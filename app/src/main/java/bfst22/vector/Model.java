@@ -52,8 +52,8 @@ public class Model {
             }
         } else {
             lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
-                .map(Line::new)
-                .collect(toList()));
+                    .map(Line::new)
+                    .collect(toList()));
         }
         time += System.nanoTime();
         System.out.println("Load time: " + (long)(time / 1e6) + " ms");
