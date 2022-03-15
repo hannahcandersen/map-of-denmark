@@ -31,6 +31,8 @@ public class Model {
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
+
+    // liste af observers. observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
@@ -143,10 +145,16 @@ public class Model {
         System.out.println("Done");
     }
 
+    // tilføjer en observer til listen observers
+    // Runnable = metode der ikke tager nogle argumenter eller returnerer noget
     public void addObserver(Runnable observer) {
         observers.add(observer);
     }
 
+    /* alle der er registreret som observers, får af vide, at der er sket en ændring.
+     bruges steder, hvor modellen vil fortælle dens observers, at der er sket en vigtig ændring i modellen.
+     f.eks. for at fortælle repaint-metoden at der er kommet en ny linje den skal tegnes.
+    */
     public void notifyObservers() {
         for (var observer : observers) {
             observer.run();
