@@ -1,10 +1,8 @@
-package bfst22.vector;
+package bfst22.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javafx.scene.canvas.GraphicsContext;
 
 //Indeholder linjesegmenter
 

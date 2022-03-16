@@ -1,4 +1,4 @@
-package bfst22.vector;
+package bfst22.view;
 
 import javafx.scene.canvas.GraphicsContext;
 //Canvas = lærred

@@ -1,5 +1,6 @@
-package bfst22.vector;
+package bfst22.Model;
 
+import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 

@@ -1,4 +1,4 @@
-package bfst22.vector;
+package bfst22.Model;
 
 import java.io.Serializable;
 

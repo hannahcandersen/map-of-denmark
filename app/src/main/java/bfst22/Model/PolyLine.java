@@ -1,8 +1,9 @@
-package bfst22.vector;
+package bfst22.Model;
 
 import java.io.Serializable;
 import java.util.List;
 
+import bfst22.view.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 
 /*

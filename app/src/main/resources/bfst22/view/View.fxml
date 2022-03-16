@@ -5,7 +5,7 @@
 <?import javafx.scene.Scene?>
 <Scene xmlns="http://javafx.com/javafx"
        xmlns:fx="http://javafx.com/fxml"
-       fx:controller="bfst22.vector.Controller"
+       fx:controller="bfst22.Controller.Controller"
        fx:id="scene"
 >
     <root>

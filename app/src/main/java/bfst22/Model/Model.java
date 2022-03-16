@@ -1,11 +1,13 @@
-package bfst22.vector;
+package bfst22.Model;
+
+import bfst22.vector.*;
+import bfst22.view.Drawable;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
