@@ -14,12 +14,13 @@ public class MapCanvas extends Canvas {
 
     void init(Model model) {
         this.model = model;
-        pan(-model.minlon, -model.minlat);
-        zoom(640 / (model.maxlon - model.minlon), 0, 0);
+        pan(-model.getMinLon(), -model.getMinLat());
+        zoom(640 / (model.getMaxlon() - model.getMinLon()), 0, 0);
         model.addObserver(this::repaint);
         repaint();
     }
 
+    //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     void repaint() {
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
