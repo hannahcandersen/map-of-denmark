@@ -6,8 +6,12 @@ import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
 
+//Indeholder linjesegmenter
+
 public class OSMWay implements Serializable {
     public static final long serialVersionUID = 42;
+
+    //List af OSMNodes.
     List<OSMNode> nodes;
     public OSMWay(List<OSMNode> nodes) {
         this.nodes = new ArrayList<>(nodes);
