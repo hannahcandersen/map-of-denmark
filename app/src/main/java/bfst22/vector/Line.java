@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Line implements Drawable {
     Point2D from, to;
-
+//Line tager de fire koordinater fra txt line filerne og splitter dem til at kunne blive læst og derefter tegnet.
     Line(String line) {
         var parts = line.split(" ");
         var x1 = Double.parseDouble(parts[1]);
@@ -21,6 +21,7 @@ public class Line implements Drawable {
         this.to = to;
     }
 
+    @Override
     public void trace(GraphicsContext gc) {
         gc.beginPath();
         gc.moveTo(from.getX(), from.getY());
