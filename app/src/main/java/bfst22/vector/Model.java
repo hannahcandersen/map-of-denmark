@@ -27,21 +27,12 @@ import java.io.ObjectOutputStream;
 import static java.util.stream.Collectors.toList;
 
 public class Model {
-    float minlat, minlon, maxlat, maxlon; // min og max koordinater for hele datasættet
+    // min og max koordinater for hele datasættet. hedder bounds i osm filen
+    float minlat, minlon, maxlat, maxlon;
+
+    // map med linjer og tilhørende type af vej
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
-    }
-    public float getMinLat(){
-        return minlat;
-    }
-    public float getMinLon(){
-        return minlon;
-    }
-    public float getMaxlat(){
-        return maxlat;
-    }
-    public float getMaxlon(){
-        return maxlon;
     }
 
     // liste af observers. observers gør så objekter kan blive notificeret om ændringer i andre objekter
@@ -50,12 +41,15 @@ public class Model {
     @SuppressWarnings("unchecked")
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         var time = -System.nanoTime();
+        // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
         if (filename.endsWith(".zip")) {
             var zip = new ZipInputStream(new FileInputStream(filename));
             zip.getNextEntry();
             loadOSM(zip);
+        // læser filen som en osm-fil
         } else if (filename.endsWith(".osm")) {
             loadOSM(new FileInputStream(filename));
+        // læser filen som en obj-fil
         } else if (filename.endsWith(".obj")) {
             try (var input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 minlat = input.readFloat();
@@ -69,11 +63,15 @@ public class Model {
                     .map(Line::new)
                     .collect(toList()));
         }
-        time += System.nanoTime();
-        System.out.println("Load time: " + (long)(time / 1e6) + " ms");
+
+        // måler load time
+        time += System.nanoTime(); // load time i nanosekunder
+        System.out.println("Load time: " + (long)(time / 1e6) + " ms"); // printer load time i millisekunder
+
         if (!filename.endsWith(".obj")) save(filename);
     }
 
+    // bruges hvis filen er en obj-fil
     public void save(String basename) throws FileNotFoundException, IOException {
         try (var out = new ObjectOutputStream(new FileOutputStream(basename + ".obj"))) {
             out.writeFloat(minlat);
@@ -84,35 +82,56 @@ public class Model {
         }
     }
 
+    // get-metoder til min og max koordinater
+    public float getMinLat(){
+        return minlat;
+    }
+    public float getMinLon(){
+        return minlon;
+    }
+    public float getMaxlat(){
+        return maxlat;
+    }
+    public float getMaxlon(){
+        return maxlon;
+    }
+
+    // bruges til at parse en OSM film
     private void loadOSM(InputStream input) throws XMLStreamException, FactoryConfigurationError {
-        var reader = XMLInputFactory.newInstance().createXMLStreamReader(new BufferedInputStream(input));
-        var id2node = new NodeMap();
-        var id2way = new HashMap<Long, OSMWay>();
-        var nodes = new ArrayList<OSMNode>();
+        var reader = XMLInputFactory.newInstance().createXMLStreamReader(new BufferedInputStream(input)); // laver en ny XML Reader der læser tags
+        var id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
+        var id2way = new HashMap<Long, OSMWay>(); // map til veje, der gemmer id og listen af nodes for vejen
+        var nodes = new ArrayList<OSMNode>(); // liste af nodes for den enkelte vej
         var rel = new ArrayList<OSMWay>();
         long relID = 0;
         var type = WayType.UNKNOWN;
-        while (reader.hasNext()) {
+        while (reader.hasNext()) { // læser hver linje én af gangen
             switch (reader.next()) {
-                case XMLStreamConstants.START_ELEMENT:
+                case XMLStreamConstants.START_ELEMENT: // får det første på den givne linje i osm-filen. f.eks. om det er en node
                     var name = reader.getLocalName();
+                    // switch statement, som gør noget forskelligt ud fra hvad det første ord på linjen er
                     switch (name) {
+                        // indlæser min og max koordinaterne for hele det valgte datasæt
                         case "bounds":
                             maxlat = -Float.parseFloat(reader.getAttributeValue(null, "minlat"));
                             minlon = 0.56f * Float.parseFloat(reader.getAttributeValue(null, "minlon"));
                             minlat = -Float.parseFloat(reader.getAttributeValue(null, "maxlat"));
                             maxlon = 0.56f * Float.parseFloat(reader.getAttributeValue(null, "maxlon"));
                             break;
+                        // giver id, lat og lon på nodes og tilføjer det til et NodeMap
                         case "node":
                             var id = Long.parseLong(reader.getAttributeValue(null, "id"));
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
                             break;
+                        // en way har i osm-filen en reference til de nodes der angiver vejen kaldet nd, der indeholder nodes id nummer.
+                        // her gemmes disse nodes i en arrayliste "nodes"
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             nodes.add(id2node.get(ref));
                             break;
+
                         case "way":
                             relID = Long.parseLong(reader.getAttributeValue(null, "id"));
                             type = WayType.UNKNOWN;
@@ -136,13 +155,14 @@ public class Model {
 
                     }
                     break;
-                case XMLStreamConstants.END_ELEMENT:
+                case XMLStreamConstants.END_ELEMENT: // får det sidste på den givne linje i osm-filen.
                     switch (reader.getLocalName()) {
+                        // laver en ny OSMWay ud fra listen af de nodes, som vejen indeholder
                         case "way":
                             var way = new PolyLine(nodes);
-                            id2way.put(relID, new OSMWay(nodes));
-                            lines.get(type).add(way);
-                            nodes.clear();
+                            id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
+                            lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende type
+                            nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
                             break;
                         case "relation":
                             if (type == WayType.LAKE && !rel.isEmpty()) {
@@ -165,8 +185,7 @@ public class Model {
 
     /* alle der er registreret som observers, får af vide, at der er sket en ændring.
      bruges steder, hvor modellen vil fortælle dens observers, at der er sket en vigtig ændring i modellen.
-     f.eks. for at fortælle repaint-metoden at der er kommet en ny linje den skal tegnes.
-    */
+     f.eks. for at fortælle repaint-metoden at der er kommet en ny linje den skal tegnes. */
     public void notifyObservers() {
         for (var observer : observers) {
             observer.run();
