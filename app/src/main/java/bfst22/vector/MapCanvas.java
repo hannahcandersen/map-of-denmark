@@ -6,6 +6,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
+//Canvas = lærred
+
 public class MapCanvas extends Canvas {
     Model model;
     Affine trans = new Affine();
