@@ -30,15 +30,15 @@ public class Model {
 
     //Felter:
 
-    // min og max koordinater for hele datasættet. hedder bounds i osm filen
+    // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     float minlat, minlon, maxlat, maxlon;
 
-    // map med type (om det f.eks. er lake eller highway) og tilhørende linje
+    // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
 
-    // liste af observers. observers gør så objekter kan blive notificeret om ændringer i andre objekter
+    // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
 
     // Konstruktør:
