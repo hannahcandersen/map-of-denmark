@@ -13,8 +13,16 @@ public class NodeMap extends ArrayList<OSMNode> {
     boolean sorted;
 
     @Override
-    //Vi har denne metode således at vi holder datastrukturen, selvom vi måske ikke overholder kontrakten
-        //forstår ikke helt dette..
+    //Vi har denne metode således at vi holder datastrukturen, selvom vi måske ikke overholder kontrakten (citat fra Troels)
+        /*
+        Formålet med 'boolean add' metoden:
+            It returns a boolean to inform if add effectively changed the collection.
+
+            This is useful for collections like Set<T> which doesn't change if the element added was already
+            present inside the collection. In case of a List<T> Java enforces by design to return true, so if
+            you want to notify the caller that the operation didn't succeed you must find another way (eg.
+            throw an exception).
+         */
     public boolean add(OSMNode node) {
         sorted = false;
         return super.add(node);
