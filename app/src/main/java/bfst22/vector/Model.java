@@ -27,7 +27,7 @@ import java.io.ObjectOutputStream;
 import static java.util.stream.Collectors.toList;
 
 public class Model {
-    float minlat, minlon, maxlat, maxlon;
+    float minlat, minlon, maxlat, maxlon; // min og max koordinater for hele datasættet
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
