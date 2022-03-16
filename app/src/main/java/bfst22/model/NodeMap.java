@@ -1,4 +1,4 @@
-package bfst22.Model;
+package bfst22.model;
 
 import java.util.ArrayList;
 import java.util.Comparator;

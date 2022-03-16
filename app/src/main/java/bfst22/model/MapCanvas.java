@@ -1,6 +1,5 @@
-package bfst22.vector;
+package bfst22.model;
 
-import bfst22.Model.Model;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;

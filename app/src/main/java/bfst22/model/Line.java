@@ -1,4 +1,4 @@
-package bfst22.Model;
+package bfst22.model;
 
 import bfst22.view.Drawable;
 import javafx.geometry.Point2D;

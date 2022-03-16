@@ -1,6 +1,6 @@
 package bfst22.vector;
 
-import bfst22.Model.Model;
+import bfst22.model.Model;
 import bfst22.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;

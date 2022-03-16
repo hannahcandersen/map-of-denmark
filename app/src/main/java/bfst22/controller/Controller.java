@@ -1,7 +1,7 @@
-package bfst22.Controller;
+package bfst22.controller;
 
-import bfst22.Model.Model;
-import bfst22.vector.MapCanvas;
+import bfst22.model.Model;
+import bfst22.model.MapCanvas;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;

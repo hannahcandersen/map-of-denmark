@@ -1,6 +1,5 @@
-package bfst22.Model;
+package bfst22.model;
 
-import bfst22.vector.*;
 import bfst22.view.Drawable;
 
 import java.nio.file.Files;
