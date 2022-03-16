@@ -27,6 +27,9 @@ import java.io.ObjectOutputStream;
 import static java.util.stream.Collectors.toList;
 
 public class Model {
+
+    //Felter:
+
     // min og max koordinater for hele datasættet. hedder bounds i osm filen
     float minlat, minlon, maxlat, maxlon;
 
@@ -38,6 +41,7 @@ public class Model {
     // liste af observers. observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
 
+    // Konstruktør:
     @SuppressWarnings("unchecked")
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         var time = -System.nanoTime();
@@ -71,7 +75,7 @@ public class Model {
         if (!filename.endsWith(".obj")) save(filename);
     }
 
-    // bruges hvis filen er en obj-fil
+    // metode der bruges hvis filen er en obj-fil
     public void save(String basename) throws FileNotFoundException, IOException {
         try (var out = new ObjectOutputStream(new FileOutputStream(basename + ".obj"))) {
             out.writeFloat(minlat);
@@ -96,7 +100,7 @@ public class Model {
         return maxlon;
     }
 
-    // bruges til at parse en OSM film
+    // metode der bruges til at parse en OSM film
     private void loadOSM(InputStream input) throws XMLStreamException, FactoryConfigurationError {
         var reader = XMLInputFactory.newInstance().createXMLStreamReader(new BufferedInputStream(input)); // laver en ny XML Reader der læser tags
         var id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
@@ -125,13 +129,12 @@ public class Model {
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
                             break;
-                        // en way har i osm-filen en reference til de nodes der angiver vejen kaldet nd, der indeholder nodes id nummer.
+                        // en way har i osm-filen en reference til de nodes der angiver vejen kaldet nd, der indeholder nodes' id nummer.
                         // her gemmes disse nodes i en arrayliste "nodes"
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             nodes.add(id2node.get(ref));
                             break;
-
                         case "way":
                             relID = Long.parseLong(reader.getAttributeValue(null, "id"));
                             type = WayType.UNKNOWN;
