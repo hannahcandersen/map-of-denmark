@@ -1,4 +1,4 @@
-package bfst22.vector;
+package bfst22.run;
 
 import bfst22.model.Model;
 import bfst22.view.View;

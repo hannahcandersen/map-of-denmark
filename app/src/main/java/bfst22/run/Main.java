@@ -1,6 +1,5 @@
-package bfst22.vector;
+package bfst22.run;
 
-import bfst22.vector.App;
 import javafx.application.Application;
 
 public class Main {
