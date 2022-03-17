@@ -1,4 +1,4 @@
-package bfst22.vector;
+package bfst22.model;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
@@ -12,7 +12,7 @@ public class MapCanvas extends Canvas {
     Model model;
     Affine trans = new Affine();
 
-    void init(Model model) {
+    public void init(Model model) {
         this.model = model;
         pan(-model.getMinLon(), -model.getMinLat());
         zoom(640 / (model.getMaxlon() - model.getMinLon()), 0, 0);
@@ -21,7 +21,7 @@ public class MapCanvas extends Canvas {
     }
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
-    void repaint() {
+    public void repaint() {
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
         gc.setFill(Color.WHITE);
@@ -37,12 +37,12 @@ public class MapCanvas extends Canvas {
         }
     }
 
-    void pan(double dx, double dy) {
+    public void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
         repaint();
     }
 
-    void zoom(double factor, double x, double y) {
+    public void zoom(double factor, double x, double y) {
         trans.prependTranslation(-x, -y);
         trans.prependScale(factor, factor);
         trans.prependTranslation(x, y);

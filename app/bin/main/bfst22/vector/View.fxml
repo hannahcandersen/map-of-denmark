@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import bfst22.vector.MapCanvas?>
+<?import bfst22.Model.MapCanvas?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.Scene?>
 <Scene xmlns="http://javafx.com/javafx"
