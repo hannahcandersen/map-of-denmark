@@ -31,15 +31,15 @@ public class Model {
 
     //Felter:
 
-    // min og max koordinater for hele datasættet. hedder bounds i osm filen
+    // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     float minlat, minlon, maxlat, maxlon;
 
-    // map med linjer og tilhørende type af vej
+    // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
 
-    // liste af observers. observers gør så objekter kan blive notificeret om ændringer i andre objekter
+    // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
 
     // Konstruktør:
@@ -48,13 +48,13 @@ public class Model {
         var time = -System.nanoTime();
         // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
         if (filename.endsWith(".zip")) {
-            var zip = new ZipInputStream(new FileInputStream(filename));
-            zip.getNextEntry();
+            var zip = new ZipInputStream(new FileInputStream(filename)); //læser zip-filen én fil af gangen
+            zip.getNextEntry(); // læser næste fil i zip-filen
             loadOSM(zip);
         // læser filen som en osm-fil
         } else if (filename.endsWith(".osm")) {
             loadOSM(new FileInputStream(filename));
-        // læser filen som en obj-fil
+        // kan læse den .obj-fil der er blevet gemt (binary file)
         } else if (filename.endsWith(".obj")) {
             try (var input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 minlat = input.readFloat();
@@ -68,15 +68,15 @@ public class Model {
                     .map(Line::new)
                     .collect(toList()));
         }
-
         // måler load time
         time += System.nanoTime(); // load time i nanosekunder
         System.out.println("Load time: " + (long)(time / 1e6) + " ms"); // printer load time i millisekunder
 
+        // gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
         if (!filename.endsWith(".obj")) save(filename);
     }
 
-    // metode der bruges hvis filen er en obj-fil
+    // metode til at gemme data i en .obj-fil
     public void save(String basename) throws FileNotFoundException, IOException {
         try (var out = new ObjectOutputStream(new FileOutputStream(basename + ".obj"))) {
             out.writeFloat(minlat);
@@ -105,11 +105,11 @@ public class Model {
     private void loadOSM(InputStream input) throws XMLStreamException, FactoryConfigurationError {
         var reader = XMLInputFactory.newInstance().createXMLStreamReader(new BufferedInputStream(input)); // laver en ny XML Reader der læser tags
         var id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
-        var id2way = new HashMap<Long, OSMWay>(); // map til veje, der gemmer id og listen af nodes for vejen
+        var id2way = new HashMap<Long, OSMWay>(); // map til veje, der gemmer rel-id og listen af nodes for vejen
         var nodes = new ArrayList<OSMNode>(); // liste af nodes for den enkelte vej
-        var rel = new ArrayList<OSMWay>();
-        long relID = 0;
-        var type = WayType.UNKNOWN;
+        var rel = new ArrayList<OSMWay>(); // liste med osm ways
+        long relID = 0; // giver et id til en relation
+        var type = WayType.UNKNOWN; // sætter først typen til unknows. kan ændres undervejs i metoden til f.eks. LAKE
         while (reader.hasNext()) { // læser hver linje én af gangen
             switch (reader.next()) {
                 case XMLStreamConstants.START_ELEMENT: // får det første på den givne linje i osm-filen. f.eks. om det er en node
@@ -136,15 +136,18 @@ public class Model {
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             nodes.add(id2node.get(ref));
                             break;
+                        // sætter type til UNKNOWN for veje (kan måske sættes til noget andet, når vi har defineret flere typer veje?)
                         case "way":
                             relID = Long.parseLong(reader.getAttributeValue(null, "id"));
                             type = WayType.UNKNOWN;
                             break;
+                        // hvis et punkt har tag natural og water, er det en sø. ændrer WayType til LAKE
                         case "tag":
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
-                            if (k.equals("natural") && v.equals("water")) type = WayType.LAKE;
+                            if (k.equals("natural") && v.equals("water")) type = WayType.LAKE; // sætter WayType til LAKE
                             break;
+                        // relations har member-tags, der referer til
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             var elm = id2way.get(ref);
@@ -196,6 +199,7 @@ public class Model {
         }
     }
 
+    // iterator over types
     public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);
     }
