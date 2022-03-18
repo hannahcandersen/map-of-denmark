@@ -1,8 +1,10 @@
-package bfst22.vector;
+package bfst22.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import bfst22.view.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 
 public class MultiPolygon implements Drawable, Serializable {

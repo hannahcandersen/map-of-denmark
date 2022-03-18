@@ -23,7 +23,7 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainClass = 'bfst22.vector.App'
+    mainClass = 'bfst22.run.App'
 }
 
 tasks.named('test') {

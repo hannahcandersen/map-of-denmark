@@ -1,10 +1,11 @@
-package bfst22.vector;
+package bfst22.model;
 
+import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Line implements Drawable {
-    Point2D from, to;
+    private Point2D from, to;
 //Line tager de fire koordinater fra txt line filerne og splitter dem til at kunne blive læst og derefter tegnet.
     public Line(String line) {
         var parts = line.split(" ");
