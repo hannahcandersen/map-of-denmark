@@ -20,6 +20,6 @@ public class View {
         //kalder på init metoden i controller klassen med model som parameter
         controller.init(model);
         //sætter titlen på vores window
-        primaryStage.setTitle("Totalt mega fed vector grafik!!!");
+        primaryStage.setTitle("Map Of Denmark");
     }
 }
