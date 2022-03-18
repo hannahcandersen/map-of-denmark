@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Indeholder linjesegmenter
+/*
+    Fungerer som edge i en graf
+ */
 
 public class OSMWay implements Serializable {
     public static final long serialVersionUID = 42;
