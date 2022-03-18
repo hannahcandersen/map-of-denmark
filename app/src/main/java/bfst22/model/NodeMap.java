@@ -10,7 +10,7 @@ import java.util.Comparator;
  */
 
 public class NodeMap extends ArrayList<OSMNode> {
-    boolean sorted;
+    private boolean sorted;
 
     @Override
     //Vi har denne metode således at vi holder datastrukturen, selvom vi måske ikke overholder kontrakten (citat fra Troels)
@@ -31,7 +31,7 @@ public class NodeMap extends ArrayList<OSMNode> {
     public OSMNode get(long ref) {
         //Hvis listen ikke er sorteret, sorterer den listen her
         if (!sorted) {
-            sort(Comparator.comparing(node -> node.id));
+            sort(Comparator.comparing(node -> node.getId()));
             sorted = true;
         }
 
@@ -44,7 +44,7 @@ public class NodeMap extends ArrayList<OSMNode> {
          */
         while (hi - lo > 1) {
             int mi = (lo + hi) / 2;
-            if (get(mi).id <= ref) {
+            if (get(mi).getId() <= ref) {
                 lo = mi;
             } else {
                 hi = mi;
@@ -54,6 +54,6 @@ public class NodeMap extends ArrayList<OSMNode> {
         //Hvis det element vi leder efter er i listen, så vil det være i 'lo' variablen (som er det sidste element tilbage).
         var node = get(lo);
         //Hvis elementet vi leder efter er lig med 'ref' (vores parameter), så returnerer vi det, ellers returnerer vi null
-        return node.id == ref ? node : null;
+        return node.getId() == ref ? node : null;
     }
 }

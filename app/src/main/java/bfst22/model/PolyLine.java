@@ -16,7 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class PolyLine implements Drawable, Serializable {
     public static final long serialVersionUID = 134123;
     //Programmet skal kun huske en sekvens af floats koordinater
-    float[] coords;
+    private float[] coords;
 
     public PolyLine(List<OSMNode> nodes) {
         //Opretter et nyt float-array.
@@ -25,8 +25,8 @@ public class PolyLine implements Drawable, Serializable {
         int i = 0;
         //Gemmer alle lat og lon koordinater (x-,y-koordinater) fra OSMNode-listen i float-arrayet
         for (var node : nodes) {
-            coords[i++] = node.lat;
-            coords[i++] = node.lon;
+            coords[i++] = node.getLat();
+            coords[i++] = node.getLat();
         }
     }
 

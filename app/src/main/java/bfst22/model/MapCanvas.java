@@ -9,8 +9,8 @@ import javafx.scene.transform.NonInvertibleTransformException;
 //Canvas = lærred
 
 public class MapCanvas extends Canvas {
-    Model model;
-    Affine trans = new Affine();
+    private Model model;
+    private Affine trans = new Affine();
 
     public void init(Model model) {
         this.model = model;

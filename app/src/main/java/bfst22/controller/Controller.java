@@ -11,7 +11,7 @@ import javafx.scene.input.ScrollEvent;
 //Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
 
 public class Controller {
-    public Point2D lastMouse;
+    private Point2D lastMouse;
 
     //Canvas er superklassen til vores MapCanvas.
     //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
