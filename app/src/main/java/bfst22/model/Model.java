@@ -32,7 +32,7 @@ public class Model {
     //Felter:
 
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
-    float minlat, minlon, maxlat, maxlon;
+    private float minlat, minlon, maxlat, maxlon;
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {

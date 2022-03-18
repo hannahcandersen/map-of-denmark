@@ -16,7 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 public class PolyLine implements Drawable, Serializable {
     public static final long serialVersionUID = 134123;
     //Programmet skal kun huske en sekvens af floats koordinater
-    float[] coords;
+    private float[] coords;
 
     public PolyLine(List<OSMNode> nodes) {
         //Opretter et nyt float-array.

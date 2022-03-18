@@ -10,7 +10,7 @@ import java.util.Comparator;
  */
 
 public class NodeMap extends ArrayList<OSMNode> {
-    boolean sorted;
+    private boolean sorted;
 
     @Override
     //Vi har denne metode således at vi holder datastrukturen, selvom vi måske ikke overholder kontrakten (citat fra Troels)
