@@ -26,7 +26,7 @@ public class PolyLine implements Drawable, Serializable {
         //Gemmer alle lat og lon koordinater (x-,y-koordinater) fra OSMNode-listen i float-arrayet
         for (var node : nodes) {
             coords[i++] = node.getLat();
-            coords[i++] = node.getLat();
+            coords[i++] = node.getLon();
         }
     }
 
