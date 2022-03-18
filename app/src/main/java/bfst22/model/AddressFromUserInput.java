@@ -27,7 +27,7 @@ public class AddressFromUserInput {
                 + postcode + " " + city;
     }
 
-    private final static String REGEX = "^(?<street>[A-Za-zæøå ]+?) +(?<house>[0-9]+)([, ]+(?<postcode>[0-9]{4}) +(?<city>[A-Za-zæøå ]+))?$";
+    private final static String REGEX = "^(?<street>[A-Za-zæøå ]+?) +(?<house>[0-9]+)([, ])+(?<floor>[0-9.]+)?(?<side>(th|tv|mf){0,1})?([, ]+?(?<postcode>[0-9]{4}) +(?<city>[A-Za-zæøå ]+))?$";
     private final static Pattern PATTERN = Pattern.compile(REGEX);
 
     public static AddressFromUserInput parse(String input) {
@@ -38,6 +38,8 @@ public class AddressFromUserInput {
             builder.house(matcher.group("house"));
             builder.postcode(matcher.group("postcode"));
             builder.city(matcher.group("city"));
+            builder.floor(matcher.group("floor"));
+            builder.side(matcher.group("side"));
         }
         return builder.build();
     }
