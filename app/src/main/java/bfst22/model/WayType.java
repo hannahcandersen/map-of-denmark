@@ -2,7 +2,6 @@ package bfst22.model;
 
 public enum WayType {
     UNKNOWN, LAKE;
-
 }
 
 
