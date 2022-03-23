@@ -8,8 +8,8 @@ public class KDTree2 {
     //Erklærer roden.
     private Node root;
 
-    public KDTree2(List<OSMNode> list, boolean x) {
-        root = new KDNode(list, x);
+    public KDTree2(List<OSMNode> OSMNodes) {
+        buildKDTree(OSMNodes, false);
     }
 
             // noget if der tjekker om der skal oprettes KDNote eller Leaf (tjekker size)
@@ -22,6 +22,8 @@ public class KDTree2 {
 
             // left = new KDNode(den ene halvdel af listen)
             // right = new KDNode(den anden halvdel af listen)
+
+            //root = buildKDTree(OSMNodes, true)
 
 
 /*
@@ -39,7 +41,7 @@ public class KDTree2 {
             return Double.compare(n1.getLat(), n2.getLat());
         }
     };
- */ 
+ */
 
 
     //Metode til at bygge kdTree
