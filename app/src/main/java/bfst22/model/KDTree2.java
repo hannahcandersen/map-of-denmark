@@ -1,7 +1,6 @@
 package bfst22.model;
 
 import bfst22.view.Drawable;
-
 import java.util.List;
 
 public class KDTree2 {
