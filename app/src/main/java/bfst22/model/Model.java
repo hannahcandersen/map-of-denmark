@@ -76,6 +76,7 @@ public class Model {
         if (!filename.endsWith(".obj")) save(filename);
     }
 
+
     // metode til at gemme data i en .obj-fil
     public void save(String basename) throws FileNotFoundException, IOException {
         try (var out = new ObjectOutputStream(new FileOutputStream(basename + ".obj"))) {

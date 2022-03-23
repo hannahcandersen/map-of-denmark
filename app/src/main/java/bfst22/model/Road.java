@@ -16,7 +16,6 @@ public abstract class Road {
     public Road(){
     }
 
-
     // Getters og setters for alle felter
 
     public int getSpeedLimit() {
@@ -54,6 +53,7 @@ public abstract class Road {
     public Color getColorOnMap() {
         return colorOnMap;
     }
+
 
     public void setColorOnMap(Color colorOnMap) {
         this.colorOnMap = colorOnMap;

@@ -5,6 +5,10 @@ import java.io.Serializable;
 
 //Opretter objekter af "Nodes" fra OSM filen.
 
+/*
+    Fungerer som Vertex i en graf
+ */
+
 
 public class OSMNode implements Serializable {
     public static final long serialVersionUID = 9082413;
