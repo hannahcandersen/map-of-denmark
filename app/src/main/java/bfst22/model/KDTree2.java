@@ -39,7 +39,7 @@ public class KDTree2 {
             return Double.compare(n1.getLat(), n2.getLat());
         }
     };
- */
+ */ 
 
 
     //Metode til at bygge kdTree
