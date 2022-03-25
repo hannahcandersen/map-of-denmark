@@ -15,6 +15,13 @@ public class OSMNode implements Serializable {
     private long id;
     private float lat, lon;
 
+    //Tager parameterne ID, bredde- (lat) og længdegrader (lon), fra Noden i .osm filen.
+    public OSMNode(long id, float lat, float lon) {
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+    }
+
     public long getId(){
         return id;
     }
@@ -25,11 +32,6 @@ public class OSMNode implements Serializable {
         return lon;
     }
 
-    //Tager parameterne ID, bredde- (lat) og længdegrader (lon), fra Noden i .osm filen.
-    public OSMNode(long id, float lat, float lon) {
-        this.id = id;
-        this.lat = lat;
-        this.lon = lon;
-    }
+
 
 }

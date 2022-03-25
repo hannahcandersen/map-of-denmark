@@ -12,36 +12,20 @@ public class KDTree2 {
         buildKDTree(OSMNodes, false);
     }
 
-            // noget if der tjekker om der skal oprettes KDNote eller Leaf (tjekker size)
+    public KDNode getRoot() {
+        return root;
+    }
 
-            // sorter på den rigtige akse (x/y)
+            // noget if der tjekker om der skal oprettes KDNote eller Leaf (tjekker size) - tjek
 
-            // split listen i 2 halvdele
+            // sorter på den rigtige akse (x/y) - tjek
 
-            // skift boolean
+            // split listen i 2 halvdele - tjek
 
-            // left = new KDNode(den ene halvdel af listen)
-            // right = new KDNode(den anden halvdel af listen)
+            // skift boolean - tjek
 
-            //root = buildKDTree(OSMNodes, true)
-
-
-/*
-    //Sammenligner X-koordinater
-    private final Comparator<OSMNode> compareByXCoord = new Comparator<OSMNode>() {
-        @Override
-        public int compare(OSMNode n1, OSMNode n2) {
-            return Double.compare(n1.getLon(), n2.getLon());
-        }
-    };
-    //Sammenligner Y-koordinater
-    private final Comparator<OSMNode> compareByYCoord = new Comparator<OSMNode>() {
-        @Override
-        public int compare(OSMNode n1, OSMNode n2) {
-            return Double.compare(n1.getLat(), n2.getLat());
-        }
-    };
- */
+            // left = new KDNode(den ene halvdel af listen) - tjek
+            // right = new KDNode(den anden halvdel af listen) - tjek
 
 
     //Metode til at bygge kdTree
@@ -82,6 +66,52 @@ public class KDTree2 {
 
         }
         return kdNode;
+    }
+
+   /*
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        Queue<KDNode> q = new LinkedList<>();
+        q.add(this.root);
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                KDNode n = q.poll();
+                if (n != null) {
+                    sb.append(n.point).append(", ");
+                    q.add(n.left);
+                    q.add(n.right);
+                } else {
+                    sb.append("null, ");
+                }
+            }
+            sb.append('\n');
+        }
+        return sb.toString();
+    }
+    */
+
+    public static void main(String[] args) {
+        List<OSMNode> OSMNodesTEST = new ArrayList<>();
+
+        OSMNode o1 = new OSMNode(1, 2, 3);
+        OSMNode o2 = new OSMNode(2, 1, 4);
+        OSMNode o3 = new OSMNode(3, 2, 1);
+        OSMNode o4 = new OSMNode(4, 3, 2);
+        OSMNode o5 = new OSMNode(5, 5, 4);
+        OSMNode o6 = new OSMNode(6, 3, 3);
+        OSMNode o7 = new OSMNode(7, 3, 1);
+
+        OSMNodesTEST.add(o1);
+        OSMNodesTEST.add(o2);
+        OSMNodesTEST.add(o3);
+        OSMNodesTEST.add(o4);
+        OSMNodesTEST.add(o5);
+        OSMNodesTEST.add(o6);
+        OSMNodesTEST.add(o7);
+
+        KDTree2 test = new KDTree2(OSMNodesTEST);
     }
 
 }

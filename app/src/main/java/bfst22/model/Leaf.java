@@ -12,10 +12,10 @@ public class Leaf extends KDNode {
 
         public Leaf(List<OSMNode> leaves){
                 super();
-                this.listOfOSMNodes = listOfOSMNodes;
+                this.listOfOSMNodes = leaves;
         }
 
-        public List getListOfOsmNodes(){
+        public List<OSMNode> getListOfOSMNodes(){
                 return listOfOSMNodes;
         }
 }
