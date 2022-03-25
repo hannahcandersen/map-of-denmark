@@ -1,31 +1,31 @@
 package bfst22.model;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class KDTree2 {
 
     //Erklærer roden.
-    private Node root;
+    private KDNode root;
 
     public KDTree2(List<OSMNode> OSMNodes) {
-        buildKDTree(OSMNodes, false);
+        // buildKDTree(OSMNodes, false);
+        this.root = buildKDTree(OSMNodes, false);
     }
 
     public KDNode getRoot() {
         return root;
     }
 
-            // noget if der tjekker om der skal oprettes KDNote eller Leaf (tjekker size) - tjek
+    // noget if der tjekker om der skal oprettes KDNote eller Leaf (tjekker size) - tjek
 
-            // sorter på den rigtige akse (x/y) - tjek
+    // sorter på den rigtige akse (x/y) - tjek
 
-            // split listen i 2 halvdele - tjek
+    // split listen i 2 halvdele - tjek
 
-            // skift boolean - tjek
+    // skift boolean - tjek
 
-            // left = new KDNode(den ene halvdel af listen) - tjek
-            // right = new KDNode(den anden halvdel af listen) - tjek
+    // left = new KDNode(den ene halvdel af listen) - tjek
+    // right = new KDNode(den anden halvdel af listen) - tjek
 
 
     //Metode til at bygge kdTree
@@ -36,35 +36,48 @@ public class KDTree2 {
             return null;
         }
 
-        // Laver leaves
+        //Erklærer
         KDNode kdNode;
-        if(OSMNodes.size() < 100){
-            // find ud af hvordan vi laver leaves
+
+        // Laver leaves
+        if(OSMNodes.size() < 3){
             kdNode = new Leaf(OSMNodes);
+            System.out.println("Laver et blad");
+            for(int i = 0; i < OSMNodes.size(); i++) {
+                System.out.print("(" + OSMNodes.get(i).getLon());
+                System.out.println(" , " + OSMNodes.get(i).getLat() + ")");
+
+                //System.out.println(((Leaf) kdNode).getListOfOSMNodes());
+            }
         }
         else{
-            //sorter listen
+            //sorter listen på x
             if(isXcoord){
                 //Vi sorterer listen OSMNodes ved at bruge sort, som tager parametren Comparator.comparing.
                 //Den fortæller at vi skal hive fat i OSMNode-klassen og kalde getLon-metoden. Sorter på x.
-                OSMNodes.sort(Comparator.comparing(OSMNode::getLon));
-            }
-            else{
-                //sorter på y
                 OSMNodes.sort(Comparator.comparing(OSMNode::getLat));
             }
+            else{
+                //sorter listen på y
+                OSMNodes.sort(Comparator.comparing(OSMNode::getLon));
+            }
 
-            //finder midterste element i den sorterede liste og laver det til en root
+            //Laver en ny node
             Node node = new Node();
-            int mid = OSMNodes.size()/2;
+            System.out.println("Laver en node");
 
-            // laver left og right root for root
+            //Finder midterste indeks af listen
+            int mid = OSMNodes.size()/2;
+            System.out.println("Dette er midten: " + mid);
+
+            //Laver left og right nodes
             node.setLeft(buildKDTree(OSMNodes.subList(0, mid), !isXcoord));
             node.setRight(buildKDTree(OSMNodes.subList(mid, OSMNodes.size()), !isXcoord));
 
             kdNode = node;
 
         }
+
         return kdNode;
     }
 

@@ -27,9 +27,11 @@ public class OSMNode implements Serializable {
     }
     public float getLat(){
         return lat;
+        //Y
     }
     public float getLon(){
         return lon;
+        //X
     }
 
 
