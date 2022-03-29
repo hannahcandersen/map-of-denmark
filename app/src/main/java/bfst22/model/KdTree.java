@@ -87,6 +87,23 @@ public class KdTree<T> {
 
     } //BuildTree slutter
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Andet shit vi ikke skal bruge nu.
+
     public T findNearestNeighbour(double x, double y) {
         return findNearestNeighbour(root, x, y, true);
     }
@@ -280,7 +297,7 @@ public class KdTree<T> {
         }
     }
 
-    public KdNode<T> fastDelete(final T target, double x, double y) {
+   /* public KdNode<T> fastDelete(final T target, double x, double y) {
         root = new Object() {
             KdNode<T> delete(T targetObject, double x, double y, KdNode<T> kdNode, boolean divX) {
                 if(kdNode == null)
@@ -313,9 +330,9 @@ public class KdTree<T> {
         }.delete(target, x, y, root, true);
 
         return root;
-    }
+    } */
 
-    public KdNode<T> delete(final T target) {
+   /* public KdNode<T> delete(final T target) {
         root = new Object() {
             KdNode<T> delete(T targetObject, KdNode<T> kdNode, boolean divX) {
                 if(kdNode == null)
@@ -345,7 +362,7 @@ public class KdTree<T> {
         }.delete(target, root, true);
 
         return root;
-    }
+    } */
 
 
     /*public void insertOrUpdate(T target, double x, double y) {

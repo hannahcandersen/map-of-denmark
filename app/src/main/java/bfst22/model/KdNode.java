@@ -30,7 +30,6 @@ public class KdNode<T> {
         this.object = object;
     }
 
-
     public Point2D.Double getCoords() {
         return coords;
     }
