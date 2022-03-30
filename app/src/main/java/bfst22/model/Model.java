@@ -77,8 +77,7 @@ public class Model {
 
         // gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
         if (!filename.endsWith(".obj")) save(filename);
-
-        System.out.println();
+        
         //Bygger KDTree
         KDTree2.buildKDTree(id2node, false);
 
