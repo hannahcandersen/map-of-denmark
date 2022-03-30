@@ -329,45 +329,12 @@ public class KdTree<T> {
         }.delete(target, x, y, root, true);
 
         return root;
-    } */
-
-   /* public KdNode<T> delete(final T target) {
-        root = new Object() {
-            KdNode<T> delete(T targetObject, KdNode<T> kdNode, boolean divX) {
-                if(kdNode == null)
-                    return null;
-                if (targetObject.equals(kdNode.object)) {
-                    if(kdNode.right != null) {
-                        KdNode<T> minKdNode = findMin(kdNode.right, !divX);
-                        kdNode.object = minKdNode.object;
-                        kdNode.coords = minKdNode.coords;
-                        kdNode.right = delete(kdNode.object, kdNode.right, !divX);
-                    }
-                    else if (kdNode.left != null) {
-                        KdNode<T> minKdNode = findMin(kdNode.left, !divX);
-                        kdNode.object = minKdNode.object;
-                        kdNode.coords = minKdNode.coords;
-                        kdNode.left = delete(kdNode.object, kdNode.left, !divX);
-                    }
-                    else
-                        kdNode = null;
-                }
-                else {
-                    kdNode.left = delete(targetObject, kdNode.left, !divX);
-                    kdNode.right = delete(targetObject, kdNode.right, !divX);
-                }
-                return kdNode;
-            }
-        }.delete(target, root, true);
-
-        return root;
-    } */
-
-
-    /*public void insertOrUpdate(T target, double x, double y) {
-        delete(target);
-        insert(target, x, y);
     }
+
+
+
+
+
 
     public int getSize() {
         return new Object() {
