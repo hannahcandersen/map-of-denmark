@@ -103,50 +103,53 @@ public class KDTree2 {
             result.add((OSMNode) ((Leaf) splitNode).getListOfOSMNodes());
         }
 
-        else {
-
-            // Caster splitnode fra KDNode til Node
-            //KDNode splitNode = (Node) splitNode;
-
-
-            if(isXcoord) {
-                //Gør det på X (isXcoord)
-                //if(((Node) splitNode).getSplit()) < rectangle.getMaxLon() && (((Node) splitNode).getSplit() > rectangle.getMinLon()) {
-
-                //}
+        //Ellers er vores splitnode en splitnode, og vi skal kalde rekursivt ned gennem træet
+        else{
+            //Gør det på X (isXcoord)
+            if(isXcoord){
 
                 //InRange? - mellem minLon og MaxLon
+                if(((Node) splitNode).getSplit() > rectangle.getMinLon()
+                        && ((Node) splitNode).getSplit() < rectangle.getMaxLon()) {
+
                     //Gå begge veje
-                    //rangeSearch(rectangle, splitNode, !isXcoord, result);
-                    //rangeSearch(rectangle, splitnode.right, !isXcoord, result)
+                    rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
 
+                }
                 // Over? - større end maxLon (((rectangle.getMaxLon())))
+                if(((Node) splitNode).getSplit() > rectangle.getMaxLon()) {
                     //Gå til venstre
-                    //rangeSearch(rectangle, splitnode.left, !isXcoord, result)
-
+                    rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                }
                 //Under? - mindre end minLon
+                if(((Node) splitNode).getSplit() < rectangle.getMinLon()) {
                     //Gå til højre
-                    //rangeSearch(rectangle, splitnode.right, !isXcoord, result)
-
+                    rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                }
             }
 
             //Gør det på Y (!isXcoord) Måske skal lat ændres til minus
             else {
-                //Gør det på Y (!isXcoord)
+                //InRange? - mellem minLon og MaxLon
+                if(((Node) splitNode).getSplit() > rectangle.getMinLat()
+                        && ((Node) splitNode).getSplit() < rectangle.getMaxLat()) {
 
-                //InRange? - mellem minLon og MaxLat
-                //Gå begge veje
-                //rangeSearch(rectangle, splitNode.left, !isXcoord, result)
-                //rangeSearch(rectangle, splitnode.right, !isXcoord, result)
+                    //Gå begge veje
+                    rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
 
-                //Over? - større end maxLat
+                }
+                // Over? - større end maxLon (((rectangle.getMaxLon())))
+                if(((Node) splitNode).getSplit() > rectangle.getMaxLat()) {
                     //Gå til venstre
-                    //rangeSearch(rectangle, splitnode.left, !isXcoord, result)
-
-                //Under? - mindre end minLat
+                    rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                }
+                //Under? - mindre end minLon
+                if(((Node) splitNode).getSplit() < rectangle.getMinLat()) {
                     //Gå til højre
-                    //rangeSearch(rectangle, splitnode.right, !isXcoord, result)
-
+                    rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                }
             }
         }
       return result;
