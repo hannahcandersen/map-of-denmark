@@ -18,4 +18,5 @@ public class Leaf extends KDNode {
         public List<OSMNode> getListOfOSMNodes(){
                 return listOfOSMNodes;
         }
+
 }
