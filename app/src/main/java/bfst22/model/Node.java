@@ -10,7 +10,6 @@ public class Node extends KDNode {
         super();
     }
 
-    public KDNode getRoot() {return root;}
     public KDNode getLeft() {return left;}
     public KDNode getRight() {return right;}
 

@@ -55,11 +55,11 @@ public class KDTree2 {
             if(isXcoord){
                 //Vi sorterer listen OSMNodes ved at bruge sort, som tager parametren Comparator.comparing.
                 //Den fortæller at vi skal hive fat i OSMNode-klassen og kalde getLon-metoden. Sorter på x.
-                OSMNodes.sort(Comparator.comparing(OSMNode::getLat));
+                OSMNodes.sort(Comparator.comparing(OSMNode::getLon));
             }
             else{
                 //sorter listen på y
-                OSMNodes.sort(Comparator.comparing(OSMNode::getLon));
+                OSMNodes.sort(Comparator.comparing(OSMNode::getLat));
             }
 
             //Laver en ny node
