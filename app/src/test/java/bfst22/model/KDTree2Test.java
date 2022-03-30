@@ -43,7 +43,10 @@ class KDTree2Test {
     @Test
     void buildKDTree() {
         makeList(OSMNodes);
-        test.buildKDTree(OSMNodes, false);
+
+
+        //buildtree();
+
 
         //assertEquals(test.buildKDTree(OSMNodes, false).getRight(), test.buildKDTree(OSMNodes, false).getLeft());
 

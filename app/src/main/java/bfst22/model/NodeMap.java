@@ -35,7 +35,7 @@ public class NodeMap extends ArrayList<OSMNode> {
             sorted = true;
         }
 
-        //Laver en binær søgning
+        //Laver en binær søgning. Sortere fra midten og enten til højre eller ventre. Mindten. Højre eller venstre. Indtil vi finder det vi leder efter.
         int lo = 0;
         int hi = size();
         /*

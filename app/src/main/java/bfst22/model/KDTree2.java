@@ -16,20 +16,8 @@ public class KDTree2 {
         return root;
     }
 
-    // noget if der tjekker om der skal oprettes KDNote eller Leaf (tjekker size) - tjek
-
-    // sorter på den rigtige akse (x/y) - tjek
-
-    // split listen i 2 halvdele - tjek
-
-    // skift boolean - tjek
-
-    // left = new KDNode(den ene halvdel af listen) - tjek
-    // right = new KDNode(den anden halvdel af listen) - tjek
-
-
     //Metode til at bygge kdTree
-    public KDNode buildKDTree(List<OSMNode> OSMNodes, boolean isXcoord) {
+    public static KDNode buildKDTree(List<OSMNode> OSMNodes, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if(OSMNodes == null || OSMNodes.size() == 0) {
             System.out.println("OSMNode list is empty!");
@@ -40,7 +28,7 @@ public class KDTree2 {
         KDNode kdNode;
 
         // Laver leaves
-        if(OSMNodes.size() < 3){
+        if(OSMNodes.size() < 100){
             kdNode = new Leaf(OSMNodes);
             System.out.println("Laver et blad");
             for(int i = 0; i < OSMNodes.size(); i++) {
@@ -81,29 +69,6 @@ public class KDTree2 {
         return kdNode;
     }
 
-   /*
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        Queue<KDNode> q = new LinkedList<>();
-        q.add(this.root);
-
-        while (!q.isEmpty()) {
-            int size = q.size();
-            for (int i = 0; i < size; i++) {
-                KDNode n = q.poll();
-                if (n != null) {
-                    sb.append(n.point).append(", ");
-                    q.add(n.left);
-                    q.add(n.right);
-                } else {
-                    sb.append("null, ");
-                }
-            }
-            sb.append('\n');
-        }
-        return sb.toString();
-    }
-    */
 
     public static void main(String[] args) {
         List<OSMNode> OSMNodesTEST = new ArrayList<>();
