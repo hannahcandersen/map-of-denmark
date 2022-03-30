@@ -47,8 +47,9 @@ public class MapCanvas extends Canvas {
         //Opretter en rectangle med de koordinater der er inden for rectangle
         Rectangle searchRectangle = new Rectangle(realMin.getX(), realMax.getX(), realMax.getY(), realMin.getY());
 
+        ///////////////// MANGLER AT FÅ FAT PÅ id2node LISTEN
         KDTree2 kdTree = new KDTree2();
-        var result = kdTree.rangeSearch(searchRectangle);
+        var result = kdTree.rangeSearch(searchRectangle); */
 
         // løb results igennem og tegn dem
 
