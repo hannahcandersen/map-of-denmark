@@ -78,8 +78,8 @@ public class Model {
         // gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
         if (!filename.endsWith(".obj")) save(filename);
 
-        //Bygger KDTree
-        KDTree2.buildKDTree(id2node, true);
+        //Bygger KDTree - DET SKAL VI NOK IKKE GØRE I MODEL FORDI VI GØR DET I MAPCANVAS
+        //KDTree2.buildKDTree(id2node, true);
 
 
     }
