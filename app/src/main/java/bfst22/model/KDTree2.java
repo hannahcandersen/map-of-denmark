@@ -83,15 +83,19 @@ public class KDTree2 {
     }
 
     //////////////////// RANGE SEARCH ///////////////////////
+
+    //Public den der kaldt i MapCanvas
     public List<OSMNode> rangeSearch(Rectangle rectangle) {
-        // kald den anden rangesearch, returner resultaterne
+        // kald den anden rangesearch, der returner en lsite med inrange resultaterne
         return rangeSearch(rectangle, root, true, new ArrayList<>());
     }
 
+    //Metode der returner en liste
     private List<OSMNode> rangeSearch(Rectangle rectangle, KDNode splitNode, boolean isXcoord, List<OSMNode> result){
-        // List<OSMNode> inRange = new ArrayList<>(); //måske bruge LinkedList?? - blade der er in range (kan også inkludere nodes der ikke er in range)
-        // List<OSMNode> result = new ArrayList<>(); //KUN de OSMnodes der er inden for rectangle
-
+       if (splitNode == null){
+           System.out.println("splitnode er tom!!!");
+           return null;
+       }
 
         //Hvis vores splitnode er en leaf, tilføj leaf(s) til result listen
         if (splitNode instanceof Leaf){
@@ -125,6 +129,8 @@ public class KDTree2 {
                     //rangeSearch(rectangle, splitnode.right, !isXcoord, result)
 
             }
+
+            //Gør det på Y (!isXcoord) Måske skal lat ændres til minus
             else {
                 //Gør det på Y (!isXcoord)
 
@@ -143,7 +149,6 @@ public class KDTree2 {
 
             }
         }
-
       return result;
     }
 

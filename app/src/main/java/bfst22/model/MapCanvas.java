@@ -22,8 +22,22 @@ public class MapCanvas extends Canvas {
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() {
+        var gc = getGraphicsContext2D();
+        gc.setTransform(new Affine());
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, getWidth(), getHeight());
+        gc.setTransform(trans);
+        gc.setFill(Color.LIGHTBLUE);
+        for (var line : model.iterable(WayType.LAKE)) {
+            line.fill(gc);
+        }
+        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        for (var line : model.iterable(WayType.UNKNOWN)) {
+            line.draw(gc);
+        }
         //InRange
         //Punkter i vinduet
+
         Point2D screenMin = new Point2D(0, 0);
         Point2D screenMax = new Point2D(getWidth(), getHeight());
 
@@ -39,19 +53,7 @@ public class MapCanvas extends Canvas {
 
         // løb results igennem og tegn dem
 
-        var gc = getGraphicsContext2D();
-        gc.setTransform(new Affine());
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, getWidth(), getHeight());
-        gc.setTransform(trans);
-        gc.setFill(Color.LIGHTBLUE);
-        for (var line : model.iterable(WayType.LAKE)) {
-            line.fill(gc);
-        }
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc);
-        }
+
 
     }
 
