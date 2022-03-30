@@ -1,6 +1,7 @@
 package bfst22.model;
 
 import bfst22.view.Drawable;
+import bfst22.model.KDTree2;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
