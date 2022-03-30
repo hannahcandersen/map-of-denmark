@@ -40,6 +40,8 @@ public class Model {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
 
+    NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
+
     // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
 
@@ -106,7 +108,6 @@ public class Model {
     // metode der bruges til at parse en OSM film
     private void loadOSM(InputStream input) throws XMLStreamException, FactoryConfigurationError {
         var reader = XMLInputFactory.newInstance().createXMLStreamReader(new BufferedInputStream(input)); // laver en ny XML Reader der læser tags
-        var id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
         var id2way = new HashMap<Long, OSMWay>(); // map til veje, der gemmer rel-id og listen af nodes for vejen
         var nodes = new ArrayList<OSMNode>(); // liste af nodes for den enkelte vej
         var rel = new ArrayList<OSMWay>(); // liste med osm ways

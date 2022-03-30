@@ -29,7 +29,7 @@ public class KDTree2 {
 
 
     //Metode til at bygge kdTree
-    public KDNode buildKDTree(List<OSMNode> OSMNodes, boolean isXcoord) {
+    public static KDNode buildKDTree(List<OSMNode> OSMNodes, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if(OSMNodes == null || OSMNodes.size() == 0) {
             System.out.println("OSMNode list is empty!");
@@ -40,7 +40,7 @@ public class KDTree2 {
         KDNode kdNode;
 
         // Laver leaves
-        if(OSMNodes.size() < 3){
+        if(OSMNodes.size() < 100){
             kdNode = new Leaf(OSMNodes);
             System.out.println("Laver et blad");
             for(int i = 0; i < OSMNodes.size(); i++) {
