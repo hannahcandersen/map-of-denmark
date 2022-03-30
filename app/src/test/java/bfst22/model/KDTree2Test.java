@@ -43,23 +43,17 @@ class KDTree2Test {
     @Test
     void buildKDTree() {
         makeList(OSMNodes);
-
-
         //buildtree();
-
-
         //assertEquals(test.buildKDTree(OSMNodes, false).getRight(), test.buildKDTree(OSMNodes, false).getLeft());
 
         //AE(b,a.left)
         //(e,a.left.right)
 
+        //skal teste resultatet fra buildTree igennem vores RangeSearch
+        //Tegn koordinaterne på et pappir og tjek om vi får de samme
 
 
 
-        //KDTree2 kdtest = new KDTree2();
-        //KDNode test = root;
-
-        //assertEquals(test, root);
 
     }
 }

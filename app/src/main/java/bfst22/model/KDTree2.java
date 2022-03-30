@@ -7,6 +7,8 @@ public class KDTree2 {
     //Erklærer roden.
     private KDNode root;
 
+    public KDTree2() {}
+
     public KDTree2(List<OSMNode> OSMNodes) {
         // buildKDTree(OSMNodes, false);
         this.root = buildKDTree(OSMNodes, true);
