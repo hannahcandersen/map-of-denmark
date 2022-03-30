@@ -39,6 +39,10 @@ public class KDTree2 {
             }
         }
         else{
+            //Laver en ny node
+            Node node = new Node();
+            System.out.println("Laver en node");
+
             //sorter listen på x
             if(isXcoord){
                 //Vi sorterer listen OSMNodes ved at bruge sort, som tager parametren Comparator.comparing.
@@ -50,9 +54,6 @@ public class KDTree2 {
                 OSMNodes.sort(Comparator.comparing(OSMNode::getLat));
             }
 
-            //Laver en ny node
-            Node node = new Node();
-            System.out.println("Laver en node");
 
             //Finder midterste indeks af listen
             int mid = OSMNodes.size()/2;

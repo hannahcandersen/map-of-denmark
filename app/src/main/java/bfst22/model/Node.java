@@ -4,7 +4,7 @@ public class Node extends KDNode {
     private KDNode left, right;
 
     //Enten lat/y-værdien eller lon/x-værdien
-    private  float split;
+    private float split;
 
     public Node() {
         super();
