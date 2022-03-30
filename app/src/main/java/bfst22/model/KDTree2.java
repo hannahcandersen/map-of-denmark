@@ -58,6 +58,8 @@ public class KDTree2 {
             int mid = OSMNodes.size()/2;
             System.out.println("Dette er midten: " + mid);
 
+            //Sætter splitværiden
+
             //Laver left og right nodes
             node.setLeft(buildKDTree(OSMNodes.subList(0, mid), !isXcoord));
             node.setRight(buildKDTree(OSMNodes.subList(mid, OSMNodes.size()), !isXcoord));
