@@ -37,8 +37,7 @@ public class MapCanvas extends Canvas {
         }
         //InRange
         //Punkter i vinduet
-
-        Point2D screenMin = new Point2D(0, 0);
+        /*Point2D screenMin = new Point2D(0, 0);
         Point2D screenMax = new Point2D(getWidth(), getHeight());
 
         //Punkter i vinduet lavet om til coords
@@ -52,8 +51,6 @@ public class MapCanvas extends Canvas {
         var result = kdTree.rangeSearch(searchRectangle);
 
         // løb results igennem og tegn dem
-
-
 
     }
 
