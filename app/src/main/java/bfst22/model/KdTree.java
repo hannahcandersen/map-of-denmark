@@ -1,4 +1,4 @@
-package bfst22.model;
+/* package bfst22.model;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ public class KdTree<T> {
 
     //Erklærer en sammenlignelige rod af Kd-træet
     private KdNode<T> root;
+
 
     //Tom constructor
     public KdTree() {}
@@ -261,8 +262,6 @@ public class KdTree<T> {
             insert(kdNode, currentKdNode.right, !divX);
     }
 
-     */
-
     public T findMin() {
         KdNode<T> kdNode = findMin(root, true);
         if(kdNode != null)
@@ -370,8 +369,6 @@ public class KdTree<T> {
         insert(target, x, y);
     }
 
-     */
-
     public int getSize() {
         return new Object() {
             int cnt = 0;
@@ -408,3 +405,5 @@ public class KdTree<T> {
     }
 
 }
+
+*/
