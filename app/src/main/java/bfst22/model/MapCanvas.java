@@ -22,6 +22,23 @@ public class MapCanvas extends Canvas {
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() {
+        //InRange
+        //Punkter i vinduet
+        Point2D screenMin = new Point2D(0, 0);
+        Point2D screenMax = new Point2D(getWidth(), getHeight());
+
+        //Punkter i vinduet lavet om til coords
+        Point2D realMin = mouseToModel(screenMin);
+        Point2D realMax = mouseToModel(screenMax);
+
+        //Opretter en rectangle med de koordinater der er inden for rectangle
+        Rectangle searchRectangle = new Rectangle(realMin.getX(), realMax.getX(), realMax.getY(), realMin.getY());
+
+        KDTree2 kdTree = new KDTree2();
+        var result = kdTree.rangeSearch(searchRectangle);
+
+        // løb results igennem og tegn dem
+
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
         gc.setFill(Color.WHITE);
@@ -35,6 +52,7 @@ public class MapCanvas extends Canvas {
         for (var line : model.iterable(WayType.UNKNOWN)) {
             line.draw(gc);
         }
+
     }
 
     public void pan(double dx, double dy) {
