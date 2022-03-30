@@ -42,6 +42,7 @@ class KDTree2Test {
     @Test
     void buildKDTree() {
         makeList(OSMNodes);
+        //buildtree();
 
         //assertEquals(o7,o1.left);
 
