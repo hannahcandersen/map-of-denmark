@@ -16,7 +16,7 @@ public class KDTree2 {
         return root;
     }
 
-    //Metode til at bygge kdTree
+    //////////////////// BULDING KDTREE ///////////////////////
     public static KDNode buildKDTree(List<OSMNode> OSMNodes, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if(OSMNodes == null || OSMNodes.size() == 0) {
@@ -78,6 +78,12 @@ public class KDTree2 {
         }
 
         return kdNode;
+    }
+
+    ////////////////////RANGE SEARCH ///////////////////////
+    public List<OSMNode> rangeSearch(){
+        return null;
+
     }
 
 
