@@ -79,7 +79,7 @@ public class Model {
         if (!filename.endsWith(".obj")) save(filename);
 
         //Bygger KDTree
-        KDTree2.buildKDTree(id2node, false);
+        KDTree2.buildKDTree(id2node, true);
 
 
     }
