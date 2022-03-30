@@ -9,7 +9,7 @@ public class KDTree2 {
 
     public KDTree2(List<OSMNode> OSMNodes) {
         // buildKDTree(OSMNodes, false);
-        this.root = buildKDTree(OSMNodes, false);
+        this.root = buildKDTree(OSMNodes, true);
     }
 
     public KDNode getRoot() {

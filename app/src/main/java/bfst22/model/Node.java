@@ -1,7 +1,10 @@
 package bfst22.model;
 
 public class Node extends KDNode {
-    private KDNode root, left, right;
+    private KDNode left, right;
+
+    //Enten lat/y-værdien eller lon/x-værdien
+    private  float split;
 
     public Node() {
         super();

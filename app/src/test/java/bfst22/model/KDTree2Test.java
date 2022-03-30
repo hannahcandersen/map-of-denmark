@@ -1,6 +1,8 @@
 package bfst22.model;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.OS;
+
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,9 +12,9 @@ class KDTree2Test {
 
     List<OSMNode> OSMNodes = new ArrayList<>();
     OSMNode o1, o2, o3, o4, o5, o6, o7;
+    KDTree2 test = new KDTree2(OSMNodes);
 
-
-    public void makeList(List<OSMNode> OSMNodes) {
+    public List<OSMNode> makeList(List<OSMNode> OSMNodes) {
         o1 = new OSMNode(1, 2, 3);
         o2 = new OSMNode(2, 1, 4);
         o3 = new OSMNode(3, 2, 1);
@@ -29,9 +31,8 @@ class KDTree2Test {
         OSMNodes.add(o6);
         OSMNodes.add(o7);
 
-        //return OSMNodes;
+        return OSMNodes;
     }
-
 
 
     @Test
@@ -42,8 +43,9 @@ class KDTree2Test {
     @Test
     void buildKDTree() {
         makeList(OSMNodes);
+        test.buildKDTree(OSMNodes, false);
 
-        //assertEquals(o7,o1.left);
+        //assertEquals(test.buildKDTree(OSMNodes, false).getRight(), test.buildKDTree(OSMNodes, false).getLeft());
 
         //AE(b,a.left)
         //(e,a.left.right)
@@ -57,6 +59,4 @@ class KDTree2Test {
         //assertEquals(test, root);
 
     }
-
-
 }
