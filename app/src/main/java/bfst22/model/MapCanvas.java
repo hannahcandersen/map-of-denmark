@@ -49,10 +49,14 @@ public class MapCanvas extends Canvas {
         repaint();
     }
 
+    //oversætter window koordinater til model koordinater
     public Point2D mouseToModel(Point2D point) {
         try {
             return trans.inverseTransform(point);
         } catch (NonInvertibleTransformException e) {
+            //ikke alle lineære transformer kan transverteres, derfor kaster den denne exception
+            //men Troels er så sikker på, at dette ikke vil ske, så hvis det sker skal programmet bare crashe
+            //dette er en Java funktion, som udkommenterer "this can not happen"
             throw new RuntimeException(e);
         }
     }
