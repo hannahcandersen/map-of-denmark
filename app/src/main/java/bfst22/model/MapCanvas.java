@@ -22,18 +22,18 @@ public class MapCanvas extends Canvas {
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() {
-        var gc = getGraphicsContext2D(); //Får en "kuglepen"
+        var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans); //
         gc.setFill(Color.LIGHTBLUE);
         for (var line : model.iterable(WayType.LAKE)) {
-            line.fill(gc); //henter alle lakes fra Model og tegner dem
+            line.fill(gc);
         }
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
         for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc); //henter alle "unknown" fra Model og tegner dem
+            line.draw(gc);
         }
         //InRange
         //Punkter i vinduet
@@ -56,11 +56,10 @@ public class MapCanvas extends Canvas {
     }
 
     public void pan(double dx, double dy) {
-        trans.prependTranslation(dx, dy); //"Skubber" det hele et hvis antal pixels
+        trans.prependTranslation(dx, dy);
         repaint();
     }
 
-    // Zoomer med en faktor
     public void zoom(double factor, double x, double y) {
         trans.prependTranslation(-x, -y);
         trans.prependScale(factor, factor);
@@ -68,7 +67,6 @@ public class MapCanvas extends Canvas {
         repaint();
     }
 
-    // Finder kortets koordinater ud fra skærmkoordinater
     public Point2D mouseToModel(Point2D point) {
         try {
             return trans.inverseTransform(point);
