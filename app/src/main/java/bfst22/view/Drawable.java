@@ -8,9 +8,9 @@ public interface Drawable {
     //Default svarer til et "else" statement hvilket betyder at den udfører den handling uanset hvad.
     //Metoden draw
     default void draw(GraphicsContext gc) {
-        gc.beginPath();
+        gc.beginPath(); //Starter med at tegne
         trace(gc);
-        gc.stroke();
+        gc.stroke(); //Udfører tegneoperationerne
     }
     default void fill(GraphicsContext gc) {
         gc.beginPath();
