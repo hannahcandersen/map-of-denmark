@@ -36,7 +36,7 @@ public class Controller {
     public void onMouseDragged(MouseEvent e) {
         var dx = e.getX() - lastMouse.getX();
         var dy = e.getY() - lastMouse.getY();
-        canvas.pan(dx, dy); //Kalder pan-metoden fra mapCanvas, der flytter i kortet
+        canvas.pan(dx, dy);
         lastMouse = new Point2D(e.getX(), e.getY());
     }
     //Gør det muligt for brugeren at klikke på kortet, når der klikkes opdateres "lastmouse" med de nye klik-koordinater.
