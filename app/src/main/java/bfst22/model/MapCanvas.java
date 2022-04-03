@@ -42,6 +42,7 @@ public class MapCanvas extends Canvas {
         repaint();
     }
 
+    // Zoomer med en given faktor
     public void zoom(double factor, double x, double y) {
         trans.prependTranslation(-x, -y);
         trans.prependScale(factor, factor);
