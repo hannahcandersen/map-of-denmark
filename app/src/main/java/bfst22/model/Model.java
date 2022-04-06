@@ -42,7 +42,9 @@ public class Model {
 
     NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
 
-    KDNode KDTree;
+    // Alle KDtræer
+    KDNode KDTreeLAKE, KDTreeUNKNOWN;
+
     // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
 
@@ -80,8 +82,10 @@ public class Model {
         if (!filename.endsWith(".obj")) save(filename);
 
         //Bygger KDTree og gemmer det i feltet KDTree
-        //KDTree = KDTree2.buildKDTree(id2node, true);
-
+        KDTreeLAKE = KDTree2.buildKDTree(lines.get(WayType.LAKE), true);
+        System.out.println("Har bygget KDTreeLAKE done");
+        KDTreeUNKNOWN = KDTree2.buildKDTree(lines.get(WayType.UNKNOWN), true);
+        System.out.println("Har bygget KDTreeUNKNOWN done");
 
     }
 

@@ -1,17 +1,17 @@
 package bfst22.model;
 
-//
 import bfst22.view.Drawable;
 import java.util.*;
 
-/*
-public class KDTree2 {}
+public class KDTree2 {
 
     //Erklærer roden.
-    //private static KDNode root;
+    private static KDNode root;
 
 
-    public KDTree2() {}
+    public KDTree2() {
+    }
+
     public KDTree2(List<Drawable> drawables) {
         // buildKDTree(OSMNodes, false);
         this.root = buildKDTree(drawables, true);
@@ -24,7 +24,7 @@ public class KDTree2 {}
     //////////////////// BULDING KDTREE ///////////////////////
     public static KDNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
-        if(drawables == null || drawables.size() == 0) {
+        if (drawables == null || drawables.size() == 0) {
             System.out.println("OSMNode list is empty!");
             return null;
         }
@@ -34,45 +34,41 @@ public class KDTree2 {}
         KDNode kdNode;
 
         // Laver leaves
-        if(drawables.size() < 1000){
+        if (drawables.size() < 1000) {
             kdNode = new Leaf(drawables);
             System.out.println("Laver et blad");
-            
-            //Test - printer hvert blad
-            for(int i = 0; i < drawables.size(); i++) {
-                System.out.print("(" + drawables.get(i).getLon());
-                System.out.println(" , " + drawables.get(i).getLat() + ")");
 
-                //System.out.println(((Leaf) kdNode).getListOfOSMNodes());
+            //Test - printer hvert blad
+            /*for(int i = 0; i < drawables.size(); i++) {
+                System.out.print("(" + drawables.get(i).getLon());
+                System.out.println(" , " + drawables.get(i).getLat() + ")"); */
+
+            //System.out.println(((Leaf) kdNode).getListOfOSMNodes());
             //}
-        }
-        else{
+        } else {
             //Laver en ny node
             Node node = new Node();
             System.out.println("Laver en node");
 
             //sorter listen på x
-            if(isXcoord){
+            if (isXcoord) {
                 //Vi sorterer listen drawables ved at bruge sort, som tager parametren Comparator.comparing.
                 //Den fortæller at vi skal hive fat i OSMNode-klassen og kalde getLon-metoden. Sorter på x.
                 drawables.sort(Comparator.comparing(Drawable::getMiddleX));
-            }
-            else{
+            } else {
                 //sorter listen på y
                 drawables.sort(Comparator.comparing(Drawable::getMiddleY));
             }
 
-
             //Finder midterste indeks af listen
-            int mid = drawables.size()/2;
+            int mid = drawables.size() / 2;
             System.out.println("Dette er midten: " + mid);
 
             //Sætter splitværdien
-            if(isXcoord){
+            if (isXcoord) {
                 node.setSplit(drawables.get(mid).getMiddleX());
                 System.out.println("SplitX: " + node.getSplit());
-            }
-            else{ //!isXcoord
+            } else { //!isXcoord
                 node.setSplit(drawables.get(mid).getMiddleY());
                 System.out.println("SplitY: " + node.getSplit());
             }
@@ -86,12 +82,12 @@ public class KDTree2 {}
         return kdNode;
     }
 }
-*/
 
+    /*
     //////////////////// RANGE SEARCH ///////////////////////
 
     //Public den der kaldt i MapCanvas
-   /* public static List<OSMNode> rangeSearch(Rectangle rectangle) {
+    public static List<OSMNode> rangeSearch(Rectangle rectangle) {
         // kald den anden rangesearch, der returner en lsite med inrange resultaterne
         return rangeSearch(rectangle, root, true, new ArrayList<>());
     }
@@ -183,5 +179,6 @@ public class KDTree2 {}
 
         KDTree2 test = new KDTree2(OSMNodesTEST);
     }
+}
 
-} */
+     */

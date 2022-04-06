@@ -16,10 +16,9 @@ public class MultiPolygon implements Drawable, Serializable {
 
         Det er ligemeget hvilke tal vi giver den
      */
-    float currentMinX = 0;
-    float currentMaxX = 0;
-    float currentMinY = 0;
-    float currentMaxY = 0;
+
+    float totalX;
+    float totalY;
 
     public static final long serialVersionUID = 1325234;
     List<Drawable> parts = new ArrayList<>();
@@ -29,29 +28,15 @@ public class MultiPolygon implements Drawable, Serializable {
     public MultiPolygon(ArrayList<OSMWay> rel) {
         for (OSMWay way : rel) {
             parts.add(new PolyLine(way.getNodes())); //Her får vi x-,y-kooordinaterne fra PolyLine klassen
+            totalX = 0;
+            totalY = 0;
 
-            for (OSMNode node : OSMWay.getNodes()){
-                multiPolygonNodes.add(node);
-                //Opdatere currentMaxY EVT skriver: <
-                if (node.getLat() > currentMaxY){
-                    currentMaxY = node.getLat();
-                    System.out.println("MultiPolygonCurrentMaxY: " + currentMaxY);
-                }
-                else if(node.getLat() < currentMinY){
-                    currentMinY = node.getLat();
-                    System.out.println("MultiPolygonCurrentMinY: " + currentMinY);
-                }
-                else if(node.getLon() > currentMaxX){
-                    currentMaxX = node.getLon();
-                    System.out.println("MultiPolygonCurrentMaxX: " + currentMaxX);
-                }
-                else if(node.getLon() < currentMinX){
-                    currentMinX = node.getLon();
-                    System.out.println("MultiPolygonCurrentMinX: " + currentMinX);
-                }
-            }
+            totalX += way.getMiddleX();
+            totalY += way.getMiddleY();
+
         }
     }
+
 
     @Override
     //Tegner
@@ -61,12 +46,16 @@ public class MultiPolygon implements Drawable, Serializable {
 
     @Override
     public float getMiddleX(){
-        return (currentMaxX + currentMinX) / 2 ;
+
+        //Måske bare size
+        return (totalX/parts.size());
     }
 
     @Override
     public float getMiddleY(){
-        return (currentMaxY + currentMinY) / 2;
+
+        //Måske bare size
+        return (totalY/parts.size());
     }
 
 
