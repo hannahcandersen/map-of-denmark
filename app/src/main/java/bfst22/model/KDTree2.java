@@ -1,17 +1,19 @@
 package bfst22.model;
 
+import bfst22.view.Drawable;
 import java.util.*;
 
-public class KDTree2 {
+/*
+public class KDTree2 {}
 
     //Erklærer roden.
-    private static KDNode root;
+    //private static KDNode root;
+
 
     public KDTree2() {}
-
-    public KDTree2(List<OSMNode> OSMNodes) {
+    public KDTree2(List<Drawable> drawables) {
         // buildKDTree(OSMNodes, false);
-        this.root = buildKDTree(OSMNodes, true);
+        this.root = buildKDTree(drawables, true);
     }
 
     public KDNode getRoot() {
@@ -19,9 +21,9 @@ public class KDTree2 {
     }
 
     //////////////////// BULDING KDTREE ///////////////////////
-    public static KDNode buildKDTree(List<OSMNode> OSMNodes, boolean isXcoord) {
+    public static KDNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
-        if(OSMNodes == null || OSMNodes.size() == 0) {
+        if(drawables == null || drawables.size() == 0) {
             System.out.println("OSMNode list is empty!");
             return null;
         }
@@ -30,15 +32,17 @@ public class KDTree2 {
         KDNode kdNode;
 
         // Laver leaves
-        if(OSMNodes.size() < 1000){
-            kdNode = new Leaf(OSMNodes);
+        if(drawables.size() < 1000){
+            kdNode = new Leaf(drawables);
             System.out.println("Laver et blad");
-            for(int i = 0; i < OSMNodes.size(); i++) {
-                System.out.print("(" + OSMNodes.get(i).getLon());
-                System.out.println(" , " + OSMNodes.get(i).getLat() + ")");
+            
+            //Test - printer hvert blad
+            for(int i = 0; i < drawables.size(); i++) {
+                System.out.print("(" + drawables.get(i).getLon());
+                System.out.println(" , " + drawables.get(i).getLat() + ")");
 
                 //System.out.println(((Leaf) kdNode).getListOfOSMNodes());
-            }
+            //}
         }
         else{
             //Laver en ny node
@@ -47,45 +51,45 @@ public class KDTree2 {
 
             //sorter listen på x
             if(isXcoord){
-                //Vi sorterer listen OSMNodes ved at bruge sort, som tager parametren Comparator.comparing.
+                //Vi sorterer listen drawables ved at bruge sort, som tager parametren Comparator.comparing.
                 //Den fortæller at vi skal hive fat i OSMNode-klassen og kalde getLon-metoden. Sorter på x.
-                OSMNodes.sort(Comparator.comparing(OSMNode::getLon));
+                drawables.sort(Comparator.comparing(Drawable::getMiddleX));
             }
             else{
                 //sorter listen på y
-                OSMNodes.sort(Comparator.comparing(OSMNode::getLat));
+                drawables.sort(Comparator.comparing(Drawable::getMiddleY));
             }
 
 
             //Finder midterste indeks af listen
-            int mid = OSMNodes.size()/2;
+            int mid = drawables.size()/2;
             System.out.println("Dette er midten: " + mid);
 
             //Sætter splitværdien
             if(isXcoord){
-                node.setSplit(OSMNodes.get(mid).getLon());
+                node.setSplit(drawables.get(mid).getMiddleX());
                 System.out.println("SplitX: " + node.getSplit());
             }
             else{ //!isXcoord
-                node.setSplit(OSMNodes.get(mid).getLat());
+                node.setSplit(drawables.get(mid).getMiddleY());
                 System.out.println("SplitY: " + node.getSplit());
             }
 
             //Laver left og right nodes
-            node.setLeft(buildKDTree(OSMNodes.subList(0, mid), !isXcoord));
-            node.setRight(buildKDTree(OSMNodes.subList(mid, OSMNodes.size()), !isXcoord));
+            node.setLeft(buildKDTree(drawables.subList(0, mid), !isXcoord));
+            node.setRight(buildKDTree(drawables.subList(mid, drawables.size()), !isXcoord));
 
             kdNode = node;
-
         }
-
         return kdNode;
     }
+}
+*/
 
     //////////////////// RANGE SEARCH ///////////////////////
 
     //Public den der kaldt i MapCanvas
-    public static List<OSMNode> rangeSearch(Rectangle rectangle) {
+   /* public static List<OSMNode> rangeSearch(Rectangle rectangle) {
         // kald den anden rangesearch, der returner en lsite med inrange resultaterne
         return rangeSearch(rectangle, root, true, new ArrayList<>());
     }
@@ -118,12 +122,12 @@ public class KDTree2 {
 
                 }
                 // Over? - større end maxLon (((rectangle.getMaxLon())))
-                if(((Node) splitNode).getSplit() > rectangle.getMaxLon()) {
+                else if (((Node) splitNode).getSplit() > rectangle.getMaxLon()) {
                     //Gå til venstre
                     rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                 }
                 //Under? - mindre end minLon
-                if(((Node) splitNode).getSplit() < rectangle.getMinLon()) {
+                else if(((Node) splitNode).getSplit() < rectangle.getMinLon()) {
                     //Gå til højre
                     rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
                 }
@@ -141,12 +145,12 @@ public class KDTree2 {
 
                 }
                 // Over? - større end maxLon (((rectangle.getMaxLon())))
-                if(((Node) splitNode).getSplit() > rectangle.getMaxLat()) {
+                else if(((Node) splitNode).getSplit() > rectangle.getMaxLat()) {
                     //Gå til venstre
                     rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                 }
                 //Under? - mindre end minLon
-                if(((Node) splitNode).getSplit() < rectangle.getMinLat()) {
+                else if(((Node) splitNode).getSplit() < rectangle.getMinLat()) {
                     //Gå til højre
                     rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
                 }
@@ -178,4 +182,4 @@ public class KDTree2 {
         KDTree2 test = new KDTree2(OSMNodesTEST);
     }
 
-}
+} */

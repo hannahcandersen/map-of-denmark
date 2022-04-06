@@ -1,6 +1,10 @@
 package bfst22.view;
+import bfst22.model.OSMNode;
 
 import javafx.scene.canvas.GraphicsContext;
+
+import java.util.ArrayList;
+
 //Canvas = lærred
 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/GraphicsContext.html
 //Klassen Drawable er et interface som bruger GraphicsContext til at tegne scenen/lærred.
@@ -17,5 +21,11 @@ public interface Drawable {
         trace(gc);
         gc.fill();
     }
+
     void trace(GraphicsContext gc);
+
+    //Bruges til at finde vejens midtpunkt
+    public float getMiddleX();
+    public float getMiddleY();
+
 }

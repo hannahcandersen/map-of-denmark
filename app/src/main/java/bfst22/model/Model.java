@@ -80,7 +80,7 @@ public class Model {
         if (!filename.endsWith(".obj")) save(filename);
 
         //Bygger KDTree og gemmer det i feltet KDTree
-        KDTree = KDTree2.buildKDTree(id2node, true);
+        //KDTree = KDTree2.buildKDTree(id2node, true);
 
 
     }

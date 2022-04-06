@@ -1,5 +1,7 @@
 package bfst22.model;
 
+import bfst22.view.Drawable;
+
 import java.util.List;
 
 /*
@@ -8,15 +10,15 @@ import java.util.List;
 */
 
 public class Leaf extends KDNode {
-        protected List<OSMNode> listOfOSMNodes;
+        protected List<Drawable> listOfDrawables;
 
-        public Leaf(List<OSMNode> leaves){
+        public Leaf(List<Drawable> leaves){
                 super();
-                this.listOfOSMNodes = leaves;
+                this.listOfDrawables = leaves;
         }
 
-        public List<OSMNode> getListOfOSMNodes(){
-                return listOfOSMNodes;
-        }
+        public List<Drawable> getListOfDrawables() {
+                return listOfDrawables;
 
+        }
 }

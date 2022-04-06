@@ -11,10 +11,13 @@ import java.util.List;
 
 public class OSMWay implements Serializable {
     public static final long serialVersionUID = 42;
+    private static ArrayList<OSMNode> nodes;
 
-    //List af OSMNodes.
-    List<OSMNode> nodes;
-    public OSMWay(List<OSMNode> nodes) {
+    public OSMWay(ArrayList<OSMNode> nodes) {
         this.nodes = new ArrayList<>(nodes);
+    }
+
+    public static ArrayList<OSMNode> getNodes() {
+        return nodes;
     }
 }

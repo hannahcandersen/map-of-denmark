@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class KDTree2Test {
 
-    List<OSMNode> OSMNodes = new ArrayList<>();
+   /* List<OSMNode> OSMNodes = new ArrayList<>();
     OSMNode o1, o2, o3, o4, o5, o6, o7;
     KDTree2 test = new KDTree2(OSMNodes);
 
@@ -56,4 +56,6 @@ class KDTree2Test {
 
 
     }
+
+    */
 }

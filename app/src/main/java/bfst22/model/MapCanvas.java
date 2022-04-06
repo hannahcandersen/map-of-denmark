@@ -1,5 +1,6 @@
 package bfst22.model;
 
+import com.sun.scenario.effect.impl.prism.ps.PPSBlend_BLUEPeer;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -25,28 +26,32 @@ public class MapCanvas extends Canvas {
 
         //Får punkterne i vinduet
         //PLUS 20 OG MINUS 20 SKAL FJERNES I DEN ENDELIGE LØSNING
-        Point2D screenMin = new Point2D(20, -20);
-        Point2D screenMax = new Point2D(getWidth()+20, getHeight()-20);
+        //Point2D screenMin = new Point2D(20, -20);
+        //Point2D screenMax = new Point2D(getWidth()+20, getHeight()-20);
 
         //Punkter i vinduet lavet om til coords
-        Point2D realMin = mouseToModel(screenMin);
-        Point2D realMax = mouseToModel(screenMax);
+        //Point2D realMin = mouseToModel(screenMin);
+        //Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en rectangle med de koordinater der er inden for rectangle
-        Rectangle searchRectangle = new Rectangle(realMin.getX(), realMax.getX(), realMax.getY(), realMin.getY());
+        //Rectangle searchRectangle = new Rectangle(realMin.getX(), realMax.getX(), realMax.getY(), realMin.getY());
 
         //Result listen, med de punkter der er inRange
-        var result = KDTree2.rangeSearch(searchRectangle);
+        //var result = KDTree2.rangeSearch(searchRectangle);
 
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
+
+        //gc.strokeLine(realMin.getX(), realMin.getY(), realMax.getX(), realMax.getY());
+
         gc.setTransform(trans); //
         gc.setFill(Color.LIGHTBLUE);
 
 
+        //
         //Tegner lake
         for (var line : model.iterable(WayType.LAKE)) {
             line.fill(gc);
@@ -84,7 +89,7 @@ public class MapCanvas extends Canvas {
         try {
             return trans.inverseTransform(point);
         } catch (NonInvertibleTransformException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("her er fejlen" + e);
         }
     }
 }
