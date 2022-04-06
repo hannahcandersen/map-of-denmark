@@ -1,6 +1,8 @@
 package bfst22.model;
 
+import bfst22.view.Drawable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 
 public class Rectangle extends Canvas {
@@ -44,6 +46,7 @@ public class Rectangle extends Canvas {
     public void setMaxLat(float maxLat) {
         this.maxLat = maxLat;
     }
+
 
     //En metode til at tegne firkantens omkreds
 

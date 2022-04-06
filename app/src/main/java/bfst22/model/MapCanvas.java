@@ -38,8 +38,8 @@ public class MapCanvas extends Canvas {
         Point2D screenMax = new Point2D(getWidth()-200, getHeight()-200);
 
         //Punkter i vinduet lavet om til coords
-        //Point2D realMin = mouseToModel(screenMin);
-        //Point2D realMax = mouseToModel(screenMax);
+        Point2D realMin = mouseToModel(screenMin);
+        Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en rectangle med de koordinater der er inden for rectangle
         Rectangle searchRectangle = new Rectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
@@ -107,7 +107,7 @@ public class MapCanvas extends Canvas {
         try {
             return trans.inverseTransform(point);
         } catch (NonInvertibleTransformException e) {
-            throw new RuntimeException("her er fejlen" + e);
+            throw new RuntimeException(e);
         }
     }
 }
