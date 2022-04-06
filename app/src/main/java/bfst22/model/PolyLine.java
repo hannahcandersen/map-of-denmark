@@ -15,10 +15,10 @@ import javafx.scene.canvas.GraphicsContext;
  */
 
 public class PolyLine implements Drawable, Serializable {
-    float currentMinX = 0;
-    float currentMaxX = 0;
-    float currentMinY = 0;
-    float currentMaxY = 0;
+    float currentMinX;
+    float currentMaxX;
+    float currentMinY;
+    float currentMaxY;
 
     public static final long serialVersionUID = 134123;
     //Programmet skal kun huske en sekvens af floats koordinater
@@ -33,7 +33,14 @@ public class PolyLine implements Drawable, Serializable {
         //Opretter et nyt float-array.
         //Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
         coords = new float[nodes.size() * 2];
+
         int i = 0;
+
+        currentMinX = nodes.get(0).getLon();
+        currentMaxX = nodes.get(0).getLon();
+        currentMinY = nodes.get(0).getLat();
+        currentMaxY = nodes.get(0).getLat();
+        
         //Gemmer alle lat og lon koordinater (x-,y-koordinater) fra OSMNode-listen i float-arrayet
         for (var node : nodes) {
 
@@ -41,13 +48,13 @@ public class PolyLine implements Drawable, Serializable {
             if (node.getLat() > currentMaxY){
                 currentMaxY = node.getLat();
             }
-            else if(node.getLat() < currentMinY){
+            if(node.getLat() < currentMinY){
                 currentMinY = node.getLat();
             }
-            else if(node.getLon() > currentMaxX){
+            if(node.getLon() > currentMaxX){
                 currentMaxX = node.getLon();
             }
-            else if(node.getLon() < currentMinX){
+            if(node.getLon() < currentMinX){
                 currentMinX = node.getLon();
             }
 
@@ -69,7 +76,7 @@ public class PolyLine implements Drawable, Serializable {
     //Bruges til at finde vejens midtpunkt
     @Override
     public float getMiddleX(){
-        return (currentMaxY + currentMinX) / 2;
+        return (currentMaxX + currentMinX) / 2;
     }
 
     @Override

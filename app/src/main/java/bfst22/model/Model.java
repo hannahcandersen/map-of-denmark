@@ -1,7 +1,7 @@
 package bfst22.model;
 
 import bfst22.view.Drawable;
-import bfst22.model.KDTree2;
+// import bfst22.model.KDTree2;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,6 +29,7 @@ import java.io.ObjectOutputStream;
 import static java.util.stream.Collectors.toList;
 
 public class Model {
+    private final KDNode KDTreeUNKNOWN;
 
     //Felter:
 
@@ -43,7 +44,7 @@ public class Model {
     NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
 
     // Alle KDtræer
-    KDNode KDTreeLAKE, KDTreeUNKNOWN;
+    private static KDNode KDTreeLAKE;
 
     // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
@@ -82,8 +83,8 @@ public class Model {
         if (!filename.endsWith(".obj")) save(filename);
 
         //Bygger KDTree og gemmer det i feltet KDTree
-        KDTreeLAKE = KDTree2.buildKDTree(lines.get(WayType.LAKE), true);
-        System.out.println("Har bygget KDTreeLAKE done");
+        //KDTreeLAKE = KDTree2.buildKDTree(lines.get(WayType.LAKE), true);
+        //System.out.println("Har bygget KDTreeLAKE done");
         KDTreeUNKNOWN = KDTree2.buildKDTree(lines.get(WayType.UNKNOWN), true);
         System.out.println("Har bygget KDTreeUNKNOWN done");
 
@@ -158,7 +159,7 @@ public class Model {
                         case "tag":
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
-                            if (k.equals("natural") && v.equals("water")) type = WayType.LAKE; // sætter WayType til LAKE
+                            if (k.equals("water") && v.equals("lake")) type = WayType.LAKE; // sætter WayType til LAKE
                             break;
                         // relations har member-tags, der referer til
                         case "member":
@@ -215,5 +216,9 @@ public class Model {
     // iterator over types
     public Iterable<Drawable> iterable(WayType type) {
         return lines.get(type);
+    }
+
+    public static KDNode getKDTreeLAKE() {
+        return KDTreeLAKE;
     }
 }

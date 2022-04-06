@@ -7,6 +7,7 @@ public class KDTree2 {
 
     //Erklærer roden.
     private static KDNode root;
+    static int leavesAdded = 0;
 
 
     public KDTree2() {
@@ -79,30 +80,39 @@ public class KDTree2 {
 
             kdNode = node;
         }
+        root = kdNode;
         return kdNode;
     }
-}
 
-    /*
+
     //////////////////// RANGE SEARCH ///////////////////////
 
     //Public den der kaldt i MapCanvas
-    public static List<OSMNode> rangeSearch(Rectangle rectangle) {
-        // kald den anden rangesearch, der returner en lsite med inrange resultaterne
+    //RangeSearch der tager rectangle og root
+    public static List<Drawable> rangeSearch(Rectangle rectangle, KDNode root) {
+        // kald den anden rangesearch, der returner en liste med inrange resultaterne
         return rangeSearch(rectangle, root, true, new ArrayList<>());
     }
 
-    //Metode der returner en liste
-    private static List<OSMNode> rangeSearch(Rectangle rectangle, KDNode splitNode, boolean isXcoord, List<OSMNode> result){
-       if (splitNode == null){
-           System.out.println("splitnode er tom!!!");
-           return null;
-       }
+    // RangeSearch der kun tager rectangle
+    public static List<Drawable> rangeSearch(Rectangle rectangle) {
+        // kald den anden rangesearch, der returner en liste med inrange resultaterne
+        leavesAdded = 0;
+        return rangeSearch(rectangle, root, true, new ArrayList<>());
+    }
+
+    //Privat RangeSearch metode
+       private static List<Drawable> rangeSearch(Rectangle rectangle, KDNode splitNode, boolean isXcoord, List<Drawable> result){
+            if (splitNode == null){
+                System.out.println("splitnode er tom!!!");
+                return null;
+            }
 
         //Hvis vores splitnode er en leaf, tilføj leaf(s) til result listen
         if (splitNode instanceof Leaf){
             //Caster KDnode splitNode om til et leaf.
-            result.add((OSMNode) ((Leaf) splitNode).getListOfOSMNodes());
+            result.addAll(((Leaf) splitNode).getListOfDrawables());
+            leavesAdded++;
         }
 
         //Ellers er vores splitnode en splitnode, og vi skal kalde rekursivt ned gennem træet
@@ -158,6 +168,8 @@ public class KDTree2 {
     }
 
 
+
+    /*
     public static void main(String[] args) {
         List<OSMNode> OSMNodesTEST = new ArrayList<>();
 
@@ -179,6 +191,6 @@ public class KDTree2 {
 
         KDTree2 test = new KDTree2(OSMNodesTEST);
     }
-}
 
      */
+}

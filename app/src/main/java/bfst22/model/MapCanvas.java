@@ -1,11 +1,19 @@
 package bfst22.model;
 
+import bfst22.view.Drawable;
 import com.sun.scenario.effect.impl.prism.ps.PPSBlend_BLUEPeer;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
+import java.awt.Graphics;
+import bfst22.model.Model;
+import javafx.scene.transform.Transform;
+
+import java.awt.geom.Rectangle2D;
 
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
@@ -26,52 +34,62 @@ public class MapCanvas extends Canvas {
 
         //Får punkterne i vinduet
         //PLUS 20 OG MINUS 20 SKAL FJERNES I DEN ENDELIGE LØSNING
-        //Point2D screenMin = new Point2D(20, -20);
-        //Point2D screenMax = new Point2D(getWidth()+20, getHeight()-20);
+        Point2D screenMin = new Point2D(200, 200);
+        Point2D screenMax = new Point2D(getWidth()-200, getHeight()-200);
 
         //Punkter i vinduet lavet om til coords
         //Point2D realMin = mouseToModel(screenMin);
         //Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en rectangle med de koordinater der er inden for rectangle
-        //Rectangle searchRectangle = new Rectangle(realMin.getX(), realMax.getX(), realMax.getY(), realMin.getY());
+        Rectangle searchRectangle = new Rectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
+        System.out.println(searchRectangle);
 
-        //Result listen, med de punkter der er inRange
-        //var result = KDTree2.rangeSearch(searchRectangle);
+        //Result listen, med de drawables der er inRange
+        var result = KDTree2.rangeSearch(searchRectangle);
+        System.out.println("leaves added: " + KDTree2.leavesAdded);
 
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
+
+        //laver baggrunden
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
+        gc.setTransform(trans);
 
-        //gc.strokeLine(realMin.getX(), realMin.getY(), realMax.getX(), realMax.getY());
-
-        gc.setTransform(trans); //
-        gc.setFill(Color.LIGHTBLUE);
-
-
-        //
-        //Tegner lake
-        for (var line : model.iterable(WayType.LAKE)) {
-            line.fill(gc);
-        }
-
-        //Tegner alle linjer
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc);
-        }
-
-
-
-        ///////////////// MANGLER AT FÅ FAT PÅ id2node LISTEN
-        //KDTree2 kdTree = new KDTree2();
-        //
+        Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
+        gc.setFill(Color.BLACK);
+        gc.fillRect(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
 
         // løb results igennem og tegn dem
+        gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
+        for (Drawable drawable : result) { // virker ikke lige nu fordi result er null??
+            drawable.draw(gc);
+        }
 
-    }
+
+
+
+
+
+
+
+
+
+            /*for (var lakes : model.iterable(WayType.LAKE)) {
+                lakes.fill(gc);
+            }
+
+            //Tegner alle linjer
+            gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
+            for (var line : model.iterable(WayType.UNKNOWN)) {
+                line.draw(gc);
+            }*/
+
+
+        }
+
 
     public void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
