@@ -22,23 +22,11 @@ public class MapCanvas extends Canvas {
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() {
-        var gc = getGraphicsContext2D();
-        gc.setTransform(new Affine());
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, getWidth(), getHeight());
-        gc.setTransform(trans); //
-        gc.setFill(Color.LIGHTBLUE);
-        for (var line : model.iterable(WayType.LAKE)) {
-            line.fill(gc);
-        }
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        for (var line : model.iterable(WayType.UNKNOWN)) {
-            line.draw(gc);
-        }
-        //InRange
-        //Punkter i vinduet
-        /*Point2D screenMin = new Point2D(0, 0);
-        Point2D screenMax = new Point2D(getWidth(), getHeight());
+
+        //Får punkterne i vinduet
+        //PLUS 20 OG MINUS 20 SKAL FJERNES I DEN ENDELIGE LØSNING
+        Point2D screenMin = new Point2D(20, -20);
+        Point2D screenMax = new Point2D(getWidth()+20, getHeight()-20);
 
         //Punkter i vinduet lavet om til coords
         Point2D realMin = mouseToModel(screenMin);
@@ -47,9 +35,34 @@ public class MapCanvas extends Canvas {
         //Opretter en rectangle med de koordinater der er inden for rectangle
         Rectangle searchRectangle = new Rectangle(realMin.getX(), realMax.getX(), realMax.getY(), realMin.getY());
 
+        //Result listen, med de punkter der er inRange
+        var result = KDTree2.rangeSearch(searchRectangle);
+
+        //Sætter de generelle indstillinger for MapCanvas
+        var gc = getGraphicsContext2D();
+        gc.setTransform(new Affine());
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, getWidth(), getHeight());
+        gc.setTransform(trans); //
+        gc.setFill(Color.LIGHTBLUE);
+
+
+        //Tegner lake
+        for (var line : model.iterable(WayType.LAKE)) {
+            line.fill(gc);
+        }
+
+        //Tegner alle linjer
+        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        for (var line : model.iterable(WayType.UNKNOWN)) {
+            line.draw(gc);
+        }
+
+
+
         ///////////////// MANGLER AT FÅ FAT PÅ id2node LISTEN
-        KDTree2 kdTree = new KDTree2();
-        var result = kdTree.rangeSearch(searchRectangle); */
+        //KDTree2 kdTree = new KDTree2();
+        //
 
         // løb results igennem og tegn dem
 

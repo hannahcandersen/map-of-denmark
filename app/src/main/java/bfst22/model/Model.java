@@ -42,6 +42,7 @@ public class Model {
 
     NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
 
+    KDNode KDTree;
     // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
 
@@ -78,8 +79,8 @@ public class Model {
         // gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
         if (!filename.endsWith(".obj")) save(filename);
 
-        //Bygger KDTree - DET SKAL VI NOK IKKE GØRE I MODEL FORDI VI GØR DET I MAPCANVAS
-        //KDTree2.buildKDTree(id2node, true);
+        //Bygger KDTree og gemmer det i feltet KDTree
+        KDTree = KDTree2.buildKDTree(id2node, true);
 
 
     }
