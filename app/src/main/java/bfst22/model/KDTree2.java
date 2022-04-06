@@ -29,6 +29,7 @@ public class KDTree2 {}
         }
 
         //Erklærer
+        Hvad sker der?
         KDNode kdNode;
 
         // Laver leaves
