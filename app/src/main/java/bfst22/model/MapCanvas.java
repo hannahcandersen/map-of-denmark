@@ -9,7 +9,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
-import java.awt.Graphics;
+
+import java.awt.*;
+
 import bfst22.model.Model;
 import javafx.scene.transform.Transform;
 
@@ -53,43 +55,22 @@ public class MapCanvas extends Canvas {
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
 
-        //laver baggrunden
+        //Laver baggrunden
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
 
+        //Laver rectangle - virker ikke
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
-        gc.setFill(Color.BLACK);
+        gc.setFill(rectangleColor);
         gc.fillRect(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
 
-        // løb results igennem og tegn dem
+        //Løber results (liste af drawables returneret af rangeSearch) igennem og tegner dem
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
-        for (Drawable drawable : result) { // virker ikke lige nu fordi result er null??
+        for (Drawable drawable : result) {
             drawable.draw(gc);
         }
-
-
-
-
-
-
-
-
-
-
-            /*for (var lakes : model.iterable(WayType.LAKE)) {
-                lakes.fill(gc);
-            }
-
-            //Tegner alle linjer
-            gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
-            for (var line : model.iterable(WayType.UNKNOWN)) {
-                line.draw(gc);
-            }*/
-
-
-        }
-
+    }
 
     public void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
