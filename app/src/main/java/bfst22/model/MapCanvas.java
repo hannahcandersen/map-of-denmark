@@ -44,7 +44,8 @@ public class MapCanvas extends Canvas {
         Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en rectangle med de koordinater der er inden for rectangle
-        Rectangle searchRectangle = new Rectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
+        Rectangle searchRectangle = new Rectangle(realMin.getY(),
+                realMax.getY(), realMin.getX(), realMax.getX());
         System.out.println(searchRectangle);
 
         //Result listen, med de drawables der er inRange
