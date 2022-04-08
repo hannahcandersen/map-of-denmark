@@ -1,7 +1,9 @@
 package bfst22.model;
 
+import bfst22.model.kdtree.KdNode;
+import bfst22.model.kdtree.KdTree;
 import bfst22.view.Drawable;
-// import bfst22.model.KDTree2;
+// import bfst22.model.kdtree.KDTree2;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,7 +31,7 @@ import java.io.ObjectOutputStream;
 import static java.util.stream.Collectors.toList;
 
 public class Model {
-    private final KDNode KDTreeUNKNOWN;
+    private final KdNode KDTreeUNKNOWN;
 
     //Felter:
 
@@ -44,7 +46,7 @@ public class Model {
     NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
 
     // Alle KDtræer
-    private static KDNode KDTreeLAKE;
+    private static KdNode KDTreeLAKE;
 
     // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
     List<Runnable> observers = new ArrayList<>();
@@ -85,7 +87,7 @@ public class Model {
         //Bygger KDTree og gemmer det i feltet KDTree
         //KDTreeLAKE = KDTree2.buildKDTree(lines.get(WayType.LAKE), true);
         //System.out.println("Har bygget KDTreeLAKE done");
-        KDTreeUNKNOWN = KDTree2.buildKDTree(lines.get(WayType.UNKNOWN), true);
+        KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
         System.out.println("Har bygget KDTreeUNKNOWN done");
 
     }
@@ -218,7 +220,7 @@ public class Model {
         return lines.get(type);
     }
 
-    public static KDNode getKDTreeLAKE() {
+    public static KdNode getKDTreeLAKE() {
         return KDTreeLAKE;
     }
 }

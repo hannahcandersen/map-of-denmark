@@ -1,4 +1,4 @@
-package bfst22.model;
+package bfst22.model.kdtree;
 
 import bfst22.view.Drawable;
 
@@ -9,7 +9,7 @@ import java.util.List;
     så kan vi til sidst tilføje en liste med de sidste noder
 */
 
-public class Leaf extends KDNode {
+public class Leaf extends KdNode {
         protected List<Drawable> listOfDrawables;
 
         public Leaf(List<Drawable> leaves){

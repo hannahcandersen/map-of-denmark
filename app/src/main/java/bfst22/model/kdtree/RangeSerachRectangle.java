@@ -1,14 +1,14 @@
-package bfst22.model;
+package bfst22.model.kdtree;
 
 import bfst22.view.Drawable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 
-public class Rectangle extends Canvas {
+public class RangeSerachRectangle extends Canvas {
     private double minLon, maxLon, minLat, maxLat;
 
-    public Rectangle(double minLon, double maxLon, double minLat, double maxLat) {
+    public RangeSerachRectangle(double minLon, double maxLon, double minLat, double maxLat) {
         this.minLon = minLon;
         this.maxLon = maxLon;
         this.minLat = minLat;

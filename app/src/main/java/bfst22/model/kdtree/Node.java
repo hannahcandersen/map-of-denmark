@@ -1,7 +1,7 @@
-package bfst22.model;
+package bfst22.model.kdtree;
 
-public class Node extends KDNode {
-    private KDNode left, right;
+public class Node extends KdNode {
+    private KdNode left, right;
 
     //Enten lat/y-værdien eller lon/x-værdien
     private float split;
@@ -10,14 +10,14 @@ public class Node extends KDNode {
         super();
     }
 
-    public KDNode getLeft() {return left;}
-    public KDNode getRight() {return right;}
+    public KdNode getLeft() {return left;}
+    public KdNode getRight() {return right;}
     public float  getSplit(){return split;}
 
-    public void setLeft(KDNode left) {
+    public void setLeft(KdNode left) {
         this.left = left;
     }
-    public void setRight(KDNode right) {
+    public void setRight(KdNode right) {
         this.right = right;
     }
     public void setSplit(float split) {

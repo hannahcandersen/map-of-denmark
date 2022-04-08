@@ -1,29 +1,33 @@
-package bfst22.model;
+package bfst22.model.kdtree;
 
 import bfst22.view.Drawable;
 import java.util.*;
 
-public class KDTree2 {
+public class KdTree {
 
     //Erklærer roden.
-    private static KDNode root;
+    private static KdNode root;
     static int leavesAdded = 0;
 
 
-    public KDTree2() {
+    public KdTree() {
     }
 
-    public KDTree2(List<Drawable> drawables) {
+    public KdTree(List<Drawable> drawables) {
         // buildKDTree(OSMNodes, false);
         this.root = buildKDTree(drawables, true);
     }
 
-    public KDNode getRoot() {
+    public static int getLeavesAdded() {
+        return leavesAdded;
+    }
+
+    public KdNode getRoot() {
         return root;
     }
 
     //////////////////// BULDING KDTREE ///////////////////////
-    public static KDNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
+    public static KdNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if (drawables == null || drawables.size() == 0) {
             System.out.println("OSMNode list is empty!");
@@ -32,7 +36,7 @@ public class KDTree2 {
 
         //Erklærer
 
-        KDNode kdNode;
+        KdNode kdNode;
 
         // Laver leaves
         if (drawables.size() < 1000) {
@@ -89,20 +93,20 @@ public class KDTree2 {
 
     //Public den der kaldt i MapCanvas
     //RangeSearch der tager rectangle og root
-    public static List<Drawable> rangeSearch(Rectangle rectangle, KDNode root) {
+    public static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode root) {
         // kald den anden rangesearch, der returner en liste med inrange resultaterne
-        return rangeSearch(rectangle, root, true, new ArrayList<>());
+        return rangeSearch(rangeSerachRectangle, root, true, new ArrayList<>());
     }
 
     // RangeSearch der kun tager rectangle
-    public static List<Drawable> rangeSearch(Rectangle rectangle) {
+    public static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle) {
         // kald den anden rangesearch, der returner en liste med inrange resultaterne
         leavesAdded = 0;
-        return rangeSearch(rectangle, root, true, new ArrayList<>());
+        return rangeSearch(rangeSerachRectangle, root, true, new ArrayList<>());
     }
 
     //Privat RangeSearch metode
-       private static List<Drawable> rangeSearch(Rectangle rectangle, KDNode splitNode, boolean isXcoord, List<Drawable> result){
+       private static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
             if (splitNode == null){
                 System.out.println("splitnode er tom!!!");
                 return null;
@@ -121,46 +125,46 @@ public class KDTree2 {
             if(isXcoord){
 
                 //InRange? - mellem minLon og MaxLon
-                if(((Node) splitNode).getSplit() > rectangle.getMinLon()
-                        && ((Node) splitNode).getSplit() < rectangle.getMaxLon()) {
+                if(((Node) splitNode).getSplit() > rangeSerachRectangle.getMinLon()
+                        && ((Node) splitNode).getSplit() < rangeSerachRectangle.getMaxLon()) {
 
                     //Gå begge veje
-                    rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
-                    rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
 
                 }
                 // Over? - større end maxLon (((rectangle.getMaxLon())))
-                else if (((Node) splitNode).getSplit() > rectangle.getMaxLon()) {
+                else if (((Node) splitNode).getSplit() > rangeSerachRectangle.getMaxLon()) {
                     //Gå til venstre
-                    rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                 }
                 //Under? - mindre end minLon
-                else if(((Node) splitNode).getSplit() < rectangle.getMinLon()) {
+                else if(((Node) splitNode).getSplit() < rangeSerachRectangle.getMinLon()) {
                     //Gå til højre
-                    rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
                 }
             }
 
             //Gør det på Y (!isXcoord) Måske skal lat ændres til minus
             else {
                 //InRange? - mellem minLon og MaxLon
-                if(((Node) splitNode).getSplit() > rectangle.getMinLat()
-                        && ((Node) splitNode).getSplit() < rectangle.getMaxLat()) {
+                if(((Node) splitNode).getSplit() > rangeSerachRectangle.getMinLat()
+                        && ((Node) splitNode).getSplit() < rangeSerachRectangle.getMaxLat()) {
 
                     //Gå begge veje
-                    rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
-                    rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
 
                 }
                 // Over? - større end maxLon (((rectangle.getMaxLon())))
-                else if(((Node) splitNode).getSplit() > rectangle.getMaxLat()) {
+                else if(((Node) splitNode).getSplit() > rangeSerachRectangle.getMaxLat()) {
                     //Gå til venstre
-                    rangeSearch(rectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                 }
                 //Under? - mindre end minLon
-                else if(((Node) splitNode).getSplit() < rectangle.getMinLat()) {
+                else if(((Node) splitNode).getSplit() < rangeSerachRectangle.getMinLat()) {
                     //Gå til højre
-                    rangeSearch(rectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
                 }
             }
         }

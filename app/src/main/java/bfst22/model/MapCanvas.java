@@ -1,21 +1,13 @@
 package bfst22.model;
 
+import bfst22.model.kdtree.KdTree;
+import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
-import com.sun.scenario.effect.impl.prism.ps.PPSBlend_BLUEPeer;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
-
-import java.awt.*;
-
-import bfst22.model.Model;
-import javafx.scene.transform.Transform;
-
-import java.awt.geom.Rectangle2D;
 
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
@@ -44,13 +36,13 @@ public class MapCanvas extends Canvas {
         Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en rectangle med de koordinater der er inden for rectangle
-        Rectangle searchRectangle = new Rectangle(realMin.getY(),
+        RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(),
                 realMax.getY(), realMin.getX(), realMax.getX());
-        System.out.println(searchRectangle);
+        System.out.println(searchRangeSerachRectangle);
 
         //Result listen, med de drawables der er inRange
-        var result = KDTree2.rangeSearch(searchRectangle);
-        System.out.println("leaves added: " + KDTree2.leavesAdded);
+        var result = KdTree.rangeSearch(searchRangeSerachRectangle);
+        System.out.println("leaves added: " + KdTree.getLeavesAdded());
 
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
