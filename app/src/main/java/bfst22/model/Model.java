@@ -31,10 +31,15 @@ import java.io.ObjectOutputStream;
 import static java.util.stream.Collectors.toList;
 
 public class Model {
-    private final KdNode KDTreeUNKNOWN;
+
+    //KD Trees
+    private static KdNode KDTreeUNKNOWN;
+    private static KdNode KDTreeRESIDENTIAL;
+
+    NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
+    List<Runnable> observers = new ArrayList<>();  // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
 
     //Felter:
-
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     private float minlat, minlon, maxlat, maxlon;
 
@@ -43,28 +48,17 @@ public class Model {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
 
-    NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
 
-    // Alle KDtræer
-    private static KdNode KDTreeLAKE;
-
-    // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
-    List<Runnable> observers = new ArrayList<>();
-
-    // Konstruktør:
-    @SuppressWarnings("unchecked")
+    /////////////// Konstruktør (unchecked) ///////////////////
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         var time = -System.nanoTime();
-        // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
-        if (filename.endsWith(".zip")) {
+        if (filename.endsWith(".zip")) {   // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
             var zip = new ZipInputStream(new FileInputStream(filename)); //læser zip-filen én fil af gangen
             zip.getNextEntry(); // læser næste fil i zip-filen
             loadOSM(zip);
-        // læser filen som en osm-fil
-        } else if (filename.endsWith(".osm")) {
+        } else if (filename.endsWith(".osm")) {// læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
-        // kan læse den .obj-fil der er blevet gemt (binary file)
-        } else if (filename.endsWith(".obj")) {
+        } else if (filename.endsWith(".obj")) { // kan læse den .obj-fil der er blevet gemt (binary file)
             try (var input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 minlat = input.readFloat();
                 minlon = input.readFloat();
@@ -89,7 +83,8 @@ public class Model {
         //System.out.println("Har bygget KDTreeLAKE done");
         KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
         System.out.println("Har bygget KDTreeUNKNOWN done");
-
+        KDTreeRESIDENTIAL = KdTree.buildKDTree(lines.get(WayType.RESIDENTIAL), true);
+        System.out.println("Har bygget KDTreeRESIDENTIAL done");
     }
 
 
@@ -161,7 +156,14 @@ public class Model {
                         case "tag":
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
-                            if (k.equals("water") && v.equals("lake")) type = WayType.LAKE; // sætter WayType til LAKE
+                            switch (k) {
+                                case "landuse":
+                                    type = switch (v) {
+                                        case "residential" -> WayType.RESIDENTIAL;
+                                        default -> type;
+                                    };
+                                    break;
+                            }
                             break;
                         // relations har member-tags, der referer til
                         case "member":
@@ -221,7 +223,10 @@ public class Model {
         return lines.get(type);
     }
 
-    public static KdNode getKDTreeLAKE() {
-        return KDTreeLAKE;
+    public static KdNode getKDTreeUNKNOWN() {
+        return KDTreeUNKNOWN;
+    }
+    public static KdNode getKDTreeRESIDENTIAL() {
+        return KDTreeRESIDENTIAL;
     }
 }

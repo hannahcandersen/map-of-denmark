@@ -41,8 +41,11 @@ public class MapCanvas extends Canvas {
         System.out.println(searchRangeSerachRectangle);
 
         //Result listen, med de drawables der er inRange
-        var result = KdTree.rangeSearch(searchRangeSerachRectangle);
-        System.out.println("leaves added: " + KdTree.getLeavesAdded());
+        var resultUNKNOW = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
+        System.out.println("leaves added in resultUNKNOW: " + KdTree.getLeavesAdded());
+
+        var resultRESIDENTIAL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL());
+        System.out.println("leaves added in resultRESIDENTIAL: " + KdTree.getLeavesAdded());
 
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
@@ -55,9 +58,16 @@ public class MapCanvas extends Canvas {
 
         //Løber results (liste af drawables returneret af rangeSearch) igennem og tegner dem
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
-        for (Drawable drawable : result) {
+
+        for (Drawable drawable : resultUNKNOW) {
             drawable.draw(gc);
         }
+        for (Drawable drawable : resultRESIDENTIAL) {
+            gc.setFill(Color.PINK);
+            drawable.fill(gc);
+        }
+
+
 
         //Laver rectangle - virker ikke
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);

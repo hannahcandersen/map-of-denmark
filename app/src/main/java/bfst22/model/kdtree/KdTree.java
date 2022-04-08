@@ -95,6 +95,7 @@ public class KdTree {
     //RangeSearch der tager rectangle og root
     public static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode root) {
         // kald den anden rangesearch, der returner en liste med inrange resultaterne
+        leavesAdded = 0;
         return rangeSearch(rangeSerachRectangle, root, true, new ArrayList<>());
     }
 
