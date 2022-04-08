@@ -61,16 +61,18 @@ public class MapCanvas extends Canvas {
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
 
-        //Laver rectangle - virker ikke
-        Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
-        gc.setFill(rectangleColor);
-        gc.fillRect(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
-
         //Løber results (liste af drawables returneret af rangeSearch) igennem og tegner dem
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         for (Drawable drawable : result) {
             drawable.draw(gc);
         }
+
+        //Laver rectangle - virker ikke
+        Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
+        gc.setFill(rectangleColor);
+        gc.fillRect(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
+        gc.setStroke(Color.BLACK);
+        gc.stroke();
     }
 
     public void pan(double dx, double dy) {
