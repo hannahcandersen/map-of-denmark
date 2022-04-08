@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class KDTree2Test {
 
-    List<OSMNode> OSMNodes = new ArrayList<>();
+   /* List<OSMNode> OSMNodes = new ArrayList<>();
     OSMNode o1, o2, o3, o4, o5, o6, o7;
     KDTree2 test = new KDTree2(OSMNodes);
 
@@ -43,23 +43,19 @@ class KDTree2Test {
     @Test
     void buildKDTree() {
         makeList(OSMNodes);
-
-
         //buildtree();
-
-
         //assertEquals(test.buildKDTree(OSMNodes, false).getRight(), test.buildKDTree(OSMNodes, false).getLeft());
 
         //AE(b,a.left)
         //(e,a.left.right)
 
+        //skal teste resultatet fra buildTree igennem vores RangeSearch
+        //Tegn koordinaterne på et pappir og tjek om vi får de samme
 
 
 
-        //KDTree2 kdtest = new KDTree2();
-        //KDNode test = root;
-
-        //assertEquals(test, root);
 
     }
+
+    */
 }

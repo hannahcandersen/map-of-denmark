@@ -3,6 +3,7 @@
 <?import bfst22.model.MapCanvas?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.Scene?>
+
 <Scene xmlns="http://javafx.com/javafx"
        xmlns:fx="http://javafx.com/fxml"
        fx:controller="bfst22.controller.Controller"
@@ -17,7 +18,8 @@
                            onScroll="#onScroll"
                            onMousePressed="#onMousePressed"
                            onMouseDragged="#onMouseDragged"
-                />
+                >
+                </MapCanvas>
             </center>
         </BorderPane>
     </root>

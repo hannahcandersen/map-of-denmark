@@ -6,13 +6,19 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Line implements Drawable {
     private Point2D from, to;
+
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+
 //Line tager de fire koordinater fra txt line filerne og splitter dem til at kunne blive læst og derefter tegnet.
     public Line(String line) {
         var parts = line.split(" ");
-        var x1 = Double.parseDouble(parts[1]);
-        var y1 = Double.parseDouble(parts[2]);
-        var x2 = Double.parseDouble(parts[3]);
-        var y2 = Double.parseDouble(parts[4]);
+        this.x1 = Float.parseFloat(parts[1]);
+        this.y1 = Float.parseFloat(parts[2]);
+        this.x2 = Float.parseFloat(parts[3]);
+        this.y2 = Float.parseFloat(parts[4]);
         from = new Point2D(x1, y1);
         to = new Point2D(x2, y2);
     }
@@ -28,5 +34,15 @@ public class Line implements Drawable {
         gc.moveTo(from.getX(), from.getY());
         gc.lineTo(to.getX(), to.getY());
         gc.stroke();
+    }
+
+    @Override
+    public float getMiddleX(){
+        return (x1 + x2) / 2;
+    }
+
+    @Override
+    public float getMiddleY(){
+        return (y1 + y2) / 2;
     }
 }

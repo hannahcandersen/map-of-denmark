@@ -2,6 +2,7 @@ package bfst22.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 import bfst22.view.Drawable;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,17 +15,49 @@ import javafx.scene.canvas.GraphicsContext;
  */
 
 public class PolyLine implements Drawable, Serializable {
+    float currentMinX;
+    float currentMaxX;
+    float currentMinY;
+    float currentMaxY;
+
     public static final long serialVersionUID = 134123;
     //Programmet skal kun huske en sekvens af floats koordinater
     private float[] coords;
 
-    public PolyLine(List<OSMNode> nodes) {
+    private ArrayList<OSMNode> nodes;
+
+
+    public PolyLine(ArrayList<OSMNode> nodes) {
+        this.nodes = nodes;
+
         //Opretter et nyt float-array.
         //Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
         coords = new float[nodes.size() * 2];
+
         int i = 0;
+
+        currentMinX = nodes.get(0).getLon();
+        currentMaxX = nodes.get(0).getLon();
+        currentMinY = nodes.get(0).getLat();
+        currentMaxY = nodes.get(0).getLat();
+        
         //Gemmer alle lat og lon koordinater (x-,y-koordinater) fra OSMNode-listen i float-arrayet
         for (var node : nodes) {
+
+            //Opdatere currentMaxY EVT skriver: <
+            if (node.getLat() > currentMaxY){
+                currentMaxY = node.getLat();
+            }
+            if(node.getLat() < currentMinY){
+                currentMinY = node.getLat();
+            }
+            if(node.getLon() > currentMaxX){
+                currentMaxX = node.getLon();
+            }
+            if(node.getLon() < currentMinX){
+                currentMinX = node.getLon();
+            }
+
             coords[i++] = node.getLat();
             coords[i++] = node.getLon();
         }
@@ -39,4 +72,18 @@ public class PolyLine implements Drawable, Serializable {
             gc.lineTo(coords[i], coords[i+1]);
         }
     }
+
+    //Bruges til at finde vejens midtpunkt
+    @Override
+    public float getMiddleX(){
+        return (currentMaxX + currentMinX) / 2;
+    }
+
+    @Override
+    public float getMiddleY(){
+        return (currentMinY+currentMaxY)/ 2;
+    }
+
+
+
 }
