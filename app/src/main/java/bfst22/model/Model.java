@@ -326,7 +326,34 @@ public class Model {
                             switch (k) {
                                 case "landuse":
                                     type = switch (v) {
+                                        case "forest" -> WayType.FOREST;
                                         case "residential" -> WayType.RESIDENTIAL;
+                                        case "industrial", "port" -> WayType.INDUSTRIAL;
+                                        case "meadow" -> WayType.MEADOW;
+                                        case "cemetery" -> WayType.CEMETERY;
+                                        case "allotments" -> WayType.ALLOTMENTS;
+                                        case "farmyard" -> WayType.FARMYARD;
+                                        case "commercial" -> WayType.COMMERCIAL;
+                                        case "construction" -> WayType.CONSTRUCTION;
+                                        case "retail" -> WayType.RETAIL;
+                                        case "farmland" -> WayType.FARMLAND;
+                                        case "orchard" -> WayType.ORCHARD;
+                                        case "vineyard" -> WayType.VINEYARD;
+                                        case "basin" -> WayType.BASIN;
+                                        case "grass" -> WayType.GRASS;
+                                        case "greenfield" -> WayType.GREENFIELD;
+                                        case "greenhouse_horticulture" -> WayType.GREENHOUSE_HORTICULTURE;
+                                        case "military" -> WayType.MILITARY;
+                                        case "plant_nursery" -> WayType.PLANT_NURSERY;
+                                        case "quarry" -> WayType.QUARRY;
+                                        case "recreation_ground" -> WayType.RECREATION_GROUND;
+                                        case "village_green" -> WayType.VILLAGE_GREEN;
+                                        case "salt_pond" -> WayType.SALT_POND;
+                                        case "brownfield" -> WayType.BROWNFIELD;
+                                        case "garages" -> WayType.GARAGES;
+                                        case "landfill" -> WayType.LANDFILL;
+                                        case "railway" -> WayType.RAILWAY;
+                                        case "religious" -> WayType.RELIGIOUS;
                                         default -> type;
                                     };
                                     break;

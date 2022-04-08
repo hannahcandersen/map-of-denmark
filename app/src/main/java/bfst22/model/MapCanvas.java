@@ -101,6 +101,120 @@ public class MapCanvas extends Canvas {
             gc.setFill(Color.valueOf("E0DFDF"));
             drawable.fill(gc);
         }
+        for (Drawable drawable : resultFOREST) {
+            gc.setFill(Color.valueOf("B4D0A3"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultMEADOW) {
+            gc.setFill(Color.valueOf("D4EAB6"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultCEMETERY) {
+            gc.setFill(Color.valueOf("B0CAB2"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultALLOTMENTS) {
+            gc.setFill(Color.valueOf("CFE0C1"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultFARMYARD) {
+            gc.setFill(Color.valueOf("F1DDBE"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultCOMMERCIAL) {
+            gc.setFill(Color.valueOf("EEDAD9"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultCONSTRUCTION) {
+            gc.setFill(Color.valueOf("C7C7B6"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultRETAIL) {
+            gc.setFill(Color.valueOf("F8D6D1"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultRESIDENTIAL) {
+            gc.setFill(Color.valueOf("E0DFDF"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultINDUSTRIAL) {
+            gc.setFill(Color.valueOf("E8DCE7"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultFARMLAND) {
+            gc.setFill(Color.valueOf("EEF0D8"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultORCHARD) {
+            gc.setFill(Color.valueOf("B7DFA7"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultVINEYARD) {
+            gc.setFill(Color.valueOf("B7DFA7"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultBASIN) {
+            gc.setFill(Color.valueOf("B2D2DD"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultGRASS) {
+            gc.setFill(Color.valueOf("D4E9B6"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultGREENFIELD) {
+            gc.setFill(Color.valueOf("F1EEE9"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {
+            gc.setFill(Color.valueOf("EEF0D8"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultMILITARY) {
+            gc.setFill(Color.valueOf("F0E4DF"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultPLANT_NURSERY) {
+            gc.setFill(Color.valueOf("B8DEA8"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultQUARRY) {
+            gc.setFill(Color.valueOf("C3C2C2"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultRECREATION_GROUND) {
+            gc.setFill(Color.valueOf("E5FBE4"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultVILLAGE_GREEN) {
+            gc.setFill(Color.valueOf("D3EAB6"));
+            drawable.fill(gc);
+        }
+        /*for (Drawable drawable : resultSALT_POND) {
+            gc.setFill(Color.valueOf("B2D2DD"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultBROWNFIELD) {
+            gc.setFill(Color.valueOf("C7C7B6"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultGARAGES) {
+            gc.setFill(Color.valueOf("DEDDCE"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultLANDFILL) {
+            gc.setFill(Color.valueOf("B6B694"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultRAILWAY) {
+            gc.setFill(Color.valueOf("E9DBE8"));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultRELIGIOUS) {
+            gc.setFill(Color.valueOf("CDCCC9"));
+            drawable.fill(gc);
+        }*/
+
+
 
 
 
