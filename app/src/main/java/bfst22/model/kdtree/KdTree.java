@@ -50,6 +50,7 @@ public class KdTree {
 
             //System.out.println(((Leaf) kdNode).getListOfOSMNodes());
             //}
+
         } else {
             //Laver en ny node
             Node node = new Node();
@@ -117,6 +118,14 @@ public class KdTree {
         if (splitNode instanceof Leaf){
             //Caster KDnode splitNode om til et leaf.
             result.addAll(((Leaf) splitNode).getListOfDrawables());
+
+            for (Drawable drawable: ((Leaf) splitNode).getListOfDrawables()) {
+
+
+                //hvis drawable er mindre end minX
+                //hvis drawable er større end maxX
+                //hvis drawable er mellem minX og maxX
+            }
             leavesAdded++;
         }
 

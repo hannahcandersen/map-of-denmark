@@ -330,6 +330,101 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
+                                case "natural":
+                                    type = switch (v) {
+                                        case "beach" -> WayType.BEACH;
+                                        case "wood" -> WayType.WOOD;
+                                        case "sand" -> WayType.SAND;
+                                        case "tree_row" -> WayType.TREE_ROW;
+                                        case "water" -> WayType.WATER;
+                                        case "wetland" -> WayType.WETLAND;
+                                        case "scrub" -> WayType.SCRUB;
+                                        case "grassland" -> WayType.GRASSLAND;
+                                        case "heath" -> WayType.HEATH;
+                                        case "bay" -> WayType.BAY;
+                                        case "bare_rock", "rock" -> WayType.BARE_ROCK;
+                                        case "coastline" -> WayType.COASTLINE;
+                                        default -> type;
+                                    };
+                                    break;
+                                case "water":
+                                    type = switch (v) {
+                                        case "lake" -> WayType.LAKE;
+                                        case "canal" -> WayType.RIVER_ANDMORE;
+                                        case "pond", "basin", "reservoir" -> WayType.POND_ANDMORE;
+                                        case "harbour" -> WayType.HARBOUR;
+                                        default -> type;
+                                    };
+                                    break;
+                                case "waterway":
+                                    type = switch (v) {
+                                        case "river", "canal" -> WayType.RIVER_ANDMORE;
+                                        case "stream", "ditch", "drain" -> WayType.STREAM_ANDMORE;
+                                        case "dock" -> WayType.DOCK;
+                                        default -> type;
+                                    };
+                                    break;
+                                case "amenity":
+                                    type = switch (v) {
+                                        case "school" -> WayType.SCHOOL;
+                                        case "parking" -> WayType.PARKING;
+                                        default -> type;
+                                    };
+                                    break;
+                                case "building":
+                                    type = switch (v) {
+                                        case "yes", "church", "retail", "detached", "house", "toilets",
+                                                "shed", "garage", "school", "hotel", "commercial",
+                                                "public", "slurry_tank", "greenhouse", "office", "chapel", "semidetached_house",
+                                                "bungalow", "lighthouse", "service", "warehouse", "farm", "electricity",
+                                                "farm_auxiliary", "silo", "roof", "storage_tank", "kindergarten", "barn",
+                                                "stable", "terrace", "apartments", "sports_hall", "cabin",
+                                                "kiosk", "windmill", "cowshed", "supermarket", "watermill", "civic",
+                                                "hut", "carport", "ruins", "construction", "hospital", "residential" -> WayType.BUILDING;
+                                        default -> type;
+                                    };
+                                    break;
+                                case "leisure":
+                                    type = switch (v) {
+                                        case "park" -> WayType.PARK;
+                                        case "playground" -> WayType.PLAYGROUND;
+                                        case "garden" -> WayType.GARDEN;
+                                        case "dog_park" -> WayType.DOG_PARK;
+                                        case "golf_course" -> WayType.GOLF_COURSE;
+                                        case "ice_rink" -> WayType.ICE_RINK;
+                                        case "marina" -> WayType.MARINA;
+                                        case "miniature_golf" -> WayType.MINIATURE_GOLF;
+                                        case "nature_reserve" -> WayType.NATURE_RESERVE;
+                                        case "pitch", "track" -> WayType.PITCH;
+                                        case "sports_centre", "stadium" -> WayType.SPORTS_CENTRE;
+                                        case "swimming_pool" -> WayType.SWIMMING_POOL;
+                                        default -> type;
+                                    };
+                                    break;
+                                case "highway":
+                                    type = switch (v) {
+                                        case "motorway", "motorway_link" -> WayType.MOTORWAY;
+                                        case "primary", "primary_link" -> WayType.PRIMARY;
+                                        case "trunk", "trunk_link" -> WayType.TRUNK;
+                                        case "secondary", "secondary_link" -> WayType.SECONDARY;
+                                        case "tertiary", "tertiary_link" -> WayType.TERTIARY;
+                                        case "unclassified" -> WayType.UNCLASSIFIED;
+                                        case "residential" -> WayType.RESIDENTIALWAY;
+                                        case "living_street" -> WayType.LIVING_STREET;
+                                        case "service" -> WayType.SERVICE;
+                                        case "pedestrian" -> WayType.PEDESTRIAN;
+                                        case "track" -> WayType.TRACK;
+                                        case "road" -> WayType.ROAD;
+                                        case "raceway" -> WayType.RACEWAY;
+                                        case "bus_guideway" -> WayType.BUS_GUIDEWAY;
+                                        case "footway", "path", "crossing", "sidewalk" -> WayType.FOOTWAY_ANDMORE;
+                                        case "bridleway" -> WayType.BRIDLEWAY;
+                                        case "steps" -> WayType.STEPS;
+                                        case "cycleway" -> WayType.CYCLEWAY;
+                                        case "construction" -> WayType.CONSTRUCTIONWAY;
+                                        default -> type;
+                                    };
+                                    break;
                             }
                             break;
                         // relations har member-tags, der referer til
