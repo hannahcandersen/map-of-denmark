@@ -177,6 +177,7 @@ public class Model {
                             break;
 
                     }
+
                     break;
                 case XMLStreamConstants.END_ELEMENT: // får det sidste på den givne linje i osm-filen.
                     switch (reader.getLocalName()) {
