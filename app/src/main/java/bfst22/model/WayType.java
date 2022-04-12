@@ -9,6 +9,8 @@ package bfst22.model;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.awt.*;
+
 public enum WayType {
     UNKNOWN, LAKE, BEACH, WOOD, SAND, FOREST, TREE_ROW, WATER, BUILDING, RESIDENTIAL, INDUSTRIAL, MEADOW, PARK,
     WETLAND, CEMETERY, ALLOTMENTS, SCRUB, FARMYARD, COMMERCIAL, CONSTRUCTION, RETAIL, FARMLAND, ORCHARD, VINEYARD, BASIN,
@@ -21,11 +23,35 @@ public enum WayType {
 
     public Paint getColorValue() {
         return switch (this) {
-            case LAKE -> Color.valueOf("B2D2DD");
+            case LAKE, BASIN, SALT_POND -> Color.valueOf("B2D2DD");
             case RESIDENTIAL -> Color.valueOf("E0DFDF");
+            case MEADOW -> Color.valueOf("D4EAB6");
+            case CEMETERY -> Color.valueOf("B0CAB2");
+            case ALLOTMENTS -> Color.valueOf("CFE0C1");
+            case FARMYARD -> Color.valueOf("F1DDBE");
+            case COMMERCIAL -> Color.valueOf("EEDAD9");
+            case INDUSTRIAL -> Color.valueOf("E8DCE7");
+            case CONSTRUCTION, BROWNFIELD -> Color.valueOf("C7C7B6");
+            case RETAIL -> Color.valueOf("F8D6D1");
+            case FARMLAND, GREENHOUSE_HORTICULTURE -> Color.valueOf("EEF0D8");
+            case ORCHARD, VINEYARD -> Color.valueOf("B7DFA7");
+            case GRASS -> Color.valueOf("D4E9B6");
+            case GREENFIELD -> Color.valueOf("F1EEE9");
+            case MILITARY -> Color.valueOf("F0E4DF");
+            case PLANT_NURSERY -> Color.valueOf("B8DEA8");
+            case QUARRY -> Color.valueOf("C3C2C2");
+            case RECREATION_GROUND -> Color.valueOf("E5FBE4");
+            case VILLAGE_GREEN -> Color.valueOf("D3EAB6");
+            case GARAGES -> Color.valueOf("DEDDCE");
+            case LANDFILL -> Color.valueOf("B6B694");
+            case RAILWAY -> Color.valueOf("E9DBE8");
+            case RELIGIOUS -> Color.valueOf("CDCCC9");
+            case FOREST -> Color.valueOf("B4D0A3");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
         };
     }
+
+
 
 
 }

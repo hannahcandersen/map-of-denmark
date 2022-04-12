@@ -102,115 +102,117 @@ public class MapCanvas extends Canvas {
             gc.setFill(WayType.RESIDENTIAL.getColorValue());
             drawable.fill(gc);
         }
-        /*for (Drawable drawable : resultFOREST) {
-            gc.setFill(Color.valueOf("B4D0A3"));
+        for (Drawable drawable : resultFOREST) {
+            gc.setFill(WayType.FOREST.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultMEADOW) {
-            gc.setFill(Color.valueOf("D4EAB6"));
+            gc.setFill(WayType.MEADOW.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultCEMETERY) {
-            gc.setFill(Color.valueOf("B0CAB2"));
+            gc.setFill(WayType.CEMETERY.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultALLOTMENTS) {
-            gc.setFill(Color.valueOf("CFE0C1"));
+            gc.setFill(WayType.ALLOTMENTS.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultFARMYARD) {
-            gc.setFill(Color.valueOf("F1DDBE"));
+            gc.setFill(WayType.FARMYARD.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultCOMMERCIAL) {
-            gc.setFill(Color.valueOf("EEDAD9"));
+            gc.setFill(WayType.COMMERCIAL.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultCONSTRUCTION) {
-            gc.setFill(Color.valueOf("C7C7B6"));
+            gc.setFill(WayType.CONSTRUCTION.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultRETAIL) {
-            gc.setFill(Color.valueOf("F8D6D1"));
-            drawable.fill(gc);
-        }*/
-        for (Drawable drawable : resultINDUSTRIAL) {
-            gc.setFill(Color.valueOf("E8DCE7"));
+            gc.setFill(WayType.RETAIL.getColorValue());
             drawable.fill(gc);
         }
-        /*for (Drawable drawable : resultFARMLAND) {
-            gc.setFill(Color.valueOf("EEF0D8"));
+        for (Drawable drawable : resultINDUSTRIAL) {
+            gc.setFill(WayType.INDUSTRIAL.getColorValue());
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultFARMLAND) {
+            gc.setFill(WayType.FARMLAND.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultORCHARD) {
-            gc.setFill(Color.valueOf("B7DFA7"));
+            gc.setFill(WayType.ORCHARD.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultVINEYARD) {
-            gc.setFill(Color.valueOf("B7DFA7"));
+            gc.setFill(WayType.VINEYARD.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultBASIN) {
-            gc.setFill(Color.valueOf("B2D2DD"));
+            gc.setFill(WayType.BASIN.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultGRASS) {
-            gc.setFill(Color.valueOf("D4E9B6"));
+            gc.setFill(WayType.GRASS.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultGREENFIELD) {
-            gc.setFill(Color.valueOf("F1EEE9"));
+            gc.setFill(WayType.GREENFIELD.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {
-            gc.setFill(Color.valueOf("EEF0D8"));
+            gc.setFill(WayType.GREENHOUSE_HORTICULTURE.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultMILITARY) {
-            gc.setFill(Color.valueOf("F0E4DF"));
+            gc.setFill(WayType.MILITARY.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultPLANT_NURSERY) {
-            gc.setFill(Color.valueOf("B8DEA8"));
+            gc.setFill(WayType.PLANT_NURSERY.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultQUARRY) {
-            gc.setFill(Color.valueOf("C3C2C2"));
+            gc.setFill(WayType.QUARRY.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultRECREATION_GROUND) {
-            gc.setFill(Color.valueOf("E5FBE4"));
+            gc.setFill(WayType.RECREATION_GROUND.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultVILLAGE_GREEN) {
-            gc.setFill(Color.valueOf("D3EAB6"));
+            gc.setFill(WayType.VILLAGE_GREEN.getColorValue());
             drawable.fill(gc);
         }
         /*for (Drawable drawable : resultSALT_POND) {
-            gc.setFill(Color.valueOf("B2D2DD"));
+            gc.setFill(WayType.SALT_POND.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultBROWNFIELD) {
-            gc.setFill(Color.valueOf("C7C7B6"));
+            gc.setFill(WayType.BROWNFIELD.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultGARAGES) {
-            gc.setFill(Color.valueOf("DEDDCE"));
+            gc.setFill(WayType.GARAGES.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultLANDFILL) {
-            gc.setFill(Color.valueOf("B6B694"));
+            gc.setFill(WayType.LANDFILL.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultRAILWAY) {
-            gc.setFill(Color.valueOf("E9DBE8"));
+            gc.setFill(WayType.RAILWAY.getColorValue());
             drawable.fill(gc);
         }
         for (Drawable drawable : resultRELIGIOUS) {
-            gc.setFill(Color.valueOf("CDCCC9"));
+            gc.setFill(WayType.RELIGIOUS.getColorValue());
             drawable.fill(gc);
         }*/
 
+
+        //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
 
 
 
