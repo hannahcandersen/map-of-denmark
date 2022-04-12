@@ -9,8 +9,6 @@ package bfst22.model;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-import java.awt.*;
-
 public enum WayType {
     UNKNOWN, LAKE, BEACH, WOOD, SAND, FOREST, TREE_ROW, WATER, BUILDING, RESIDENTIAL, INDUSTRIAL, MEADOW, PARK,
     WETLAND, CEMETERY, ALLOTMENTS, SCRUB, FARMYARD, COMMERCIAL, CONSTRUCTION, RETAIL, FARMLAND, ORCHARD, VINEYARD, BASIN,
@@ -54,11 +52,40 @@ public enum WayType {
             case SECONDARY -> Color.valueOf("F8FAC1");
             case TERTIARY -> Color.valueOf("FEFEFE");
             case UNCLASSIFIED -> Color.valueOf("FEFEFE");
+            case RESIDENTIALWAY -> Color.valueOf("FEFEFE");
+            case LIVING_STREET -> Color.valueOf("EDEDED");
+            case ROAD -> Color.valueOf("DDDDDD");
+            case SERVICE -> Color.valueOf("FEFEFE");
+            case PEDESTRIAN -> Color.valueOf("DDDDE8");
+            case TRACK -> Color.valueOf("A6863A");
+            case RACEWAY -> Color.valueOf("F5C1CA");
+            case CYCLEWAY -> Color.valueOf("5656F2");
+            case FOOTWAY_ANDMORE -> Color.valueOf("EA897B");
+            case STEPS -> Color.valueOf("EC8574");
+            case BRIDLEWAY -> Color.valueOf("64A257");
+            case BUILDING -> Color.valueOf("D7D0CB");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
         };
     }
 
+    public int getWidth() {
+        return switch (this) {
+            case MOTORWAY -> 10;
+            case TRUNK, PRIMARY -> 9;
+            case SECONDARY -> 7;
+            case TERTIARY -> 6;
+            case UNCLASSIFIED, RESIDENTIALWAY, LIVING_STREET -> 5;
+            case ROAD, RACEWAY -> 3;
+            case CONSTRUCTIONWAY, SERVICE, PEDESTRIAN, STEPS -> 2;
+            default -> 1;
+        };
+    }
 
-
-
+    public int getDashes() {
+        return switch (this) {
+            case BRIDLEWAY -> 4;
+            case TRACK, CYCLEWAY, FOOTWAY_ANDMORE, STEPS -> 3;
+            default -> 1;
+        };
+    }
 }
