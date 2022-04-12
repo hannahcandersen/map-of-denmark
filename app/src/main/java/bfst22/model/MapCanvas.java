@@ -73,10 +73,15 @@ public class MapCanvas extends Canvas {
         var resultLANDFILL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLANDFILL());
         var resultRAILWAY = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRAILWAY());
         var resultRELIGIOUS = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRELIGIOUS());
+        var resultCONSTRUCTIONWAY = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCONSTRUCTIONWAY());
 
 
-
-
+        var resultUNCLASSIFIED= KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNCLASSIFIED());
+        var resultTERTIARY= KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTERTIARY());
+        var resultSECONDARY= KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY());
+        var resultPRIMARY= KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePRIMARY());
+        var resultTRUNK= KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTRUNK());
+        var resultMOTORWAY = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMOTORWAY());
 
 
         //Sætter de generelle indstillinger for MapCanvas
@@ -186,6 +191,7 @@ public class MapCanvas extends Canvas {
             gc.setFill(WayType.VILLAGE_GREEN.getColorValue());
             drawable.fill(gc);
         }
+        ///Er ikke på Bornholm///
         /*for (Drawable drawable : resultSALT_POND) {
             gc.setFill(WayType.SALT_POND.getColorValue());
             drawable.fill(gc);
@@ -213,7 +219,46 @@ public class MapCanvas extends Canvas {
 
 
         //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
+        for (Drawable drawable : resultCONSTRUCTIONWAY) {
+            gc.setStroke(WayType.CONSTRUCTIONWAY.getColorValue());
+            gc.setLineWidth(2/Math.sqrt(trans.determinant()));
+            drawable.fill(gc);
+        }
 
+
+
+        for (Drawable drawable : resultUNCLASSIFIED) {
+            gc.setStroke(WayType.UNCLASSIFIED.getColorValue());
+            gc.setLineWidth(5/Math.sqrt(trans.determinant()));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultTERTIARY) {
+            gc.setStroke(WayType.TERTIARY.getColorValue());
+            gc.setLineWidth(6/Math.sqrt(trans.determinant()));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultSECONDARY) {
+            gc.setStroke(WayType.SECONDARY.getColorValue());
+            gc.setLineWidth(7/Math.sqrt(trans.determinant()));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultPRIMARY) {
+            gc.setStroke(WayType.PRIMARY.getColorValue());
+            gc.setLineWidth(9/Math.sqrt(trans.determinant()));
+            drawable.fill(gc);
+        }
+
+        ///Er ikke på Bornholm///
+        /*for (Drawable drawable : resultTRUNK) {
+            gc.setStroke(WayType.TRUNK.getColorValue());
+            gc.setLineWidth(9/Math.sqrt(trans.determinant()));
+            drawable.fill(gc);
+        }
+        for (Drawable drawable : resultMOTORWAY) {
+            gc.setStroke(WayType.MOTORWAY.getColorValue());
+            gc.setLineWidth(10/Math.sqrt(trans.determinant()));
+            drawable.fill(gc);
+        }*/
 
 
 

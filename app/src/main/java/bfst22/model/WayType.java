@@ -47,6 +47,13 @@ public enum WayType {
             case RAILWAY -> Color.valueOf("E9DBE8");
             case RELIGIOUS -> Color.valueOf("CDCCC9");
             case FOREST -> Color.valueOf("B4D0A3");
+            case CONSTRUCTIONWAY -> Color.valueOf("AAAAAA");
+            case MOTORWAY -> Color.valueOf("DD94A1");
+            case TRUNK -> Color.valueOf("F2C3AF");
+            case PRIMARY -> Color.valueOf("F7D8A8");
+            case SECONDARY -> Color.valueOf("F8FAC1");
+            case TERTIARY -> Color.valueOf("FEFEFE");
+            case UNCLASSIFIED -> Color.valueOf("FEFEFE");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
         };
     }

@@ -39,7 +39,7 @@ public class KdTree {
         KdNode kdNode;
 
         // Laver leaves
-        if (drawables.size() < 10) {
+        if (drawables.size() < 100) {
             kdNode = new Leaf(drawables);
             System.out.println("Laver et blad");
 
