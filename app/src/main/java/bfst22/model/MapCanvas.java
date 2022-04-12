@@ -6,6 +6,7 @@ import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
@@ -14,6 +15,7 @@ import javafx.scene.transform.NonInvertibleTransformException;
 public class MapCanvas extends Canvas {
     private Model model;
     private Affine trans = new Affine();
+    private Paint color = WayType.UNKNOWN.getColorValue();
 
     public void init(Model model) {
         this.model = model;
@@ -96,12 +98,11 @@ public class MapCanvas extends Canvas {
         }
 
         //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
-
         for (Drawable drawable : resultRESIDENTIAL) {
-            gc.setFill(Color.valueOf("E0DFDF"));
+            gc.setFill(WayType.RESIDENTIAL.getColorValue());
             drawable.fill(gc);
         }
-        for (Drawable drawable : resultFOREST) {
+        /*for (Drawable drawable : resultFOREST) {
             gc.setFill(Color.valueOf("B4D0A3"));
             drawable.fill(gc);
         }
@@ -132,16 +133,12 @@ public class MapCanvas extends Canvas {
         for (Drawable drawable : resultRETAIL) {
             gc.setFill(Color.valueOf("F8D6D1"));
             drawable.fill(gc);
-        }
-        for (Drawable drawable : resultRESIDENTIAL) {
-            gc.setFill(Color.valueOf("E0DFDF"));
-            drawable.fill(gc);
-        }
+        }*/
         for (Drawable drawable : resultINDUSTRIAL) {
             gc.setFill(Color.valueOf("E8DCE7"));
             drawable.fill(gc);
         }
-        for (Drawable drawable : resultFARMLAND) {
+        /*for (Drawable drawable : resultFARMLAND) {
             gc.setFill(Color.valueOf("EEF0D8"));
             drawable.fill(gc);
         }

@@ -1,5 +1,14 @@
 package bfst22.model;
 
+/*
+    An enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
+*/
+
+// man kan tilføje flere typer f.eks. HIGHWAY
+
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+
 public enum WayType {
     UNKNOWN, LAKE, BEACH, WOOD, SAND, FOREST, TREE_ROW, WATER, BUILDING, RESIDENTIAL, INDUSTRIAL, MEADOW, PARK,
     WETLAND, CEMETERY, ALLOTMENTS, SCRUB, FARMYARD, COMMERCIAL, CONSTRUCTION, RETAIL, FARMLAND, ORCHARD, VINEYARD, BASIN,
@@ -9,25 +18,14 @@ public enum WayType {
     BUS_GUIDEWAY, FOOTWAY_ANDMORE, STEPS, BRIDLEWAY, CYCLEWAY, RESIDENTIALWAY, CONSTRUCTIONWAY, DOG_PARK, GOLF_COURSE,
     ICE_RINK, MARINA, MINIATURE_GOLF, NATURE_RESERVE, PITCH, SPORTS_CENTRE, SWIMMING_POOL, RIVER_ANDMORE, SCHOOL,
     STREAM_ANDMORE, DOCK, POND_ANDMORE, HARBOUR, PARKING;
+
+    public Paint getColorValue() {
+        return switch (this) {
+            case LAKE -> Color.valueOf("B2D2DD");
+            case RESIDENTIAL -> Color.valueOf("E0DFDF");
+            default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
+        };
+    }
+
+
 }
-
-
-/*
-    An enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
-*/
-
-/*
-    An enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
-*/
-
-/*
-    An enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
-*/
-
-/*
-
-    An enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
-*/
-
-
-// man kan tilføje flere typer f.eks. HIGHWAY
