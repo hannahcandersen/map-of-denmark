@@ -346,8 +346,8 @@ public class MapCanvas extends Canvas {
         //Laver rectangle - virker ikke
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
         gc.setFill(rectangleColor);
-        gc.fillRect(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         gc.setStroke(Color.BLACK);
+        gc.fillRect(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         gc.stroke();
     }
 
