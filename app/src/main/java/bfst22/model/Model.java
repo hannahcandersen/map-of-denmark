@@ -369,9 +369,9 @@ public class Model {
                                     break;
                                 case "water":
                                     type = switch (v) {
-                                        case "lake" -> WayType.LAKE;
-                                        case "canal" -> WayType.RIVER_ANDMORE;
-                                        case "pond", "basin", "reservoir" -> WayType.POND_ANDMORE;
+                                        case "lake", "lagoon" -> WayType.LAKE;
+                                        case "canal", "river" -> WayType.RIVER_ANDMORE;
+                                        case "pond", "basin", "reservoir", "dam", "pool" -> WayType.POND_ANDMORE;
                                         case "harbour" -> WayType.HARBOUR;
                                         default -> type;
                                     };
