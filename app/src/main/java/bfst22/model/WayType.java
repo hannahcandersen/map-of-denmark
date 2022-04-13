@@ -19,7 +19,7 @@ public enum WayType {
     ICE_RINK, MARINA, MINIATURE_GOLF, NATURE_RESERVE, PITCH, SPORTS_CENTRE, SWIMMING_POOL, RIVER_ANDMORE, SCHOOL,
     STREAM_ANDMORE, DOCK, POND_ANDMORE, HARBOUR, PARKING;
 
-    public Paint getColorValue() {
+    public Paint getFillColor() {
         return switch (this) {
             case LAKE, BASIN -> Color.valueOf("B2D2DD");
             case RESIDENTIAL -> Color.valueOf("E0DFDF");
@@ -65,6 +65,13 @@ public enum WayType {
             case BRIDLEWAY -> Color.valueOf("64A257");
             case BUILDING -> Color.valueOf("D7D0CB");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
+        };
+    }
+
+    public Paint getStrokeColor() {
+        return switch (this) {
+            case BUILDING -> Color.valueOf("C3B8AE");
+            default -> Color.BLACK;
         };
     }
 

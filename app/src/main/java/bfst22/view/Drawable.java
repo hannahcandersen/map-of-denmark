@@ -1,9 +1,7 @@
 package bfst22.view;
-import bfst22.model.OSMNode;
 
+import bfst22.model.WayType;
 import javafx.scene.canvas.GraphicsContext;
-
-import java.util.ArrayList;
 
 //Canvas = lærred
 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/GraphicsContext.html
@@ -16,16 +14,29 @@ public interface Drawable {
         trace(gc);
         gc.stroke();
     }
+    default void drawWayType(GraphicsContext gc, WayType wt) {
+        gc.beginPath();
+        trace(gc);
+        gc.setStroke(wt.getStrokeColor());
+        gc.stroke();
+    }
     default void fill(GraphicsContext gc) {
         gc.beginPath();
         trace(gc);
         gc.fill();
     }
 
+    default void fillWayType(GraphicsContext gc, WayType wt) {
+        gc.beginPath();
+        trace(gc);
+        gc.setFill(wt.getFillColor());
+        gc.fill();
+    }
+
     void trace(GraphicsContext gc);
 
     //Bruges til at finde vejens midtpunkt
-    public float getMiddleX();
-    public float getMiddleY();
+    float getMiddleX();
+    float getMiddleY();
 
 }

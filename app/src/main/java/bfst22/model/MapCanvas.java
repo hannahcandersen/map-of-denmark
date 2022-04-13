@@ -15,7 +15,7 @@ import javafx.scene.transform.NonInvertibleTransformException;
 public class MapCanvas extends Canvas {
     private Model model;
     private Affine trans = new Affine();
-    private Paint color = WayType.UNKNOWN.getColorValue();
+    private Paint color = WayType.UNKNOWN.getFillColor();
 
     public void init(Model model) {
         this.model = model;
@@ -112,233 +112,228 @@ public class MapCanvas extends Canvas {
 
         //////////////////////////////////////tegner UNKNOWN//////////////////////////////////////
         for (Drawable drawable : resultUNKNOW) {
-                drawable.draw(gc);
+                drawable.drawWayType(gc, WayType.UNKNOWN);
             }
 
 
             //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
-            gc.setFill(WayType.RESIDENTIAL.getColorValue());
             for (Drawable drawable : resultRESIDENTIAL) {
-                drawable.fill(gc);
+                drawable.fillWayType(gc, WayType.RESIDENTIAL);
             }
-            gc.setFill(WayType.FOREST.getColorValue());
             for (Drawable drawable : resultFOREST) {
-                drawable.fill(gc);
+                drawable.fillWayType(gc, WayType.FOREST);
             }
-            gc.setFill(WayType.MEADOW.getColorValue());
             for (Drawable drawable : resultMEADOW) {
-                drawable.fill(gc);
+                drawable.fillWayType(gc, WayType.MEADOW);
             }
-            gc.setFill(WayType.CEMETERY.getColorValue());
+            /*gc.setFill(WayType.CEMETERY.getFillColor());
             for (Drawable drawable : resultCEMETERY) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.ALLOTMENTS.getColorValue());
+            gc.setFill(WayType.ALLOTMENTS.getFillColor());
             for (Drawable drawable : resultALLOTMENTS) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.FARMYARD.getColorValue());
+            gc.setFill(WayType.FARMYARD.getFillColor());
             for (Drawable drawable : resultFARMYARD) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.COMMERCIAL.getColorValue());
+            gc.setFill(WayType.COMMERCIAL.getFillColor());
             for (Drawable drawable : resultCOMMERCIAL) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.CONSTRUCTION.getColorValue());
+            gc.setFill(WayType.CONSTRUCTION.getFillColor());
             for (Drawable drawable : resultCONSTRUCTION) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.RETAIL.getColorValue());
+            gc.setFill(WayType.RETAIL.getFillColor());
             for (Drawable drawable : resultRETAIL) {
                 drawable.fill(gc);
-            }
-            gc.setFill(WayType.INDUSTRIAL.getColorValue());
+            }*/
             for (Drawable drawable : resultINDUSTRIAL) {
-                drawable.fill(gc);
+                drawable.fillWayType(gc, WayType.INDUSTRIAL);
             }
-            gc.setFill(WayType.FARMLAND.getColorValue());
+            /*gc.setFill(WayType.FARMLAND.getFillColor());
             for (Drawable drawable : resultFARMLAND) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.ORCHARD.getColorValue());
+            gc.setFill(WayType.ORCHARD.getFillColor());
             for (Drawable drawable : resultORCHARD) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.VINEYARD.getColorValue());
+            gc.setFill(WayType.VINEYARD.getFillColor());
             for (Drawable drawable : resultVINEYARD) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.BASIN.getColorValue());
+            gc.setFill(WayType.BASIN.getFillColor());
             for (Drawable drawable : resultBASIN) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.GRASS.getColorValue());
+            gc.setFill(WayType.GRASS.getFillColor());
             for (Drawable drawable : resultGRASS) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.GREENFIELD.getColorValue());
+            gc.setFill(WayType.GREENFIELD.getFillColor());
             for (Drawable drawable : resultGREENFIELD) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.GREENHOUSE_HORTICULTURE.getColorValue());
+            gc.setFill(WayType.GREENHOUSE_HORTICULTURE.getFillColor());
             for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.MILITARY.getColorValue());
+            gc.setFill(WayType.MILITARY.getFillColor());
             for (Drawable drawable : resultMILITARY) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.PLANT_NURSERY.getColorValue());
+            gc.setFill(WayType.PLANT_NURSERY.getFillColor());
             for (Drawable drawable : resultPLANT_NURSERY) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.QUARRY.getColorValue());
+            gc.setFill(WayType.QUARRY.getFillColor());
             for (Drawable drawable : resultQUARRY) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.RECREATION_GROUND.getColorValue());
+            gc.setFill(WayType.RECREATION_GROUND.getFillColor());
             for (Drawable drawable : resultRECREATION_GROUND) {
                 drawable.fill(gc);
             }
-            gc.setFill(WayType.VILLAGE_GREEN.getColorValue());
+            gc.setFill(WayType.VILLAGE_GREEN.getFillColor());
             for (Drawable drawable : resultVILLAGE_GREEN) {
                 drawable.fill(gc);
             }
             ///Er ikke på Bornholm///
-        /*gc.setFill(WayType.BROWNFIELD.getColorValue());
+        /*gc.setFill(WayType.BROWNFIELD.getFillColor());
         for (Drawable drawable : resultBROWNFIELD) {
             drawable.fill(gc);
         }
-        gc.setFill(WayType.GARAGES.getColorValue());
+        gc.setFill(WayType.GARAGES.getFillColor());
         for (Drawable drawable : resultGARAGES) {
             drawable.fill(gc);
         }
-        gc.setFill(WayType.LANDFILL.getColorValue());
+        gc.setFill(WayType.LANDFILL.getFillColor());
         for (Drawable drawable : resultLANDFILL) {
             drawable.fill(gc);
         }
-        gc.setFill(WayType.RAILWAY.getColorValue());
+        gc.setFill(WayType.RAILWAY.getFillColor());
         for (Drawable drawable : resultRAILWAY) {
             drawable.fill(gc);
         }
-        gc.setFill(WayType.RELIGIOUS.getColorValue());
+        gc.setFill(WayType.RELIGIOUS.getFillColor());
         for (Drawable drawable : resultRELIGIOUS) {
             drawable.fill(gc);
         }*/
 
 
             //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
-            gc.setStroke(WayType.CONSTRUCTIONWAY.getColorValue());
+            /*gc.setStroke(WayType.CONSTRUCTIONWAY.getFillColor());
             gc.setLineWidth(WayType.CONSTRUCTIONWAY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultCONSTRUCTIONWAY) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.BRIDLEWAY.getColorValue());
+            gc.setStroke(WayType.BRIDLEWAY.getFillColor());
             gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
             gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultBRIDLEWAY) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.STEPS.getColorValue());
+            gc.setStroke(WayType.STEPS.getFillColor());
             gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.STEPS.getDashes());
             gc.setLineWidth(WayType.STEPS.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultSTEPS) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.FOOTWAY_ANDMORE.getColorValue());
+            gc.setStroke(WayType.FOOTWAY_ANDMORE.getFillColor());
             gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
             gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultFOOTWAY_ANDMORE) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.CYCLEWAY.getColorValue());
+            gc.setStroke(WayType.CYCLEWAY.getFillColor());
             gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
             gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultCYCLEWAY) {
                 drawable.draw(gc);
             }
             gc.setLineDashes(null);
-            gc.setStroke(WayType.RACEWAY.getColorValue());
+            gc.setStroke(WayType.RACEWAY.getFillColor());
             gc.setLineWidth(WayType.RACEWAY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultRACEWAY) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.TRACK.getColorValue());
+            gc.setStroke(WayType.TRACK.getFillColor());
             gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
             gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultTRACK) {
                 drawable.draw(gc);
             }
             gc.setLineDashes(null);
-            gc.setStroke(WayType.PEDESTRIAN.getColorValue());
+            gc.setStroke(WayType.PEDESTRIAN.getFillColor());
             gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultPEDESTRIAN) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.SERVICE.getColorValue());
+            gc.setStroke(WayType.SERVICE.getFillColor());
             gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultSERVICE) {
                 drawable.draw(gc);
             }
             ///Er ikke på Bornholm///
-        /*gc.setStroke(WayType.ROAD.getColorValue());
-        gc.setLineWidth(WayType.ROAD.setWidth()/Math.sqrt(trans.determinant()));
+        /*gc.setStroke(WayType.ROAD.getFillColor());
+        gc.setLineWidth(WayType.ROAD.getWidth()/Math.sqrt(trans.determinant()));
         for (Drawable drawable : resultROAD) {
             drawable.draw(gc);
         }*/
-            gc.setStroke(WayType.LIVING_STREET.getColorValue());
+            /*gc.setStroke(WayType.LIVING_STREET.getFillColor());
             gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultLIVING_STREET) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.RESIDENTIALWAY.getColorValue());
+            gc.setStroke(WayType.RESIDENTIALWAY.getFillColor());
             gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultRESIDENTIALWAY) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.UNCLASSIFIED.getColorValue());
+            gc.setStroke(WayType.UNCLASSIFIED.getFillColor());
             gc.setLineWidth(WayType.UNCLASSIFIED.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultUNCLASSIFIED) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.TERTIARY.getColorValue());
+            gc.setStroke(WayType.TERTIARY.getFillColor());
             gc.setLineWidth(WayType.TERTIARY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultTERTIARY) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.SECONDARY.getColorValue());
+            gc.setStroke(WayType.SECONDARY.getFillColor());
             gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultSECONDARY) {
                 drawable.draw(gc);
             }
-            gc.setStroke(WayType.PRIMARY.getColorValue());
+            gc.setStroke(WayType.PRIMARY.getFillColor());
             gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultPRIMARY) {
                 drawable.draw(gc);
-            }
+            }*/
 
             ///Er ikke på Bornholm///
-        /*gc.setStroke(WayType.TRUNK.getColorValue());
-        gc.setLineWidth(WayType.TRUNK.setWidth()/Math.sqrt(trans.determinant()));
+        /*gc.setStroke(WayType.TRUNK.getFillColor());
+        gc.setLineWidth(WayType.TRUNK.getWidth()/Math.sqrt(trans.determinant()));
         for (Drawable drawable : resultTRUNK) {
             drawable.draw(gc);
         }
-            gc.setStroke(WayType.MOTORWAY.getColorValue());
-            gc.setLineWidth(WayType.MOTORWAY.setWidth()/Mat
+            gc.setStroke(WayType.MOTORWAY.getFillColor());
+            gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
         for (Drawable drawable : resultMOTORWAY) {
-            h.sqrt(trans.determinant()));
             drawable.draw(gc);
         }*/
 
 
             //////////////////////////////////////tegner BUILDING//////////////////////////////////////
-            gc.setFill(WayType.BUILDING.getColorValue());
-            gc.setStroke(Color.valueOf("C3B8AE"));
+            //gc.setFill(WayType.BUILDING.getFillColor());
+            //gc.setStroke(Color.valueOf("C3B8AE"));
             gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultBUILDING) {
-                drawable.fill(gc);
-                drawable.draw(gc);
+                drawable.fillWayType(gc, WayType.BUILDING);
+                drawable.drawWayType(gc, WayType.BUILDING);
             }
 
 

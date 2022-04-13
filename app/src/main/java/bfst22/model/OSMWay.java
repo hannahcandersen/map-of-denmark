@@ -22,7 +22,6 @@ public class OSMWay implements Serializable {
     }
 
     //Bruges til at finde vejens midtpunkt
-
     private void calculateMinAndMax() {
 
         for (OSMNode node : nodes) {

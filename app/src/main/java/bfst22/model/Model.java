@@ -281,6 +281,8 @@ public class Model {
         var id2way = new HashMap<Long, OSMWay>(); // map til veje, der gemmer rel-id og listen af nodes for vejen
         var nodes = new ArrayList<OSMNode>(); // liste af nodes for den enkelte vej
         var rel = new ArrayList<OSMWay>(); // liste med osm ways
+        var innerRole = new ArrayList<Drawable>();
+        var outerRole = new ArrayList<Drawable>();
         long relID = 0; // giver et id til en relation
         var type = WayType.UNKNOWN; // sætter først typen til unknows. kan ændres undervejs i metoden til f.eks. LAKE
         while (reader.hasNext()) { // læser hver linje én af gangen
@@ -460,13 +462,25 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
+                                case "type":
+                                    if(v.equals("multipolygon")) {
+
+                                    }
+                                    break;
                             }
                             break;
                         // relations har member-tags, der referer til
                         case "member":
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
-                            var elm = id2way.get(ref);
-                            if (elm != null) rel.add(elm);
+                            var elm = id2way.get(ref); //man får et OSMWay objekt
+                            if (elm != null) rel.add(elm); //tilføjer OSMWay objekt til listen rel
+
+                            var role = reader.getAttributeValue(null, "role");
+                            if(role.equals("inner")) {
+
+                            } else if(role.equals("outer")) {
+
+                            }
                             break;
                         case "relation":
                             id = Long.parseLong(reader.getAttributeValue(null, "id"));
@@ -488,9 +502,11 @@ public class Model {
                             nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
                             break;
                         case "relation":
-                            if (type == WayType.LAKE && !rel.isEmpty()) {
+                            if (type == WayType.FOREST && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
                             }
+
+
                             rel.clear();
                             break;
                     }
