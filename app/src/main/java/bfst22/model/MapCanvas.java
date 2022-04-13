@@ -22,11 +22,15 @@ public class MapCanvas extends Canvas {
         pan(-model.getMinLon(), -model.getMinLat());
         zoom(640 / (model.getMaxlon() - model.getMinLon()), 0, 0);
         model.addObserver(this::repaint);
-        repaint();
+        //try {
+            repaint();
+        /*} catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }*/
     }
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
-    public void repaint() {
+    public void repaint() { //throws NullPointerException
 
         //Får punkterne i vinduet
         //PLUS 20 OG MINUS 20 SKAL FJERNES I DEN ENDELIGE LØSNING
@@ -67,7 +71,6 @@ public class MapCanvas extends Canvas {
         var resultQUARRY = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeQUARRY());
         var resultRECREATION_GROUND = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRECREATION_GROUND());
         var resultVILLAGE_GREEN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeVILLAGE_GREEN());
-        var resultSALT_POND = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSALT_POND());
         var resultBROWNFIELD = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBROWNFIELD());
         var resultGARAGES = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGARAGES());
         var resultLANDFILL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLANDFILL());
@@ -109,104 +112,101 @@ public class MapCanvas extends Canvas {
 
         //////////////////////////////////////tegner UNKNOWN//////////////////////////////////////
         for (Drawable drawable : resultUNKNOW) {
-            drawable.draw(gc);
-        }
+                drawable.draw(gc);
+            }
 
-        //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
-        gc.setFill(WayType.RESIDENTIAL.getColorValue());
-        for (Drawable drawable : resultRESIDENTIAL) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.FOREST.getColorValue());
-        for (Drawable drawable : resultFOREST) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.MEADOW.getColorValue());
-        for (Drawable drawable : resultMEADOW) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.CEMETERY.getColorValue());
-        for (Drawable drawable : resultCEMETERY) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.ALLOTMENTS.getColorValue());
-        for (Drawable drawable : resultALLOTMENTS) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.FARMYARD.getColorValue());
-        for (Drawable drawable : resultFARMYARD) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.COMMERCIAL.getColorValue());
-        for (Drawable drawable : resultCOMMERCIAL) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.CONSTRUCTION.getColorValue());
-        for (Drawable drawable : resultCONSTRUCTION) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.RETAIL.getColorValue());
-        for (Drawable drawable : resultRETAIL) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.INDUSTRIAL.getColorValue());
-        for (Drawable drawable : resultINDUSTRIAL) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.FARMLAND.getColorValue());
-        for (Drawable drawable : resultFARMLAND) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.ORCHARD.getColorValue());
-        for (Drawable drawable : resultORCHARD) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.VINEYARD.getColorValue());
-        for (Drawable drawable : resultVINEYARD) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.BASIN.getColorValue());
-        for (Drawable drawable : resultBASIN) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.GRASS.getColorValue());
-        for (Drawable drawable : resultGRASS) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.GREENFIELD.getColorValue());
-        for (Drawable drawable : resultGREENFIELD) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.GREENHOUSE_HORTICULTURE.getColorValue());
-        for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.MILITARY.getColorValue());
-        for (Drawable drawable : resultMILITARY) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.PLANT_NURSERY.getColorValue());
-        for (Drawable drawable : resultPLANT_NURSERY) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.QUARRY.getColorValue());
-        for (Drawable drawable : resultQUARRY) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.RECREATION_GROUND.getColorValue());
-        for (Drawable drawable : resultRECREATION_GROUND) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.VILLAGE_GREEN.getColorValue());
-        for (Drawable drawable : resultVILLAGE_GREEN) {
-            drawable.fill(gc);
-        }
-        ///Er ikke på Bornholm///
-        /*gc.setFill(WayType.SALT_POND.getColorValue());
-        for (Drawable drawable : resultSALT_POND) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.BROWNFIELD.getColorValue());
+
+            //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
+            gc.setFill(WayType.RESIDENTIAL.getColorValue());
+            for (Drawable drawable : resultRESIDENTIAL) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.FOREST.getColorValue());
+            for (Drawable drawable : resultFOREST) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.MEADOW.getColorValue());
+            for (Drawable drawable : resultMEADOW) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.CEMETERY.getColorValue());
+            for (Drawable drawable : resultCEMETERY) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.ALLOTMENTS.getColorValue());
+            for (Drawable drawable : resultALLOTMENTS) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.FARMYARD.getColorValue());
+            for (Drawable drawable : resultFARMYARD) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.COMMERCIAL.getColorValue());
+            for (Drawable drawable : resultCOMMERCIAL) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.CONSTRUCTION.getColorValue());
+            for (Drawable drawable : resultCONSTRUCTION) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.RETAIL.getColorValue());
+            for (Drawable drawable : resultRETAIL) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.INDUSTRIAL.getColorValue());
+            for (Drawable drawable : resultINDUSTRIAL) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.FARMLAND.getColorValue());
+            for (Drawable drawable : resultFARMLAND) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.ORCHARD.getColorValue());
+            for (Drawable drawable : resultORCHARD) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.VINEYARD.getColorValue());
+            for (Drawable drawable : resultVINEYARD) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.BASIN.getColorValue());
+            for (Drawable drawable : resultBASIN) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.GRASS.getColorValue());
+            for (Drawable drawable : resultGRASS) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.GREENFIELD.getColorValue());
+            for (Drawable drawable : resultGREENFIELD) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.GREENHOUSE_HORTICULTURE.getColorValue());
+            for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.MILITARY.getColorValue());
+            for (Drawable drawable : resultMILITARY) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.PLANT_NURSERY.getColorValue());
+            for (Drawable drawable : resultPLANT_NURSERY) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.QUARRY.getColorValue());
+            for (Drawable drawable : resultQUARRY) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.RECREATION_GROUND.getColorValue());
+            for (Drawable drawable : resultRECREATION_GROUND) {
+                drawable.fill(gc);
+            }
+            gc.setFill(WayType.VILLAGE_GREEN.getColorValue());
+            for (Drawable drawable : resultVILLAGE_GREEN) {
+                drawable.fill(gc);
+            }
+            ///Er ikke på Bornholm///
+        /*gc.setFill(WayType.BROWNFIELD.getColorValue());
         for (Drawable drawable : resultBROWNFIELD) {
             drawable.fill(gc);
         }
@@ -228,97 +228,97 @@ public class MapCanvas extends Canvas {
         }*/
 
 
-        //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
-        gc.setStroke(WayType.CONSTRUCTIONWAY.getColorValue());
-        gc.setLineWidth(WayType.CONSTRUCTIONWAY.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultCONSTRUCTIONWAY) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.BRIDLEWAY.getColorValue());
-        gc.setLineDashes(1/Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
-        gc.setLineWidth(WayType.BRIDLEWAY.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultBRIDLEWAY) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.STEPS.getColorValue());
-        gc.setLineDashes(1/Math.sqrt(trans.determinant()) * WayType.STEPS.getDashes());
-        gc.setLineWidth(WayType.STEPS.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultSTEPS) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.FOOTWAY_ANDMORE.getColorValue());
-        gc.setLineDashes(1/Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
-        gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultFOOTWAY_ANDMORE) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.CYCLEWAY.getColorValue());
-        gc.setLineDashes(1/Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
-        gc.setLineWidth(WayType.CYCLEWAY.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultCYCLEWAY) {
-            drawable.draw(gc);
-        }
-        gc.setLineDashes(null);
-        gc.setStroke(WayType.RACEWAY.getColorValue());
-        gc.setLineWidth(WayType.RACEWAY.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultRACEWAY) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.TRACK.getColorValue());
-        gc.setLineDashes(1/Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
-        gc.setLineWidth(WayType.TRACK.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultTRACK) {
-            drawable.draw(gc);
-        }
-        gc.setLineDashes(null);
-        gc.setStroke(WayType.PEDESTRIAN.getColorValue());
-        gc.setLineWidth(WayType.PEDESTRIAN.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultPEDESTRIAN) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.SERVICE.getColorValue());
-        gc.setLineWidth(WayType.SERVICE.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultSERVICE) {
-            drawable.draw(gc);
-        }
-        ///Er ikke på Bornholm///
+            //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
+            gc.setStroke(WayType.CONSTRUCTIONWAY.getColorValue());
+            gc.setLineWidth(WayType.CONSTRUCTIONWAY.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultCONSTRUCTIONWAY) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.BRIDLEWAY.getColorValue());
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
+            gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultBRIDLEWAY) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.STEPS.getColorValue());
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.STEPS.getDashes());
+            gc.setLineWidth(WayType.STEPS.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultSTEPS) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.FOOTWAY_ANDMORE.getColorValue());
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
+            gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultFOOTWAY_ANDMORE) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.CYCLEWAY.getColorValue());
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
+            gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultCYCLEWAY) {
+                drawable.draw(gc);
+            }
+            gc.setLineDashes(null);
+            gc.setStroke(WayType.RACEWAY.getColorValue());
+            gc.setLineWidth(WayType.RACEWAY.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultRACEWAY) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.TRACK.getColorValue());
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
+            gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultTRACK) {
+                drawable.draw(gc);
+            }
+            gc.setLineDashes(null);
+            gc.setStroke(WayType.PEDESTRIAN.getColorValue());
+            gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultPEDESTRIAN) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.SERVICE.getColorValue());
+            gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultSERVICE) {
+                drawable.draw(gc);
+            }
+            ///Er ikke på Bornholm///
         /*gc.setStroke(WayType.ROAD.getColorValue());
         gc.setLineWidth(WayType.ROAD.setWidth()/Math.sqrt(trans.determinant()));
         for (Drawable drawable : resultROAD) {
             drawable.draw(gc);
         }*/
-        gc.setStroke(WayType.LIVING_STREET.getColorValue());
-        gc.setLineWidth(WayType.LIVING_STREET.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultLIVING_STREET) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.RESIDENTIALWAY.getColorValue());
-        gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultRESIDENTIALWAY) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.UNCLASSIFIED.getColorValue());
-        gc.setLineWidth(WayType.UNCLASSIFIED.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultUNCLASSIFIED) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.TERTIARY.getColorValue());
-        gc.setLineWidth(WayType.TERTIARY.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultTERTIARY) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.SECONDARY.getColorValue());
-        gc.setLineWidth(WayType.SECONDARY.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultSECONDARY) {
-            drawable.draw(gc);
-        }
-        gc.setStroke(WayType.PRIMARY.getColorValue());
-        gc.setLineWidth(WayType.PRIMARY.getWidth()/Math.sqrt(trans.determinant()));
-        for (Drawable drawable : resultPRIMARY) {
-            drawable.draw(gc);
-        }
+            gc.setStroke(WayType.LIVING_STREET.getColorValue());
+            gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultLIVING_STREET) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.RESIDENTIALWAY.getColorValue());
+            gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultRESIDENTIALWAY) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.UNCLASSIFIED.getColorValue());
+            gc.setLineWidth(WayType.UNCLASSIFIED.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultUNCLASSIFIED) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.TERTIARY.getColorValue());
+            gc.setLineWidth(WayType.TERTIARY.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultTERTIARY) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.SECONDARY.getColorValue());
+            gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultSECONDARY) {
+                drawable.draw(gc);
+            }
+            gc.setStroke(WayType.PRIMARY.getColorValue());
+            gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultPRIMARY) {
+                drawable.draw(gc);
+            }
 
-        ///Er ikke på Bornholm///
+            ///Er ikke på Bornholm///
         /*gc.setStroke(WayType.TRUNK.getColorValue());
         gc.setLineWidth(WayType.TRUNK.setWidth()/Math.sqrt(trans.determinant()));
         for (Drawable drawable : resultTRUNK) {
@@ -332,14 +332,15 @@ public class MapCanvas extends Canvas {
         }*/
 
 
-        //////////////////////////////////////tegner BUILDING//////////////////////////////////////
-        gc.setFill(WayType.BUILDING.getColorValue());
-        gc.setStroke(Color.valueOf("C3B8AE"));
-        gc.setLineWidth(WayType.BUILDING.getWidth()/Math.sqrt(trans.determinant()));
-        for(Drawable drawable : resultBUILDING) {
-            drawable.fill(gc);
-            drawable.draw(gc);
-        }
+            //////////////////////////////////////tegner BUILDING//////////////////////////////////////
+            gc.setFill(WayType.BUILDING.getColorValue());
+            gc.setStroke(Color.valueOf("C3B8AE"));
+            gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
+            for (Drawable drawable : resultBUILDING) {
+                drawable.fill(gc);
+                drawable.draw(gc);
+            }
+
 
 
 
@@ -353,7 +354,11 @@ public class MapCanvas extends Canvas {
 
     public void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
-        repaint();
+        //try {
+            repaint();
+        /*} catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }*/
     }
 
     // Zoomer med en given faktor
@@ -361,7 +366,11 @@ public class MapCanvas extends Canvas {
         trans.prependTranslation(-x, -y);
         trans.prependScale(factor, factor);
         trans.prependTranslation(x, y);
-        repaint();
+        //try {
+            repaint();
+        /*} catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }*/
     }
 
     //oversætter window koordinater til model koordinater

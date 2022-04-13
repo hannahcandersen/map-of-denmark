@@ -46,7 +46,6 @@ public class Model {
     private static KdNode KDTreeINDUSTRIAL;
     private static KdNode KDTreeMEADOW;
     private static KdNode KDTreePARK;
-    private static KdNode KDTreeWETLAND;
     private static KdNode KDTreeCEMETERY;
     private static KdNode KDTreeALLOTMENTS;
     private static KdNode KDTreeSCRUB;
@@ -66,14 +65,12 @@ public class Model {
     private static KdNode KDTreeQUARRY;
     private static KdNode KDTreeRECREATION_GROUND;
     private static KdNode KDTreeVILLAGE_GREEN;
-    private static KdNode KDTreeSALT_POND;
     private static KdNode KDTreeBROWNFIELD;
     private static KdNode KDTreeGARAGES;
     private static KdNode KDTreeLANDFILL;
     private static KdNode KDTreeRAILWAY;
     private static KdNode KDTreeRELIGIOUS;
     private static KdNode KDTreeGRASSLAND;
-
 
     private static KdNode KDTreeHEATH;
     private static KdNode KDTreePLAYGROUND;
@@ -184,7 +181,6 @@ public class Model {
         KDTreeINDUSTRIAL = KdTree.buildKDTree(lines.get(WayType.INDUSTRIAL), true);
         KDTreeMEADOW = KdTree.buildKDTree(lines.get(WayType.MEADOW), true);
         KDTreePARK = KdTree.buildKDTree(lines.get(WayType.PARK), true);
-        KDTreeWETLAND = KdTree.buildKDTree(lines.get(WayType.WETLAND), true);
         KDTreeCEMETERY = KdTree.buildKDTree(lines.get(WayType.CEMETERY), true);
         KDTreeALLOTMENTS = KdTree.buildKDTree(lines.get(WayType.ALLOTMENTS), true);
         KDTreeSCRUB = KdTree.buildKDTree(lines.get(WayType.SCRUB), true);
@@ -204,7 +200,6 @@ public class Model {
         KDTreeQUARRY = KdTree.buildKDTree(lines.get(WayType.QUARRY), true);
         KDTreeRECREATION_GROUND = KdTree.buildKDTree(lines.get(WayType.RECREATION_GROUND), true);
         KDTreeVILLAGE_GREEN = KdTree.buildKDTree(lines.get(WayType.VILLAGE_GREEN), true);
-        KDTreeSALT_POND = KdTree.buildKDTree(lines.get(WayType.SALT_POND), true);
         KDTreeBROWNFIELD = KdTree.buildKDTree(lines.get(WayType.BROWNFIELD), true);
         KDTreeLANDFILL = KdTree.buildKDTree(lines.get(WayType.GARAGES), true);
         KDTreeRAILWAY = KdTree.buildKDTree(lines.get(WayType.RAILWAY), true);
@@ -348,7 +343,6 @@ public class Model {
                                         case "quarry" -> WayType.QUARRY;
                                         case "recreation_ground" -> WayType.RECREATION_GROUND;
                                         case "village_green" -> WayType.VILLAGE_GREEN;
-                                        case "salt_pond" -> WayType.SALT_POND;
                                         case "brownfield" -> WayType.BROWNFIELD;
                                         case "garages" -> WayType.GARAGES;
                                         case "landfill" -> WayType.LANDFILL;
@@ -364,7 +358,6 @@ public class Model {
                                         case "sand" -> WayType.SAND;
                                         case "tree_row" -> WayType.TREE_ROW;
                                         case "water" -> WayType.WATER;
-                                        case "wetland" -> WayType.WETLAND;
                                         case "scrub" -> WayType.SCRUB;
                                         case "grassland" -> WayType.GRASSLAND;
                                         case "heath" -> WayType.HEATH;
@@ -388,6 +381,7 @@ public class Model {
                                         case "river", "canal" -> WayType.RIVER_ANDMORE;
                                         case "stream", "ditch", "drain" -> WayType.STREAM_ANDMORE;
                                         case "dock" -> WayType.DOCK;
+                                        case "lake" -> WayType.LAKE;
                                         default -> type;
                                     };
                                     break;
@@ -407,7 +401,21 @@ public class Model {
                                                 "farm_auxiliary", "silo", "roof", "storage_tank", "kindergarten", "barn",
                                                 "stable", "terrace", "apartments", "sports_hall", "cabin",
                                                 "kiosk", "windmill", "cowshed", "supermarket", "watermill", "civic",
-                                                "hut", "carport", "ruins", "construction", "hospital", "residential" -> WayType.BUILDING;
+                                                "hut", "carport", "ruins", "construction", "hospital", "residential",
+                                                "bunker", "transformer_tower", "dormitory", "bank", "university",
+                                                "sports_centre", "cathedral", "manor", "college", "hangar", "government",
+                                                "prison", "train_station", "manufacture", "transportation", "watertower",
+                                                "synagogue", "fortress", "garages", "childcare", "stilt_house", "clinic",
+                                                "castle", "observatory", "mansion", "museum", "stadium", "riding_hall",
+                                                "temple", "cottage", "storage", "bakehouse", "religious", "mosque", "shop",
+                                                "theatre", "fire_station", "allotment_house", "library", "sports_center",
+                                                "data_center", "pumping_station", "townhall", "tower", "cinema", "monastery",
+                                                "private", "skyscraper", "factory", "restaurant", "chalet", "brewery", "pagoda",
+                                                "cold_store", "ground_station", "skyway", "outbuilding", "pavilion", "shelter",
+                                                "institution", "palace", "hall", "outhouse", "production_hall", "mall",
+                                                "chapel_of_rest", "dentist", "conservatory", "bell_tower", "farmhouse",
+                                                "court_house"
+                                                -> WayType.BUILDING;
                                         default -> type;
                                     };
                                     break;
@@ -444,7 +452,7 @@ public class Model {
                                         case "road" -> WayType.ROAD;
                                         case "raceway" -> WayType.RACEWAY;
                                         case "bus_guideway" -> WayType.BUS_GUIDEWAY;
-                                        case "footway", "path", "crossing", "sidewalk" -> WayType.FOOTWAY_ANDMORE;
+                                        case "footway", "path", "crossing" -> WayType.FOOTWAY_ANDMORE;
                                         case "bridleway" -> WayType.BRIDLEWAY;
                                         case "steps" -> WayType.STEPS;
                                         case "cycleway" -> WayType.CYCLEWAY;
@@ -568,10 +576,6 @@ public class Model {
         return KDTreePARK;
     }
 
-    public static KdNode getKDTreeWETLAND() {
-        return KDTreeWETLAND;
-    }
-
     public static KdNode getKDTreeCEMETERY() {
         return KDTreeCEMETERY;
     }
@@ -646,10 +650,6 @@ public class Model {
 
     public static KdNode getKDTreeVILLAGE_GREEN() {
         return KDTreeVILLAGE_GREEN;
-    }
-
-    public static KdNode getKDTreeSALT_POND() {
-        return KDTreeSALT_POND;
     }
 
     public static KdNode getKDTreeBROWNFIELD() {
