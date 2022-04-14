@@ -16,6 +16,10 @@ public class MapCanvas extends Canvas {
     private Model model;
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
+    private int zoomLevel;
+    private int currentZoomLevel;
+    private double zoom;
+
 
     public void init(Model model) {
         this.model = model;
@@ -39,9 +43,21 @@ public class MapCanvas extends Canvas {
         Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
-        RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(),
-                realMin.getX(), realMax.getX());
+        RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         System.out.println(searchRangeSerachRectangle);
+
+        ////////////////// START ZOOM OVERHOVEDE IKKE SIKKER ///////////////
+        //Udregnet zoomLevel
+        currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
+        System.out.println("Currentzoomlevel: " + currentZoomLevel);
+
+        //udregner zoomlevel på en anden måde:
+        int mapdisplay = 322; //min of height and width of element which contains the map
+        double dist = (6371 * Math.acos(Math.sin(realMin.getX() / 57.2958) * Math.sin(realMax.getX() / 57.2958) +
+                (Math.cos(realMin.getX() / 57.2958) * Math.cos(realMax.getX() / 57.2958) * Math.cos((realMax.getY() / 57.2958) - (realMin.getY() / 57.2958)))));
+        zoom = Math.floor(8 - Math.log(1.6446 * dist / Math.sqrt(2 * (mapdisplay * mapdisplay))) / Math.log (2));
+        System.out.println("zoom: " + (zoom));
+        ////////////////// SLUT ZOOM OVERHOVEDE IKKE SIKKER ///////////////
 
         //Result listen, med de drawables der er inRange
         var resultUNKNOW = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
@@ -102,9 +118,6 @@ public class MapCanvas extends Canvas {
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
-
-
-
 
         // Tegner og farvelægger kortet
         if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOW) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
@@ -248,13 +261,21 @@ public class MapCanvas extends Canvas {
             drawable.draw(gc);
         }*/
 
-        //Laver rectangle - virker ikke
+        //Tegner vores debug firkant
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
         gc.setFill(rectangleColor);
         gc.setStroke(Color.BLACK);
         gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
         gc.stroke();
+    }
 
+    private int getZoomLevel(double r) {
+        if (r != 0){
+            double scale = r / 500;
+            zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        }
+        System.out.println("Zoonlevel: " + (zoomLevel));
+        return zoomLevel;
     }
 
     public void pan(double dx, double dy) {
@@ -268,11 +289,13 @@ public class MapCanvas extends Canvas {
 
     // Zoomer med en given faktor
     public void zoom(double factor, double x, double y) {
-        trans.prependTranslation(-x, -y);
-        trans.prependScale(factor, factor);
-        trans.prependTranslation(x, y);
-        //try {
+            trans.prependTranslation(-x, -y);
+            trans.prependScale(factor, factor);
+            trans.prependTranslation(x, y);
             repaint();
+
+        //try {
+        //  repaint();
         /*} catch (NullPointerException e) {
             System.out.println(e.getMessage());
         }*/
@@ -289,5 +312,4 @@ public class MapCanvas extends Canvas {
             throw new RuntimeException(e);
         }
     }
-
 }
