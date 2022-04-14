@@ -32,18 +32,15 @@ public class MapCanvas extends Canvas {
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() { //throws NullPointerException
 
-        //Får punkterne i vinduet
-        //PLUS 20 OG MINUS 20 SKAL FJERNES I DEN ENDELIGE LØSNING
+        //Får punkterne i vinduet og laver dem om til punkter i kortet
         Point2D screenMin = new Point2D(200, 200);
         Point2D screenMax = new Point2D(getWidth()-200, getHeight()-200);
-
-        //Punkter i vinduet lavet om til coords
         Point2D realMin = mouseToModel(screenMin);
         Point2D realMax = mouseToModel(screenMax);
 
-        //Opretter en rectangle med de koordinater der er inden for rectangle
-        RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(),
-                realMax.getY(), realMin.getX(), realMax.getX());
+        //Opretter en Searchrectangle med de koordinater der er inden for rectangle
+        RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(),
+                realMin.getX(), realMax.getX());
         System.out.println(searchRangeSerachRectangle);
 
         //Result listen, med de drawables der er inRange
@@ -96,7 +93,6 @@ public class MapCanvas extends Canvas {
         var resultMOTORWAY = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMOTORWAY());
         var resultBUILDING = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBUILDING());
 
-
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
@@ -105,123 +101,51 @@ public class MapCanvas extends Canvas {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
-
-        //Løber results (liste af drawables returneret af rangeSearch) igennem og tegner dem
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
 
 
-        //////////////////////////////////////tegner UNKNOWN//////////////////////////////////////
-        for (Drawable drawable : resultUNKNOW) {
-                drawable.drawWayType(gc, WayType.UNKNOWN);
-            }
 
 
-            //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
-            for (Drawable drawable : resultRESIDENTIAL) {
-                drawable.fillWayType(gc, WayType.RESIDENTIAL);
-            }
-            for (Drawable drawable : resultFOREST) {
-                drawable.fillWayType(gc, WayType.FOREST);
-            }
-            for (Drawable drawable : resultMEADOW) {
-                drawable.fillWayType(gc, WayType.MEADOW);
-            }
-            /*gc.setFill(WayType.CEMETERY.getFillColor());
-            for (Drawable drawable : resultCEMETERY) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.ALLOTMENTS.getFillColor());
-            for (Drawable drawable : resultALLOTMENTS) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.FARMYARD.getFillColor());
-            for (Drawable drawable : resultFARMYARD) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.COMMERCIAL.getFillColor());
-            for (Drawable drawable : resultCOMMERCIAL) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.CONSTRUCTION.getFillColor());
-            for (Drawable drawable : resultCONSTRUCTION) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.RETAIL.getFillColor());
-            for (Drawable drawable : resultRETAIL) {
-                drawable.fill(gc);
-            }*/
-            for (Drawable drawable : resultINDUSTRIAL) {
-                drawable.fillWayType(gc, WayType.INDUSTRIAL);
-            }
-            /*gc.setFill(WayType.FARMLAND.getFillColor());
-            for (Drawable drawable : resultFARMLAND) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.ORCHARD.getFillColor());
-            for (Drawable drawable : resultORCHARD) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.VINEYARD.getFillColor());
-            for (Drawable drawable : resultVINEYARD) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.BASIN.getFillColor());
-            for (Drawable drawable : resultBASIN) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.GRASS.getFillColor());
-            for (Drawable drawable : resultGRASS) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.GREENFIELD.getFillColor());
-            for (Drawable drawable : resultGREENFIELD) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.GREENHOUSE_HORTICULTURE.getFillColor());
-            for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.MILITARY.getFillColor());
-            for (Drawable drawable : resultMILITARY) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.PLANT_NURSERY.getFillColor());
-            for (Drawable drawable : resultPLANT_NURSERY) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.QUARRY.getFillColor());
-            for (Drawable drawable : resultQUARRY) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.RECREATION_GROUND.getFillColor());
-            for (Drawable drawable : resultRECREATION_GROUND) {
-                drawable.fill(gc);
-            }
-            gc.setFill(WayType.VILLAGE_GREEN.getFillColor());
-            for (Drawable drawable : resultVILLAGE_GREEN) {
-                drawable.fill(gc);
-            }
-            ///Er ikke på Bornholm///
-        /*gc.setFill(WayType.BROWNFIELD.getFillColor());
-        for (Drawable drawable : resultBROWNFIELD) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.GARAGES.getFillColor());
-        for (Drawable drawable : resultGARAGES) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.LANDFILL.getFillColor());
-        for (Drawable drawable : resultLANDFILL) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.RAILWAY.getFillColor());
-        for (Drawable drawable : resultRAILWAY) {
-            drawable.fill(gc);
-        }
-        gc.setFill(WayType.RELIGIOUS.getFillColor());
-        for (Drawable drawable : resultRELIGIOUS) {
-            drawable.fill(gc);
-        }*/
+        // Tegner og farvelægger kortet
+        if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOW) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
+        if(Model.getKDTreeRESIDENTIAL() != null){for (Drawable drawable : resultRESIDENTIAL) {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
+        if(Model.getKDTreeFOREST() != null){for (Drawable drawable : resultFOREST) {drawable.fillWayType(gc, WayType.FOREST);}}
+        if(Model.getKDTreeMEADOW() != null){for (Drawable drawable : resultMEADOW) {drawable.fillWayType(gc, WayType.MEADOW);}}
+        if(Model.getKDTreeCEMETERY() != null){for (Drawable drawable : resultCEMETERY) {drawable.fillWayType(gc, WayType.CEMETERY);}}
+        if(Model.getKDTreeFARMYARD() != null){for (Drawable drawable : resultFARMYARD) {drawable.fillWayType(gc, WayType.FARMYARD);}}
+        if(Model.getKDTreeCOMMERCIAL() != null){for (Drawable drawable : resultCOMMERCIAL) {drawable.fillWayType(gc, WayType.COMMERCIAL);}}
+        if(Model.getKDTreeCONSTRUCTION() != null){for (Drawable drawable : resultCONSTRUCTION) {drawable.fillWayType(gc, WayType.CONSTRUCTION);}}
+        if(Model.getKDTreeRETAIL() != null){for (Drawable drawable : resultRETAIL) {drawable.fillWayType(gc, WayType.RETAIL);}}
+        if(Model.getKDTreeINDUSTRIAL() != null){for (Drawable drawable : resultINDUSTRIAL) {drawable.fillWayType(gc, WayType.INDUSTRIAL);}}
+        if(Model.getKDTreeFARMLAND() != null){for (Drawable drawable : resultFARMLAND) {drawable.fillWayType(gc, WayType.FARMLAND);}}
+        if(Model.getKDTreeGRASS() != null){for (Drawable drawable : resultGRASS) {drawable.fillWayType(gc, WayType.GRASS);}}
+        if(Model.getKDTreeGREENHOUSE_HORTICULTURE() != null){for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}}
+        if(Model.getKDTreeLANDFILL() != null){for (Drawable drawable : resultLANDFILL) {drawable.fillWayType(gc, WayType.LANDFILL);}}
+        if(Model.getKDTreeRAILWAY() != null){for (Drawable drawable : resultRAILWAY) {drawable.fillWayType(gc, WayType.RAILWAY);}}
+        if(Model.getKDTreeRELIGIOUS() != null){for (Drawable drawable : resultRELIGIOUS) {drawable.fillWayType(gc, WayType.RELIGIOUS);}}
+        if(Model.getKDTreeALLOTMENTS() != null){for (Drawable drawable : resultALLOTMENTS) {drawable.fillWayType(gc, WayType.ALLOTMENTS);}}
+
+        gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
+        if(Model.getKDTreeBUILDING() != null){
+        for (Drawable drawable : resultBUILDING) {
+            drawable.fillWayType(gc, WayType.BUILDING);
+            drawable.drawWayType(gc, WayType.BUILDING);
+        }}
+
+        ////////////////Ting vi kunne overveje IKKE at farvelægge ////////////
+        /*
+        if(Model.getKDTreeVINEYARD() != null){for (Drawable drawable : resultVINEYARD) {drawable.fillWayType(gc, WayType.VINEYARD);}}
+        if(Model.getKDTreeBASIN() != null){for (Drawable drawable : resultBASIN) {drawable.fillWayType(gc, WayType.BASIN);}}
+        if(Model.getKDTreeORCHARD() != null){for (Drawable drawable : resultORCHARD) {drawable.fillWayType(gc, WayType.ORCHARD);}}
+        if(Model.getKDTreeMILITARY() != null){for (Drawable drawable : resultMILITARY) {drawable.fillWayType(gc, WayType.MILITARY);}}
+        if(Model.getKDTreePLANT_NURSERY() != null){for (Drawable drawable : resultPLANT_NURSERY) {drawable.fillWayType(gc, WayType.PLANT_NURSERY);}}
+        if(Model.getKDTreeQUARRY() != null){for (Drawable drawable : resultQUARRY) {drawable.fillWayType(gc, WayType.QUARRY);}} //Stenbrud
+        if(Model.getKDTreeRECREATION_GROUND() != null){for (Drawable drawable : resultRECREATION_GROUND) {drawable.fillWayType(gc, WayType.RECREATION_GROUND);}}//an area of public land that is used for sports and outdoor games.
+        if(Model.getKDTreeVILLAGE_GREEN() != null){for (Drawable drawable : resultVILLAGE_GREEN) {drawable.fillWayType(gc, WayType.VILLAGE_GREEN);}}//A village green is a common open area within a village or other settlement
+        if(Model.getKDTreeBROWNFIELD() != null){for (Drawable drawable : resultBROWNFIELD) {drawable.fillWayType(gc, WayType.BROWNFIELD);}} //Findes ikke på bornholm
+        if(Model.getKDTreeGARAGES() != null){for (Drawable drawable : resultGARAGES) {drawable.fillWayType(gc, WayType.GARAGES);}}
+        if(Model.getKDTreeGREENFIELD() != null){for (Drawable drawable : resultGREENFIELD) {drawable.fillWayType(gc, WayType.GREENFIELD);}}
+*/
 
 
             //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
@@ -277,13 +201,13 @@ public class MapCanvas extends Canvas {
             for (Drawable drawable : resultSERVICE) {
                 drawable.draw(gc);
             }
-            ///Er ikke på Bornholm///
-        /*gc.setStroke(WayType.ROAD.getFillColor());
+
+        gc.setStroke(WayType.ROAD.getFillColor()); ///Er ikke på Bornholm///
         gc.setLineWidth(WayType.ROAD.getWidth()/Math.sqrt(trans.determinant()));
         for (Drawable drawable : resultROAD) {
             drawable.draw(gc);
-        }*/
-            /*gc.setStroke(WayType.LIVING_STREET.getFillColor());
+
+            gc.setStroke(WayType.LIVING_STREET.getFillColor());
             gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultLIVING_STREET) {
                 drawable.draw(gc);
@@ -312,10 +236,8 @@ public class MapCanvas extends Canvas {
             gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
             for (Drawable drawable : resultPRIMARY) {
                 drawable.draw(gc);
-            }*/
 
-            ///Er ikke på Bornholm///
-        /*gc.setStroke(WayType.TRUNK.getFillColor());
+        gc.setStroke(WayType.TRUNK.getFillColor());    ///Er ikke på Bornholm///
         gc.setLineWidth(WayType.TRUNK.getWidth()/Math.sqrt(trans.determinant()));
         for (Drawable drawable : resultTRUNK) {
             drawable.draw(gc);
@@ -326,25 +248,13 @@ public class MapCanvas extends Canvas {
             drawable.draw(gc);
         }*/
 
-
-            //////////////////////////////////////tegner BUILDING//////////////////////////////////////
-            //gc.setFill(WayType.BUILDING.getFillColor());
-            //gc.setStroke(Color.valueOf("C3B8AE"));
-            gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
-            for (Drawable drawable : resultBUILDING) {
-                drawable.fillWayType(gc, WayType.BUILDING);
-                drawable.drawWayType(gc, WayType.BUILDING);
-            }
-
-
-
-
         //Laver rectangle - virker ikke
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
         gc.setFill(rectangleColor);
         gc.setStroke(Color.BLACK);
-        gc.fillRect(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
+        gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
         gc.stroke();
+
     }
 
     public void pan(double dx, double dy) {
@@ -379,4 +289,5 @@ public class MapCanvas extends Canvas {
             throw new RuntimeException(e);
         }
     }
+
 }
