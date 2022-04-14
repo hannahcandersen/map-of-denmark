@@ -49,24 +49,6 @@ public enum WayType {
             case RAILWAY -> Color.valueOf("E9DBE8");
             case RELIGIOUS -> Color.valueOf("CDCCC9");
             case FOREST -> Color.valueOf("B4D0A3");
-            case CONSTRUCTIONWAY -> Color.valueOf("AAAAAA");
-            case MOTORWAY -> Color.valueOf("DD94A1");
-            case TRUNK -> Color.valueOf("F2C3AF");
-            case PRIMARY -> Color.valueOf("F7D8A8");
-            case SECONDARY -> Color.valueOf("F8FAC1");
-            case TERTIARY -> Color.valueOf("FEFEFE");
-            case UNCLASSIFIED -> Color.valueOf("FEFEFE");
-            case RESIDENTIALWAY -> Color.valueOf("FEFEFE");
-            case LIVING_STREET -> Color.valueOf("EDEDED");
-            case ROAD -> Color.valueOf("DDDDDD");
-            case SERVICE -> Color.valueOf("FEFEFE");
-            case PEDESTRIAN -> Color.valueOf("DDDDE8");
-            case TRACK -> Color.valueOf("A6863A");
-            case RACEWAY -> Color.valueOf("F5C1CA");
-            case CYCLEWAY -> Color.valueOf("5656F2");
-            case FOOTWAY_ANDMORE -> Color.valueOf("EA897B");
-            case STEPS -> Color.valueOf("EC8574");
-            case BRIDLEWAY -> Color.valueOf("64A257");
             case BUILDING -> Color.valueOf("D7D0CB");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
         };
@@ -75,6 +57,21 @@ public enum WayType {
     public Paint getStrokeColor() {
         return switch (this) {
             case BUILDING -> Color.valueOf("C3B8AE");
+            case CONSTRUCTIONWAY -> Color.valueOf("AAAAAA");
+            case MOTORWAY -> Color.valueOf("DD94A1");
+            case TRUNK -> Color.valueOf("F2C3AF");
+            case PRIMARY -> Color.valueOf("F7D8A8");
+            case SECONDARY -> Color.valueOf("F8FAC1");
+            case TERTIARY, SERVICE, UNCLASSIFIED, RESIDENTIALWAY -> Color.valueOf("FEFEFE");
+            case LIVING_STREET -> Color.valueOf("EDEDED");
+            case ROAD -> Color.valueOf("DDDDDD");
+            case PEDESTRIAN -> Color.valueOf("DDDDE8");
+            case TRACK -> Color.valueOf("A6863A");
+            case RACEWAY -> Color.valueOf("F5C1CA");
+            case CYCLEWAY -> Color.valueOf("5656F2");
+            case FOOTWAY_ANDMORE -> Color.valueOf("EA897B");
+            case STEPS -> Color.valueOf("EC8574");
+            case BRIDLEWAY -> Color.valueOf("64A257");
             default -> Color.BLACK;
         };
     }
