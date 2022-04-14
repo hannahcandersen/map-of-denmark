@@ -110,7 +110,7 @@ public class KdTree {
     //Privat RangeSearch metode
        private static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
             if (splitNode == null){
-                System.out.println("splitnode er tom!!!");
+                //System.out.println("splitnode er tom!!!");
                 return null;
             }
 
@@ -121,7 +121,7 @@ public class KdTree {
 
             for (Drawable drawable: ((Leaf) splitNode).getListOfDrawables()) {
 
-
+//Hannah kigger på det her//////////////
                 //hvis drawable er mindre end minX
                 //hvis drawable er større end maxX
                 //hvis drawable er mellem minX og maxX
