@@ -96,3 +96,4 @@ public enum WayType {
         };
     }
 }
+
