@@ -162,7 +162,7 @@ public class MapCanvas extends Canvas {
 */
 
 
-            //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
+        //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
         gc.setLineWidth(WayType.CONSTRUCTIONWAY.getWidth() / Math.sqrt(trans.determinant()));
         if(Model.getKDTreeCONSTRUCTIONWAY() != null) {for (Drawable drawable : resultCONSTRUCTIONWAY) {drawable.drawWayType(gc, WayType.CONSTRUCTIONWAY);}}
 
@@ -237,7 +237,7 @@ public class MapCanvas extends Canvas {
             double scale = r / 500;
             zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
         }
-        System.out.println("Zoonlevel: " + (zoomLevel));
+        System.out.println("Zoomlevel: " + (zoomLevel));
         return zoomLevel;
     }
 
