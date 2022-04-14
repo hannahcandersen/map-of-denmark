@@ -19,6 +19,10 @@ public enum WayType {
     ICE_RINK, MARINA, MINIATURE_GOLF, NATURE_RESERVE, PITCH, SPORTS_CENTRE, SWIMMING_POOL, RIVER_ANDMORE, SCHOOL,
     STREAM_ANDMORE, DOCK, POND_ANDMORE, HARBOUR, PARKING;
 
+    /*
+    Her er også stroke farve, men fordi BUILDING skal have to forskellige farver, er der lavet to metoder.
+    (se nedenfor)
+     */
     public Paint getFillColor() {
         return switch (this) {
             case LAKE, BASIN -> Color.valueOf("B2D2DD");
