@@ -48,6 +48,7 @@ public class MapCanvas extends Canvas {
 
         ////////////////// START ZOOM OVERHOVEDE IKKE SIKKER ///////////////
         //Udregnet zoomLevel
+        //VI HAR 3 ZOOM UDREGNERE, Currentzoomlevel, ZoomLevel (ens værdi) og zoom.
         currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         System.out.println("Currentzoomlevel: " + currentZoomLevel);
 
@@ -60,8 +61,8 @@ public class MapCanvas extends Canvas {
         ////////////////// SLUT ZOOM OVERHOVEDE IKKE SIKKER ///////////////
 
         //Result listen, med de drawables der er inRange
-        var resultUNKNOW = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
-        //System.out.println("leaves added in resultUNKNOW: " + KdTree.getLeavesAdded());
+        var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
+        //System.out.println("leaves added in resultUNKNOWN: " + KdTree.getLeavesAdded());
         var resultRESIDENTIAL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL());
         var resultFOREST = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST());
         var resultMEADOW = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW());
@@ -121,7 +122,8 @@ public class MapCanvas extends Canvas {
 
         // Tegner og farvelægger kortet
         //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
-        if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOW) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
+
+        if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOWN) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
         if(Model.getKDTreeRESIDENTIAL() != null){for (Drawable drawable : resultRESIDENTIAL) {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
         if(Model.getKDTreeFOREST() != null){for (Drawable drawable : resultFOREST) {drawable.fillWayType(gc, WayType.FOREST);}}
         if(Model.getKDTreeMEADOW() != null){for (Drawable drawable : resultMEADOW) {drawable.fillWayType(gc, WayType.MEADOW);}}
@@ -163,64 +165,134 @@ public class MapCanvas extends Canvas {
 
 
         //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
-        gc.setLineWidth(WayType.CONSTRUCTIONWAY.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeCONSTRUCTIONWAY() != null) {for (Drawable drawable : resultCONSTRUCTIONWAY) {drawable.drawWayType(gc, WayType.CONSTRUCTIONWAY);}}
+        //Her er ét stort if-statement der kun tegner MOTORWAY hvis zoomLevel er over 29.
+        if(zoomLevel < 29) {
+            gc.setLineWidth(WayType.CONSTRUCTIONWAY.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeCONSTRUCTIONWAY() != null) {
+                for (Drawable drawable : resultCONSTRUCTIONWAY) {
+                    drawable.drawWayType(gc, WayType.CONSTRUCTIONWAY);
+                }
+            }
 
-        gc.setLineDashes(1/Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
-        gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeBRIDLEWAY() != null) {for (Drawable drawable : resultBRIDLEWAY) {drawable.drawWayType(gc, WayType.BRIDLEWAY);}}
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
+            gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeBRIDLEWAY() != null) {
+                for (Drawable drawable : resultBRIDLEWAY) {
+                    drawable.drawWayType(gc, WayType.BRIDLEWAY);
+                }
+            }
 
-        gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.STEPS.getDashes());
-        gc.setLineWidth(WayType.STEPS.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeSTEPS() != null) {for (Drawable drawable : resultSTEPS) {drawable.drawWayType(gc, WayType.STEPS);}}
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.STEPS.getDashes());
+            gc.setLineWidth(WayType.STEPS.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeSTEPS() != null) {
+                for (Drawable drawable : resultSTEPS) {
+                    drawable.drawWayType(gc, WayType.STEPS);
+                }
+            }
 
-        gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
-        gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeFOOTWAY_ANDMORE() != null) {for (Drawable drawable : resultFOOTWAY_ANDMORE) {drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);}}
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
+            gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeFOOTWAY_ANDMORE() != null) {
+                for (Drawable drawable : resultFOOTWAY_ANDMORE) {
+                    drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);
+                }
+            }
 
-        gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
-        gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeCYCLEWAY() != null) {for (Drawable drawable : resultCYCLEWAY) {drawable.drawWayType(gc, WayType.CYCLEWAY);}}
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
+            gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeCYCLEWAY() != null) {
+                for (Drawable drawable : resultCYCLEWAY) {
+                    drawable.drawWayType(gc, WayType.CYCLEWAY);
+                }
+            }
 
-        gc.setLineDashes(null);
-        gc.setLineWidth(WayType.RACEWAY.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeRACEWAY() != null) {for (Drawable drawable : resultRACEWAY) {drawable.drawWayType(gc, WayType.RACEWAY);}}
+            gc.setLineDashes(null);
+            gc.setLineWidth(WayType.RACEWAY.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeRACEWAY() != null) {
+                for (Drawable drawable : resultRACEWAY) {
+                    drawable.drawWayType(gc, WayType.RACEWAY);
+                }
+            }
 
-        gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
-        gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeTRACK() != null) {for (Drawable drawable : resultTRACK) {drawable.drawWayType(gc, WayType.TRACK);}}
+            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
+            gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeTRACK() != null) {
+                for (Drawable drawable : resultTRACK) {
+                    drawable.drawWayType(gc, WayType.TRACK);
+                }
+            }
 
-        gc.setLineDashes(null);
-        gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreePEDESTRIAN() != null) {for (Drawable drawable : resultPEDESTRIAN) {drawable.drawWayType(gc, WayType.PEDESTRIAN);}}
+            gc.setLineDashes(null);
+            gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreePEDESTRIAN() != null) {
+                for (Drawable drawable : resultPEDESTRIAN) {
+                    drawable.drawWayType(gc, WayType.PEDESTRIAN);
+                }
+            }
 
-        gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeSERVICE() != null) {for (Drawable drawable : resultSERVICE) {drawable.drawWayType(gc, WayType.SERVICE);}}
+            gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeSERVICE() != null) {
+                for (Drawable drawable : resultSERVICE) {
+                    drawable.drawWayType(gc, WayType.SERVICE);
+                }
+            }
 
-        gc.setLineWidth(WayType.ROAD.getWidth()/Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeROAD() != null) {for (Drawable drawable : resultROAD) {drawable.drawWayType(gc, WayType.ROAD);}}
+            gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeROAD() != null) {
+                for (Drawable drawable : resultROAD) {
+                    drawable.drawWayType(gc, WayType.ROAD);
+                }
+            }
 
-        gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeLIVING_STREET() != null) {for (Drawable drawable : resultLIVING_STREET) {drawable.drawWayType(gc, WayType.LIVING_STREET);}}
+            gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeLIVING_STREET() != null) {
+                for (Drawable drawable : resultLIVING_STREET) {
+                    drawable.drawWayType(gc, WayType.LIVING_STREET);
+                }
+            }
 
-        gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeRESIDENTIALWAY() != null) {for (Drawable drawable : resultRESIDENTIALWAY) {drawable.drawWayType(gc, WayType.RESIDENTIALWAY);}}
+            gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeRESIDENTIALWAY() != null) {
+                for (Drawable drawable : resultRESIDENTIALWAY) {
+                    drawable.drawWayType(gc, WayType.RESIDENTIALWAY);
+                }
+            }
 
-        gc.setLineWidth(WayType.UNCLASSIFIED.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeUNCLASSIFIED() != null) {for (Drawable drawable : resultUNCLASSIFIED) {drawable.drawWayType(gc, WayType.UNCLASSIFIED);}}
+            gc.setLineWidth(WayType.UNCLASSIFIED.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeUNCLASSIFIED() != null) {
+                for (Drawable drawable : resultUNCLASSIFIED) {
+                    drawable.drawWayType(gc, WayType.UNCLASSIFIED);
+                }
+            }
 
-        gc.setLineWidth(WayType.TERTIARY.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeTERTIARY() != null) {for (Drawable drawable : resultTERTIARY) {drawable.drawWayType(gc, WayType.TERTIARY);}}
+            gc.setLineWidth(WayType.TERTIARY.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeTERTIARY() != null) {
+                for (Drawable drawable : resultTERTIARY) {
+                    drawable.drawWayType(gc, WayType.TERTIARY);
+                }
+            }
 
-        gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeSECONDARY() != null) {for (Drawable drawable : resultSECONDARY) {drawable.drawWayType(gc, WayType.SECONDARY);}}
+            gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeSECONDARY() != null) {
+                for (Drawable drawable : resultSECONDARY) {
+                    drawable.drawWayType(gc, WayType.SECONDARY);
+                }
+            }
 
-        gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
-        if(Model.getKDTreePRIMARY() != null) {for (Drawable drawable : resultPRIMARY) {drawable.drawWayType(gc, WayType.PRIMARY);}}
+            gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreePRIMARY() != null) {
+                for (Drawable drawable : resultPRIMARY) {
+                    drawable.drawWayType(gc, WayType.PRIMARY);
+                }
+            }
 
-        gc.setLineWidth(WayType.TRUNK.getWidth()/Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeTRUNK() != null) {for (Drawable drawable : resultTRUNK) {drawable.drawWayType(gc, WayType.TRUNK);}}
-
+            gc.setLineWidth(WayType.TRUNK.getWidth() / Math.sqrt(trans.determinant()));
+            if (Model.getKDTreeTRUNK() != null) {
+                for (Drawable drawable : resultTRUNK) {
+                    drawable.drawWayType(gc, WayType.TRUNK);
+                }
+            }
+        }
         gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
         if(Model.getKDTreeMOTORWAY() != null) {for (Drawable drawable : resultMOTORWAY) {drawable.drawWayType(gc, WayType.MOTORWAY);}}
 
