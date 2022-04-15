@@ -166,7 +166,7 @@ public class MapCanvas extends Canvas {
 
         //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
         //Her er ét stort if-statement der kun tegner MOTORWAY hvis zoomLevel er over 29.
-        if(zoomLevel < 29) {
+        if(zoomLevel > 29) {
             gc.setLineWidth(WayType.CONSTRUCTIONWAY.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeCONSTRUCTIONWAY() != null) {
                 for (Drawable drawable : resultCONSTRUCTIONWAY) {
