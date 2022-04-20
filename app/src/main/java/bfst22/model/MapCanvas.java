@@ -17,7 +17,6 @@ public class MapCanvas extends Canvas {
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
-    private int currentZoomLevel;
 
 
 
@@ -48,9 +47,9 @@ public class MapCanvas extends Canvas {
         
         //Udregnet zoomLevel
         //VI HAR 3 ZOOM UDREGNERE, Currentzoomlevel, ZoomLevel (ens værdi) og zoom.
-        currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
-        //zoomLevel; = getZoomLevel((realMax.getY() - realMin.getY())/2);
-        System.out.println("Currentzoomlevel: " + currentZoomLevel);
+        //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
+        zoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
+        System.out.println("Currentzoomlevel: " + zoomLevel);
         
 
         //Result listen, med de drawables der er inRange
@@ -271,7 +270,7 @@ public class MapCanvas extends Canvas {
                     drawable.drawWayType(gc, WayType.SECONDARY);
                 }
             }
-
+        }
             gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreePRIMARY() != null) {
                 for (Drawable drawable : resultPRIMARY) {
@@ -285,7 +284,7 @@ public class MapCanvas extends Canvas {
                     drawable.drawWayType(gc, WayType.TRUNK);
                 }
             }
-        }
+
         gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
         if(Model.getKDTreeMOTORWAY() != null) {for (Drawable drawable : resultMOTORWAY) {drawable.drawWayType(gc, WayType.MOTORWAY);}}
 
@@ -302,7 +301,6 @@ public class MapCanvas extends Canvas {
             double scale = r / 500;
             zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
         }
-        System.out.println("Zoomlevel: " + (zoomLevel));
         return zoomLevel;
     }
 
