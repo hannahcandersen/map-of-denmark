@@ -40,7 +40,7 @@ public class KdTree {
         // Laver leaves
         if (drawables.size() < 100) {
             kdNode = new Leaf(drawables);
-            System.out.println("Laver et blad");
+            //System.out.println("Laver et blad");
 
             //Test - printer hvert blad
             /*for(int i = 0; i < drawables.size(); i++) {
@@ -53,7 +53,7 @@ public class KdTree {
         } else {
             //Laver en ny node
             Node node = new Node();
-            System.out.println("Laver en node");
+            //System.out.println("Laver en node");
 
             //sorter listen på x
             if (isXcoord) {
@@ -67,15 +67,15 @@ public class KdTree {
 
             //Finder midterste indeks af listen
             int mid = drawables.size() / 2;
-            System.out.println("Dette er midten: " + mid);
+            //System.out.println("Dette er midten: " + mid);
 
             //Sætter splitværdien
             if (isXcoord) {
                 node.setSplit(drawables.get(mid).getMiddleX());
-                System.out.println("SplitX: " + node.getSplit());
+                //System.out.println("SplitX: " + node.getSplit());
             } else { //!isXcoord
                 node.setSplit(drawables.get(mid).getMiddleY());
-                System.out.println("SplitY: " + node.getSplit());
+                //System.out.println("SplitY: " + node.getSplit());
             }
 
             //Laver left og right nodes
@@ -119,15 +119,15 @@ public class KdTree {
 
             // VERSION 1: Tilføjer drawable til result hvis der er bare én enkelt node i drawable, der er indenfor firkanten. Ved ikke om den virker??
             // For loop der caster splitnode til Leaf of løber alle drawables i leaf igennem
-            for (Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
+            /*for (Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
                 if (d.getCurrentMinX() >= rangeSerachRectangle.getMinLon() || d.getCurrentMaxX() <= rangeSerachRectangle.getMaxLon() || d.getCurrentMinY() >= rangeSerachRectangle.getMinLat() || d.getCurrentMaxY() <= rangeSerachRectangle.getMaxLat()) {
                     result.add(d);
                 }
                 //TIL TEST. Printer min og max koordinater. minX er Lon (minus) og minY er Lat (ikke minus).
                 //System.out.println("MinX : " + d.getCurrentMinX() + " MaxX : " + d.getCurrentMaxX() + " MinY: " + d.getCurrentMinY() + " MaxY :" + d.getCurrentMaxY());
-            }
+            }*/
 
-            /*
+
             // VERSION 2: Tilføjer drawable til result hvis middleX eller middleY er indenfor firkanten
             // For loop der caster splitnode til Leaf of løber alle drawables i leaf igennem
             for(Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
@@ -139,7 +139,7 @@ public class KdTree {
 
             }
 
-             */
+
 
             leavesAdded++;
         }
