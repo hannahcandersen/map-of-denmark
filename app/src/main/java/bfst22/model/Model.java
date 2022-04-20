@@ -70,7 +70,7 @@ public class Model {
     private static KdNode KDTreeRAILWAY;
     private static KdNode KDTreeRELIGIOUS;
     private static KdNode KDTreeGRASSLAND;
-    private static KdNode KDTreeCoastline;
+    //private static KdNode KDTreeCoastline;
     private static KdNode KDTreeHEATH;
     private static KdNode KDTreePLAYGROUND;
     private static KdNode KDTreeGARDEN;
@@ -670,43 +670,64 @@ public class Model {
         OSMNode currentEndOSMNode;
         String idWay;
 
+        //PolyLine currentWay;
+
 
         List<OSMNode> listOfNodesInCoastline = new ArrayList<>();
         List<PolyLine> listOfCoastlines = new ArrayList<>();
 
-        while(!linesList.isEmpty()) {
-            for (Drawable coastline : linesList.get(WayType.COASTLINE)) {
+        List<Drawable> coastlines2 = linesList.get(WayType.COASTLINE);
+        while(!coastlines2.isEmpty()) {
+            List<Drawable> coastline2Ny = new ArrayList<>();
+
+            for (Drawable coastline : coastlines2) {
                 if (listOfNodesInCoastline.size() == 0) {
                     //listOfNodesInCoastline.addAll((lines.get(WayType.COASTLINE).get(0)));
-                    listOfOSMNodesOfCoastlines.addAll(((PolyLine) linesList).getNodes());
+                    listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     startOSMNode = ((PolyLine) coastline).getNodes().get(0);
-                    currentEndOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
-                    linesList.remove(coastline);
+                    endOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
+                    //currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
                 }
 
                 currentStartOSMNode = ((PolyLine) coastline).getNodes().get(0);
                 currentEndOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
-                System.out.println("currentStartOSMNode: " + currentStartOSMNode);
-                System.out.println("currentEndOSMNode: " + currentEndOSMNode);
 
 
-                if (currentStartOSMNode.getLat() == currentEndOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
+                // SITUATION 1: Begge pile mod højre.
+                if (currentStartOSMNode.getLat() == endOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     endOSMNode = currentEndOSMNode;
-                    linesList.remove(coastline);
+
                 }
 
-                if (currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()) {
+                // SITUATION 2: Begge pile mod midten
+                if (endOSMNode.getLat() == currentEndOSMNode.getLat() && endOSMNode.getLon() == currentEndOSMNode.getLon()){
+                    // Vend nummer to pil om og tilføjer til listOfNodesInCoastLine
+                    Collections.reverse(((PolyLine) coastline).getNodes());
+                    listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
+                    endOSMNode = currentEndOSMNode;
+                }
+
+                // SITUATION 3: Begge pile væk fra midten
+                // SITUATION 4: Begge pile mod venstre
+
+
+                if (endOSMNode.getLat() == startOSMNode.getLat() && endOSMNode.getLon() == startOSMNode.getLon()) {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     listOfCoastlines.add(new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline));
-                    linesList.remove(coastline);
                     listOfNodesInCoastline.clear();
+                }
+
+                else{
+                     coastline2Ny.add(coastline);
                 }
             }
 
             if (listOfCoastlines == null) {
                 System.out.print("listOfCoastlines er null!!");
             }
+            // gammel liste = ny liste (ting vi mangler at kigge på)
+            coastlines2 = coastline2Ny;
         }
 
         return listOfCoastlines;
