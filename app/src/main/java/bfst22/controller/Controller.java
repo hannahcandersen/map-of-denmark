@@ -5,6 +5,7 @@ import bfst22.model.MapCanvas;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
@@ -46,5 +47,8 @@ public class Controller {
         lastMouse = new Point2D(e.getX(), e.getY());
     }
 
+    @FXML
+    public void AddressFromUserInput(KeyEvent keyEvent) {
 
+    }
 }
