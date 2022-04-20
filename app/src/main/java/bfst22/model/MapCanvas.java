@@ -46,7 +46,7 @@ public class MapCanvas extends Canvas {
         System.out.println(searchRangeSerachRectangle);
         
         //Udregnet zoomLevel
-        //VI HAR 3 ZOOM UDREGNERE, Currentzoomlevel, ZoomLevel (ens værdi) og zoom.
+
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         System.out.println("Currentzoomlevel: " + zoomLevel);

@@ -170,6 +170,7 @@ public class Model {
         //Bygger KDTree og gemmer det i feltet KDTree
         //buildKdTrees();
         KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
+        KDTreePROPOSED = KdTree.buildKDTree(lines.get(WayType.PROPOSED), true);
         KDTreeLAKE = KdTree.buildKDTree(lines.get(WayType.LAKE), true);
         KDTreeBEACH = KdTree.buildKDTree(lines.get(WayType.BEACH), true);
         KDTreeWOOD = KdTree.buildKDTree(lines.get(WayType.WOOD), true);
