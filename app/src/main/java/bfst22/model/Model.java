@@ -34,6 +34,7 @@ public class Model {
 
     //KD Trees
     private static KdNode KDTreeUNKNOWN;
+    private static KdNode KDTreePROPOSED;
     private static KdNode KDTreeRESIDENTIAL;
     private static KdNode KDTreeLAKE;
     private static KdNode KDTreeBEACH;
@@ -161,6 +162,7 @@ public class Model {
         //Bygger KDTree og gemmer det i feltet KDTree
         //buildKdTrees();
         KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
+        KDTreePROPOSED = KdTree.buildKDTree(lines.get(WayType.PROPOSED), true);
         KDTreeLAKE = KdTree.buildKDTree(lines.get(WayType.LAKE), true);
         KDTreeBEACH = KdTree.buildKDTree(lines.get(WayType.BEACH), true);
         KDTreeWOOD = KdTree.buildKDTree(lines.get(WayType.WOOD), true);
@@ -537,6 +539,9 @@ public class Model {
 
     public static KdNode getKDTreeUNKNOWN() {
         return KDTreeUNKNOWN;
+    }
+    public static KdNode getKDTreePROPOSED() {
+        return KDTreePROPOSED;
     }
     public static KdNode getKDTreeRESIDENTIAL() {
         return KDTreeRESIDENTIAL;

@@ -46,7 +46,7 @@ public class MapCanvas extends Canvas {
         System.out.println(searchRangeSerachRectangle);
         
         //Udregnet zoomLevel
-        //VI HAR 3 ZOOM UDREGNERE, Currentzoomlevel, ZoomLevel (ens værdi) og zoom.
+
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         System.out.println("Currentzoomlevel: " + zoomLevel);
@@ -55,6 +55,7 @@ public class MapCanvas extends Canvas {
         //Result listen, med de drawables der er inRange
         var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
         //System.out.println("leaves added in resultUNKNOWN: " + KdTree.getLeavesAdded());
+        var resultPROPOSED = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePROPOSED());
         var resultRESIDENTIAL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL());
         var resultFOREST = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST());
         var resultMEADOW = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW());
@@ -116,6 +117,7 @@ public class MapCanvas extends Canvas {
         //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
 
         if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOWN) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
+        //if(Model.getKDTreePROPOSED() != null) {for (Drawable drawable : resultPROPOSED) {   drawable.drawWayType(gc, WayType.PROPOSED);}}
         if(Model.getKDTreeRESIDENTIAL() != null){for (Drawable drawable : resultRESIDENTIAL) {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
         if(Model.getKDTreeFOREST() != null){for (Drawable drawable : resultFOREST) {drawable.fillWayType(gc, WayType.FOREST);}}
         if(Model.getKDTreeMEADOW() != null){for (Drawable drawable : resultMEADOW) {drawable.fillWayType(gc, WayType.MEADOW);}}

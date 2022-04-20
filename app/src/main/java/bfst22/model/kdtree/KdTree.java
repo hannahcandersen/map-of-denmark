@@ -107,7 +107,7 @@ public class KdTree {
     }
 
     //Privat RangeSearch metode
-    private static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
+    private static List<Drawable> rangeSearch(RangeSerachRectangle rangeSearchRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
         if (splitNode == null){
             //System.out.println("splitnode er tom!!!");
             return null;
@@ -119,25 +119,25 @@ public class KdTree {
 
             // VERSION 1: Tilføjer drawable til result hvis der er bare én enkelt node i drawable, der er indenfor firkanten. Ved ikke om den virker??
             // For loop der caster splitnode til Leaf of løber alle drawables i leaf igennem
-            /*for (Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
-                if (d.getCurrentMinX() >= rangeSerachRectangle.getMinLon() || d.getCurrentMaxX() <= rangeSerachRectangle.getMaxLon() || d.getCurrentMinY() >= rangeSerachRectangle.getMinLat() || d.getCurrentMaxY() <= rangeSerachRectangle.getMaxLat()) {
+            for (Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
+                if (d.getCurrentMinX() >= rangeSearchRectangle.getMinLon() || d.getCurrentMaxX() <= rangeSearchRectangle.getMaxLon() || d.getCurrentMinY() >= rangeSearchRectangle.getMinLat() || d.getCurrentMaxY() <= rangeSearchRectangle.getMaxLat()) {
                     result.add(d);
                 }
                 //TIL TEST. Printer min og max koordinater. minX er Lon (minus) og minY er Lat (ikke minus).
                 //System.out.println("MinX : " + d.getCurrentMinX() + " MaxX : " + d.getCurrentMaxX() + " MinY: " + d.getCurrentMinY() + " MaxY :" + d.getCurrentMaxY());
-            }*/
+            }
 
 
             // VERSION 2: Tilføjer drawable til result hvis middleX eller middleY er indenfor firkanten
             // For loop der caster splitnode til Leaf of løber alle drawables i leaf igennem
-            for(Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
+            /*for(Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
                 // Langt if-statement der tjekker at midX for hver drawable er mellem firkantens min og maxLon. OG at midY samtidigt er mellem firkantens min og maxLat
-                if ((d.getMiddleX() >= rangeSerachRectangle.getMinLon() && d.getMiddleX() <= rangeSerachRectangle.getMaxLon()) && (d.getMiddleY() >= rangeSerachRectangle.getMinLat() && d.getMiddleY() <= rangeSerachRectangle.getMaxLat())) {
+                if ((d.getMiddleX() >= rangeSearchRectangle.getMinLon() && d.getMiddleX() <= rangeSearchRectangle.getMaxLon()) && (d.getMiddleY() >= rangeSearchRectangle.getMinLat() && d.getMiddleY() <= rangeSearchRectangle.getMaxLat())) {
                     // Tilføjer kun de Drawables, som er inde i firkanten til result
                     result.add(d);
                 }
 
-            }
+            }*/
 
 
 
@@ -152,46 +152,46 @@ public class KdTree {
             if(isXcoord){
 
                 //InRange? - mellem minLon og MaxLon
-                if(((Node) splitNode).getSplit() > rangeSerachRectangle.getMinLon()
-                        && ((Node) splitNode).getSplit() < rangeSerachRectangle.getMaxLon()) {
+                if(((Node) splitNode).getSplit() > rangeSearchRectangle.getMinLon()
+                        && ((Node) splitNode).getSplit() < rangeSearchRectangle.getMaxLon()) {
 
                     //Gå begge veje
-                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
-                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                    rangeSearch(rangeSearchRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rangeSearchRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
 
                 }
                 // Over? - større end maxLon (((rectangle.getMaxLon())))
-                else if (((Node) splitNode).getSplit() > rangeSerachRectangle.getMaxLon()) {
+                else if (((Node) splitNode).getSplit() > rangeSearchRectangle.getMaxLon()) {
                     //Gå til venstre
-                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rangeSearchRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                 }
                 //Under? - mindre end minLon
-                else if(((Node) splitNode).getSplit() < rangeSerachRectangle.getMinLon()) {
+                else if(((Node) splitNode).getSplit() < rangeSearchRectangle.getMinLon()) {
                     //Gå til højre
-                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                    rangeSearch(rangeSearchRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
                 }
             }
 
             //Gør det på Y (!isXcoord) Måske skal lat ændres til minus
             else {
                 //InRange? - mellem minLon og MaxLon
-                if(((Node) splitNode).getSplit() > rangeSerachRectangle.getMinLat()
-                        && ((Node) splitNode).getSplit() < rangeSerachRectangle.getMaxLat()) {
+                if(((Node) splitNode).getSplit() > rangeSearchRectangle.getMinLat()
+                        && ((Node) splitNode).getSplit() < rangeSearchRectangle.getMaxLat()) {
 
                     //Gå begge veje
-                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
-                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                    rangeSearch(rangeSearchRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rangeSearchRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
 
                 }
                 // Over? - større end maxLon (((rectangle.getMaxLon())))
-                else if(((Node) splitNode).getSplit() > rangeSerachRectangle.getMaxLat()) {
+                else if(((Node) splitNode).getSplit() > rangeSearchRectangle.getMaxLat()) {
                     //Gå til venstre
-                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
+                    rangeSearch(rangeSearchRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                 }
                 //Under? - mindre end minLon
-                else if(((Node) splitNode).getSplit() < rangeSerachRectangle.getMinLat()) {
+                else if(((Node) splitNode).getSplit() < rangeSearchRectangle.getMinLat()) {
                     //Gå til højre
-                    rangeSearch(rangeSerachRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
+                    rangeSearch(rangeSearchRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
                 }
             }
         }
