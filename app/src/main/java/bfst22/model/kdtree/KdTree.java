@@ -5,6 +5,11 @@ import java.util.*;
 
 public class KdTree {
 
+    
+    // Har vi faktisk lavet et RTree??
+    
+    
+    
     //Erklærer roden.
     private static KdNode root;
     static int leavesAdded = 0;
@@ -115,36 +120,17 @@ public class KdTree {
 
         //Hvis vores splitnode er en leaf, tilføj leaf(s) til result listen
         if (splitNode instanceof Leaf) {
-
-
-            // VERSION 1: Tilføjer drawable til result hvis der er bare én enkelt node i drawable, der er indenfor firkanten. Ved ikke om den virker??
             // For loop der caster splitnode til Leaf of løber alle drawables i leaf igennem
-            /*for (Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
-                if (d.getCurrentMinX() >= rangeSerachRectangle.getMinLon() || d.getCurrentMaxX() <= rangeSerachRectangle.getMaxLon() || d.getCurrentMinY() >= rangeSerachRectangle.getMinLat() || d.getCurrentMaxY() <= rangeSerachRectangle.getMaxLat()) {
-                    result.add(d);
-                }
-                //TIL TEST. Printer min og max koordinater. minX er Lon (minus) og minY er Lat (ikke minus).
-                //System.out.println("MinX : " + d.getCurrentMinX() + " MaxX : " + d.getCurrentMaxX() + " MinY: " + d.getCurrentMinY() + " MaxY :" + d.getCurrentMaxY());
-            }*/
-
-
-            // VERSION 2: Tilføjer drawable til result hvis middleX eller middleY er indenfor firkanten
-            // For loop der caster splitnode til Leaf of løber alle drawables i leaf igennem
-            for(Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
-                // Langt if-statement der tjekker at midX for hver drawable er mellem firkantens min og maxLon. OG at midY samtidigt er mellem firkantens min og maxLat
-                if ((d.getMiddleX() >= rangeSerachRectangle.getMinLon() && d.getMiddleX() <= rangeSerachRectangle.getMaxLon()) && (d.getMiddleY() >= rangeSerachRectangle.getMinLat() && d.getMiddleY() <= rangeSerachRectangle.getMaxLat())) {
-                    // Tilføjer kun de Drawables, som er inde i firkanten til result
+            // Tilføjer kun drawable til result hvis drawable og searchRectangle overlapper 
+            for (Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
+                if (doRectanglesOverlap(d, rangeSerachRectangle)) {
                     result.add(d);
                 }
 
+                leavesAdded++;
             }
 
-
-
-            leavesAdded++;
         }
-
-
 
         //Ellers er vores splitnode en splitnode, og vi skal kalde rekursivt ned gennem træet
         else{
@@ -196,6 +182,28 @@ public class KdTree {
             }
         }
         return result;
+    }
+
+
+    // checker om et element af drawable overlapper med searchTriangle. https://stackoverflow.com/questions/23302698/java-check-if-two-rectangles-overlap-at-any-point
+    public static boolean doRectanglesOverlap(Drawable drawable, RangeSerachRectangle rangeSerachRectangle) {
+
+        //sandt hvis de ikke overlapper
+        if (drawable.getCurrentMinX() > rangeSerachRectangle.getMaxLon()){
+            return false;
+        }
+        else if (drawable.getCurrentMaxX() < rangeSerachRectangle.getMinLon()){
+            return false;
+        }
+        else if (drawable.getCurrentMinY() > rangeSerachRectangle.getMaxLat()){
+            return false;
+        }
+        else if (drawable.getCurrentMaxY() < rangeSerachRectangle.getMinLat()){
+            return false;
+        }
+
+        // ellers overlapper de
+            return true;
     }
 
 

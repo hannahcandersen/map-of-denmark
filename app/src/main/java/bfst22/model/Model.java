@@ -2,16 +2,13 @@ package bfst22.model;
 
 import bfst22.model.kdtree.KdNode;
 import bfst22.model.kdtree.KdTree;
+import bfst22.model.kdtree.Leaf;
 import bfst22.view.Drawable;
 // import bfst22.model.kdtree.KDTree2;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -34,6 +31,8 @@ public class Model {
 
     //KD Trees
     private static KdNode KDTreeUNKNOWN;
+    private static KdNode KDTreePROPOSED;
+    private static KdNode KDTreeNAVIGATION_LINE;
     private static KdNode KDTreeRESIDENTIAL;
     private static KdNode KDTreeLAKE;
     private static KdNode KDTreeBEACH;
@@ -71,7 +70,7 @@ public class Model {
     private static KdNode KDTreeRAILWAY;
     private static KdNode KDTreeRELIGIOUS;
     private static KdNode KDTreeGRASSLAND;
-
+    private static KdNode KDTreeCoastline;
     private static KdNode KDTreeHEATH;
     private static KdNode KDTreePLAYGROUND;
     private static KdNode KDTreeGARDEN;
@@ -123,9 +122,19 @@ public class Model {
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     private float minlat, minlon, maxlat, maxlon;
 
+    private static List<OSMNode> listOfOSMNodesOfCoastlines;
+    private static List<PolyLine> list;
+
+
+
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
     Map<WayType,List<Drawable>> lines = new EnumMap<>(WayType.class); {
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
+    }
+
+    //Map med coastlines
+    static Map<WayType,List<Drawable>> coastlines = new EnumMap<>(WayType.class);{
+        for (var type : WayType.values()) coastlines.put(type, new ArrayList<>());
     }
 
 
@@ -209,7 +218,6 @@ public class Model {
         KDTreeGARDEN = KdTree.buildKDTree(lines.get(WayType.GARDEN), true);
         KDTreeBAY = KdTree.buildKDTree(lines.get(WayType.BAY), true);
         KDTreeBARE_ROCK = KdTree.buildKDTree(lines.get(WayType.BARE_ROCK), true);
-        KDTreeCOASTLINE = KdTree.buildKDTree(lines.get(WayType.COASTLINE), true);
         KDTreeMOTORWAY = KdTree.buildKDTree(lines.get(WayType.MOTORWAY), true);
         KDTreePRIMARY = KdTree.buildKDTree(lines.get(WayType.PRIMARY), true);
         KDTreeTRUNK = KdTree.buildKDTree(lines.get(WayType.TRUNK), true);
@@ -246,6 +254,8 @@ public class Model {
         KDTreePOND_ANDMORE = KdTree.buildKDTree(lines.get(WayType.POND_ANDMORE), true);
         KDTreeHABOUR = KdTree.buildKDTree(lines.get(WayType.HARBOUR), true);
         KDTreePARKING = KdTree.buildKDTree(lines.get(WayType.PARKING), true);
+        KDTreeCOASTLINE = KdTree.buildKDTree(coastlines.get(WayType.COASTLINE), true);
+
     }
 
 
@@ -497,9 +507,17 @@ public class Model {
                         case "way":
                             var way = new PolyLine(nodes);
                             id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
-                            lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende type
+                            lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende
                             nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
+
+                            //Tilføjer coastlines til en liste
+                            if(type == WayType.COASTLINE){
+                                coastlines.get(type).add(way);
+                                nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
+                            }
+
                             break;
+
                         case "relation":
                             if (type == WayType.FOREST && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel));
@@ -512,7 +530,11 @@ public class Model {
                     break;
             }
         }
-        System.out.println("Done");
+
+        //listOfOSMNodesOfCoastlines = getListOfOSMNodesOfCoastlines(coastlines);
+
+        list = makeCoastlineObject(coastlines);
+                System.out.println("Done");
     }
 
     // tilføjer en observer til listen observers
@@ -531,327 +553,170 @@ public class Model {
     }
 
     // iterator over types
-    public Iterable<Drawable> iterable(WayType type) {
-        return lines.get(type);
-    }
-
-    public static KdNode getKDTreeUNKNOWN() {
-        return KDTreeUNKNOWN;
-    }
-    public static KdNode getKDTreeRESIDENTIAL() {
-        return KDTreeRESIDENTIAL;
-    }
-
-
-    public void buildKdTrees(){
-        //
-    }
-
-    public static KdNode getKDTreeLAKE() {
-        return KDTreeLAKE;
-    }
-
-    public static KdNode getKDTreeBEACH() {
-        return KDTreeBEACH;
-    }
-
-    public static KdNode getKDTreeWOOD() {
-        return KDTreeWOOD;
-    }
-
-    public static KdNode getKDTreeSAND() {
-        return KDTreeSAND;
-    }
-
-    public static KdNode getKDTreeFOREST() {
-        return KDTreeFOREST;
-    }
-
-    public static KdNode getKDTreeTREE_ROW() {
-        return KDTreeTREE_ROW;
-    }
-
-    public static KdNode getKDTreeWATER() {
-        return KDTreeWATER;
-    }
-
-    public static KdNode getKDTreeBUILDING() {
-        return KDTreeBUILDING;
-    }
-
-    public static KdNode getKDTreeINDUSTRIAL() {
-        return KDTreeINDUSTRIAL;
-    }
-
-    public static KdNode getKDTreeMEADOW() {
-        return KDTreeMEADOW;
-    }
-
-    public static KdNode getKDTreePARK() {
-        return KDTreePARK;
-    }
-
-    public static KdNode getKDTreeCEMETERY() {
-        return KDTreeCEMETERY;
-    }
-
-    public static KdNode getKDTreeALLOTMENTS() {
-        return KDTreeALLOTMENTS;
-    }
-
-    public static KdNode getKDTreeSCRUB() {
-        return KDTreeSCRUB;
-    }
-
-    public static KdNode getKDTreeFARMYARD() {
-        return KDTreeFARMYARD;
-    }
-
-    public static KdNode getKDTreeCOMMERCIAL() {
-        return KDTreeCOMMERCIAL;
-    }
-
-    public static KdNode getKDTreeCONSTRUCTION() {
-        return KDTreeCONSTRUCTION;
-    }
-
-    public static KdNode getKDTreeRETAIL() {
-        return KDTreeRETAIL;
-    }
-
-    public static KdNode getKDTreeFARMLAND() {
-        return KDTreeFARMLAND;
-    }
-
-    public static KdNode getKDTreeORCHARD() {
-        return KDTreeORCHARD;
-    }
-
-    public static KdNode getKDTreeVINEYARD() {
-        return KDTreeVINEYARD;
-    }
-
-    public static KdNode getKDTreeBASIN() {
-        return KDTreeBASIN;
-    }
-
-    public static KdNode getKDTreeGRASS() {
-        return KDTreeGRASS;
-    }
-
-    public static KdNode getKDTreeGREENFIELD() {
-        return KDTreeGREENFIELD;
-    }
-
-    public static KdNode getKDTreeGREENHOUSE_HORTICULTURE() {
-        return KDTreeGREENHOUSE_HORTICULTURE;
-    }
-
-    public static KdNode getKDTreeMILITARY() {
-        return KDTreeMILITARY;
-    }
-
-    public static KdNode getKDTreePLANT_NURSERY() {
-        return KDTreePLANT_NURSERY;
-    }
-
-    public static KdNode getKDTreeQUARRY() {
-        return KDTreeQUARRY;
-    }
-
-    public static KdNode getKDTreeRECREATION_GROUND() {
-        return KDTreeRECREATION_GROUND;
-    }
-
-    public static KdNode getKDTreeVILLAGE_GREEN() {
-        return KDTreeVILLAGE_GREEN;
-    }
-
-    public static KdNode getKDTreeBROWNFIELD() {
-        return KDTreeBROWNFIELD;
-    }
-
-    public static KdNode getKDTreeGARAGES() {
-        return KDTreeGARAGES;
-    }
-
-    public static KdNode getKDTreeLANDFILL() {
-        return KDTreeLANDFILL;
-    }
-
-    public static KdNode getKDTreeRAILWAY() {
-        return KDTreeRAILWAY;
-    }
-
-    public static KdNode getKDTreeRELIGIOUS() {
-        return KDTreeRELIGIOUS;
-    }
-
-    public static KdNode getKDTreeGRASSLAND() {
-        return KDTreeGRASSLAND;
-    }
-
-    public static KdNode getKDTreeHEATH() {
-        return KDTreeHEATH;
-    }
-
-    public static KdNode getKDTreePLAYGROUND() {
-        return KDTreePLAYGROUND;
-    }
-
-    public static KdNode getKDTreeGARDEN() {
-        return KDTreeGARDEN;
-    }
-
-    public static KdNode getKDTreeBAY() {
-        return KDTreeBAY;
-    }
-
-    public static KdNode getKDTreeBARE_ROCK() {
-        return KDTreeBARE_ROCK;
-    }
-
-    public static KdNode getKDTreeCOASTLINE() {
-        return KDTreeCOASTLINE;
-    }
-
-    public static KdNode getKDTreeMOTORWAY() {
-        return KDTreeMOTORWAY;
-    }
-
-    public static KdNode getKDTreePRIMARY() {
-        return KDTreePRIMARY;
-    }
-
-    public static KdNode getKDTreeTRUNK() {
-        return KDTreeTRUNK;
-    }
-
-    public static KdNode getKDTreeSECONDARY() {
-        return KDTreeSECONDARY;
-    }
-
-    public static KdNode getKDTreeTERTIARY() {
-        return KDTreeTERTIARY;
-    }
-
-    public static KdNode getKDTreeUNCLASSIFIED() {
-        return KDTreeUNCLASSIFIED;
-    }
-
-    public static KdNode getKDTreeLIVING_STREET() {
-        return KDTreeLIVING_STREET;
-    }
-
-    public static KdNode getKDTreeSERVICE() {
-        return KDTreeSERVICE;
-    }
-
-    public static KdNode getKDTreePEDESTRIAN() {
-        return KDTreePEDESTRIAN;
-    }
-
-    public static KdNode getKDTreeTRACK() {
-        return KDTreeTRACK;
-    }
-
-    public static KdNode getKDTreeROAD() {
-        return KDTreeROAD;
-    }
-
-    public static KdNode getKDTreeRACEWAY() {
-        return KDTreeRACEWAY;
-    }
-
-    public static KdNode getKDTreeBUS_GUIDEWAY() {
-        return KDTreeBUS_GUIDEWAY;
-    }
-
-    public static KdNode getKDTreeFOOTWAY_ANDMORE() {
-        return KDTreeFOOTWAY_ANDMORE;
-    }
-
-    public static KdNode getKDTreeSTEPS() {
-        return KDTreeSTEPS;
-    }
-
-    public static KdNode getKDTreeBRIDLEWAY() {
-        return KDTreeBRIDLEWAY;
-    }
-
-    public static KdNode getKDTreeCYCLEWAY() {
-        return KDTreeCYCLEWAY;
-    }
-
-    public static KdNode getKDTreeRESIDENTIALWAY() {
-        return KDTreeRESIDENTIALWAY;
-    }
-
-    public static KdNode getKDTreeCONSTRUCTIONWAY() {
-        return KDTreeCONSTRUCTIONWAY;
-    }
-
-    public static KdNode getKDTreeDOG_PARK() {
-        return KDTreeDOG_PARK;
-    }
+    public Iterable<Drawable> iterable(WayType type) {return lines.get(type);}
+
+    public static KdNode getKDTreeUNKNOWN() {return KDTreeUNKNOWN;}
+    public static KdNode getKDTreePROPOSED() { return KDTreePROPOSED; }
+    public static KdNode getKDTreeNAVIGATION_LINE() { return KDTreeNAVIGATION_LINE; }
+    public static KdNode getKDTreeRESIDENTIAL() {return KDTreeRESIDENTIAL;}
+    public static KdNode getKDTreeLAKE() {return KDTreeLAKE;}
+    public static KdNode getKDTreeBEACH() {return KDTreeBEACH;}
+    public static KdNode getKDTreeWOOD() {return KDTreeWOOD;}
+    public static KdNode getKDTreeSAND() {return KDTreeSAND;}
+    public static KdNode getKDTreeFOREST() {return KDTreeFOREST;}
+    public static KdNode getKDTreeTREE_ROW() {return KDTreeTREE_ROW;}
+    public static KdNode getKDTreeWATER() {return KDTreeWATER;}
+    public static KdNode getKDTreeBUILDING() {return KDTreeBUILDING;}
+    public static KdNode getKDTreeINDUSTRIAL() {return KDTreeINDUSTRIAL;}
+    public static KdNode getKDTreeMEADOW() {return KDTreeMEADOW;}
+    public static KdNode getKDTreePARK() {return KDTreePARK;}
+    public static KdNode getKDTreeCEMETERY() {return KDTreeCEMETERY;}
+    public static KdNode getKDTreeALLOTMENTS() {return KDTreeALLOTMENTS;}
+    public static KdNode getKDTreeSCRUB() {return KDTreeSCRUB;}
+    public static KdNode getKDTreeFARMYARD() {return KDTreeFARMYARD;}
+    public static KdNode getKDTreeCOMMERCIAL() {return KDTreeCOMMERCIAL;}
+    public static KdNode getKDTreeCONSTRUCTION() {return KDTreeCONSTRUCTION;}
+    public static KdNode getKDTreeRETAIL() {return KDTreeRETAIL;}
+    public static KdNode getKDTreeFARMLAND() {return KDTreeFARMLAND;}
+    public static KdNode getKDTreeORCHARD() {return KDTreeORCHARD;}
+    public static KdNode getKDTreeVINEYARD() {return KDTreeVINEYARD;}
+    public static KdNode getKDTreeBASIN() {return KDTreeBASIN;}
+    public static KdNode getKDTreeGRASS() {return KDTreeGRASS;}
+    public static KdNode getKDTreeGREENFIELD() {return KDTreeGREENFIELD;}
+    public static KdNode getKDTreeGREENHOUSE_HORTICULTURE() {return KDTreeGREENHOUSE_HORTICULTURE;}
+    public static KdNode getKDTreeMILITARY() {return KDTreeMILITARY;}
+    public static KdNode getKDTreePLANT_NURSERY() {return KDTreePLANT_NURSERY;}
+    public static KdNode getKDTreeQUARRY() {return KDTreeQUARRY;}
+    public static KdNode getKDTreeRECREATION_GROUND() {return KDTreeRECREATION_GROUND;}
+    public static KdNode getKDTreeVILLAGE_GREEN() {return KDTreeVILLAGE_GREEN;}
+    public static KdNode getKDTreeBROWNFIELD() {return KDTreeBROWNFIELD;}
+    public static KdNode getKDTreeGARAGES() {return KDTreeGARAGES;}
+    public static KdNode getKDTreeLANDFILL() {return KDTreeLANDFILL;}
+    public static KdNode getKDTreeRAILWAY() {return KDTreeRAILWAY;}
+    public static KdNode getKDTreeRELIGIOUS() {return KDTreeRELIGIOUS;}
+    public static KdNode getKDTreeGRASSLAND() {return KDTreeGRASSLAND;}
+    public static KdNode getKDTreeHEATH() {return KDTreeHEATH;}
+    public static KdNode getKDTreePLAYGROUND() {return KDTreePLAYGROUND;}
+    public static KdNode getKDTreeGARDEN() {return KDTreeGARDEN;}
+    public static KdNode getKDTreeBAY() {return KDTreeBAY;}
+    public static KdNode getKDTreeBARE_ROCK() {return KDTreeBARE_ROCK;}
+    public static KdNode getKDTreeMOTORWAY() {return KDTreeMOTORWAY;}
+    public static KdNode getKDTreePRIMARY() {return KDTreePRIMARY;}
+    public static KdNode getKDTreeTRUNK() {return KDTreeTRUNK;}
+    public static KdNode getKDTreeSECONDARY() {return KDTreeSECONDARY;}
+    public static KdNode getKDTreeTERTIARY() {return KDTreeTERTIARY;}
+    public static KdNode getKDTreeUNCLASSIFIED() {return KDTreeUNCLASSIFIED;}
+    public static KdNode getKDTreeLIVING_STREET() {return KDTreeLIVING_STREET;}
+    public static KdNode getKDTreeSERVICE() {return KDTreeSERVICE;}
+    public static KdNode getKDTreePEDESTRIAN() {return KDTreePEDESTRIAN;}
+    public static KdNode getKDTreeTRACK() {return KDTreeTRACK;}
+    public static KdNode getKDTreeROAD() {return KDTreeROAD;}
+    public static KdNode getKDTreeRACEWAY() {return KDTreeRACEWAY;}
+    public static KdNode getKDTreeBUS_GUIDEWAY() {return KDTreeBUS_GUIDEWAY;}
+    public static KdNode getKDTreeFOOTWAY_ANDMORE() {return KDTreeFOOTWAY_ANDMORE;}
+    public static KdNode getKDTreeSTEPS() {return KDTreeSTEPS;}
+    public static KdNode getKDTreeBRIDLEWAY() {return KDTreeBRIDLEWAY;}
+    public static KdNode getKDTreeCYCLEWAY() {return KDTreeCYCLEWAY;}
+    public static KdNode getKDTreeRESIDENTIALWAY() {return KDTreeRESIDENTIALWAY;}
+    public static KdNode getKDTreeCONSTRUCTIONWAY() {return KDTreeCONSTRUCTIONWAY;}
+    public static KdNode getKDTreeDOG_PARK() {return KDTreeDOG_PARK;}
+    public static KdNode getKDTreeGOLF_COURSE() {return KDTreeGOLF_COURSE;}
+    public static KdNode getKDTreeICE_RINK() {return KDTreeICE_RINK;}
+    public static KdNode getKDTreeMARINA() {return KDTreeMARINA;}
+    public static KdNode getKDTreeMINIATURE_GOLF() {return KDTreeMINIATURE_GOLF;}
+    public static KdNode getKDTreeNATURE_RESERVE() {return KDTreeNATURE_RESERVE;}
+    public static KdNode getKDTreePITCH() {return KDTreePITCH;}
+    public static KdNode getKDTreeSPORTS_CENTRE() {return KDTreeSPORTS_CENTRE;}
+    public static KdNode getKDTreeSWIMMING_POOL() {return KDTreeSWIMMING_POOL;}
+    public static KdNode getKDTreeRIVER_ANDMORE() {return KDTreeRIVER_ANDMORE;}
+    public static KdNode getKDTreeSCHOOL() {return KDTreeSCHOOL;}
+    public static KdNode getKDTreeSTREAM_ANDMORE() {return KDTreeSTREAM_ANDMORE;}
+    public static KdNode getKDTreeDOCK() {return KDTreeDOCK;}
+    public static KdNode getKDTreePOND_ANDMORE() {return KDTreePOND_ANDMORE;}
+    public static KdNode getKDTreeHABOUR() {return KDTreeHABOUR;}
+    public static KdNode getKDTreePARKING() {return KDTreePARKING;}
+    public static KdNode getKDTreeCOASTLINE() {return KDTreeCOASTLINE;}
+    public static Map<WayType, List<Drawable>> getCoastlines() {return coastlines;}
+
+    public static List<OSMNode> getListOfOSMNodesOfCoastlines(Map<WayType,List<Drawable>> coastlines) {
+        //så længe dens startpunkt ikke er dens slutpunkt - kør while loop
+        //getLon/Lat fra OSMNode
+        ArrayList<OSMNode> listOfOSMNodesOfCoastlines = new ArrayList<>();
+        for (Drawable drawable : coastlines.get(WayType.COASTLINE)) {
+            listOfOSMNodesOfCoastlines.addAll(((PolyLine) drawable).getNodes());
+        }
+        return listOfOSMNodesOfCoastlines;
+    }
+
+    //Returner en liste for hver kystlinje (polylines)
+    /*public static List<PolyLine> getPolyLinesOfEachCoastline(){
+        for (OSMNode osmNode: listOfOSMNodesOfCoastlines) {
+
+        }
+    }*/
 
-    public static KdNode getKDTreeGOLF_COURSE() {
-        return KDTreeGOLF_COURSE;
-    }
+    public List<PolyLine> makeCoastlineObject(Map<WayType,List<Drawable>> linesList) {
+        //det som er tilføjet til listen
+        OSMNode startOSMNode = null;
+        OSMNode endOSMNode = null;
+        //det som ikke endnu er tilføjet
+        OSMNode currentStartOSMNode;
+        OSMNode currentEndOSMNode;
+        String idWay;
 
-    public static KdNode getKDTreeICE_RINK() {
-        return KDTreeICE_RINK;
-    }
+        List<OSMNode> listOfNodesInCoastline = new ArrayList<>();
+        List<PolyLine> listOfCoastlines = new ArrayList<>();
 
-    public static KdNode getKDTreeMARINA() {
-        return KDTreeMARINA;
-    }
+        for(Drawable coastline : linesList.get(WayType.COASTLINE)) {
 
-    public static KdNode getKDTreeMINIATURE_GOLF() {
-        return KDTreeMINIATURE_GOLF;
-    }
+            if(listOfNodesInCoastline.size() == 0) {
+                //listOfNodesInCoastline.addAll((lines.get(WayType.COASTLINE).get(0)));
+                listOfOSMNodesOfCoastlines.addAll(((PolyLine) linesList).getNodes());
+                startOSMNode = ((PolyLine) linesList).getNodes().get(0);
+                currentEndOSMNode = ((PolyLine) linesList).getNodes().get(linesList.size()-1);
+            }
 
-    public static KdNode getKDTreeNATURE_RESERVE() {
-        return KDTreeNATURE_RESERVE;
-    }
+            currentStartOSMNode = ((PolyLine) linesList).getNodes().get(0);
+            currentEndOSMNode = ((PolyLine) linesList).getNodes().get(linesList.size()-1);
 
-    public static KdNode getKDTreePITCH() {
-        return KDTreePITCH;
-    }
+            System.out.println("currentStartOSMNode: " + currentStartOSMNode);
+            System.out.println("currentEndOSMNode: " + currentEndOSMNode);
 
-    public static KdNode getKDTreeSPORTS_CENTRE() {
-        return KDTreeSPORTS_CENTRE;
-    }
 
-    public static KdNode getKDTreeSWIMMING_POOL() {
-        return KDTreeSWIMMING_POOL;
-    }
 
-    public static KdNode getKDTreeRIVER_ANDMORE() {
-        return KDTreeRIVER_ANDMORE;
-    }
+           if(currentStartOSMNode.getLat() == currentEndOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()){
+               listOfNodesInCoastline.addAll(((PolyLine) linesList).getNodes());
+               endOSMNode = currentEndOSMNode;
+           }
 
-    public static KdNode getKDTreeSCHOOL() {
-        return KDTreeSCHOOL;
-    }
+           if(currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()){
+               listOfNodesInCoastline.addAll(((PolyLine) linesList).getNodes());
+               listOfCoastlines.add(new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline));
+               listOfNodesInCoastline.clear();
+           }
+        }
 
-    public static KdNode getKDTreeSTREAM_ANDMORE() {
-        return KDTreeSTREAM_ANDMORE;
+        if(listOfCoastlines == null){
+            System.out.print("listOfCoastlines er null!!");
+        }
+        return listOfCoastlines;
     }
 
-    public static KdNode getKDTreeDOCK() {
-        return KDTreeDOCK;
+    public static List<PolyLine> getList() {
+        return list;
     }
 
-    public static KdNode getKDTreePOND_ANDMORE() {
-        return KDTreePOND_ANDMORE;
-    }
+    //hvis typen er Coastline
+    //get id for vejen
+    //get første element og sidste element - tjek
+    //tilføj første vej til *listen* - tjek
 
-    public static KdNode getKDTreeHABOUR() {
-        return KDTreeHABOUR;
-    }
+    //tjek sidste element i *listen* med første element i den ikke endnu tilføjede way - tjek
+    //hvis der er et match -> tilføj til *listen*
+    //ellers led videre (rekursive)
+    //tjek om første element i *listen* er lig med sidste element i listen
+    //færdig
 
-    public static KdNode getKDTreePARKING() {
-        return KDTreePARKING;
-    }
 }
+
+

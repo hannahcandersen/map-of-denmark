@@ -99,6 +99,11 @@ public class PolyLine implements Drawable, Serializable {
 
     public float getCurrentMaxY() {
         return currentMaxY;
-
     }
+
+    public ArrayList<OSMNode> getNodes(){
+        return null;
+    }
+
+
 }

@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public enum WayType {
-    UNKNOWN, LAKE, BEACH, WOOD, SAND, FOREST, TREE_ROW, WATER, BUILDING, RESIDENTIAL, INDUSTRIAL, MEADOW, PARK,
+    UNKNOWN, PROPOSED, NAVIGATION_LINE, LAKE, BEACH, WOOD, SAND, FOREST, TREE_ROW, WATER, BUILDING, RESIDENTIAL, INDUSTRIAL, MEADOW, PARK,
     CEMETERY, ALLOTMENTS, SCRUB, FARMYARD, COMMERCIAL, CONSTRUCTION, RETAIL, FARMLAND, ORCHARD, VINEYARD, BASIN,
     GRASS, GREENFIELD, GREENHOUSE_HORTICULTURE, MILITARY, PLANT_NURSERY, QUARRY, RECREATION_GROUND, VILLAGE_GREEN,
     BROWNFIELD, GARAGES, LANDFILL, RAILWAY, RELIGIOUS, GRASSLAND, HEATH, PLAYGROUND, GARDEN, BAY, BARE_ROCK, COASTLINE,
@@ -50,6 +50,7 @@ public enum WayType {
             case RELIGIOUS -> Color.valueOf("CDCCC9");
             case FOREST -> Color.valueOf("B4D0A3");
             case BUILDING -> Color.valueOf("D7D0CB");
+            case COASTLINE -> Color.RED;
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
         };
     }
@@ -72,6 +73,7 @@ public enum WayType {
             case FOOTWAY_ANDMORE -> Color.valueOf("EA897B");
             case STEPS -> Color.valueOf("EC8574");
             case BRIDLEWAY -> Color.valueOf("64A257");
+            case COASTLINE -> Color.RED;
             default -> Color.BLACK;
         };
     }
@@ -79,7 +81,7 @@ public enum WayType {
     public int getWidth() {
         return switch (this) {
             case MOTORWAY -> 9;
-            case TRUNK, PRIMARY -> 6;
+            case TRUNK, PRIMARY -> 4;
             case SECONDARY -> 4;
             case TERTIARY -> 6;
             case UNCLASSIFIED, RESIDENTIALWAY, LIVING_STREET -> 5;
