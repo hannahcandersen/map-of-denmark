@@ -39,4 +39,12 @@ public interface Drawable {
     float getMiddleX();
     float getMiddleY();
 
+
+    public float getCurrentMinX();
+
+    public float getCurrentMaxX();
+
+    public float getCurrentMinY();
+
+    public float getCurrentMaxY();
 }

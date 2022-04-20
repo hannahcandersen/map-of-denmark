@@ -40,21 +40,21 @@ public class PolyLine implements Drawable, Serializable {
         currentMaxX = nodes.get(0).getLon();
         currentMinY = nodes.get(0).getLat();
         currentMaxY = nodes.get(0).getLat();
-        
+
         //Gemmer alle lat og lon koordinater (x-,y-koordinater) fra OSMNode-listen i float-arrayet
         for (var node : nodes) {
 
             //Opdatere currentMaxY EVT skriver: <
-            if (node.getLat() > currentMaxY){
+            if (node.getLat() > currentMaxY) {
                 currentMaxY = node.getLat();
             }
-            if(node.getLat() < currentMinY){
+            if (node.getLat() < currentMinY) {
                 currentMinY = node.getLat();
             }
-            if(node.getLon() > currentMaxX){
+            if (node.getLon() > currentMaxX) {
                 currentMaxX = node.getLon();
             }
-            if(node.getLon() < currentMinX){
+            if (node.getLon() < currentMinX) {
                 currentMinX = node.getLon();
             }
 
@@ -68,22 +68,37 @@ public class PolyLine implements Drawable, Serializable {
         //Finder start-punktet (x og y koordinaterne)
         gc.moveTo(coords[0], coords[1]);
         //Tegner alle OSMNodes
-        for (var i = 2 ; i < coords.length ; i += 2) {
-            gc.lineTo(coords[i], coords[i+1]);
+        for (var i = 2; i < coords.length; i += 2) {
+            gc.lineTo(coords[i], coords[i + 1]);
         }
     }
 
     //Bruges til at finde vejens midtpunkt
     @Override
-    public float getMiddleX(){
+    public float getMiddleX() {
         return (currentMaxX + currentMinX) / 2;
     }
 
     @Override
-    public float getMiddleY(){
-        return (currentMinY+currentMaxY)/ 2;
+    public float getMiddleY() {
+        return (currentMinY + currentMaxY) / 2;
     }
 
 
+    public float getCurrentMinX() {
+        return currentMinX;
+    }
 
+    public float getCurrentMaxX() {
+        return currentMaxX;
+    }
+
+    public float getCurrentMinY() {
+        return currentMinY;
+    }
+
+    public float getCurrentMaxY() {
+        return currentMaxY;
+
+    }
 }

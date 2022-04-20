@@ -18,7 +18,7 @@ public class MapCanvas extends Canvas {
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
     private int currentZoomLevel;
-    private double zoom;
+
 
 
     public void init(Model model) {
@@ -45,11 +45,11 @@ public class MapCanvas extends Canvas {
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         System.out.println(searchRangeSerachRectangle);
-
-        ////////////////// START ZOOM OVERHOVEDE IKKE SIKKER ///////////////
+        
         //Udregnet zoomLevel
         //VI HAR 3 ZOOM UDREGNERE, Currentzoomlevel, ZoomLevel (ens værdi) og zoom.
         currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
+        //zoomLevel; = getZoomLevel((realMax.getY() - realMin.getY())/2);
         System.out.println("Currentzoomlevel: " + currentZoomLevel);
 
         //udregner zoomlevel på en anden måde:

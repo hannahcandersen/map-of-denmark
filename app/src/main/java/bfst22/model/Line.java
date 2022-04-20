@@ -45,4 +45,22 @@ public class Line implements Drawable {
     public float getMiddleY(){
         return (y1 + y2) / 2;
     }
+
+    public float getCurrentMinX() {
+        return x1;
+    }
+
+    public float getCurrentMinY() {
+        return y1;
+    }
+
+    public float getCurrentMaxX() {
+        return x2;
+    }
+
+    public float getCurrentMaxY() {
+        return y2;
+    }
 }
+
+

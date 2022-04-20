@@ -35,7 +35,6 @@ public class KdTree {
         }
 
         //Erklærer
-
         KdNode kdNode;
 
         // Laver leaves
@@ -108,26 +107,44 @@ public class KdTree {
     }
 
     //Privat RangeSearch metode
-       private static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
-            if (splitNode == null){
-                //System.out.println("splitnode er tom!!!");
-                return null;
-            }
+    private static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
+        if (splitNode == null){
+            //System.out.println("splitnode er tom!!!");
+            return null;
+        }
 
         //Hvis vores splitnode er en leaf, tilføj leaf(s) til result listen
-        if (splitNode instanceof Leaf){
-            //Caster KDnode splitNode om til et leaf.
-            result.addAll(((Leaf) splitNode).getListOfDrawables());
+        if (splitNode instanceof Leaf) {
 
-            for (Drawable drawable: ((Leaf) splitNode).getListOfDrawables()) {
 
-//Hannah kigger på det her//////////////
-                //hvis drawable er mindre end minX
-                //hvis drawable er større end maxX
-                //hvis drawable er mellem minX og maxX
+            // VERSION 1: Tilføjer drawable til result hvis der er bare én enkelt node i drawable, der er indenfor firkanten. Ved ikke om den virker??
+            // For loop der caster splitnode til Leaf of løber alle drawables i leaf igennem
+            for (Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
+                if (d.getCurrentMinX() >= rangeSerachRectangle.getMinLon() || d.getCurrentMaxX() <= rangeSerachRectangle.getMaxLon() || d.getCurrentMinY() >= rangeSerachRectangle.getMinLat() || d.getCurrentMaxY() <= rangeSerachRectangle.getMaxLat()) {
+                    result.add(d);
+                }
+                //TIL TEST. Printer min og max koordinater. minX er Lon (minus) og minY er Lat (ikke minus).
+                //System.out.println("MinX : " + d.getCurrentMinX() + " MaxX : " + d.getCurrentMaxX() + " MinY: " + d.getCurrentMinY() + " MaxY :" + d.getCurrentMaxY());
             }
+
+            /*
+            // VERSION 2: Tilføjer drawable til result hvis middleX eller middleY er indenfor firkanten
+            // For loop der caster splitnode til Leaf of løber alle drawables i leaf igennem
+            for(Drawable d : ((Leaf) splitNode).getListOfDrawables()) {
+                // Langt if-statement der tjekker at midX for hver drawable er mellem firkantens min og maxLon. OG at midY samtidigt er mellem firkantens min og maxLat
+                if ((d.getMiddleX() >= rangeSerachRectangle.getMinLon() && d.getMiddleX() <= rangeSerachRectangle.getMaxLon()) && (d.getMiddleY() >= rangeSerachRectangle.getMinLat() && d.getMiddleY() <= rangeSerachRectangle.getMaxLat())) {
+                    // Tilføjer kun de Drawables, som er inde i firkanten til result
+                    result.add(d);
+                }
+
+            }
+
+             */
+
             leavesAdded++;
         }
+
+
 
         //Ellers er vores splitnode en splitnode, og vi skal kalde rekursivt ned gennem træet
         else{
@@ -178,7 +195,7 @@ public class KdTree {
                 }
             }
         }
-      return result;
+        return result;
     }
 
 
