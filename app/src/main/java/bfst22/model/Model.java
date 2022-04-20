@@ -656,6 +656,11 @@ public class Model {
         }
     }*/
 
+    // ydre loop
+    // tilføj veje til current way
+    // fire situationer
+
+
     public List<PolyLine> makeCoastlineObject(Map<WayType,List<Drawable>> linesList) {
         //det som er tilføjet til listen
         OSMNode startOSMNode = null;
@@ -665,41 +670,45 @@ public class Model {
         OSMNode currentEndOSMNode;
         String idWay;
 
+
         List<OSMNode> listOfNodesInCoastline = new ArrayList<>();
         List<PolyLine> listOfCoastlines = new ArrayList<>();
 
-        for(Drawable coastline : linesList.get(WayType.COASTLINE)) {
+        while(!linesList.isEmpty()) {
+            for (Drawable coastline : linesList.get(WayType.COASTLINE)) {
+                if (listOfNodesInCoastline.size() == 0) {
+                    //listOfNodesInCoastline.addAll((lines.get(WayType.COASTLINE).get(0)));
+                    listOfOSMNodesOfCoastlines.addAll(((PolyLine) linesList).getNodes());
+                    startOSMNode = ((PolyLine) coastline).getNodes().get(0);
+                    currentEndOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
+                    linesList.remove(coastline);
+                }
 
-            if(listOfNodesInCoastline.size() == 0) {
-                //listOfNodesInCoastline.addAll((lines.get(WayType.COASTLINE).get(0)));
-                listOfOSMNodesOfCoastlines.addAll(((PolyLine) linesList).getNodes());
-                startOSMNode = ((PolyLine) linesList).getNodes().get(0);
-                currentEndOSMNode = ((PolyLine) linesList).getNodes().get(linesList.size()-1);
+                currentStartOSMNode = ((PolyLine) coastline).getNodes().get(0);
+                currentEndOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
+                System.out.println("currentStartOSMNode: " + currentStartOSMNode);
+                System.out.println("currentEndOSMNode: " + currentEndOSMNode);
+
+
+                if (currentStartOSMNode.getLat() == currentEndOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
+                    listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
+                    endOSMNode = currentEndOSMNode;
+                    linesList.remove(coastline);
+                }
+
+                if (currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()) {
+                    listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
+                    listOfCoastlines.add(new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline));
+                    linesList.remove(coastline);
+                    listOfNodesInCoastline.clear();
+                }
             }
 
-            currentStartOSMNode = ((PolyLine) linesList).getNodes().get(0);
-            currentEndOSMNode = ((PolyLine) linesList).getNodes().get(linesList.size()-1);
-
-            System.out.println("currentStartOSMNode: " + currentStartOSMNode);
-            System.out.println("currentEndOSMNode: " + currentEndOSMNode);
-
-
-
-           if(currentStartOSMNode.getLat() == currentEndOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()){
-               listOfNodesInCoastline.addAll(((PolyLine) linesList).getNodes());
-               endOSMNode = currentEndOSMNode;
-           }
-
-           if(currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()){
-               listOfNodesInCoastline.addAll(((PolyLine) linesList).getNodes());
-               listOfCoastlines.add(new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline));
-               listOfNodesInCoastline.clear();
-           }
+            if (listOfCoastlines == null) {
+                System.out.print("listOfCoastlines er null!!");
+            }
         }
 
-        if(listOfCoastlines == null){
-            System.out.print("listOfCoastlines er null!!");
-        }
         return listOfCoastlines;
     }
 
