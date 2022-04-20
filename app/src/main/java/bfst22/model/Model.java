@@ -35,6 +35,7 @@ public class Model {
     //KD Trees
     private static KdNode KDTreeUNKNOWN;
     private static KdNode KDTreePROPOSED;
+    private static KdNode KDTreeNAVIGATION_LINE;
     private static KdNode KDTreeRESIDENTIAL;
     private static KdNode KDTreeLAKE;
     private static KdNode KDTreeBEACH;
@@ -542,6 +543,9 @@ public class Model {
     }
     public static KdNode getKDTreePROPOSED() {
         return KDTreePROPOSED;
+    }
+    public static KdNode getKDTreeNAVIGATION_LINE() {
+        return KDTreeNAVIGATION_LINE;
     }
     public static KdNode getKDTreeRESIDENTIAL() {
         return KDTreeRESIDENTIAL;

@@ -56,6 +56,7 @@ public class MapCanvas extends Canvas {
         var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
         //System.out.println("leaves added in resultUNKNOWN: " + KdTree.getLeavesAdded());
         var resultPROPOSED = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePROPOSED());
+        var resultNAVIGATION_LINE = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeNAVIGATION_LINE());
         var resultRESIDENTIAL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL());
         var resultFOREST = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST());
         var resultMEADOW = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW());
@@ -118,6 +119,7 @@ public class MapCanvas extends Canvas {
 
         if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOWN) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
         //if(Model.getKDTreePROPOSED() != null) {for (Drawable drawable : resultPROPOSED) {   drawable.drawWayType(gc, WayType.PROPOSED);}}
+        //if(Model.getKDTreeNAVIGATION_LINE() != null) {for (Drawable drawable : resultNAVIGATION_LINE) {   drawable.drawWayType(gc, WayType.NAVIGATION_LINE);}}
         if(Model.getKDTreeRESIDENTIAL() != null){for (Drawable drawable : resultRESIDENTIAL) {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
         if(Model.getKDTreeFOREST() != null){for (Drawable drawable : resultFOREST) {drawable.fillWayType(gc, WayType.FOREST);}}
         if(Model.getKDTreeMEADOW() != null){for (Drawable drawable : resultMEADOW) {drawable.fillWayType(gc, WayType.MEADOW);}}
