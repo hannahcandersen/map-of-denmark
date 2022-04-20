@@ -535,7 +535,7 @@ public class Model {
         //listOfOSMNodesOfCoastlines = getListOfOSMNodesOfCoastlines(coastlines);
 
         list = makeCoastlineObject(coastlines);
-                System.out.println("Done");
+        System.out.println("Done");
     }
 
     // tilføjer en observer til listen observers
