@@ -51,14 +51,7 @@ public class MapCanvas extends Canvas {
         currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         //zoomLevel; = getZoomLevel((realMax.getY() - realMin.getY())/2);
         System.out.println("Currentzoomlevel: " + currentZoomLevel);
-
-        //udregner zoomlevel på en anden måde:
-        int mapdisplay = 322; //min of height and width of element which contains the map
-        double dist = (6371 * Math.acos(Math.sin(realMin.getX() / 57.2958) * Math.sin(realMax.getX() / 57.2958) +
-                (Math.cos(realMin.getX() / 57.2958) * Math.cos(realMax.getX() / 57.2958) * Math.cos((realMax.getY() / 57.2958) - (realMin.getY() / 57.2958)))));
-        zoom = Math.floor(8 - Math.log(1.6446 * dist / Math.sqrt(2 * (mapdisplay * mapdisplay))) / Math.log (2));
-        System.out.println("zoom: " + (zoom));
-        ////////////////// SLUT ZOOM OVERHOVEDE IKKE SIKKER ///////////////
+        
 
         //Result listen, med de drawables der er inRange
         var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
