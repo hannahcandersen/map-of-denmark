@@ -48,7 +48,7 @@ public class Controller {
     }
 
     @FXML
-    public void AddressFromUserInput(KeyEvent keyEvent) {
-
+    public void addressParse(KeyEvent keyEvent) {
+        
     }
 }

@@ -30,7 +30,7 @@ public class AddressFromUserInput {
     private final static String REGEX = "^(?<street>[A-Za-zæøå ]+?) +(?<house>[0-9]+)([, ])+(?<floor>[0-9.]+)?(?<side>(th|tv|mf){0,1})?([, ]+?(?<postcode>[0-9]{4}) +(?<city>[A-Za-zæøå ]+))?$";
     private final static Pattern PATTERN = Pattern.compile(REGEX);
 
-    public static AddressFromUserInput parse(String input) {
+    public static AddressFromUserInput addressParse(String input) {
         var builder = new Builder();
         var matcher = PATTERN.matcher(input);
         if (matcher.matches()) {
