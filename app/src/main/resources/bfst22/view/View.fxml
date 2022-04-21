@@ -15,17 +15,17 @@
                 <MapCanvas fx:id="canvas" height="${scene.height}" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onScroll="#onScroll" width="${scene.width}">
                 </MapCanvas>
             </center>
-         <top>
-            <Pane prefHeight="44.0" prefWidth="640.0" style="-fx-background-color: #6495ED;" BorderPane.alignment="CENTER">
-               <children>
-                  <Button layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Menu" />
-                  <TextField layoutX="111.0" layoutY="10.0" onKeyPressed="#AddressFromUserInput" onTouchPressed="#AddressFromUserInput" prefHeight="25.0" prefWidth="100.0" promptText="Search address" />
-                  <TextField layoutX="240.0" layoutY="10.0" onKeyPressed="#AddressFromUserInput" onTouchPressed="#AddressFromUserInput" prefHeight="25.0" prefWidth="100.0" promptText="Search address" />
-                  <Text layoutX="73.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From:" />
-                  <Text layoutX="217.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To:" />
-               </children>
-            </Pane>
-         </top>
+            <top>
+                <Pane prefHeight="44.0" prefWidth="640.0" style="-fx-background-color: #6495ED;" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Menu" />
+                        <TextField layoutX="111.0" layoutY="10.0" onKeyPressed="#AddressFromUserInput" onTouchPressed="#AddressFromUserInput" prefHeight="25.0" prefWidth="100.0" promptText="Search address" />
+                        <TextField layoutX="240.0" layoutY="10.0" onKeyPressed="#AddressFromUserInput" onTouchPressed="#AddressFromUserInput" prefHeight="25.0" prefWidth="100.0" promptText="Search address" />
+                        <Text layoutX="73.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From:" />
+                        <Text layoutX="217.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To:" />
+                    </children>
+                </Pane>
+            </top>
         </BorderPane>
     </root>
 </Scene>

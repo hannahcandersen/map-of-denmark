@@ -28,7 +28,7 @@ public class PolyLine implements Drawable, Serializable {
 
 
     public PolyLine(ArrayList<OSMNode> nodes) {
-        this.nodes = nodes;
+        this.nodes = new ArrayList<>(nodes);
 
         //Opretter et nyt float-array.
         //Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
@@ -84,7 +84,6 @@ public class PolyLine implements Drawable, Serializable {
         return (currentMinY + currentMaxY) / 2;
     }
 
-
     public float getCurrentMinX() {
         return currentMinX;
     }
@@ -102,8 +101,6 @@ public class PolyLine implements Drawable, Serializable {
     }
 
     public ArrayList<OSMNode> getNodes(){
-        return null;
+        return nodes;
     }
-
-
 }

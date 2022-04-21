@@ -115,6 +115,9 @@ public class MapCanvas extends Canvas {
         gc.setTransform(trans);
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
 
+        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        {for (Drawable drawable : Model.getList()) {drawable.drawWayType(gc, WayType.COASTLINE); drawable.fillWayType(gc, WayType.COASTLINE);}}
+
 
         // Tegner og farvelægger kortet
         //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
@@ -294,11 +297,6 @@ public class MapCanvas extends Canvas {
         gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
         if(Model.getKDTreeMOTORWAY() != null) {for (Drawable drawable : resultMOTORWAY) {drawable.drawWayType(gc, WayType.MOTORWAY);}}
 
-
-
-
-        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        //if(Model.getKDTreeCOASTLINE() != null) {for (Drawable drawable : Model.getList()) {drawable.drawWayType(gc, WayType.COASTLINE); drawable.fillWayType(gc, WayType.COASTLINE);}}
 
         //Tegner vores debug firkant
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
