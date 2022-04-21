@@ -1,5 +1,6 @@
 package bfst22.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddressCollection {
@@ -8,6 +9,8 @@ public class AddressCollection {
 
     public AddressCollection(List<AddressObject> addressList) {
         //this.addressList = new ...;
+
+        //sorter liste
     }
 
     public List<AddressObject> getAddressList() {

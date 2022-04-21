@@ -124,7 +124,7 @@ public class Model {
 
     private static List<OSMNode> listOfOSMNodesOfCoastlines;
     private static List<PolyLine> list;
-
+    private List<AddressObject> listOfAddresses;
 
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
@@ -291,8 +291,10 @@ public class Model {
         var id2way = new HashMap<Long, OSMWay>(); // map til veje, der gemmer rel-id og listen af nodes for vejen
         var nodes = new ArrayList<OSMNode>(); // liste af nodes for den enkelte vej
         var rel = new ArrayList<OSMWay>(); // liste med osm ways
-        var innerRole = new ArrayList<Drawable>();
-        var outerRole = new ArrayList<Drawable>();
+        String city = "";
+        String housenumber = "";
+        String postcode = "";
+        String street = "";
         long relID = 0; // giver et id til en relation
         var type = WayType.UNKNOWN; // sætter først typen til unknows. kan ændres undervejs i metoden til f.eks. LAKE
         while (reader.hasNext()) { // læser hver linje én af gangen
@@ -332,6 +334,18 @@ public class Model {
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
                             switch (k) {
+                                case "addr:city":
+                                    city = v;
+                                    break;
+                                case "addr:housenumber":
+                                    housenumber = v;
+                                    break;
+                                case "addr:postcode":
+                                    postcode = v;
+                                    break;
+                                case "addr:street":
+                                    street = v;
+                                    break;
                                 case "landuse":
                                     type = switch (v) {
                                         case "forest" -> WayType.FOREST;
@@ -501,7 +515,6 @@ public class Model {
                             break;
 
                     }
-
                     break;
                 case XMLStreamConstants.END_ELEMENT: // får det sidste på den givne linje i osm-filen.
                     switch (reader.getLocalName()) {
@@ -528,6 +541,13 @@ public class Model {
 
                             rel.clear();
                             break;
+                        case "node":
+                            if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
+                                //Map<AddressObject, OSMNode>
+                                listOfAddresses.add(new AddressObject(street, housenumber, postcode, city));
+                            }
+                            break;
+
                     }
                     break;
             }
