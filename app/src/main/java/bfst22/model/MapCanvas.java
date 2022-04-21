@@ -303,7 +303,7 @@ public class MapCanvas extends Canvas {
         gc.setFill(rectangleColor);
         gc.setStroke(Color.BLACK);
         gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
-        gc.stroke();
+        //gc.stroke();
     }
 
     private int getZoomLevel(double r) {
