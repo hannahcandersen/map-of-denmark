@@ -103,4 +103,6 @@ public class PolyLine implements Drawable, Serializable {
     public ArrayList<OSMNode> getNodes(){
         return nodes;
     }
+
+
 }

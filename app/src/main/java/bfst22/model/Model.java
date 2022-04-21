@@ -2,7 +2,6 @@ package bfst22.model;
 
 import bfst22.model.kdtree.KdNode;
 import bfst22.model.kdtree.KdTree;
-import bfst22.model.kdtree.Leaf;
 import bfst22.view.Drawable;
 // import bfst22.model.kdtree.KDTree2;
 
@@ -122,7 +121,7 @@ public class Model {
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     private float minlat, minlon, maxlat, maxlon;
 
-    private static List<OSMNode> listOfOSMNodesOfCoastlines;
+
     private static List<PolyLine> list;
 
 
@@ -133,8 +132,8 @@ public class Model {
     }
 
     //Map med coastlines
-    static Map<WayType,List<Drawable>> coastlines = new EnumMap<>(WayType.class);{
-        for (var type : WayType.values()) coastlines.put(type, new ArrayList<>());
+    static Map<WayType,List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);{
+        for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());
     }
 
 
@@ -255,7 +254,7 @@ public class Model {
         KDTreePOND_ANDMORE = KdTree.buildKDTree(lines.get(WayType.POND_ANDMORE), true);
         KDTreeHABOUR = KdTree.buildKDTree(lines.get(WayType.HARBOUR), true);
         KDTreePARKING = KdTree.buildKDTree(lines.get(WayType.PARKING), true);
-        KDTreeCOASTLINE = KdTree.buildKDTree(coastlines.get(WayType.COASTLINE), true);
+        KDTreeCOASTLINE = KdTree.buildKDTree(coastlinesMap.get(WayType.COASTLINE), true);
 
     }
 
@@ -513,7 +512,7 @@ public class Model {
 
                             //Tilføjer coastlines til en liste
                             if(type == WayType.COASTLINE){
-                                coastlines.get(type).add(way);
+                                coastlinesMap.get(type).add(way);
                                 nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
                             }
 
@@ -534,7 +533,7 @@ public class Model {
 
         //listOfOSMNodesOfCoastlines = getListOfOSMNodesOfCoastlines(coastlines);
 
-        list = makeCoastlineObject(coastlines);
+        list = makeCoastlineObject(coastlinesMap);
         System.out.println("Done");
     }
 
@@ -637,7 +636,7 @@ public class Model {
     public static KdNode getKDTreeHABOUR() {return KDTreeHABOUR;}
     public static KdNode getKDTreePARKING() {return KDTreePARKING;}
     public static KdNode getKDTreeCOASTLINE() {return KDTreeCOASTLINE;}
-    public static Map<WayType, List<Drawable>> getCoastlines() {return coastlines;}
+    public static Map<WayType, List<Drawable>> getCoastlinesMap() {return coastlinesMap;}
 
     public static List<OSMNode> getListOfOSMNodesOfCoastlines(Map<WayType,List<Drawable>> coastlines) {
         //så længe dens startpunkt ikke er dens slutpunkt - kør while loop
@@ -663,74 +662,107 @@ public class Model {
 
     public List<PolyLine> makeCoastlineObject(Map<WayType,List<Drawable>> linesList) {
         //det som er tilføjet til listen
+
+        //Starten for CurrentWay
         OSMNode startOSMNode = null;
+
+        //Slutning for CurrentWay
         OSMNode endOSMNode = null;
         //det som ikke endnu er tilføjet
+        //Start for den coastline man kigger på lige nu
         OSMNode currentStartOSMNode;
+        //Slut for den coastline man kigger på lige nu
         OSMNode currentEndOSMNode;
-        String idWay;
-
-        //PolyLine currentWay;
+        PolyLine currentWay = null;
 
 
         List<OSMNode> listOfNodesInCoastline = new ArrayList<>();
+
+        //Holder på vores færdige coastlines
         List<PolyLine> listOfCoastlines = new ArrayList<>();
 
-        List<Drawable> coastlines2 = linesList.get(WayType.COASTLINE);
-        while(!coastlines2.isEmpty()) {
-            List<Drawable> coastline2Ny = new ArrayList<>();
+        //Alle ways af typen coastline
+        List<Drawable> unSortedCoastlines = linesList.get(WayType.COASTLINE);
 
-            for (Drawable coastline : coastlines2) {
+        while(!unSortedCoastlines.isEmpty()) {
+            // De coastlines som ikke passede
+            List<Drawable> buildUpCoastlinesList = new ArrayList<>();
+            for (Drawable coastline : unSortedCoastlines) {
+
                 if (listOfNodesInCoastline.size() == 0) {
                     //listOfNodesInCoastline.addAll((lines.get(WayType.COASTLINE).get(0)));
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     startOSMNode = ((PolyLine) coastline).getNodes().get(0);
                     endOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
-                    //currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    //Opretter currentWay med Nodes i vores første vej
+                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    System.out.println("Vi er ved o case");
+                    continue;
                 }
 
                 currentStartOSMNode = ((PolyLine) coastline).getNodes().get(0);
                 currentEndOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
 
 
+
                 // SITUATION 1: Begge pile mod højre.
                 if (currentStartOSMNode.getLat() == endOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     endOSMNode = currentEndOSMNode;
-
+                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    System.out.println("Vi er ved situation 1");
                 }
-
                 // SITUATION 2: Begge pile mod midten
-                if (endOSMNode.getLat() == currentEndOSMNode.getLat() && endOSMNode.getLon() == currentEndOSMNode.getLon()){
+                else if (endOSMNode.getLat() == currentEndOSMNode.getLat() && endOSMNode.getLon() == currentEndOSMNode.getLon()) {
                     // Vend nummer to pil om og tilføjer til listOfNodesInCoastLine
                     Collections.reverse(((PolyLine) coastline).getNodes());
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     endOSMNode = currentEndOSMNode;
+                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    System.out.println("Vi er ved situation 2");
+                }
+                // SITUATION 3: Begge pile væk fra midten // Start og start mødes //Første pil drejet rundt
+                else if (currentStartOSMNode.getLat() == startOSMNode.getLat() && currentStartOSMNode.getLon() == startOSMNode.getLon()) {
+                    Collections.reverse(((PolyLine) coastline).getNodes()); //EVT her er fejlen
+                    listOfNodesInCoastline.addAll(0, ((PolyLine) coastline).getNodes());
+                    startOSMNode = listOfNodesInCoastline.get(0);
+                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    System.out.println("Vi er ved situation 3");
+                }
+                // SITUATION 4: Begge pile mod venstre // Vores start == nye slut //EVt forkert
+                else if (currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()) {
+                    listOfNodesInCoastline.addAll(0, ((PolyLine) coastline).getNodes());
+                    startOSMNode = listOfNodesInCoastline.get(0);
+                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    System.out.println("Vi er ved situation 4");
+                }
+                else {
+                    buildUpCoastlinesList.add(coastline);
+                    //System.out.println("buildUpCoastlinesList: " + buildUpCoastlinesList.size());
+                    System.out.println("Jeg går ind i else");
                 }
 
-                // SITUATION 3: Begge pile væk fra midten
-                // SITUATION 4: Begge pile mod venstre
-
-
+                //Hvis end og start det samme, ville alle coastlines være tilføjet
                 if (endOSMNode.getLat() == startOSMNode.getLat() && endOSMNode.getLon() == startOSMNode.getLon()) {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
-                    listOfCoastlines.add(new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline));
+                    listOfCoastlines.add(currentWay);
                     listOfNodesInCoastline.clear();
+                    System.out.println("Vi er færdige med kystlinjen og har tilføjet den");
+
                 }
 
-                else{
-                     coastline2Ny.add(coastline);
-                }
-            }
+            } //Forloop stop
 
-            if (listOfCoastlines == null) {
-                System.out.print("listOfCoastlines er null!!");
-            }
+
             // gammel liste = ny liste (ting vi mangler at kigge på)
-            coastlines2 = coastline2Ny;
-        }
+            unSortedCoastlines = buildUpCoastlinesList;
+            System.out.println("unSortedCoastlines: " + unSortedCoastlines.size());
 
+            }
+
+        System.out.println("done med kystliner");
         return listOfCoastlines;
+
     }
 
     public static List<PolyLine> getList() {
