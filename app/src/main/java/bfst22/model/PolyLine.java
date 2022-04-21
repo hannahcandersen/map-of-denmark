@@ -19,6 +19,7 @@ public class PolyLine implements Drawable, Serializable {
     float currentMaxX;
     float currentMinY;
     float currentMaxY;
+    WayType type;
 
     public static final long serialVersionUID = 134123;
     //Programmet skal kun huske en sekvens af floats koordinater
@@ -26,9 +27,10 @@ public class PolyLine implements Drawable, Serializable {
 
     private ArrayList<OSMNode> nodes;
 
-
+   //   public PolyLine(ArrayList<OSMNode> nodes, WayType type)
     public PolyLine(ArrayList<OSMNode> nodes) {
         this.nodes = new ArrayList<>(nodes);
+        this.type = type;
 
         //Opretter et nyt float-array.
         //Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
@@ -102,6 +104,10 @@ public class PolyLine implements Drawable, Serializable {
 
     public ArrayList<OSMNode> getNodes(){
         return nodes;
+    }
+
+    public WayType getType(){
+        return this.type;
     }
 
 

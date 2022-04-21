@@ -33,6 +33,8 @@ public interface Drawable {
         gc.fill();
     }
 
+    //WayType getTyppe();
+
     void trace(GraphicsContext gc);
 
     //Bruges til at finde vejens midtpunkt

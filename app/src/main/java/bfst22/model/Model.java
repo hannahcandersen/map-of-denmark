@@ -29,6 +29,19 @@ import static java.util.stream.Collectors.toList;
 public class Model {
 
     //KD Trees
+    
+    private static KdNode KDTreeDrawEverytime;
+    private static KdNode KDTreeDrawZoomLevel29AndUnder;
+    private static KdNode KDTreeDrawZoomLevel30;
+    private static KdNode KDTreeDrawZoomLevel31AndOver;
+
+    private ArrayList<Drawable> listForKDTreeDrawEverytime = new ArrayList<>();
+    private ArrayList<Drawable> listForKDTreeDrawZoomLevel29AndUnder = new ArrayList<>();
+    private ArrayList<Drawable> listForKDTreeDrawZoomLevel30 = new ArrayList<>();
+    private ArrayList<Drawable> listForKDTreeDrawLevel31AndOver = new ArrayList<>();
+
+
+
     private static KdNode KDTreeUNKNOWN;
     private static KdNode KDTreePROPOSED;
     private static KdNode KDTreeNAVIGATION_LINE;
@@ -166,8 +179,76 @@ public class Model {
         // gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
         if (!filename.endsWith(".obj")) save(filename);
 
-        //Bygger KDTree og gemmer det i feltet KDTree
-        //buildKdTrees();
+
+
+        //Lav lister
+
+        //LISTE FOR ALT
+        listForKDTreeDrawEverytime.addAll(lines.get(WayType.MOTORWAY));
+        listForKDTreeDrawEverytime.addAll(lines.get(WayType.FOREST));
+        listForKDTreeDrawEverytime.addAll(lines.get(WayType.COASTLINE));
+
+        //LISTE FOR ZOOMLEVEL 29
+        listForKDTreeDrawZoomLevel29AndUnder.addAll(lines.get(WayType.FARMLAND));
+        listForKDTreeDrawZoomLevel29AndUnder.addAll(lines.get(WayType.GRASS));
+        listForKDTreeDrawZoomLevel29AndUnder.addAll(lines.get(WayType.RAILWAY));
+        listForKDTreeDrawZoomLevel29AndUnder.addAll(lines.get(WayType.ROAD));
+        listForKDTreeDrawZoomLevel29AndUnder.addAll(lines.get(WayType.RESIDENTIALWAY));
+
+        //LISTE FOR ZOOMLEVEL 30
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.RESIDENTIAL));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.MEADOW));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.CONSTRUCTION));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.RETAIL));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.INDUSTRIAL));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.FARMLAND));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.GRASS));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.GREENHOUSE_HORTICULTURE));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.RAILWAY));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.RELIGIOUS));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.CYCLEWAY));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.SERVICE));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.ROAD));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.LIVING_STREET));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.RESIDENTIALWAY));
+        listForKDTreeDrawZoomLevel30.addAll(lines.get(WayType.BUILDING));
+
+
+        //LISTE FOR ZOOMLEVEL 31
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.RESIDENTIAL));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.MEADOW));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.CEMETERY));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.ALLOTMENTS));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.COMMERCIAL));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.CONSTRUCTION));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.RETAIL));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.INDUSTRIAL));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.FARMLAND));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.GRASS));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.GREENHOUSE_HORTICULTURE));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.LANDFILL));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.RAILWAY));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.RELIGIOUS));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.BRIDLEWAY));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.FOOTWAY_ANDMORE));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.CYCLEWAY));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.TRACK));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.PEDESTRIAN));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.SERVICE));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.ROAD));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.LIVING_STREET));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.RESIDENTIALWAY));
+        listForKDTreeDrawLevel31AndOver.addAll(lines.get(WayType.BUILDING));
+
+        //Byg træer
+        KDTreeDrawEverytime = KdTree.buildKDTree(listForKDTreeDrawEverytime, true);
+        KDTreeDrawZoomLevel29AndUnder = KdTree.buildKDTree(listForKDTreeDrawZoomLevel29AndUnder, true);
+        KDTreeDrawZoomLevel30 = KdTree.buildKDTree(listForKDTreeDrawZoomLevel30, true);
+        KDTreeDrawZoomLevel31AndOver = KdTree.buildKDTree(listForKDTreeDrawLevel31AndOver, true);
+
+
+
+
         KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
         KDTreePROPOSED = KdTree.buildKDTree(lines.get(WayType.PROPOSED), true);
         KDTreeLAKE = KdTree.buildKDTree(lines.get(WayType.LAKE), true);
@@ -505,6 +586,7 @@ public class Model {
                     switch (reader.getLocalName()) {
                         // laver en ny OSMWay ud fra listen af de nodes, som vejen indeholder
                         case "way":
+                            //var way = new PolyLine(nodes, type);
                             var way = new PolyLine(nodes);
                             id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
                             lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende
@@ -636,6 +718,11 @@ public class Model {
     public static KdNode getKDTreeHABOUR() {return KDTreeHABOUR;}
     public static KdNode getKDTreePARKING() {return KDTreePARKING;}
     public static KdNode getKDTreeCOASTLINE() {return KDTreeCOASTLINE;}
+    public static KdNode getKDTreeDrawEverytime() {return KDTreeDrawEverytime;}
+    public static KdNode getKDTreeDrawZoomLevel29AndUnder() {return KDTreeDrawZoomLevel29AndUnder;}
+    public static KdNode getKDTreeDrawZoomLevel30() {return KDTreeDrawZoomLevel30;}
+    public static KdNode getKDTreeDrawZoomLevel31AndOver() {return KDTreeDrawZoomLevel31AndOver;}
+
     public static Map<WayType, List<Drawable>> getCoastlinesMap() {return coastlinesMap;}
 
     public static List<OSMNode> getListOfOSMNodesOfCoastlines(Map<WayType,List<Drawable>> coastlines) {
@@ -696,7 +783,7 @@ public class Model {
                     endOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
                     //Opretter currentWay med Nodes i vores første vej
                     currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
-                    System.out.println("Vi er ved o case");
+                    //System.out.println("Vi er ved o case");
                     continue;
                 }
 
@@ -710,7 +797,7 @@ public class Model {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     endOSMNode = currentEndOSMNode;
                     currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
-                    System.out.println("Vi er ved situation 1");
+                    //System.out.println("Vi er ved situation 1");
                 }
                 // SITUATION 2: Begge pile mod midten
                 else if (endOSMNode.getLat() == currentEndOSMNode.getLat() && endOSMNode.getLon() == currentEndOSMNode.getLon()) {
@@ -719,7 +806,7 @@ public class Model {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     endOSMNode = currentEndOSMNode;
                     currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
-                    System.out.println("Vi er ved situation 2");
+                    //System.out.println("Vi er ved situation 2");
                 }
                 // SITUATION 3: Begge pile væk fra midten // Start og start mødes //Første pil drejet rundt
                 else if (currentStartOSMNode.getLat() == startOSMNode.getLat() && currentStartOSMNode.getLon() == startOSMNode.getLon()) {
@@ -727,19 +814,19 @@ public class Model {
                     listOfNodesInCoastline.addAll(0, ((PolyLine) coastline).getNodes());
                     startOSMNode = listOfNodesInCoastline.get(0);
                     currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
-                    System.out.println("Vi er ved situation 3");
+                    //System.out.println("Vi er ved situation 3");
                 }
                 // SITUATION 4: Begge pile mod venstre // Vores start == nye slut //EVt forkert
                 else if (currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()) {
                     listOfNodesInCoastline.addAll(0, ((PolyLine) coastline).getNodes());
                     startOSMNode = listOfNodesInCoastline.get(0);
                     currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
-                    System.out.println("Vi er ved situation 4");
+                    //System.out.println("Vi er ved situation 4");
                 }
                 else {
                     buildUpCoastlinesList.add(coastline);
                     //System.out.println("buildUpCoastlinesList: " + buildUpCoastlinesList.size());
-                    System.out.println("Jeg går ind i else");
+                    //System.out.println("Jeg går ind i else");
                 }
 
                 //Hvis end og start det samme, ville alle coastlines være tilføjet
@@ -747,7 +834,7 @@ public class Model {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
                     listOfCoastlines.add(currentWay);
                     listOfNodesInCoastline.clear();
-                    System.out.println("Vi er færdige med kystlinjen og har tilføjet den");
+                    //System.out.println("Vi er færdige med kystlinjen og har tilføjet den");
 
                 }
 
@@ -756,7 +843,7 @@ public class Model {
 
             // gammel liste = ny liste (ting vi mangler at kigge på)
             unSortedCoastlines = buildUpCoastlinesList;
-            System.out.println("unSortedCoastlines: " + unSortedCoastlines.size());
+            //System.out.println("unSortedCoastlines: " + unSortedCoastlines.size());
 
             }
 

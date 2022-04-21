@@ -18,23 +18,16 @@ public class MapCanvas extends Canvas {
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
 
-
-
     public void init(Model model) {
         this.model = model;
         pan(-model.getMinLon(), -model.getMinLat());
         zoom(640 / (model.getMaxlon() - model.getMinLon()), 0, 0);
         model.addObserver(this::repaint);
-        //try {
-            repaint();
-        /*} catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }*/
+        repaint();
     }
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() { //throws NullPointerException
-
         //Får punkterne i vinduet og laver dem om til punkter i kortet
         Point2D screenMin = new Point2D(100, 100);
         Point2D screenMax = new Point2D(getWidth()-100, getHeight()-100);
@@ -44,20 +37,31 @@ public class MapCanvas extends Canvas {
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         System.out.println(searchRangeSerachRectangle);
-        
-        //Udregnet zoomLevel
 
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         System.out.println("Currentzoomlevel: " + zoomLevel);
-        
 
         //Result listen, med de drawables der er inRange
         var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
+
+        // Laver range search
+        var resultEverytime = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeDrawEverytime());
+        var resultZoomLevel29AndUnder = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeDrawZoomLevel29AndUnder());
+        var resultZoomLevel30 = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeDrawZoomLevel30());
+        var resultZoomLevel31AndOver = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeDrawZoomLevel31AndOver());
+
+
+
+
+
+
+
+
         //System.out.println("leaves added in resultUNKNOWN: " + KdTree.getLeavesAdded());
-        var resultPROPOSED = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePROPOSED());
-        var resultNAVIGATION_LINE = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeNAVIGATION_LINE());
-        var resultRESIDENTIAL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL());
+        //var resultPROPOSED = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePROPOSED());
+        //var resultNAVIGATION_LINE = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeNAVIGATION_LINE());
+        var resultRESIDENTIAL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL() );
         var resultFOREST = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST());
         var resultMEADOW = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW());
         var resultCEMETERY = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCEMETERY());
@@ -122,11 +126,32 @@ public class MapCanvas extends Canvas {
         // Tegner og farvelægger kortet
         //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
 
+        if(Model.getKDTreeDrawEverytime() != null){
+            for (Drawable drawable: resultEverytime) {
+
+                /*if (drawable.getType()= WayType.FOREST){
+                    drawable.fillWayType(gc, WayType.FOREST);
+                }
+
+                //if(drawable.getType() = WayType.MOTORWAY){
+                    gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.MOTORWAY);
+                }*/
+
+               // drawable.drawWayType(gc, drawable.getWayType());
+
+
+            }
+        }
+
+
+
+
         if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOWN) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
-        if(Model.getKDTreePROPOSED() != null) {for (Drawable drawable : resultPROPOSED) {   drawable.drawWayType(gc, WayType.PROPOSED);}}
-        if(Model.getKDTreeNAVIGATION_LINE() != null) {for (Drawable drawable : resultNAVIGATION_LINE) {   drawable.drawWayType(gc, WayType.NAVIGATION_LINE);}}
+        //if(Model.getKDTreePROPOSED() != null) {for (Drawable drawable : resultPROPOSED) {   drawable.drawWayType(gc, WayType.PROPOSED);}}
+        //if(Model.getKDTreeNAVIGATION_LINE() != null) {for (Drawable drawable : resultNAVIGATION_LINE) {   drawable.drawWayType(gc, WayType.NAVIGATION_LINE);}}
         if(Model.getKDTreeRESIDENTIAL() != null){for (Drawable drawable : resultRESIDENTIAL) {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
-        if(Model.getKDTreeFOREST() != null){for (Drawable drawable : resultFOREST) {drawable.fillWayType(gc, WayType.FOREST);}}
+        // if(Model.getKDTreeFOREST() != null){for (Drawable drawable : resultFOREST) {drawable.fillWayType(gc, WayType.FOREST);}}
         if(Model.getKDTreeMEADOW() != null){for (Drawable drawable : resultMEADOW) {drawable.fillWayType(gc, WayType.MEADOW);}}
         if(Model.getKDTreeCEMETERY() != null){for (Drawable drawable : resultCEMETERY) {drawable.fillWayType(gc, WayType.CEMETERY);}}
         if(Model.getKDTreeFARMYARD() != null){for (Drawable drawable : resultFARMYARD) {drawable.fillWayType(gc, WayType.FARMYARD);}}
@@ -294,8 +319,8 @@ public class MapCanvas extends Canvas {
                 }
             }
 
-        gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
-        if(Model.getKDTreeMOTORWAY() != null) {for (Drawable drawable : resultMOTORWAY) {drawable.drawWayType(gc, WayType.MOTORWAY);}}
+        //gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
+        //if(Model.getKDTreeMOTORWAY() != null) {for (Drawable drawable : resultMOTORWAY) {drawable.drawWayType(gc, WayType.MOTORWAY);}}
 
 
         //Tegner vores debug firkant
