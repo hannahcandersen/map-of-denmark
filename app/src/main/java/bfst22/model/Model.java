@@ -413,6 +413,9 @@ public class Model {
                             switch (k) {
                                 case "landuse":
                                     type = switch (v) {
+                                        //currentElement.setWayType(WayType.valueOf(v.toUpperCase(Locale.ROOT)));
+                                        //Hvis tagget ikke findes, sæt til unknown
+                                        //Current type
                                         case "forest" -> WayType.FOREST;
                                         case "residential" -> WayType.RESIDENTIAL;
                                         case "industrial", "port" -> WayType.INDUSTRIAL;
@@ -486,6 +489,7 @@ public class Model {
                                     break;
                                 case "building":
                                     type = switch (v) {
+                                        //Kunne være vi skulle have flere forskellige bygninger ENUM
                                         case "yes", "church", "retail", "detached", "house", "toilets",
                                                 "shed", "garage", "school", "hotel", "commercial",
                                                 "public", "slurry_tank", "greenhouse", "office", "chapel", "semidetached_house",
