@@ -2,12 +2,14 @@
 
 <?import javafx.scene.Scene?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
-<?import bfst22.model.*?>
 
+<?import bfst22.model.MapCanvas?>
 <Scene fx:id="scene" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bfst22.controller.Controller">
     <root>
         <BorderPane prefHeight="480.0" prefWidth="640.0">
@@ -18,11 +20,16 @@
             <top>
                 <Pane prefHeight="44.0" prefWidth="640.0" style="-fx-background-color: #6495ED;" BorderPane.alignment="CENTER">
                     <children>
-                        <Button layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Menu" />
-                        <TextField layoutX="111.0" layoutY="10.0" onKeyPressed="#AddressFromUserInput" onTouchPressed="#AddressFromUserInput" prefHeight="25.0" prefWidth="100.0" promptText="Search address" />
-                        <TextField layoutX="242.0" layoutY="10.0" onKeyPressed="#AddressFromUserInput" onTouchPressed="#AddressFromUserInput" prefHeight="25.0" prefWidth="100.0" promptText="Search address" />
-                        <Text layoutX="73.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From:" />
-                        <Text layoutX="217.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To:" />
+                        <MenuButton layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Menu">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open file.." />
+                                <MenuItem mnemonicParsing="false" onAction="#etEllerAndet" text="Et eller andet" />
+                            </items>
+                        </MenuButton>
+                        <TextField fx:id="from" layoutX="140.0" layoutY="10.0" onKeyPressed="#AddressFromUserInput" onTouchPressed="#AddressFromUserInput" prefHeight="25.0" prefWidth="100.0" promptText="Search address" />
+                        <TextField fx:id="to" layoutX="285.0" layoutY="10.0" onKeyPressed="#AddressFromUserInput" onTouchPressed="#AddressFromUserInput" prefHeight="25.0" prefWidth="100.0" promptText="Search address" />
+                        <Text layoutX="100.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From:" />
+                        <Text layoutX="260.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To:" />
                     </children>
                 </Pane>
             </top>
