@@ -188,15 +188,6 @@ public class MapCanvas extends Canvas {
                 if(Model.getKDTreeDrawZoomLevel30() !=null){
                     for (Drawable drawable: resultZoomLevel30){
 
-                        if(drawable.getType() == WayType.BUILDING){
-                            gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.fillWayType(gc, WayType.BUILDING);
-                            drawable.drawWayType(gc, WayType.BUILDING);
-                        }
-
-                        if(drawable.getType() == WayType.RESIDENTIAL){
-                            drawable.fillWayType(gc, WayType.RESIDENTIAL);}
-
                         if(drawable.getType() == WayType.MEADOW){
                             drawable.fillWayType(gc, WayType.MEADOW);}
 
@@ -218,6 +209,8 @@ public class MapCanvas extends Canvas {
                         if(drawable.getType() == WayType.GREENHOUSE_HORTICULTURE){
                             drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}
 
+                        if(drawable.getType() == WayType.RESIDENTIAL){
+                            drawable.fillWayType(gc, WayType.RESIDENTIAL);}
 
 
                         if(drawable.getType() == WayType.RAILWAY){
@@ -247,11 +240,17 @@ public class MapCanvas extends Canvas {
                             drawable.drawWayType(gc, WayType.RESIDENTIALWAY);
                         }
 
+                        if(drawable.getType() == WayType.BUILDING){
+                            gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
+                            drawable.fillWayType(gc, WayType.BUILDING);
+                            drawable.drawWayType(gc, WayType.BUILDING);
+                        }
+
                      }}
 
                     if(Model.getKDTreeDrawZoomLevel31AndOver() !=null){
                         for (Drawable drawable:resultZoomLevel31AndOver){
-
+                            gc.setLineDashes(null);
 
                             //if(drawable.getType() == WayType.RESIDENTIAL){drawable.fillWayType(gc, WayType.RESIDENTIAL);}
                             //if(drawable.getType() == WayType.MEADOW){drawable.fillWayType(gc, WayType.MEADOW);}
@@ -287,8 +286,8 @@ public class MapCanvas extends Canvas {
                                 gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
                                 drawable.drawWayType(gc, WayType.TRACK);
                             }
+                            gc.setLineDashes(null);
                             if(drawable.getType() == WayType.PEDESTRIAN){
-                                gc.setLineDashes(null);
                                 gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
                                 drawable.drawWayType(gc, WayType.PEDESTRIAN);
                             }
