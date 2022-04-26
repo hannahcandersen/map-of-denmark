@@ -250,6 +250,8 @@ public class Model {
 
 
         KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
+
+        /*
         KDTreePROPOSED = KdTree.buildKDTree(lines.get(WayType.PROPOSED), true);
         KDTreeLAKE = KdTree.buildKDTree(lines.get(WayType.LAKE), true);
         KDTreeBEACH = KdTree.buildKDTree(lines.get(WayType.BEACH), true);
@@ -336,7 +338,9 @@ public class Model {
         KDTreeHABOUR = KdTree.buildKDTree(lines.get(WayType.HARBOUR), true);
         KDTreePARKING = KdTree.buildKDTree(lines.get(WayType.PARKING), true);
         KDTreeCOASTLINE = KdTree.buildKDTree(coastlinesMap.get(WayType.COASTLINE), true);
+/*
 
+         */
     }
 
 
@@ -413,6 +417,9 @@ public class Model {
                             switch (k) {
                                 case "landuse":
                                     type = switch (v) {
+                                        //currentElement.setWayType(WayType.valueOf(v.toUpperCase(Locale.ROOT)));
+                                        //Hvis tagget ikke findes, sæt til unknown
+                                        //Current type
                                         case "forest" -> WayType.FOREST;
                                         case "residential" -> WayType.RESIDENTIAL;
                                         case "industrial", "port" -> WayType.INDUSTRIAL;
@@ -486,6 +493,7 @@ public class Model {
                                     break;
                                 case "building":
                                     type = switch (v) {
+                                        //Kunne være vi skulle have flere forskellige bygninger ENUM
                                         case "yes", "church", "retail", "detached", "house", "toilets",
                                                 "shed", "garage", "school", "hotel", "commercial",
                                                 "public", "slurry_tank", "greenhouse", "office", "chapel", "semidetached_house",
@@ -555,6 +563,13 @@ public class Model {
                                 case "type":
                                     if(v.equals("multipolygon")) {
 
+
+
+
+                                       //Her skal vi have tilføjet noget!
+
+
+
                                     }
                                     break;
                             }
@@ -586,8 +601,8 @@ public class Model {
                     switch (reader.getLocalName()) {
                         // laver en ny OSMWay ud fra listen af de nodes, som vejen indeholder
                         case "way":
-                            //var way = new PolyLine(nodes, type);
-                            var way = new PolyLine(nodes);
+                            var way = new PolyLine(nodes, type);
+                            //var way = new PolyLine(nodes);
                             id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
                             lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende
                             nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
@@ -601,8 +616,8 @@ public class Model {
                             break;
 
                         case "relation":
-                            if (type == WayType.FOREST && !rel.isEmpty()) {
-                                lines.get(type).add(new MultiPolygon(rel));
+                            if (!rel.isEmpty()) { //type == WayType.FOREST &&
+                                lines.get(type).add(new MultiPolygon(rel, type));
                             }
 
 

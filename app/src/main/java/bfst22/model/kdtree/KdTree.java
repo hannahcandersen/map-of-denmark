@@ -35,7 +35,7 @@ public class KdTree {
     public static KdNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if (drawables == null || drawables.size() == 0) {
-            System.out.println("OSMNode list is empty!");
+            //System.out.println("OSMNode list is empty!");
             return null;
         }
 

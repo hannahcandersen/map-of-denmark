@@ -61,6 +61,11 @@ public class Line implements Drawable {
     public float getCurrentMaxY() {
         return y2;
     }
+
+    @Override
+    public WayType getType() {
+        return null;
+    }
 }
 
 

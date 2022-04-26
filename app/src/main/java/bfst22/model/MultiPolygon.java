@@ -22,28 +22,50 @@ public class MultiPolygon implements Drawable, Serializable {
     float currentMaxX = 0;
     float currentMinY = 0;
     float currentMaxY = 0;
+    WayType wayType;
 
 
     public static final long serialVersionUID = 1325234;
     private List<Drawable> parts = new ArrayList<>();
     private ArrayList<OSMNode> multiPolygonNodes = new ArrayList<>(); // Alle nodes der er i multipolygonet
 
-    //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes"
-    public MultiPolygon(ArrayList<OSMWay> rel) {
+    //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes" Og WayType
+    public MultiPolygon(ArrayList<OSMWay> rel, WayType wayType) {
+        this.wayType = wayType;
         for (OSMWay way : rel) {
             parts.add(new PolyLine(way.getNodes())); //Tilføjer OSMWay til listen parts
-
             totalX = 0;
             totalY = 0;
             totalX += way.getMiddleX();
             totalY += way.getMiddleY();
 
 
+
+
+
+
+
+
+
+
+
+
+
+
             // Tilføjer alle OSMNodes fra hver OSMWay til listen multiPolygonNodes
-            multiPolygonNodes.addAll(way.getNodes());
+            multiPolygonNodes.addAll(way.getNodes());}
+    }
 
-
-        }
+    //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes"
+    public MultiPolygon(ArrayList<OSMWay> rel) {
+        for (OSMWay way : rel) {
+            parts.add(new PolyLine(way.getNodes())); //Tilføjer OSMWay til listen parts
+            totalX = 0;
+            totalY = 0;
+            totalX += way.getMiddleX();
+            totalY += way.getMiddleY();
+            // Tilføjer alle OSMNodes fra hver OSMWay til listen multiPolygonNodes
+            multiPolygonNodes.addAll(way.getNodes());}
     }
 
 
@@ -104,6 +126,11 @@ public class MultiPolygon implements Drawable, Serializable {
     public float getCurrentMaxY() {
         calculateMinAndMax();
         return currentMaxY;
+    }
+
+    @Override
+    public WayType getType(){
+        return this.wayType;
     }
 }
 
