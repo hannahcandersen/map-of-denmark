@@ -845,6 +845,7 @@ public class Model {
 
             }
 
+        //hvis start og slut ikke er det samme - sæt en linje imellem
         System.out.println("done med kystliner");
         return listOfCoastlines;
 
