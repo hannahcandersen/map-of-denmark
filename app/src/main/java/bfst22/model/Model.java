@@ -124,7 +124,7 @@ public class Model {
 
     private static List<OSMNode> listOfOSMNodesOfCoastlines;
     private static List<PolyLine> list;
-    private List<AddressObject> listOfAddresses;
+    private List<AddressObject> listOfAddresses = new ArrayList<>();
 
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
