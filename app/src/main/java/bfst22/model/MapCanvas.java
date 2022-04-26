@@ -61,7 +61,7 @@ public class MapCanvas extends Canvas {
         //System.out.println("leaves added in resultUNKNOWN: " + KdTree.getLeavesAdded());
         //var resultPROPOSED = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePROPOSED());
         //var resultNAVIGATION_LINE = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeNAVIGATION_LINE());
-        var resultRESIDENTIAL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL() );
+       /* var resultRESIDENTIAL = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL() );
         var resultFOREST = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST());
         var resultMEADOW = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW());
         var resultCEMETERY = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCEMETERY());
@@ -105,74 +105,253 @@ public class MapCanvas extends Canvas {
         var resultSECONDARY= KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY());
         var resultPRIMARY= KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePRIMARY());
         var resultTRUNK= KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTRUNK());
+
+        /*
+
+        */
+
         var resultMOTORWAY = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMOTORWAY());
-        var resultBUILDING = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBUILDING());
-        var resultCOASTLINE = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCOASTLINE());
+        //var resultBUILDING = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBUILDING());
+        //var resultCOASTLINE = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCOASTLINE());
+
 
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
 
         //Laver baggrunden
-        gc.setFill(Color.WHITE);
+        gc.setFill(Color.LIGHTBLUE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
 
+        //Tegner kystlinjer
         gc.setLineWidth(1/Math.sqrt(trans.determinant()));
-        {for (Drawable drawable : Model.getList()) {drawable.drawWayType(gc, WayType.COASTLINE); drawable.fillWayType(gc, WayType.COASTLINE);}}
+       {for (Drawable drawable : Model.getList()) {
+           drawable.drawWayType(gc, WayType.COASTLINE);
+           gc.setFill(Color.PINK);
+           drawable.fillWayType(gc, WayType.COASTLINE);}}
 
 
         // Tegner og farvelægger kortet
-        //////////////////////////////////////tegner LANDUSE//////////////////////////////////////
 
+        //Tegner alt UNKNOWN
+        if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOWN) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
+
+        //Tegnes altid
         if(Model.getKDTreeDrawEverytime() != null){
             for (Drawable drawable: resultEverytime) {
 
-                /*if (drawable.getType()= WayType.FOREST){
+                //Tegner FOREST
+              if (drawable.getType()== WayType.FOREST){
                     drawable.fillWayType(gc, WayType.FOREST);
                 }
 
-                //if(drawable.getType() = WayType.MOTORWAY){
+              //Tegner motorvejene
+                if(drawable.getType() == WayType.MOTORWAY){
                     gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.MOTORWAY);
+                }
+
+                /*if(drawable.getType() == WayType.COASTLINE){
+                    gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+                 drawable.drawWayType(gc, WayType.COASTLINE); drawable.fillWayType(gc, WayType.COASTLINE);
                 }*/
 
                // drawable.drawWayType(gc, drawable.getWayType());
+            }}
+
+            //Tegnes når zoom level er =29 og under
+            if(zoomLevel <=29){
+            if(Model.getKDTreeDrawZoomLevel29AndUnder() !=null){
+                for (Drawable drawable: resultZoomLevel29AndUnder){
+
+                    if(drawable.getType() == WayType.FARMLAND){
+                        drawable.fillWayType(gc, WayType.FARMLAND);}
+
+                    if(drawable.getType() == WayType.GRASS){
+                        drawable.fillWayType(gc, WayType.GRASS);}
+
+                    if(drawable.getType() == WayType.RAILWAY){
+                        drawable.fillWayType(gc, WayType.RAILWAY);}
+
+                    if(drawable.getType() == WayType.ROAD){
+                        gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
+                        drawable.drawWayType(gc, WayType.ROAD);}
+
+                    if(drawable.getType() == WayType.RESIDENTIALWAY){
+                        gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
+                        drawable.drawWayType(gc, WayType.RESIDENTIALWAY);
+                    }}}}
+
+            if(zoomLevel >= 30){
+                if(Model.getKDTreeDrawZoomLevel30() !=null){
+                    for (Drawable drawable: resultZoomLevel30){
+
+                        if(drawable.getType() == WayType.BUILDING){
+                            gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
+                            drawable.fillWayType(gc, WayType.BUILDING);
+                            drawable.drawWayType(gc, WayType.BUILDING);
+                        }
+
+                        if(drawable.getType() == WayType.RESIDENTIAL){
+                            drawable.fillWayType(gc, WayType.RESIDENTIAL);}
+
+                        if(drawable.getType() == WayType.MEADOW){
+                            drawable.fillWayType(gc, WayType.MEADOW);}
+
+                        if(drawable.getType() == WayType.CONSTRUCTION){
+                            drawable.fillWayType(gc, WayType.CONSTRUCTION);}
+
+                        if(drawable.getType() == WayType.RETAIL){
+                            drawable.fillWayType(gc, WayType.RETAIL);}
+
+                        if(drawable.getType() == WayType.INDUSTRIAL){
+                            drawable.fillWayType(gc, WayType.INDUSTRIAL);}
+
+                        if(drawable.getType() == WayType.FARMLAND){
+                            drawable.fillWayType(gc, WayType.FARMLAND);}
+
+                        if(drawable.getType() == WayType.GRASS){
+                            drawable.fillWayType(gc, WayType.GRASS);}
+
+                        if(drawable.getType() == WayType.GREENHOUSE_HORTICULTURE){
+                            drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}
 
 
-            }
-        }
+
+                        if(drawable.getType() == WayType.RAILWAY){
+                            drawable.fillWayType(gc, WayType.RAILWAY);}
+
+                        if(drawable.getType() == WayType.RELIGIOUS){
+                            drawable.fillWayType(gc, WayType.RELIGIOUS);}
+
+                        if(drawable.getType() == WayType.CYCLEWAY){
+                            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
+                            drawable.drawWayType(gc, WayType.CYCLEWAY);}
+
+                        if(drawable.getType() == WayType.SERVICE){
+                            gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
+                            drawable.drawWayType(gc, WayType.SERVICE);}
+
+                        if(drawable.getType() == WayType.ROAD){
+                            gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
+                            drawable.drawWayType(gc, WayType.ROAD);}
+
+                        if(drawable.getType() == WayType.LIVING_STREET){
+                            gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
+                            drawable.drawWayType(gc, WayType.LIVING_STREET);}
+
+                        if(drawable.getType() == WayType.RESIDENTIALWAY){
+                            gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
+                            drawable.drawWayType(gc, WayType.RESIDENTIALWAY);
+                        }
+
+                     }}
+
+                    if(Model.getKDTreeDrawZoomLevel31AndOver() !=null){
+                        for (Drawable drawable:resultZoomLevel31AndOver){
+
+
+                            //if(drawable.getType() == WayType.RESIDENTIAL){drawable.fillWayType(gc, WayType.RESIDENTIAL);}
+                            //if(drawable.getType() == WayType.MEADOW){drawable.fillWayType(gc, WayType.MEADOW);}
+                            if(drawable.getType() == WayType.CEMETERY){drawable.fillWayType(gc, WayType.CEMETERY);}
+                            if(drawable.getType() == WayType.ALLOTMENTS){drawable.fillWayType(gc, WayType.ALLOTMENTS);}
+                            if(drawable.getType() == WayType.COMMERCIAL){drawable.fillWayType(gc, WayType.COMMERCIAL);}
+                            //if(drawable.getType() == WayType.CONSTRUCTION){drawable.fillWayType(gc, WayType.CONSTRUCTION);}
+                            //if(drawable.getType() == WayType.RETAIL){ drawable.fillWayType(gc, WayType.RETAIL);}
+                            //if(drawable.getType() == WayType.INDUSTRIAL){drawable.fillWayType(gc, WayType.INDUSTRIAL);}
+                            //if(drawable.getType() == WayType.FARMLAND){ drawable.fillWayType(gc, WayType.FARMLAND);}
+                            //if(drawable.getType() == WayType.GRASS){drawable.fillWayType(gc, WayType.GRASS);}
+                           // if(drawable.getType() == WayType.GREENHOUSE_HORTICULTURE){drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}
+                            if(drawable.getType() == WayType.LANDFILL){drawable.fillWayType(gc, WayType.LANDFILL);}
+                            //if(drawable.getType() == WayType.RAILWAY){drawable.fillWayType(gc, WayType.RAILWAY);}
+                            //if(drawable.getType() == WayType.RELIGIOUS){drawable.fillWayType(gc, WayType.RELIGIOUS);}
+
+                            if(drawable.getType() == WayType.BRIDLEWAY){
+                                gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
+                                gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.drawWayType(gc, WayType.BRIDLEWAY);}
+
+                            if(drawable.getType() == WayType.FOOTWAY_ANDMORE){
+                                gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
+                                gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);}
+
+                            /*if(drawable.getType() == WayType.CYCLEWAY){
+                                gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
+                                drawable.drawWayType(gc, WayType.CYCLEWAY);
+                            }*/
+                            if(drawable.getType() == WayType.TRACK){
+                                gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
+                                gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.drawWayType(gc, WayType.TRACK);
+                            }
+                            if(drawable.getType() == WayType.PEDESTRIAN){
+                                gc.setLineDashes(null);
+                                gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.drawWayType(gc, WayType.PEDESTRIAN);
+                            }
+                            /*
+                            if(drawable.getType() == WayType.SERVICE){
+                                gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.drawWayType(gc, WayType.SERVICE);
+                            }
+                            if(drawable.getType() == WayType.ROAD){
+                                gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.drawWayType(gc, WayType.ROAD);
+                            }
+                            if(drawable.getType() == WayType.LIVING_STREET){
+                                gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.drawWayType(gc, WayType.LIVING_STREET);
+                            }
+                            if(drawable.getType() == WayType.RESIDENTIALWAY){
+                                gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.drawWayType(gc, WayType.RESIDENTIALWAY);
+                            }
+                            if(drawable.getType() == WayType.BUILDING){}
+                                gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
+                                drawable.fillWayType(gc, WayType.BUILDING);
+                                drawable.drawWayType(gc, WayType.BUILDING);}}
+                                   */
+
+                                }}}
+
+
+        gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
+        if(Model.getKDTreeMOTORWAY() != null) {for (Drawable drawable : resultMOTORWAY) {drawable.drawWayType(gc, WayType.MOTORWAY);}}
 
 
 
 
-        if(Model.getKDTreeUNKNOWN() != null) {for (Drawable drawable : resultUNKNOWN) {   drawable.drawWayType(gc, WayType.UNKNOWN);}}
+
+
+
         //if(Model.getKDTreePROPOSED() != null) {for (Drawable drawable : resultPROPOSED) {   drawable.drawWayType(gc, WayType.PROPOSED);}}
         //if(Model.getKDTreeNAVIGATION_LINE() != null) {for (Drawable drawable : resultNAVIGATION_LINE) {   drawable.drawWayType(gc, WayType.NAVIGATION_LINE);}}
-        if(Model.getKDTreeRESIDENTIAL() != null){for (Drawable drawable : resultRESIDENTIAL) {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
+        //if(Model.getKDTreeRESIDENTIAL() != null){for (Drawable drawable : resultRESIDENTIAL) {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
         // if(Model.getKDTreeFOREST() != null){for (Drawable drawable : resultFOREST) {drawable.fillWayType(gc, WayType.FOREST);}}
-        if(Model.getKDTreeMEADOW() != null){for (Drawable drawable : resultMEADOW) {drawable.fillWayType(gc, WayType.MEADOW);}}
-        if(Model.getKDTreeCEMETERY() != null){for (Drawable drawable : resultCEMETERY) {drawable.fillWayType(gc, WayType.CEMETERY);}}
-        if(Model.getKDTreeFARMYARD() != null){for (Drawable drawable : resultFARMYARD) {drawable.fillWayType(gc, WayType.FARMYARD);}}
-        if(Model.getKDTreeCOMMERCIAL() != null){for (Drawable drawable : resultCOMMERCIAL) {drawable.fillWayType(gc, WayType.COMMERCIAL);}}
-        if(Model.getKDTreeCONSTRUCTION() != null){for (Drawable drawable : resultCONSTRUCTION) {drawable.fillWayType(gc, WayType.CONSTRUCTION);}}
-        if(Model.getKDTreeRETAIL() != null){for (Drawable drawable : resultRETAIL) {drawable.fillWayType(gc, WayType.RETAIL);}}
-        if(Model.getKDTreeINDUSTRIAL() != null){for (Drawable drawable : resultINDUSTRIAL) {drawable.fillWayType(gc, WayType.INDUSTRIAL);}}
-        if(Model.getKDTreeFARMLAND() != null){for (Drawable drawable : resultFARMLAND) {drawable.fillWayType(gc, WayType.FARMLAND);}}
-        if(Model.getKDTreeGRASS() != null){for (Drawable drawable : resultGRASS) {drawable.fillWayType(gc, WayType.GRASS);}}
-        if(Model.getKDTreeGREENHOUSE_HORTICULTURE() != null){for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}}
-        if(Model.getKDTreeLANDFILL() != null){for (Drawable drawable : resultLANDFILL) {drawable.fillWayType(gc, WayType.LANDFILL);}}
-        if(Model.getKDTreeRAILWAY() != null){for (Drawable drawable : resultRAILWAY) {drawable.fillWayType(gc, WayType.RAILWAY);}}
-        if(Model.getKDTreeRELIGIOUS() != null){for (Drawable drawable : resultRELIGIOUS) {drawable.fillWayType(gc, WayType.RELIGIOUS);}}
-        if(Model.getKDTreeALLOTMENTS() != null){for (Drawable drawable : resultALLOTMENTS) {drawable.fillWayType(gc, WayType.ALLOTMENTS);}}
+       // if(Model.getKDTreeMEADOW() != null){for (Drawable drawable : resultMEADOW) {drawable.fillWayType(gc, WayType.MEADOW);}}
+        //if(Model.getKDTreeCEMETERY() != null){for (Drawable drawable : resultCEMETERY) {drawable.fillWayType(gc, WayType.CEMETERY);}}
+        //if(Model.getKDTreeFARMYARD() != null){for (Drawable drawable : resultFARMYARD) {drawable.fillWayType(gc, WayType.FARMYARD);}}
+        //if(Model.getKDTreeCOMMERCIAL() != null){for (Drawable drawable : resultCOMMERCIAL) {drawable.fillWayType(gc, WayType.COMMERCIAL);}}
+        //if(Model.getKDTreeCONSTRUCTION() != null){for (Drawable drawable : resultCONSTRUCTION) {drawable.fillWayType(gc, WayType.CONSTRUCTION);}}
+        //if(Model.getKDTreeRETAIL() != null){for (Drawable drawable : resultRETAIL) {drawable.fillWayType(gc, WayType.RETAIL);}}
+       // if(Model.getKDTreeINDUSTRIAL() != null){for (Drawable drawable : resultINDUSTRIAL) {drawable.fillWayType(gc, WayType.INDUSTRIAL);}}
+        //if(Model.getKDTreeFARMLAND() != null){for (Drawable drawable : resultFARMLAND) {drawable.fillWayType(gc, WayType.FARMLAND);}}
+        //if(Model.getKDTreeGRASS() != null){for (Drawable drawable : resultGRASS) {drawable.fillWayType(gc, WayType.GRASS);}}
+        //if(Model.getKDTreeGREENHOUSE_HORTICULTURE() != null){for (Drawable drawable : resultGREENHOUSE_HORTICULTURE) {drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}}
+        //if(Model.getKDTreeLANDFILL() != null){for (Drawable drawable : resultLANDFILL) {drawable.fillWayType(gc, WayType.LANDFILL);}}
+        //if(Model.getKDTreeRAILWAY() != null){for (Drawable drawable : resultRAILWAY) {drawable.fillWayType(gc, WayType.RAILWAY);}}
+        //if(Model.getKDTreeRELIGIOUS() != null){for (Drawable drawable : resultRELIGIOUS) {drawable.fillWayType(gc, WayType.RELIGIOUS);}}
+        //if(Model.getKDTreeALLOTMENTS() != null){for (Drawable drawable : resultALLOTMENTS) {drawable.fillWayType(gc, WayType.ALLOTMENTS);}}
 
-        gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
+       /* gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
         if(Model.getKDTreeBUILDING() != null){
             for (Drawable drawable : resultBUILDING) {
                 drawable.fillWayType(gc, WayType.BUILDING);
                 drawable.drawWayType(gc, WayType.BUILDING);
-        }}
+        }}*/
 
         ////////////////Ting vi kunne overveje IKKE at farvelægge ////////////
         /*
@@ -192,7 +371,7 @@ public class MapCanvas extends Canvas {
 
         //////////////////////////////////////tegner HIGHWAY//////////////////////////////////////
         //Her er ét stort if-statement der kun tegner MOTORWAY hvis zoomLevel er over 29.
-        if(zoomLevel > 29) {
+       /*if(zoomLevel > 29) {
             gc.setLineWidth(WayType.CONSTRUCTIONWAY.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeCONSTRUCTIONWAY() != null) {
                 for (Drawable drawable : resultCONSTRUCTIONWAY) {
@@ -200,91 +379,91 @@ public class MapCanvas extends Canvas {
                 }
             }
 
-            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
+            /*gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
             gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeBRIDLEWAY() != null) {
                 for (Drawable drawable : resultBRIDLEWAY) {
                     drawable.drawWayType(gc, WayType.BRIDLEWAY);
                 }
-            }
+            }*/
 
-            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.STEPS.getDashes());
+            /*gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.STEPS.getDashes());
             gc.setLineWidth(WayType.STEPS.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeSTEPS() != null) {
                 for (Drawable drawable : resultSTEPS) {
                     drawable.drawWayType(gc, WayType.STEPS);
                 }
-            }
+            }*/
 
-            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
+            /*gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
             gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeFOOTWAY_ANDMORE() != null) {
                 for (Drawable drawable : resultFOOTWAY_ANDMORE) {
                     drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);
                 }
-            }
+            }*/
 
-            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
+            /*gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
             gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeCYCLEWAY() != null) {
                 for (Drawable drawable : resultCYCLEWAY) {
                     drawable.drawWayType(gc, WayType.CYCLEWAY);
                 }
-            }
+            }*/
 
-            gc.setLineDashes(null);
+            /*gc.setLineDashes(null);
             gc.setLineWidth(WayType.RACEWAY.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeRACEWAY() != null) {
                 for (Drawable drawable : resultRACEWAY) {
                     drawable.drawWayType(gc, WayType.RACEWAY);
                 }
-            }
+            }*/
 
-            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
+            /*gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
             gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeTRACK() != null) {
                 for (Drawable drawable : resultTRACK) {
                     drawable.drawWayType(gc, WayType.TRACK);
                 }
-            }
+            }*/
 
-            gc.setLineDashes(null);
+            /*gc.setLineDashes(null);
             gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreePEDESTRIAN() != null) {
                 for (Drawable drawable : resultPEDESTRIAN) {
                     drawable.drawWayType(gc, WayType.PEDESTRIAN);
                 }
-            }
+            }*/
 
-            gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
+            /*gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeSERVICE() != null) {
                 for (Drawable drawable : resultSERVICE) {
                     drawable.drawWayType(gc, WayType.SERVICE);
                 }
-            }
+            }*/
 
-            gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
+           /* gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeROAD() != null) {
                 for (Drawable drawable : resultROAD) {
                     drawable.drawWayType(gc, WayType.ROAD);
                 }
-            }
+            }*/
 
-            gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
+           /* gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeLIVING_STREET() != null) {
                 for (Drawable drawable : resultLIVING_STREET) {
                     drawable.drawWayType(gc, WayType.LIVING_STREET);
                 }
-            }
+            }*/
 
-            gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
+            /*gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeRESIDENTIALWAY() != null) {
                 for (Drawable drawable : resultRESIDENTIALWAY) {
                     drawable.drawWayType(gc, WayType.RESIDENTIALWAY);
                 }
-            }
+            }*/
 
-            gc.setLineWidth(WayType.UNCLASSIFIED.getWidth() / Math.sqrt(trans.determinant()));
+            /* gc.setLineWidth(WayType.UNCLASSIFIED.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreeUNCLASSIFIED() != null) {
                 for (Drawable drawable : resultUNCLASSIFIED) {
                     drawable.drawWayType(gc, WayType.UNCLASSIFIED);
@@ -303,9 +482,9 @@ public class MapCanvas extends Canvas {
                 for (Drawable drawable : resultSECONDARY) {
                     drawable.drawWayType(gc, WayType.SECONDARY);
                 }
-            }
-        }
-            gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
+
+        }*/
+            /*gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
             if (Model.getKDTreePRIMARY() != null) {
                 for (Drawable drawable : resultPRIMARY) {
                     drawable.drawWayType(gc, WayType.PRIMARY);
@@ -317,10 +496,9 @@ public class MapCanvas extends Canvas {
                 for (Drawable drawable : resultTRUNK) {
                     drawable.drawWayType(gc, WayType.TRUNK);
                 }
-            }
+            }*/
 
-        //gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
-        //if(Model.getKDTreeMOTORWAY() != null) {for (Drawable drawable : resultMOTORWAY) {drawable.drawWayType(gc, WayType.MOTORWAY);}}
+
 
 
         //Tegner vores debug firkant
@@ -330,6 +508,7 @@ public class MapCanvas extends Canvas {
         gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
         //gc.stroke();
     }
+
 
     private int getZoomLevel(double r) {
         if (r != 0){

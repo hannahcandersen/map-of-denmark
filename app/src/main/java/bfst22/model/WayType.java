@@ -48,7 +48,8 @@ public enum WayType {
             case LANDFILL -> Color.valueOf("B6B694");
             case RAILWAY -> Color.valueOf("E9DBE8");
             case RELIGIOUS -> Color.valueOf("CDCCC9");
-            case FOREST -> Color.valueOf("B4D0A3");
+            //case FOREST -> Color.valueOf("B4D0A3");
+            case FOREST -> Color.PINK;
             case BUILDING -> Color.valueOf("D7D0CB");
             case COASTLINE -> Color.valueOf("F2EFEA");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");

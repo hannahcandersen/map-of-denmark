@@ -33,14 +33,11 @@ public interface Drawable {
         gc.fill();
     }
 
-    //WayType getTyppe();
-
     void trace(GraphicsContext gc);
 
     //Bruges til at finde vejens midtpunkt
     float getMiddleX();
     float getMiddleY();
-
 
     public float getCurrentMinX();
 
@@ -49,4 +46,6 @@ public interface Drawable {
     public float getCurrentMinY();
 
     public float getCurrentMaxY();
+
+    WayType getType();
 }
