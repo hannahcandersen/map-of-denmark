@@ -25,7 +25,7 @@ public enum WayType {
      */
     public Paint getFillColor() {
         return switch (this) {
-            case LAKE, BASIN -> Color.valueOf("B2D2DD");
+            case LAKE, BASIN, WATER, RIVER_ANDMORE -> Color.valueOf("B2D2DD");
             case RESIDENTIAL -> Color.valueOf("E0DFDF");
             case MEADOW -> Color.valueOf("D4EAB6");
             case CEMETERY -> Color.valueOf("B0CAB2");
@@ -48,10 +48,12 @@ public enum WayType {
             case LANDFILL -> Color.valueOf("B6B694");
             case RAILWAY -> Color.valueOf("E9DBE8");
             case RELIGIOUS -> Color.valueOf("CDCCC9");
-            //case FOREST -> Color.valueOf("B4D0A3");
-            case FOREST -> Color.PINK;
+            case FOREST -> Color.valueOf("B4D0A3");
             case BUILDING -> Color.valueOf("D7D0CB");
             case COASTLINE -> Color.valueOf("F2EFEA");
+            case PARK -> Color.valueOf("D2FAD0");
+            case BEACH, SAND -> Color.valueOf("FEF2C0");
+            //case COASTLINE -> Color.valueOf("GREEN");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
         };
     }
@@ -75,6 +77,7 @@ public enum WayType {
             case STEPS -> Color.valueOf("EC8574");
             case BRIDLEWAY -> Color.valueOf("64A257");
             case COASTLINE -> Color.valueOf("F2EFEA");
+            case RIVER_ANDMORE -> Color.valueOf("B2D2DD");
             default -> Color.BLACK;
         };
     }
