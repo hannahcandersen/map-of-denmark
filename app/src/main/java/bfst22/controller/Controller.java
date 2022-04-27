@@ -2,18 +2,30 @@ package bfst22.controller;
 
 import bfst22.model.Model;
 import bfst22.model.MapCanvas;
+import com.sun.glass.ui.CommonDialogs;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.stage.FileChooser;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
+import java.io.IOException;
 
 //Controller klassen håndterer alle kliks og scrolls eller andet som brugeren foretager sig.
 //Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
 
 public class Controller {
+    @FXML
     private Point2D lastMouse;
+    @FXML
+    public TextField from;
+    @FXML
+    public TextField to;
 
     //Canvas er superklassen til vores MapCanvas.
     //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
@@ -50,5 +62,24 @@ public class Controller {
     @FXML
     public void addressParse(KeyEvent keyEvent) {
         
+    }
+
+    @FXML
+    public void openFile(ActionEvent event) throws XMLStreamException, IOException, ClassNotFoundException {
+        FileChooser fc = new FileChooser();
+        //så den kun viser pdf filer
+        //fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PDF files", "*.pdf"));
+        File selectedFile = fc.showOpenDialog(null);
+
+        if(selectedFile != null) {
+            Model model = new Model(selectedFile.getAbsolutePath());
+        } else {
+            System.out.println("File is not valid");
+        }
+    }
+
+    @FXML
+    public void etEllerAndet(ActionEvent event) {
+        to.setText("Bye");
     }
 }
