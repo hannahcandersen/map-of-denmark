@@ -182,6 +182,18 @@ public class MapCanvas extends Canvas {
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSAND()))
             {drawable.fillWayType(gc, WayType.SAND);}}
 
+            if (Model.getKDTreeHOSPITAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeHOSPITAL()) != null)
+            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeHOSPITAL()))
+            {drawable.fillWayType(gc, WayType.HOSPITAL);}}
+
+            if (Model.getKDTreeRECREATION_GROUND() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRECREATION_GROUND()) != null)
+            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRECREATION_GROUND()))
+            {drawable.fillWayType(gc, WayType.RECREATION_GROUND);}}
+
+            if (Model.getKDTreePITCH() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePITCH()) != null)
+            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePITCH()))
+            {drawable.fillWayType(gc, WayType.PITCH);}}
+
             if (Model.getKDTreeBRIDLEWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());

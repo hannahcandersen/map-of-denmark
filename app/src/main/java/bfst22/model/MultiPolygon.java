@@ -40,17 +40,11 @@ public class MultiPolygon implements Drawable, Serializable {
             totalY += way.getMiddleY();
 
 
+            //Et eller andet loop der sætter dem rigtig sammen
+            for (OSMWay osmway: rel) {
 
 
-
-
-
-
-
-
-
-
-
+            }
 
             // Tilføjer alle OSMNodes fra hver OSMWay til listen multiPolygonNodes
             multiPolygonNodes.addAll(way.getNodes());}

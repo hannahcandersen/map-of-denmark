@@ -66,6 +66,9 @@ public class Model {
     private static KdNode KDTreeRESIDENTIALWAY;
     private static KdNode KDTreeCONSTRUCTIONWAY;
     private static KdNode KDTreeRIVER_ANDMORE;
+    private static KdNode KDTreeHOSPITAL;
+    private static KdNode KDTreeRECREATION_GROUND;
+    private static KdNode KDTreePITCH;
 
 
     NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
@@ -160,8 +163,13 @@ public class Model {
         KDTreeCYCLEWAY = KdTree.buildKDTree(lines.get(WayType.CYCLEWAY), true);
         KDTreeRESIDENTIALWAY = KdTree.buildKDTree(lines.get(WayType.RESIDENTIALWAY), true);
         KDTreeCONSTRUCTIONWAY = KdTree.buildKDTree(lines.get(WayType.CONSTRUCTIONWAY), true);
+        KDTreeHOSPITAL = KdTree.buildKDTree(lines.get(WayType.HOSPITAL), true);
+        KDTreeRECREATION_GROUND = KdTree.buildKDTree(lines.get(WayType.RECREATION_GROUND), true);
+        KDTreePITCH = KdTree.buildKDTree(lines.get(WayType.PITCH), true);
+
         KDTreeRIVER_ANDMORE = KdTree.buildKDTree(lines.get(WayType.RIVER_ANDMORE), true);
         KDTreeCOASTLINE = KdTree.buildKDTree(coastlinesMap.get(WayType.COASTLINE), true);}
+
 
 
     // metode til at gemme data i en .obj-fil
@@ -252,34 +260,20 @@ public class Model {
                                         case "farmland" -> WayType.FARMLAND;
                                         case "orchard" -> WayType.ORCHARD;
                                         case "vineyard" -> WayType.VINEYARD;
-                                        case "basin" -> WayType.BASIN;
                                         case "grass" -> WayType.GRASS;
-                                        case "greenfield" -> WayType.GREENFIELD;
                                         case "greenhouse_horticulture" -> WayType.GREENHOUSE_HORTICULTURE;
-                                        case "military" -> WayType.MILITARY;
-                                        case "plant_nursery" -> WayType.PLANT_NURSERY;
-                                        case "quarry" -> WayType.QUARRY;
-                                        case "recreation_ground" -> WayType.RECREATION_GROUND;
-                                        case "village_green" -> WayType.VILLAGE_GREEN;
-                                        case "brownfield" -> WayType.BROWNFIELD;
-                                        case "garages" -> WayType.GARAGES;
-                                        case "landfill" -> WayType.LANDFILL;
                                         case "railway" -> WayType.RAILWAY;
                                         case "religious" -> WayType.RELIGIOUS;
+                                        case "recreation_ground" -> WayType.RECREATION_GROUND;
                                         default -> type;
                                     };
                                     break;
                                 case "natural":
                                     type = switch (v) {
                                         case "beach" -> WayType.BEACH;
-                                        case "wood" -> WayType.WOOD;
                                         case "sand" -> WayType.SAND;
-                                        case "tree_row" -> WayType.TREE_ROW;
                                         case "water" -> WayType.WATER;
-                                        case "scrub" -> WayType.SCRUB;
                                         case "grassland" -> WayType.GRASSLAND;
-                                        case "heath" -> WayType.HEATH;
-                                        case "bay" -> WayType.BAY;
                                         case "bare_rock", "rock" -> WayType.BARE_ROCK;
                                         case "coastline" -> WayType.COASTLINE;
                                         default -> type;
@@ -289,7 +283,6 @@ public class Model {
                                     type = switch (v) {
                                         case "lake", "lagoon" -> WayType.LAKE;
                                         case "canal", "river" -> WayType.RIVER_ANDMORE;
-                                        case "pond", "basin", "reservoir", "dam", "pool" -> WayType.POND_ANDMORE;
                                         case "harbour" -> WayType.HARBOUR;
                                         default -> type;
                                     };
@@ -307,6 +300,7 @@ public class Model {
                                     type = switch (v) {
                                         case "school" -> WayType.SCHOOL;
                                         case "parking" -> WayType.PARKING;
+                                        case "hospital" -> WayType.HOSPITAL;
                                         default -> type;
                                     };
                                     break;
@@ -341,17 +335,11 @@ public class Model {
                                 case "leisure":
                                     type = switch (v) {
                                         case "park" -> WayType.PARK;
-                                        case "playground" -> WayType.PLAYGROUND;
                                         case "garden" -> WayType.GARDEN;
-                                        case "dog_park" -> WayType.DOG_PARK;
-                                        case "golf_course" -> WayType.GOLF_COURSE;
-                                        case "ice_rink" -> WayType.ICE_RINK;
                                         case "marina" -> WayType.MARINA;
-                                        case "miniature_golf" -> WayType.MINIATURE_GOLF;
                                         case "nature_reserve" -> WayType.NATURE_RESERVE;
                                         case "pitch", "track" -> WayType.PITCH;
                                         case "sports_centre", "stadium" -> WayType.SPORTS_CENTRE;
-                                        case "swimming_pool" -> WayType.SWIMMING_POOL;
                                         default -> type;
                                     };
                                     break;
@@ -491,6 +479,10 @@ public class Model {
     public static KdNode getKDTreeCYCLEWAY () {return KDTreeCYCLEWAY;}
     public static KdNode getKDTreeRESIDENTIALWAY () {return KDTreeRESIDENTIALWAY;}
     public static KdNode getKDTreeRIVER_ANDMORE () {return KDTreeRIVER_ANDMORE;}
+    public static KdNode getKDTreeHOSPITAL () {return KDTreeHOSPITAL;}
+    public static KdNode getKDTreeRECREATION_GROUND () {return KDTreeRECREATION_GROUND;}
+    public static KdNode getKDTreePITCH () {return KDTreePITCH;}
+
 
         public static KdNode getKDTreeCOASTLINE () {
             return KDTreeCOASTLINE;
