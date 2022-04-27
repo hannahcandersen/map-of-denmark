@@ -2,10 +2,15 @@ package bfst22.controller;
 
 import bfst22.model.Model;
 import bfst22.model.MapCanvas;
+import bfst22.model.addresses.AddressCollection;
+import bfst22.model.addresses.AddressNode;
+import bfst22.model.addresses.AddressObject;
+import bfst22.model.addresses.TST;
 import com.sun.glass.ui.CommonDialogs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -15,6 +20,14 @@ import javafx.stage.FileChooser;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+//LINK//https://gist.github.com/Da9el00/cde4381b8f17299693bab886ec700a78
 
 //Controller klassen håndterer alle kliks og scrolls eller andet som brugeren foretager sig.
 //Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
@@ -82,4 +95,27 @@ public class Controller {
     public void etEllerAndet(ActionEvent event) {
         to.setText("Bye");
     }
+
+    public void AddressFromUserInput(KeyEvent keyEvent) {
+    }
+
+
+
+
+   /* @FXML
+    void search(ActionEvent event) {
+        listView.getItems().clear();
+        listView.getItems().addAll(searchList(from.getText(),TST.get("Sankt Mortens Gade")));
+    }
+
+    private List<AddressObject> searchList(String searchWords, List<AddressObject> listOfStrings) {
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
+        String s = listOfStrings.toString();
+        System.out.println(s);
+
+        return listOfStrings.stream().filter(input -> {
+            return searchWordsArray.stream().allMatch(word ->
+                    input.toLowerCase().contains(word.toLowerCase()));
+        }).collect(Collectors.toList());
+    }*/
 }

@@ -13,7 +13,7 @@ public class TST {
 
     //key er navnet på vejen
     //vores value er listen med addresserne med samme navn
-    public List<AddressObject> get(String key){
+    public static List<AddressObject> get(String key){
         AddressNode node = get(root, key, 0);
         if(node == null) return null;  //returner null, hvis der ikke er tilføjet noget til Tree/Trie
         return node.listOfAddresses;

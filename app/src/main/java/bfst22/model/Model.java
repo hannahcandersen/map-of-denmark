@@ -567,7 +567,7 @@ public class Model {
 
         list = makeCoastlineObject(coastlines);
         System.out.println(tst.get("Sankt Mortens Gade"));
-        System.out.println(tst.get("Lillegade"));
+        System.out.println(tst.get("Sankt Mortens Gade"));
         System.out.println("Done");
 
     }
