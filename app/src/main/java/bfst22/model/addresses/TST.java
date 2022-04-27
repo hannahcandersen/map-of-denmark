@@ -5,7 +5,7 @@ import java.util.List;
 //Ternary Search Tree/Trie
 public class TST {
     //rooten er det første bogstav i det første ord, som bliver tilføjet til Tree/Trie
-    private AddressNode root;   // root of trie
+    private static AddressNode root;   // root of trie
 
     public TST(AddressObject addressObject) {
         put(addressObject.getStreet(), addressObject);
@@ -23,7 +23,7 @@ public class TST {
         //Hvis vores det nye c er mindre end det nuværende c, returnerer den venstre character, samt d som er nuværende plads.. Tegn TST tree for at visualisere.
         //Hvis vores det nye c er større end det nuværende c, returnerer den højre character, samt d som er nuværende plads.
         //Hvis c hverken er større eller mindre end vores nuværende c, så er c lig det den nye character og returnerer derfor midten.
-    private AddressNode get(AddressNode node, String key, int d) {
+    private static AddressNode get(AddressNode node, String key, int d) {
         if (node == null) return null;
         char c = key.charAt(d);
         if (c < node.c) return get(node.left,  key, d);

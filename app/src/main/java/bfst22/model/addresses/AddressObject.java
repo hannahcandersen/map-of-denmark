@@ -24,4 +24,6 @@ public class AddressObject {
         return street + " " + house + " " + postcode + " " + city;
     }
 
+
+
 }

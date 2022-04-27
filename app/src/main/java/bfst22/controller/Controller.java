@@ -36,15 +36,17 @@ public class Controller {
     @FXML
     private Point2D lastMouse;
     @FXML
-    public TextField from;
+    private TextField from;
     @FXML
-    public TextField to;
+    private TextField to;
+    @FXML
+    private ListView<AddressObject> listView;
 
     //Canvas er superklassen til vores MapCanvas.
     //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
     //Den bruger pakken GraphicsContext.
     @FXML
-    public MapCanvas canvas;
+    private MapCanvas canvas;
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
