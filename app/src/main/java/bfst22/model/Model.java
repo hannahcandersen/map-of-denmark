@@ -446,6 +446,10 @@ public class Model {
                             OSMNode endNode = way.getNodes().get(way.getNodes().size()-1);
 
 
+                            //Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
+                            
+
+
                             break;
 
                         case "relation":
