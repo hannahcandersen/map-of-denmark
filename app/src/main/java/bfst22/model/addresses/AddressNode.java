@@ -4,7 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddressNode {
-    char c;
-    AddressNode left, mid, right;
-    List<AddressObject> listOfAddresses;
+    
+    char c;                                 // character
+    AddressNode left, mid, right;           // left, middle, and right subtries
+    List<AddressObject> listOfAddresses;    // value associated with string
+
+    public AddressNode(char c) {
+        this.c = c;
+        //listOfAddresses = new ArrayList<>();
+    }
+    
+    public void addAddress(AddressObject addressObject){
+        if(listOfAddresses == null){
+            listOfAddresses = new ArrayList<>();
+        }
+        listOfAddresses.add(addressObject);
+    }
 }

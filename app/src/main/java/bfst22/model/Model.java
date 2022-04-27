@@ -1,5 +1,6 @@
 package bfst22.model;
 
+import bfst22.model.addresses.AddressCollection;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
 import bfst22.model.kdtree.KdNode;
@@ -126,6 +127,7 @@ public class Model {
     private static List<OSMNode> listOfOSMNodesOfCoastlines;
     private static List<PolyLine> list;
     private List<AddressObject> listOfAddresses = new ArrayList<>();
+    private TST tst;
 
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
@@ -545,7 +547,14 @@ public class Model {
                         case "node":
                             if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
                                 //Map<AddressObject, OSMNode>
-                                listOfAddresses.add(new AddressObject(street, housenumber, postcode, city));
+                                //listOfAddresses.add(new AddressObject(street, housenumber, postcode, city));
+
+                                //laver Ternary Search Tree/Trie med alle adresserne
+                                if(tst == null) {
+                                    tst = new TST(new AddressObject(street, housenumber, postcode, city));
+                                } else {
+                                    tst.put(street, new AddressObject(street, housenumber, postcode, city));
+                                }
                             }
                             break;
 
@@ -557,6 +566,8 @@ public class Model {
         //listOfOSMNodesOfCoastlines = getListOfOSMNodesOfCoastlines(coastlines);
 
         list = makeCoastlineObject(coastlines);
+        System.out.println(tst.get("Sankt Mortens Gade"));
+        System.out.println(tst.get("Lillegade"));
         System.out.println("Done");
 
     }

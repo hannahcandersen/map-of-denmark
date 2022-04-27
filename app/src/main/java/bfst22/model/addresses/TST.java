@@ -2,10 +2,17 @@ package bfst22.model.addresses;
 
 import java.util.List;
 
-//Ternary Search Tree
+//Ternary Search Tree/Trie
 public class TST {
-    private AddressNode root;
+    //rooten er det første bogstav i det første ord, som bliver tilføjet til Tree/Trie
+    private AddressNode root;   // root of trie
 
+    public TST(AddressObject addressObject) {
+        put(addressObject.getStreet(), addressObject);
+    }
+
+    //key er navnet på vejen
+    //vores value er listen med addresserne med samme navn
     public List<AddressObject> get(String key){
         AddressNode node = get(root, key, 0);
         if(node == null) return null;  //returner null, hvis der ikke er tilføjet noget til Tree/Trie
@@ -26,8 +33,8 @@ public class TST {
         else return node;
     }
 
-    public void put(String key, List<AddressObject> listOfAddresses)
-    {  root = put(root, key, listOfAddresses, 0);  }
+    public void put(String key, AddressObject address)
+    {  root = put(root, key, address, 0); }
 
 
     //Tilføjer en ny addresse til Tree/Trie
@@ -37,8 +44,9 @@ public class TST {
         if      (c < node.c) node.left  = put(node.left, key, address, d);      //
         else if (c > node.c) node.right = put(node.right, key, address, d);
         else if (d < key.length() - 1)
-            x.mid   = put(x.mid, key, listOfAddresses, d+1);
-        else x.listOfAddresses = listOfAddresses;
-        return x; }
+            node.mid = put(node.mid, key, address, d+1);
+        else node.addAddress(address);
+        return node;
+    }
 
 }
