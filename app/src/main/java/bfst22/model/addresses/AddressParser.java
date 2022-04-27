@@ -1,4 +1,4 @@
-package bfst22.model;
+package bfst22.model.addresses;
 
 public class AddressParser {
 

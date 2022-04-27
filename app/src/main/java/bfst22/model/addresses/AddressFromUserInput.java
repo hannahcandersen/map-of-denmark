@@ -1,4 +1,4 @@
-package bfst22.model;
+package bfst22.model.addresses;
 
 import java.util.regex.Pattern;
 
