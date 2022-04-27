@@ -26,8 +26,9 @@ public class MultiPolygon implements Drawable, Serializable {
 
 
     public static final long serialVersionUID = 1325234;
-    private List<Drawable> parts = new ArrayList<>();
+    private static List<Drawable> parts = new ArrayList<>();
     private ArrayList<OSMNode> multiPolygonNodes = new ArrayList<>(); // Alle nodes der er i multipolygonet
+    private static ArrayList<PolyLine> multiPolygonPolylines = new ArrayList<>();
 
     //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes" Og WayType
     public MultiPolygon(ArrayList<OSMWay> rel, WayType wayType) {
@@ -39,15 +40,10 @@ public class MultiPolygon implements Drawable, Serializable {
             totalX += way.getMiddleX();
             totalY += way.getMiddleY();
 
-
-            //Et eller andet loop der sætter dem rigtig sammen
-            for (OSMWay osmway: rel) {
-
-
-            }
-
             // Tilføjer alle OSMNodes fra hver OSMWay til listen multiPolygonNodes
             multiPolygonNodes.addAll(way.getNodes());}
+            multiPolygonPolylines.add(new PolyLine(multiPolygonNodes));
+
     }
 
     //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes"
@@ -62,11 +58,18 @@ public class MultiPolygon implements Drawable, Serializable {
             multiPolygonNodes.addAll(way.getNodes());}
     }
 
+    public static void trace2(GraphicsContext gc) {
+        for (var part : parts){
+            part.trace(gc);
+        }
+    }
 
     @Override
     //Tegner
     public void trace(GraphicsContext gc) {
-        for (var part : parts) part.trace(gc);
+        for (var part : parts){
+            part.trace(gc);
+        }
     }
 
     @Override
@@ -125,6 +128,10 @@ public class MultiPolygon implements Drawable, Serializable {
     @Override
     public WayType getType(){
         return this.wayType;
+    }
+
+    public static ArrayList<PolyLine> getMultiPolygonPolylines() {
+        return multiPolygonPolylines;
     }
 }
 

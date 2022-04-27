@@ -60,6 +60,8 @@ public class MapCanvas extends Canvas {
         gc.setTransform(trans);
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
 
+
+
         //Tegner kystlinjer
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         {
@@ -75,14 +77,24 @@ public class MapCanvas extends Canvas {
 
         // Tegner og farvelægger kortet
         //Tegner alt UNKNOWN
-        /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN()) != null) {
+        if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN()) != null) {
+
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN())) {
-                drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
+                if (drawable.getType()==WayType.FOREST){
+                drawable.drawWayType(gc, WayType.UNKNOWN);}}}
+
 
         //Tegner forest
         if (Model.getKDTreeFOREST() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST())) {
                 drawable.fillWayType(gc, WayType.FOREST);}}
+
+        if (MultiPolygon.getMultiPolygonPolylines().size() != 0) {
+            for (PolyLine polyline : MultiPolygon.getMultiPolygonPolylines()) {
+                System.out.println("JEg tegner et multipolygon");
+
+            }}
+
 
         // Alt der skal tegnes ved zoom level 29
         if (zoomLevel >= 29){
@@ -106,6 +118,16 @@ public class MapCanvas extends Canvas {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRIVER_ANDMORE())) {
                     drawable.drawWayType(gc, WayType.RIVER_ANDMORE);}}}
 
+        if (Model.getKDTreeFERRY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFERRY()) != null) {
+            for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFERRY())) {
+                gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
+                drawable.drawWayType(gc, WayType.FERRY);}}
+
+        if (Model.getKDTreeSECONDARY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY()) != null) {
+            for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY())) {
+                gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
+                drawable.drawWayType(gc, WayType.SECONDARY);}}
+
         // Alt der skal tegnes ved zoom level 30
         if(zoomLevel == 30){
             if(Model.getKDTreeRESIDENTIAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()) != null)
@@ -124,23 +146,23 @@ public class MapCanvas extends Canvas {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRELIGIOUS())) {
                     drawable.fillWayType(gc, WayType.RELIGIOUS);}}
 
-            if(Model.getKDTreeLAKE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()))
-            {drawable.fillWayType(gc, WayType.LAKE);}}
-
             if (Model.getKDTreeGRASS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS())) {
                     drawable.fillWayType(gc, WayType.GRASS);}}}
 
         // Alt der skal tegnes ved zoom level 31 og højere
         if (zoomLevel >= 31){
+            if(Model.getKDTreeRESIDENTIAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()) != null)
+            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()))
+            {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
+
             if(Model.getKDTreeINDUSTRIAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeINDUSTRIAL()) != null)
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeINDUSTRIAL()))
             {drawable.fillWayType(gc, WayType.INDUSTRIAL);}}
 
-            if(Model.getKDTreeRESIDENTIAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()))
-            {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
+            if(Model.getKDTreeLAKE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()) != null)
+            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()))
+            {drawable.fillWayType(gc, WayType.LAKE);}}
 
             if(Model.getKDTreeMEADOW() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW()) != null)
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW()))
@@ -174,6 +196,10 @@ public class MapCanvas extends Canvas {
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePARK()))
             {drawable.fillWayType(gc, WayType.PARK);}}
 
+            if (Model.getKDTreeSCHOOL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSCHOOL()) != null)
+            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSCHOOL()))
+            {drawable.fillWayType(gc, WayType.SCHOOL);}}
+
             if (Model.getKDTreeBEACH() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBEACH()) != null)
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBEACH()))
             {drawable.fillWayType(gc, WayType.BEACH);}}
@@ -181,6 +207,7 @@ public class MapCanvas extends Canvas {
             if (Model.getKDTreeSAND() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSAND()) != null)
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSAND()))
             {drawable.fillWayType(gc, WayType.SAND);}}
+
 
             if (Model.getKDTreeHOSPITAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeHOSPITAL()) != null)
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeHOSPITAL()))
@@ -193,6 +220,10 @@ public class MapCanvas extends Canvas {
             if (Model.getKDTreePITCH() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePITCH()) != null)
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePITCH()))
             {drawable.fillWayType(gc, WayType.PITCH);}}
+
+            if(Model.getKDTreeLAKE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()) != null)
+            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()))
+            {drawable.fillWayType(gc, WayType.LAKE);}}
 
             if (Model.getKDTreeBRIDLEWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY())) {
@@ -229,6 +260,7 @@ public class MapCanvas extends Canvas {
                     gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.SERVICE);}}
 
+
             if (Model.getKDTreeROAD() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeROAD()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeROAD())) {
                     gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
@@ -244,10 +276,10 @@ public class MapCanvas extends Canvas {
                     gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.RESIDENTIALWAY);}}
 
-            if (Model.getKDTreeSECONDARY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY()) != null) {
+            /*if (Model.getKDTreeSECONDARY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY())) {
                     gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.SECONDARY);}}
+                    drawable.drawWayType(gc, WayType.SECONDARY);}}*/
 
             if (Model.getKDTreeTERTIARY() != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTERTIARY())) {

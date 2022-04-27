@@ -95,6 +95,8 @@ public class PolyLine implements Drawable, Serializable {
         }
     }
 
+
+
     //Bruges til at finde vejens midtpunkt
     @Override
     public float getMiddleX() {
@@ -130,6 +132,5 @@ public class PolyLine implements Drawable, Serializable {
     public WayType getType(){
         return this.wayType;
     }
-
 
 }

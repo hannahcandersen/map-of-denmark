@@ -69,6 +69,10 @@ public class Model {
     private static KdNode KDTreeHOSPITAL;
     private static KdNode KDTreeRECREATION_GROUND;
     private static KdNode KDTreePITCH;
+    private static KdNode KDTreeSCHOOL;
+    private static KdNode KDTreeFERRY;
+
+
 
 
     NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
@@ -166,7 +170,8 @@ public class Model {
         KDTreeHOSPITAL = KdTree.buildKDTree(lines.get(WayType.HOSPITAL), true);
         KDTreeRECREATION_GROUND = KdTree.buildKDTree(lines.get(WayType.RECREATION_GROUND), true);
         KDTreePITCH = KdTree.buildKDTree(lines.get(WayType.PITCH), true);
-
+        KDTreeSCHOOL = KdTree.buildKDTree(lines.get(WayType.SCHOOL), true);
+        KDTreeFERRY = KdTree.buildKDTree(lines.get(WayType.FERRY), true);
         KDTreeRIVER_ANDMORE = KdTree.buildKDTree(lines.get(WayType.RIVER_ANDMORE), true);
         KDTreeCOASTLINE = KdTree.buildKDTree(coastlinesMap.get(WayType.COASTLINE), true);}
 
@@ -301,6 +306,7 @@ public class Model {
                                         case "school" -> WayType.SCHOOL;
                                         case "parking" -> WayType.PARKING;
                                         case "hospital" -> WayType.HOSPITAL;
+                                        case "kindergarten" -> WayType.BUILDING;
                                         default -> type;
                                     };
                                     break;
@@ -332,6 +338,13 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
+                                case "route":
+                                    type = switch (v) {
+                                        case "ferry" -> WayType.FERRY;
+                                        default -> type;
+                                    };
+                                    break;
+
                                 case "leisure":
                                     type = switch (v) {
                                         case "park" -> WayType.PARK;
@@ -368,16 +381,10 @@ public class Model {
                                     };
                                     break;
                                 case "type":
-                                    if(v.equals("multipolygon")) {
-
-
-
-
-                                       //Her skal vi have tilføjet noget!
-
-
-
-                                    }
+                                    type = switch (v){
+                                        case "multipolygon" ->WayType.MULTIPOLYGON;
+                                        default -> type;
+                                    };
                                     break;
                             }
                             break;
@@ -420,7 +427,7 @@ public class Model {
                             break;
 
                         case "relation":
-                            if (!rel.isEmpty()) { //type == WayType.FOREST &&
+                            if (type == WayType.FOREST && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel, type));
                             }
                             rel.clear();
@@ -482,6 +489,11 @@ public class Model {
     public static KdNode getKDTreeHOSPITAL () {return KDTreeHOSPITAL;}
     public static KdNode getKDTreeRECREATION_GROUND () {return KDTreeRECREATION_GROUND;}
     public static KdNode getKDTreePITCH () {return KDTreePITCH;}
+    public static KdNode getKDTreeSCHOOL () {return KDTreePITCH;}
+    public static KdNode getKDTreeFERRY () {return KDTreeFERRY;}
+
+
+
 
 
         public static KdNode getKDTreeCOASTLINE () {
