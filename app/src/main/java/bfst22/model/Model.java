@@ -357,6 +357,8 @@ public class Model {
                                     break;
                                 case "highway":
                                     type = switch (v) {
+                                        //highway - primary.. ??
+                                        //cycleway - track, lane ??
                                         case "motorway", "motorway_link" -> WayType.MOTORWAY;
                                         case "primary", "primary_link" -> WayType.PRIMARY;
                                         case "trunk", "trunk_link" -> WayType.TRUNK;
@@ -379,18 +381,22 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
-                                case "type":
-                                    if(v.equals("multipolygon")) {
-
-
-
-
-                                       //Her skal vi have tilføjet noget!
-
-
-
-                                    }
+                                case "lanes":
+                                    var lane = Integer.parseInt(v);
+                                    //ikke alle har line
+                                    //hvordan vælger vi hvilke der har to og ikke?
                                     break;
+                                case "maxspeed":
+                                    var maxspeed = Integer.parseInt(v);
+                                    //primary, secondary = 80
+                                    //primary, secondary, tertiary = 50
+                                    //tertiary, residential = 40
+                                    //nogle veje har ikke maxspeed (tertiary)
+                                    break;
+                                case "oneway":
+                                    boolean isOneway;
+                                    if(v.equals("no")) isOneway = false;
+                                    else if(v.equals("yes")) isOneway = true;
                             }
                             break;
                         // relations har member-tags, der referer til
@@ -429,6 +435,17 @@ public class Model {
                                 coastlinesMap.get(type).add(way);
                                 nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
                             }
+
+                            //lav edges
+                            //en edge består af en vægt + start og slut
+                            //udregn vægten - tid=længde/maxspeed
+                                //vi skal udregne længden af vejen
+                            //way.getNodes().get(0) for at få start og slutpunkt
+
+                            OSMNode startNode = way.getNodes().get(0);
+                            OSMNode endNode = way.getNodes().get(way.getNodes().size()-1);
+
+
                             break;
 
                         case "relation":
