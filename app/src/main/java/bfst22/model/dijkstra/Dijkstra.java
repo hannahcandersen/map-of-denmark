@@ -1,12 +1,12 @@
-/*package bfst22.model.dijkstra;
+package bfst22.model.dijkstra;
 
-
-import edu.princeton.cs.algs4.IndexMinPQ;
-import edu.princeton.cs.algs4.Stack;
+/*
+import bfst22.model.algslib.IndexMinPQ;
+import bfst22.model.algslib.Stack;
 
 
 // Finder shortest path fra en vertex til alle andre vertices i grafen
-// Skal laves om til at tage et start og et slut punkt, så den stopper med at lede efter vejen, når den finder slutpunkt
+// !!!!! Skal laves om til at tage et start og et slut punkt, så den stopper med at lede efter vejen, når den finder slutpunkt !!!!!
 
 public class Dijkstra {
     private double[] distTo;          // Holder korteste distance til alle vertices. distTo[v] = distance (vægt) for korteste vej fra Start-vertex til vertex v
@@ -30,11 +30,13 @@ public class Dijkstra {
         // Tjekker at startVertex er gyldig
         validateVertex(startVertex);
 
-        for (int v = 0; v < graph.getNumberOfVertices(); v++)
+        // Sætter distTo[v] til uendelig for alle andre vertices end startVertex. distTo for startVertex er 0
+        for (int v = 0; v < graph.getNumberOfVertices(); v++) {
             distTo[v] = Double.POSITIVE_INFINITY;
+        }
         distTo[startVertex] = 0.0;
 
-        // relax vertices in order of distance from s
+        // relax vertices in order of distance from s - ved brug af minimum priority queue
         pq = new IndexMinPQ<Double>(graph.getNumberOfVertices());
         pq.insert(startVertex, distTo[startVertex]);
         while (!pq.isEmpty()) {
@@ -43,64 +45,48 @@ public class Dijkstra {
                 relax(e);
         }
 
-        // check optimality conditions
+        // Check optimality conditions
         assert check(graph, startVertex);
     }
 
-    // relax edge e and update pq if changed
-    private void relax(DirectedEdge e) {
-        int v = e.from(), w = e.to();
-        if (distTo[w] > distTo[v] + e.weight()) {
-            distTo[w] = distTo[v] + e.weight();
-            edgeTo[w] = e;
+    // Metoden der relaxer en edge og opdaterer priority queuen hvis nødvendigt
+    private void relax(DirectedEdge edge) {
+        int v = edge.getStart(), w = edge.getEnd();
+        if (distTo[w] > distTo[v] + edge.weight()) {
+            distTo[w] = distTo[v] + edge.weight();
+            edgeTo[w] = edge;
             if (pq.contains(w)) pq.decreaseKey(w, distTo[w]);
             else                pq.insert(w, distTo[w]);
         }
     }
 
-    /**
-     * Returns the length of a shortest path from the source vertex {@code s} to vertex {@code v}.
-     * @param  v the destination vertex
-     * @return the length of a shortest path from the source vertex {@code s} to vertex {@code v};
-     *         {@code Double.POSITIVE_INFINITY} if no such path
-     * @throws IllegalArgumentException unless {@code 0 <= v < V}
-     */
-    /*public double distTo(int v) {
+
+    // Returnerer vægten på den korteste vej fra start vertex til en vertex v
+    public double distTo(int v) {
         validateVertex(v);
         return distTo[v];
     }
 
-    /**
-     * Returns true if there is a path from the source vertex {@code s} to vertex {@code v}.
-     *
-     * @param  v the destination vertex
-     * @return {@code true} if there is a path from the source vertex
-     *         {@code s} to vertex {@code v}; {@code false} otherwise
-     * @throws IllegalArgumentException unless {@code 0 <= v < V}
-     */
-    /*public boolean hasPathTo(int v) {
+    // Returnerer true hvis der er en vej mellem start vertex til vertex v
+    public boolean hasPathTo(int v) {
         validateVertex(v);
         return distTo[v] < Double.POSITIVE_INFINITY;
     }
 
-    /**
-     * Returns a shortest path from the source vertex {@code s} to vertex {@code v}.
-     *
-     * @param  v the destination vertex
-     * @return a shortest path from the source vertex {@code s} to vertex {@code v}
-     *         as an iterable of edges, and {@code null} if no such path
-     * @throws IllegalArgumentException unless {@code 0 <= v < V}
-     */
-    /*public Iterable<DirectedEdge> pathTo(int v) {
+    // Returnerer den korteste vej fra start vertex til en vertex v
+    public Iterable<DirectedEdge> pathTo(int v) {
         validateVertex(v);
         if (!hasPathTo(v)) return null;
         Stack<DirectedEdge> path = new Stack<DirectedEdge>();
-        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
+        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.getStart()]) {
             path.push(e);
         }
         return path;
     }
 
+
+
+    ///////////// METODER TIL VALIDERING ///////////////////
 
     // check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
@@ -131,7 +117,7 @@ public class Dijkstra {
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.getNumberOfVertices(); v++) {
             for (DirectedEdge e : G.getEdgesAdjacentToVertex(v)) {
-                int w = e.to();
+                int w = e.getEnd();
                 if (distTo[v] + e.weight() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
                     return false;
@@ -143,8 +129,8 @@ public class Dijkstra {
         for (int w = 0; w < G.getNumberOfVertices(); w++) {
             if (edgeTo[w] == null) continue;
             DirectedEdge e = edgeTo[w];
-            int v = e.from();
-            if (w != e.to()) return false;
+            int v = e.getStart();
+            if (w != e.getEnd()) return false;
             if (distTo[v] + e.weight() != distTo[w]) {
                 System.err.println("edge " + e + " on shortest path not tight");
                 return false;
@@ -161,4 +147,6 @@ public class Dijkstra {
     }
 
 
-}*/
+}
+
+ */

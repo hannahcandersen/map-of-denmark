@@ -1,4 +1,4 @@
-/*package bfst22.model.dijkstra;
+package bfst22.model.dijkstra;
 
 import edu.princeton.cs.algs4.Bag;
 
@@ -7,26 +7,28 @@ import edu.princeton.cs.algs4.Bag;
 // Bygges som en adjacency list, hvor hver index er en vertex, med en tilhørende bag af adjacent vertices
 
 public class EdgeWeightedDigraph {
-    private static final String NEWLINE = System.getProperty("line.separator"); //?
+    //Line separator opdeler en string på to forskellige linjer. FX: "Hello," + System.lineSeparator() + "there"
+    private static final String NEWLINE = System.lineSeparator(); //ny måde at skrive metoden.
+    // private static final String NEWLINE = System.getProperty("line.separator"); // gammel måde at skrive metoden
 
     private final int numberOfVertices;  // Antal vertices
     private int numberOfEdges;           // Antal edges
     private Bag<DirectedEdge>[] adjacencyList;    // adj[v] = adjacency list for vertex v. Array hvor hvert index/vertex har en Bag, der indeholder de vertices, som den vertex er connected til.
-    private int[] indegree;             // indegree[v] = indegree of vertex v. Ved jeg ikke om vi skal bruge!!
+    private int[] indegree;             // indegree[v] = indegree of vertex v. Hvor mange edges der kommer ind på vertex v
 
 
     // Laver en tom graf med V vertices og 0 edges. Tager antal vertices som parameter.
-    public EdgeWeightedDigraph(int V) {
-        if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be non-negative");
-        this.numberOfVertices = V;
+    public EdgeWeightedDigraph(int numberOfVerticesInGraph) {
+        if (numberOfVerticesInGraph < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be non-negative");
+        this.numberOfVertices = numberOfVerticesInGraph;
         this.numberOfEdges = 0;
-        this.indegree = new int[V]; // Ved jeg ikke om vi skal bruge!!
+        this.indegree = new int[numberOfVerticesInGraph]; // Laver tomt int-array, der skal indeholde indegree for hver vertex
 
         // Laver tomt array med bags
-        adjacencyList = (Bag<DirectedEdge>[]) new Bag[V];
+        adjacencyList = (Bag<DirectedEdge>[]) new Bag[numberOfVerticesInGraph];
 
         // Opretter en tom bag for hver index/vertex i adj. Den første vertex er index 0, den anden index 1, osv.
-        for (int v = 0; v < V; v++)
+        for (int v = 0; v < numberOfVerticesInGraph; v++)
             adjacencyList[v] = new Bag<DirectedEdge>();
     }
 
@@ -36,51 +38,42 @@ public class EdgeWeightedDigraph {
     }
 
     //Antal edges i grafen
-    public int getNumberofEdges() {
+    public int getNumberOfEdges() {
         return numberOfEdges;
     }
 
-    // Kaster exception hvis numberOfVertices er mindre end 0, eller over V (max antal vertices)
-    private void validateVertex(int v) {
-        if (v < 0 || v >= numberOfVertices)
-            throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (numberOfVertices -1));
-    }
 
     // Tilføjer en Directed Edge til grafen
-    public void addEdge(DirectedEdge e) {
-        int v = e.from();
-        int w = e.to();
-        validateVertex(v); // Tjekker om vertex er gyldig
-        validateVertex(w);
-        adjacencyList[v].add(e);
-        indegree[w]++;
+    public void addEdge(DirectedEdge edge) {
+        OSMNode start = edge.getStart();
+        OSMNode end = edge.getEnd();
+
+        adjacencyList[Model.getMapOfOSMNodesToIndex().get(start)].add(edge);
+        indegree[Model.getMapOfOSMNodesToIndex().get(end)]++;
         numberOfEdges++;
     }
 
     // Returnerer de edges der er adjacent med vertex v
-    public Iterable<DirectedEdge> getEdgesAdjacentToVertex(int v) {
-        validateVertex(v);
-        return adjacencyList[v];
+    public Iterable<DirectedEdge> getEdgesAdjacentToVertex(OSMNode vertex) {
+        return adjacencyList[Model.getMapOfOSMNodesToIndex().get(vertex)]; //returnere bag for den valgte vertex/index
     }
 
     // Returnerer antallet af Directed Edges fra vertex v (der går ud af den)
-    public int outdegreeFromVertex(int v) {
-        validateVertex(v);
-        return adjacencyList[v].size();
+    public int outdegreeFromVertex(int vertex) {
+        return adjacencyList[Model.getMapOfOSMNodesToIndex().get(vertex)].size();
     }
 
     // Returnerer antallet af Directed Edges fra vertex v (der går ind på den)
-    public int indegreeFromVertex(int v) {
-        validateVertex(v);
-        return indegree[v];
+    public int indegreeFromVertex(OSMNode vertex) {
+        return indegree[Model.getMapOfOSMNodesToIndex().get(vertex)];
     }
 
     // Returnerer alle edges i grafen
     public Iterable<DirectedEdge> allEdgesInGraph() {
         Bag<DirectedEdge> listOfEdges = new Bag<DirectedEdge>();
-        for (int v = 0; v < numberOfVertices; v++) {
-            for (DirectedEdge e : getEdgesAdjacentToVertex(v)) {
-                listOfEdges.add(e);
+        for (int vertexIndex = 0; vertexIndex < numberOfVertices; vertexIndex++) {
+            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(vertexIndex))) {
+                listOfEdges.add(edge);
             }
         }
         return listOfEdges;
@@ -99,5 +92,4 @@ public class EdgeWeightedDigraph {
         }
         return s.toString();
     }
-
-}*/
+}

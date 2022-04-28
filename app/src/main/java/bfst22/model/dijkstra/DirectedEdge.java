@@ -2,30 +2,38 @@ package bfst22.model.dijkstra;
 
 // Repræsenterer en Directed Edge i en EdgeWeightedGraph. Hver edge indeholder to vertices (to og from) og en vægt
 
+import bfst22.model.OSMNode;
+
 public class DirectedEdge {
 
-    private final int v; // En vertex (from)
-    private final int w; // En anden vertex (to)
+    private final OSMNode start; // En vertex (start)
+    private final OSMNode end; // En anden vertex (slut)
     private final double weight; // Vægten
 
+    // skal evt. tilføjes som parameter for en edge:z
+    /*
+    private boolean canGoByCar
+    private boolean canGoByBike
+    private boolean canGoByFoot
+     */
 
-    public DirectedEdge(int v, int w, double weight) {
-        if (v < 0) throw new IllegalArgumentException("Vertex names must be non-negative integers");
-        if (w < 0) throw new IllegalArgumentException("Vertex names must be non-negative integers");
+    public DirectedEdge(OSMNode start, OSMNode end, double weight) {
+        if (start == null) throw new IllegalArgumentException("Vertex must be non-negative integers");
+        if (end == null) throw new IllegalArgumentException("Vertex must be non-negative integers");
         if (Double.isNaN(weight)) throw new IllegalArgumentException("Weight is NaN");
-        this.v = v;
-        this.w = w;
+        this.start = start;
+        this.end = end;
         this.weight = weight;
     }
 
     // Returnerer den vertex der er "from"
-    public int from() {
-        return v;
+    public OSMNode getStart() {
+        return start;
     }
 
     // Returnerer den vertex der er "to"
-    public int to() {
-        return w;
+    public OSMNode getEnd() {
+        return end;
     }
 
     // Returnerer vægten af edge
@@ -35,6 +43,6 @@ public class DirectedEdge {
 
     // to-string metode
     public String toString() {
-        return v + "->" + w + " " + String.format("%5.2f", weight);
+        return start + "->" + end + " " + String.format("%5.2f", weight);
     }
 }
