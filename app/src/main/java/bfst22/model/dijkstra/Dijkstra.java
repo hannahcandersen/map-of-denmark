@@ -1,4 +1,4 @@
-package bfst22.model.dijkstra;
+/*package bfst22.model.dijkstra;
 
 
 import edu.princeton.cs.algs4.IndexMinPQ;
@@ -65,7 +65,7 @@ public class Dijkstra {
      *         {@code Double.POSITIVE_INFINITY} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public double distTo(int v) {
+    /*public double distTo(int v) {
         validateVertex(v);
         return distTo[v];
     }
@@ -78,7 +78,7 @@ public class Dijkstra {
      *         {@code s} to vertex {@code v}; {@code false} otherwise
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public boolean hasPathTo(int v) {
+    /*public boolean hasPathTo(int v) {
         validateVertex(v);
         return distTo[v] < Double.POSITIVE_INFINITY;
     }
@@ -91,7 +91,7 @@ public class Dijkstra {
      *         as an iterable of edges, and {@code null} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public Iterable<DirectedEdge> pathTo(int v) {
+    /*public Iterable<DirectedEdge> pathTo(int v) {
         validateVertex(v);
         if (!hasPathTo(v)) return null;
         Stack<DirectedEdge> path = new Stack<DirectedEdge>();
@@ -161,4 +161,4 @@ public class Dijkstra {
     }
 
 
-}
+}*/

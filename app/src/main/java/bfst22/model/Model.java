@@ -372,7 +372,6 @@ public class Model {
                                         case "track" -> WayType.TRACK;
                                         case "road" -> WayType.ROAD;
                                         case "raceway" -> WayType.RACEWAY;
-                                        case "bus_guideway" -> WayType.BUS_GUIDEWAY;
                                         case "footway", "path", "crossing" -> WayType.FOOTWAY_ANDMORE;
                                         case "bridleway" -> WayType.BRIDLEWAY;
                                         case "steps" -> WayType.STEPS;
@@ -442,12 +441,14 @@ public class Model {
                                 //vi skal udregne længden af vejen
                             //way.getNodes().get(0) for at få start og slutpunkt
 
+                            OSMWay osmway = id2way.get(relID);
                             OSMNode startNode = way.getNodes().get(0);
                             OSMNode endNode = way.getNodes().get(way.getNodes().size()-1);
-
+                            System.out.println("StartNode: lon: " + startNode.getLon() + " lat: " + startNode.getLat());
+                            System.out.println("EndNode: lon: " + endNode.getLon() + " lat: " + endNode.getLat());
 
                             //Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
-                            
+                            //find længde for hver vej og læg dem sammen
 
 
                             break;
