@@ -91,6 +91,13 @@ public class Model {
         for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());
     }
 
+    //Liste med HIGHWAYS
+    private static ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
+    //Map med OSMNode to index
+    private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
+
+    private EdgeWeightedDigraph graph;
+
 
     /////////////// Konstruktør (unchecked) ///////////////////
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
@@ -476,7 +483,6 @@ public class Model {
                             //System.out.println("StartNode: lon: " + startNode.getLon() + " lat: " + startNode.getLat());
                             //System.out.println("EndNode: lon: " + endNode.getLon() + " lat: " + endNode.getLat());
 
-                            //Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
                             //find længde for hver vej og læg dem sammen
 
 

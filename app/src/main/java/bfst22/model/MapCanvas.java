@@ -41,7 +41,7 @@ public class MapCanvas extends Canvas {
 
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
-        //System.out.println(searchRangeSerachRectangle);
+        System.out.println(searchRangeSerachRectangle);
 
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
