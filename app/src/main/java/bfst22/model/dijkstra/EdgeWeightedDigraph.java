@@ -1,6 +1,8 @@
 package bfst22.model.dijkstra;
 
-import edu.princeton.cs.algs4.Bag;
+import bfst22.model.Model;
+import bfst22.model.OSMNode;
+import bfst22.model.algslib.Bag;
 
 
 // En edge weighted graf der består af et antal vertices og et antal directed edges (der har et from, to og en vægt).
