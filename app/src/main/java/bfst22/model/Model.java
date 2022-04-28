@@ -75,6 +75,7 @@ public class Model {
 
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     private float minlat, minlon, maxlat, maxlon;
+    private int maxspeed = 0;
     private static List<PolyLine> list;
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
@@ -176,7 +177,7 @@ public class Model {
         makeGraph();
         //System.out.println(graph);
 
-        calculateDistance(listOfAllEdgesInWays.get(10).getStart(), listOfAllEdgesInWays.get(10).getEnd());
+        //calculateDistance(listOfAllEdgesInWays.get(10).getStart(), listOfAllEdgesInWays.get(10).getEnd());
     }
 
 
@@ -405,7 +406,8 @@ public class Model {
                                     //hvordan vælger vi hvilke der har to og ikke?
                                     break;
                                 case "maxspeed":
-                                    var maxspeed = Integer.parseInt(v);
+                                    maxspeed = Integer.parseInt(v);
+
                                     //primary, secondary = 80
                                     //primary, secondary, tertiary = 50
                                     //tertiary, residential = 40
@@ -459,33 +461,63 @@ public class Model {
                                     || type == WayType.PEDESTRIAN || type == WayType.TRACK || type == WayType.ROAD || type == WayType.RACEWAY || type == WayType.FOOTWAY_ANDMORE
                                     || type == WayType.BRIDLEWAY || type == WayType.STEPS || type == WayType.CYCLEWAY || type == WayType.CONSTRUCTIONWAY) {
 
-                                //beregn vægten////////////////
+                                //if maxspeed != 0 - brug den maxspeed som er oplyst
+                                //if maxspeed == 0 - find ud af hvad type vej det er og sæt en værdi
+                                //vi vælger selv nogle standard værdier for de forskellige veje
+                                if(maxspeed == 0) {
+                                    maxspeed = switch (type) {
+                                        case MOTORWAY -> 100;
+                                        case TRUNK -> 95;
+                                        case PRIMARY, SECONDARY, TERTIARY -> 90; //se kommentar nedenunder
+                                        //manlger typer til link vejene
+                                        case UNCLASSIFIED -> 50;
+                                        case RESIDENTIALWAY -> 40; //se kommentar nedenunder
+                                        case LIVING_STREET -> 20;
+                                        //service
+                                        //track
+                                        //pedestrian
+                                        default -> 0; //skal vi have en default værdi på 20 måske?
+                                    };
+                                    break;
+                                }
+                                /////The order of values for the highway-tag ordered by assumed speed is://///
+                                    //motorway - Usually the maxspeed can be kept for long distances, but these roads can be sensitive to long traffic jams. Usually forbidden for slow traffic (pedestrians, cyclists, agricultural, ...)
+                                    //trunk - 	Similar to motorways, but these roads can have level crossings, so the stretches where the maximum speed can be reached are shorter. Best avoided when using slow vehicles (sometimes forbidden, depending on the local legislation).
+                                    //primary, secondary, tertiary - Usually around 90-100 km/t in the countryside, and 50 (or even 30) km/t when crossing a residential center.
+                                    //motorway-link - Reachable speed depends a lot on curvature, usually around 60-90 km/h
+                                    //trunk-, primary-, secondary-, tertiary-link - The speed on these road pieces is very slow, as these often need to give way to the other traffic.
+                                    //unclassified - will rarely exceed 50 km/t
+                                    //residential - 50 km/t to 30 km/t
+                                    //living_street - 20km/t
+                                    //service - Service roads are usually found on private property or parking lots. The driver has to pay attention to manoeuvring vehicles, and must wait often
+                                    //track (måske ikke tegne) - Tracks are roads of agricultural purpose. They usually connect fields to farms. The surface sometimes makes them inaccessible for regular cars, or at least limits the speeds to a very slow pace. Tracks should always be avoided for through-going traffic.
+                                    //pedestrian - Pedestrian roads are normally forbidden for motorised vehicles, but can be allowed on certain hours (f.e. early in the morning), or for certain purposes (like delivering goods to shops). Even when allowed, only pedestrian speed is advisable. Cycling can also be forbidden on pedestrian highways.
 
                                 for (int j = 0; j < way.getNodes().size()-1; j++){
-                                    DirectedEdge edgeStart = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), 0);
-                                    DirectedEdge edgeEnd = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), 0);
+                                    //beregner længden i km
+                                    //double distance = calculateDistance(way.getNodes().get(j), way.getNodes().get(j+1));
+                                    //System.out.println(distance + " KM");
+
+                                    //udregn vægten - tid=længde/maxspeed
+                                    //double time = distance / maxspeed;
+                                    //System.out.println(time + " hour");
+
+                                    double weight = calculateTime(way.getNodes().get(j), way.getNodes().get(j+1));
+                                    //System.out.println(weight);
+
+                                    DirectedEdge edgeStart = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight);
+                                    DirectedEdge edgeEnd = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight);
+
                                     //tilføj til liste med alle edges
                                     listOfAllEdgesInWays.add(edgeStart);
                                     listOfAllEdgesInWays.add(edgeEnd);
                                     //if ensrettet - kun lav den ene
+
                                 }
+
+                                //sætter maxspeed til 0, fordi det er ikke alle veje der har tag maxspeed, så hvis vi ikke opdaterer dette, vil næste vej få samme værdi som den forrige
+                                maxspeed = 0;
                             }
-
-
-                            // og lav siden (Map<nodeID, i>)
-
-
-                            //udregn vægten - tid=længde/maxspeed
-                            //vi skal udregne længden af vejen
-                            //way.getNodes().get(0) for at få start og slutpunkt
-                            OSMNode startNode = way.getNodes().get(0);
-                            OSMNode endNode = way.getNodes().get(way.getNodes().size() - 1);
-                            //System.out.println("StartNode: lon: " + startNode.getLon() + " lat: " + startNode.getLat());
-                            //System.out.println("EndNode: lon: " + endNode.getLon() + " lat: " + endNode.getLat());
-
-                            //find længde for hver vej og læg dem sammen
-
-
                             break;
 
                         case "relation":
@@ -519,161 +551,47 @@ public class Model {
     }
 
     // iterator over types
-    public Iterable<Drawable> iterable(WayType type) {
-        return lines.get(type);
-    }
+    public Iterable<Drawable> iterable(WayType type) {return lines.get(type);}
 
-    public static KdNode getKDTreeUNKNOWN() {
-        return KDTreeUNKNOWN;
-    }
+    public static KdNode getKDTreeUNKNOWN() {return KDTreeUNKNOWN;}
+    public static KdNode getKDTreeNAVIGATION_LINE() {return KDTreeNAVIGATION_LINE;}
+    public static KdNode getKDTreeRESIDENTIAL() {return KDTreeRESIDENTIAL;}
+    public static KdNode getKDTreeLAKE() {return KDTreeLAKE;}
+    public static KdNode getKDTreeBEACH() {return KDTreeBEACH;}
+    public static KdNode getKDTreeSAND() {return KDTreeSAND;}
+    public static KdNode getKDTreeFOREST() {return KDTreeFOREST;}
+    public static KdNode getKDTreeWATER() {return KDTreeWATER;}
+    public static KdNode getKDTreeBUILDING() {return KDTreeBUILDING;}
+    public static KdNode getKDTreeINDUSTRIAL() {return KDTreeINDUSTRIAL;}
+    public static KdNode getKDTreeMEADOW() {return KDTreeMEADOW;}
+    public static KdNode getKDTreePARK() {return KDTreePARK;}
+    public static KdNode getKDTreeCEMETERY() {return KDTreeCEMETERY;}
+    public static KdNode getKDTreeALLOTMENTS() {return KDTreeALLOTMENTS;}
+    public static KdNode getKDTreeCOMMERCIAL() {return KDTreeCOMMERCIAL;}
+    public static KdNode getKDTreeCONSTRUCTION() {return KDTreeCONSTRUCTION;}
+    public static KdNode getKDTreeRETAIL() {return KDTreeRETAIL;}
+    public static KdNode getKDTreeFARMLAND() {return KDTreeFARMLAND;}
+    public static KdNode getKDTreeGRASS() {return KDTreeGRASS;}
+    public static KdNode getKDTreeGREENHOUSE_HORTICULTURE() {return KDTreeGREENHOUSE_HORTICULTURE;}
+    public static KdNode getKDTreeRAILWAY() {return KDTreeRAILWAY;}
+    public static KdNode getKDTreeRELIGIOUS() {return KDTreeRELIGIOUS;}
+    public static KdNode getKDTreeMOTORWAY() {return KDTreeMOTORWAY;}
+    public static KdNode getKDTreePRIMARY() {return KDTreePRIMARY;}
+    public static KdNode getKDTreeSECONDARY() {return KDTreeSECONDARY;}
+    public static KdNode getKDTreeTERTIARY() {return KDTreeTERTIARY;}
+    public static KdNode getKDTreeLIVING_STREET() {return KDTreeLIVING_STREET;}
+    public static KdNode getKDTreeSERVICE() {return KDTreeSERVICE;}
+    public static KdNode getKDTreePEDESTRIAN() {return KDTreePEDESTRIAN;}
+    public static KdNode getKDTreeTRACK() {return KDTreeTRACK;}
+    public static KdNode getKDTreeROAD() {return KDTreeROAD;}
+    public static KdNode getKDTreeFOOTWAY_ANDMORE() {return KDTreeFOOTWAY_ANDMORE;}
+    public static KdNode getKDTreeBRIDLEWAY() {return KDTreeBRIDLEWAY;}
+    public static KdNode getKDTreeCYCLEWAY() {return KDTreeCYCLEWAY;}
+    public static KdNode getKDTreeRESIDENTIALWAY() {return KDTreeRESIDENTIALWAY;}
+    public static KdNode getKDTreeRIVER_ANDMORE() {return KDTreeRIVER_ANDMORE;}
+    public static KdNode getKDTreeCOASTLINE() {return KDTreeCOASTLINE;}
 
-    public static KdNode getKDTreeNAVIGATION_LINE() {
-        return KDTreeNAVIGATION_LINE;
-    }
-
-    public static KdNode getKDTreeRESIDENTIAL() {
-        return KDTreeRESIDENTIAL;
-    }
-
-    public static KdNode getKDTreeLAKE() {
-        return KDTreeLAKE;
-    }
-
-    public static KdNode getKDTreeBEACH() {
-        return KDTreeBEACH;
-    }
-
-    public static KdNode getKDTreeSAND() {
-        return KDTreeSAND;
-    }
-
-    public static KdNode getKDTreeFOREST() {
-        return KDTreeFOREST;
-    }
-
-    public static KdNode getKDTreeWATER() {
-        return KDTreeWATER;
-    }
-
-    public static KdNode getKDTreeBUILDING() {
-        return KDTreeBUILDING;
-    }
-
-    public static KdNode getKDTreeINDUSTRIAL() {
-        return KDTreeINDUSTRIAL;
-    }
-
-    public static KdNode getKDTreeMEADOW() {
-        return KDTreeMEADOW;
-    }
-
-    public static KdNode getKDTreePARK() {
-        return KDTreePARK;
-    }
-
-    public static KdNode getKDTreeCEMETERY() {
-        return KDTreeCEMETERY;
-    }
-
-    public static KdNode getKDTreeALLOTMENTS() {
-        return KDTreeALLOTMENTS;
-    }
-
-    public static KdNode getKDTreeCOMMERCIAL() {
-        return KDTreeCOMMERCIAL;
-    }
-
-    public static KdNode getKDTreeCONSTRUCTION() {
-        return KDTreeCONSTRUCTION;
-    }
-
-    public static KdNode getKDTreeRETAIL() {
-        return KDTreeRETAIL;
-    }
-
-    public static KdNode getKDTreeFARMLAND() {
-        return KDTreeFARMLAND;
-    }
-
-    public static KdNode getKDTreeGRASS() {
-        return KDTreeGRASS;
-    }
-
-    public static KdNode getKDTreeGREENHOUSE_HORTICULTURE() {
-        return KDTreeGREENHOUSE_HORTICULTURE;
-    }
-
-    public static KdNode getKDTreeRAILWAY() {
-        return KDTreeRAILWAY;
-    }
-
-    public static KdNode getKDTreeRELIGIOUS() {
-        return KDTreeRELIGIOUS;
-    }
-
-    public static KdNode getKDTreeMOTORWAY() {
-        return KDTreeMOTORWAY;
-    }
-
-    public static KdNode getKDTreePRIMARY() {
-        return KDTreePRIMARY;
-    }
-
-    public static KdNode getKDTreeSECONDARY() {
-        return KDTreeSECONDARY;
-    }
-
-    public static KdNode getKDTreeTERTIARY() {
-        return KDTreeTERTIARY;
-    }
-
-    public static KdNode getKDTreeLIVING_STREET() {
-        return KDTreeLIVING_STREET;
-    }
-
-    public static KdNode getKDTreeSERVICE() {
-        return KDTreeSERVICE;
-    }
-
-    public static KdNode getKDTreePEDESTRIAN() {
-        return KDTreePEDESTRIAN;
-    }
-
-    public static KdNode getKDTreeTRACK() {
-        return KDTreeTRACK;
-    }
-
-    public static KdNode getKDTreeROAD() {
-        return KDTreeROAD;
-    }
-
-    public static KdNode getKDTreeFOOTWAY_ANDMORE() {
-        return KDTreeFOOTWAY_ANDMORE;
-    }
-
-    public static KdNode getKDTreeBRIDLEWAY() {
-        return KDTreeBRIDLEWAY;
-    }
-
-    public static KdNode getKDTreeCYCLEWAY() {
-        return KDTreeCYCLEWAY;
-    }
-
-    public static KdNode getKDTreeRESIDENTIALWAY() {
-        return KDTreeRESIDENTIALWAY;
-    }
-
-    public static KdNode getKDTreeRIVER_ANDMORE() {
-        return KDTreeRIVER_ANDMORE;
-    }
-
-    public static KdNode getKDTreeCOASTLINE() {
-        return KDTreeCOASTLINE;
-    }
-
-    public static Map<WayType, List<Drawable>> getCoastlinesMap() {
-        return coastlinesMap;
-    }
+    public static Map<WayType, List<Drawable>> getCoastlinesMap() {return coastlinesMap;}
 
     public static List<OSMNode> getListOfOSMNodesOfCoastlines(Map<WayType, List<Drawable>> coastlines) {
         //så længe dens startpunkt ikke er dens slutpunkt - kør while loop
@@ -817,14 +735,14 @@ public class Model {
 
     public double calculateDistance(OSMNode punkt1, OSMNode punkt2) {
         //Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
-        // The math module contains a function
-        // named toRadians which converts from
-        // degrees to radians.
+        // The math module contains a function named toRadians which converts from degrees to radians.
         double lon1 = Math.toRadians(punkt1.getLon());
         double lon2 = Math.toRadians(punkt2.getLon());
         double lat1 = Math.toRadians(punkt1.getLat());
         double lat2 = Math.toRadians(punkt1.getLat());
-        System.out.println("lon1: " + lon1 + "lat1: " + lat1);
+        //System.out.println("lon1: " + punkt1.getLon() + " lat1: " + punkt1.getLat());
+        //System.out.println("lon2: " + punkt2.getLon() + " lat2: " + punkt2.getLat());
+        //System.out.println("lon1RAD: " + lon1 + " lat1RAD: " + lat1);
 
         // Haversine formula
         double dlon = lon2 - lon1;
@@ -835,14 +753,21 @@ public class Model {
 
         double c = 2 * Math.asin(Math.sqrt(a));
 
-        // Radius of earth in kilometers. Use 3956
-        // for miles
+        // Radius of earth in kilometers. Use 3956 for miles
         double r = 6371;
 
         // calculate the result
         return (c * r);
+    }
 
+    public double calculateTime(OSMNode punkt1, OSMNode punkt2) {
+        double distance = calculateDistance(punkt1, punkt2);
+        if(distance < 0) throw new IllegalArgumentException("Distance must be a non-negative integer");
+        //if(distance == 0) throw new IllegalArgumentException("Distance must be a positive integer");
+        /////////////nogle er 0.0 - hvad gør vi med det?
 
+        //udregn vægten: tid=længde/maxspeed
+        return distance / maxspeed;
     }
 
     public static List<PolyLine> getList() {
