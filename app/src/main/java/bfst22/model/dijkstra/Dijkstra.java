@@ -47,7 +47,7 @@ public class Dijkstra {
         }
         distTo[startVertex] = 0.0;
 
-        // relax vertices in order of distance from s - ved brug af minimum priority queue
+        // relax vertices in order of distance from startpunkt - ved brug af minimum priority queue
         pq = new IndexMinPQ<Double>(graph.getNumberOfVertices());
         pq.insert(startVertex, distTo[startVertex]);
         while (!pq.isEmpty()) {
@@ -64,6 +64,7 @@ public class Dijkstra {
         // Check optimality conditions
         assert check(graph, startVertex);
     }
+
 
     // Metoden der relaxer en edge og opdaterer priority queuen hvis nødvendigt
     private void relax(DirectedEdge edge) {
@@ -153,8 +154,8 @@ public class Dijkstra {
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.getNumberOfVertices(); v++) {
-            for (DirectedEdge e : G.getEdgesAdjacentToVertex(v)) {
-                int w = e.getEnd();
+            for (DirectedEdge e : G.getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(v))) {
+                int w = Model.getMapOfOSMNodesToIndex().get(e.getEnd());
                 if (distTo[v] + e.weight() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
                     return false;
@@ -166,8 +167,8 @@ public class Dijkstra {
         for (int w = 0; w < G.getNumberOfVertices(); w++) {
             if (edgeTo[w] == null) continue;
             DirectedEdge e = edgeTo[w];
-            int v = e.getStart();
-            if (w != e.getEnd()) return false;
+            int v = Model.getMapOfOSMNodesToIndex().get(e.getStart());
+            if (w != Model.getMapOfOSMNodesToIndex().get(e.getEnd())) return false;
             if (distTo[v] + e.weight() != distTo[w]) {
                 System.err.println("edge " + e + " on shortest path not tight");
                 return false;

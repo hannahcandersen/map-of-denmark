@@ -792,6 +792,15 @@ public class Model {
         return null;
 
     }
+
+    public static NodeMap getId2node() {
+        return id2node;
+    }
+
+
+    public static EdgeWeightedDigraph getGraph() {
+        return graph;
+    }
 }
 
 
