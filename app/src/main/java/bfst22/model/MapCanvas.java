@@ -1,5 +1,7 @@
 package bfst22.model;
 
+import bfst22.model.dijkstra.Dijkstra;
+import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
@@ -9,11 +11,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
+import bfst22.model.dijkstra.Dijkstra;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
@@ -261,6 +265,39 @@ public class MapCanvas extends Canvas {
                 gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
                 drawable.drawWayType(gc, WayType.PRIMARY);
             }}
+
+
+        //// TEST AF DIJKSTRA //////
+
+
+/*
+        // Random OSM Nodes fra listen
+        Random rand = new Random(); //instance of random class
+        int upperbound = Model.getMapOfOSMNodesToIndex().size()-1;
+        //generate random values from 0-upperbound
+        int int_randomStart = rand.nextInt(upperbound);
+        OSMNode start = Model.getKeyfromValueInHashMap(int_randomStart);
+        int int_randomEnd  = rand.nextInt(upperbound);
+        OSMNode end = Model.getKeyfromValueInHashMap(int_randomEnd);
+*/
+        //FIND EN START OG SLUT OSM NODE
+
+
+        /*
+        Dijkstra dijkstra = new Dijkstra(Model.getGraph(), start, end);
+
+        gc.setStroke(Color.RED);
+        for (PolyLine polyLine : dijkstra.getPolylinesInPath(Model.getMapOfOSMNodesToIndex().get(end))){
+            polyLine.draw(gc);
+        }
+
+ */
+
+
+
+
+
+
 
         //Tegner vores debug firkant
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);

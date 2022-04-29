@@ -3,6 +3,7 @@ package bfst22.model.dijkstra;
 // Repræsenterer en Directed Edge i en EdgeWeightedGraph. Hver edge indeholder to vertices (to og from) og en vægt
 
 import bfst22.model.OSMNode;
+import bfst22.view.Drawable;
 
 public class DirectedEdge {
 
