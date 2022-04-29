@@ -182,17 +182,14 @@ public class MapCanvas extends Canvas {
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSAND()))
             {drawable.fillWayType(gc, WayType.SAND);}}
 
-            if (Model.getKDTreeBRIDLEWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY())) {
-                    gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
-                    gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.BRIDLEWAY);}}
 
             if (Model.getKDTreeFOOTWAY_ANDMORE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOOTWAY_ANDMORE()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
                     gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);}}
+                    drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);}
+            gc.setLineDashes(null);
+            }
 
             if (Model.getKDTreeCYCLEWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCYCLEWAY()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCYCLEWAY())) {
@@ -204,7 +201,6 @@ public class MapCanvas extends Canvas {
 
             if (Model.getKDTreePEDESTRIAN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePEDESTRIAN()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePEDESTRIAN())) {
-                    gc.setLineDashes(null);
                     gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.PEDESTRIAN);}}
 
