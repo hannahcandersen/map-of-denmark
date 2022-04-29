@@ -11,7 +11,7 @@ import java.util.List;
 
 public class OSMWay implements Serializable {
     public static final long serialVersionUID = 42;
-    private static ArrayList<OSMNode> nodes;
+    private ArrayList<OSMNode> nodes;
     float currentMinX = 0;
     float currentMaxX = 0;
     float currentMinY = 0;
@@ -45,7 +45,7 @@ public class OSMWay implements Serializable {
         return (currentMinX + currentMaxX) / 2;
     }
 
-    public static ArrayList<OSMNode> getNodes() {
+    public ArrayList<OSMNode> getNodes() {
         return nodes;
     }
 }

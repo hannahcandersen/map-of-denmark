@@ -2,6 +2,7 @@ package bfst22.view;
 
 import bfst22.model.WayType;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.FillRule;
 
 //Canvas = lærred
 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/GraphicsContext.html
@@ -30,10 +31,11 @@ public interface Drawable {
         gc.beginPath();
         trace(gc);
         gc.setFill(wt.getFillColor());
+        gc.setFillRule(FillRule.EVEN_ODD);
         gc.fill();
     }
 
-    void trace(GraphicsContext gc);
+     void trace(GraphicsContext gc);
 
     //Bruges til at finde vejens midtpunkt
     float getMiddleX();

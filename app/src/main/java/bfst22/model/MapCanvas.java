@@ -41,7 +41,7 @@ public class MapCanvas extends Canvas {
 
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
-        System.out.println(searchRangeSerachRectangle);
+       // System.out.println(searchRangeSerachRectangle);
 
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
@@ -77,23 +77,18 @@ public class MapCanvas extends Canvas {
 
         // Tegner og farvelægger kortet
         //Tegner alt UNKNOWN
-        if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN()) != null) {
-
+        /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN())) {
-                if (drawable.getType()==WayType.FOREST){
-                drawable.drawWayType(gc, WayType.UNKNOWN);}}}
+                if (drawable.getType() != WayType.UNKNOWN) System.out.println("BUG: " + drawable.getType().toString());
+                drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
 
 
         //Tegner forest
         if (Model.getKDTreeFOREST() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST()) != null) {
+            gc.setFill(Color.PURPLE);
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST())) {
+                if (drawable instanceof MultiPolygon) System.out.println("Multipolygon forest");
                 drawable.fillWayType(gc, WayType.FOREST);}}
-
-        if (MultiPolygon.getMultiPolygonPolylines().size() != 0) {
-            for (PolyLine polyline : MultiPolygon.getMultiPolygonPolylines()) {
-                System.out.println("JEg tegner et multipolygon");
-
-            }}
 
 
         // Alt der skal tegnes ved zoom level 29

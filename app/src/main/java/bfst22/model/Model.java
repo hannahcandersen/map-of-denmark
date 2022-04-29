@@ -26,6 +26,7 @@ import java.io.ObjectOutputStream;
 import static java.util.stream.Collectors.toList;
 
 public class Model {
+    long id = 0;
 
     //KD Trees
     private static KdNode KDTreeUNKNOWN;
@@ -226,7 +227,7 @@ public class Model {
                             break;
                         // giver id, lat og lon på nodes og tilføjer det til et NodeMap
                         case "node":
-                            var id = Long.parseLong(reader.getAttributeValue(null, "id"));
+                            id = Long.parseLong(reader.getAttributeValue(null, "id"));
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
@@ -380,12 +381,7 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
-                                case "type":
-                                    type = switch (v){
-                                        case "multipolygon" ->WayType.MULTIPOLYGON;
-                                        default -> type;
-                                    };
-                                    break;
+
                             }
                             break;
                         // relations har member-tags, der referer til
@@ -427,8 +423,10 @@ public class Model {
                             break;
 
                         case "relation":
-                            if (type == WayType.FOREST && !rel.isEmpty()) {
+                            if (WayType.FOREST == type && !rel.isEmpty()) {
+                                System.out.println("Typen for et multiplygon: " + type);
                                 lines.get(type).add(new MultiPolygon(rel, type));
+                                System.out.println("laver et multipolygon");
                             }
                             rel.clear();
                             break;}break;}}

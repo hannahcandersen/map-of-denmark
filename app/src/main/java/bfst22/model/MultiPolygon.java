@@ -6,6 +6,7 @@ import java.util.List;
 
 import bfst22.view.Drawable;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.FillRule;
 
 public class MultiPolygon implements Drawable, Serializable {
     /*
@@ -33,8 +34,13 @@ public class MultiPolygon implements Drawable, Serializable {
     //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes" Og WayType
     public MultiPolygon(ArrayList<OSMWay> rel, WayType wayType) {
         this.wayType = wayType;
-        for (OSMWay way : rel) {
-            parts.add(new PolyLine(way.getNodes())); //Tilføjer OSMWay til listen parts
+
+        for (var way : rel) {
+            parts.add(new PolyLine(way.getNodes(), wayType));
+
+
+
+
             totalX = 0;
             totalY = 0;
             totalX += way.getMiddleX();
@@ -58,18 +64,15 @@ public class MultiPolygon implements Drawable, Serializable {
             multiPolygonNodes.addAll(way.getNodes());}
     }
 
-    public static void trace2(GraphicsContext gc) {
-        for (var part : parts){
-            part.trace(gc);
-        }
-    }
-
     @Override
     //Tegner
     public void trace(GraphicsContext gc) {
+        gc.beginPath();
+        gc.setFillRule(FillRule.EVEN_ODD);
         for (var part : parts){
             part.trace(gc);
         }
+        gc.fill();
     }
 
     @Override
@@ -130,8 +133,8 @@ public class MultiPolygon implements Drawable, Serializable {
         return this.wayType;
     }
 
-    public static ArrayList<PolyLine> getMultiPolygonPolylines() {
-        return multiPolygonPolylines;
+    public static List<Drawable> getParts() {
+        return parts;
     }
 }
 
