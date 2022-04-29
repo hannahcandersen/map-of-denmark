@@ -76,6 +76,8 @@ public class Model {
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     private float minlat, minlon, maxlat, maxlon;
     private int maxspeed = 0;
+    private boolean isOneway;
+    private boolean isRoundabout;
     private static List<PolyLine> list;
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
@@ -408,15 +410,16 @@ public class Model {
                                 case "maxspeed":
                                     maxspeed = Integer.parseInt(v);
 
-                                    //primary, secondary = 80
+                                    //primary, secondary, tertiary = 80
                                     //primary, secondary, tertiary = 50
                                     //tertiary, residential = 40
                                     //nogle veje har ikke maxspeed (tertiary)
                                     break;
                                 case "oneway":
-                                    boolean isOneway;
                                     if (v.equals("no")) isOneway = false;
                                     else if (v.equals("yes")) isOneway = true;
+                                case "junction":
+                                    isRoundabout = v.equals("roundabout");
                             }
                             break;
                         // relations har member-tags, der referer til
@@ -458,24 +461,22 @@ public class Model {
 
                             if (type == WayType.MOTORWAY || type == WayType.PRIMARY || type == WayType.TRUNK || type == WayType.SECONDARY || type == WayType.TERTIARY
                                     || type == WayType.UNCLASSIFIED || type == WayType.RESIDENTIALWAY || type == WayType.LIVING_STREET || type == WayType.SERVICE
-                                    || type == WayType.PEDESTRIAN || type == WayType.TRACK || type == WayType.ROAD || type == WayType.RACEWAY || type == WayType.FOOTWAY_ANDMORE
-                                    || type == WayType.BRIDLEWAY || type == WayType.STEPS || type == WayType.CYCLEWAY || type == WayType.CONSTRUCTIONWAY) {
+                                    || type == WayType.PEDESTRIAN || type == WayType.ROAD || type == WayType.FOOTWAY_ANDMORE || type == WayType.STEPS
+                                    || type == WayType.CYCLEWAY || type == WayType.CONSTRUCTIONWAY) {
 
                                 //if maxspeed != 0 - brug den maxspeed som er oplyst
                                 //if maxspeed == 0 - find ud af hvad type vej det er og sæt en værdi
                                 //vi vælger selv nogle standard værdier for de forskellige veje
                                 if(maxspeed == 0) {
                                     maxspeed = switch (type) {
-                                        case MOTORWAY -> 100;
-                                        case TRUNK -> 95;
-                                        case PRIMARY, SECONDARY, TERTIARY -> 90; //se kommentar nedenunder
-                                        //manlger typer til link vejene
-                                        case UNCLASSIFIED -> 50;
+                                        case MOTORWAY -> 120; //110-130 km/t
+                                        case TRUNK -> 110;
+                                        case PRIMARY, SECONDARY, ROAD, CONSTRUCTIONWAY -> 80;
+                                        //manlger typer til -LINK vejene
+                                        case UNCLASSIFIED, TERTIARY -> 50;
                                         case RESIDENTIALWAY -> 40; //se kommentar nedenunder
-                                        case LIVING_STREET -> 20;
-                                        //service
-                                        //track
-                                        //pedestrian
+                                        case LIVING_STREET, SERVICE, CYCLEWAY -> 20;  //se kommentar nedenunder
+                                        case PEDESTRIAN, FOOTWAY_ANDMORE, STEPS -> 5;
                                         default -> 0; //skal vi have en default værdi på 20 måske?
                                     };
                                     break;
@@ -492,16 +493,10 @@ public class Model {
                                     //service - Service roads are usually found on private property or parking lots. The driver has to pay attention to manoeuvring vehicles, and must wait often
                                     //track (måske ikke tegne) - Tracks are roads of agricultural purpose. They usually connect fields to farms. The surface sometimes makes them inaccessible for regular cars, or at least limits the speeds to a very slow pace. Tracks should always be avoided for through-going traffic.
                                     //pedestrian - Pedestrian roads are normally forbidden for motorised vehicles, but can be allowed on certain hours (f.e. early in the morning), or for certain purposes (like delivering goods to shops). Even when allowed, only pedestrian speed is advisable. Cycling can also be forbidden on pedestrian highways.
+                                    //road - er et wildcard; kan være motorway, men også living-street (vælger ca. midten af 20 og 110)
+                                    //constuctionway - en vej, som er midlertidig under arbejde, men openstreetmap er måske ikke opdateret (sætter samme værdi som road)
 
                                 for (int j = 0; j < way.getNodes().size()-1; j++){
-                                    //beregner længden i km
-                                    //double distance = calculateDistance(way.getNodes().get(j), way.getNodes().get(j+1));
-                                    //System.out.println(distance + " KM");
-
-                                    //udregn vægten - tid=længde/maxspeed
-                                    //double time = distance / maxspeed;
-                                    //System.out.println(time + " hour");
-
                                     double weight = calculateTime(way.getNodes().get(j), way.getNodes().get(j+1));
                                     //System.out.println(weight);
 
@@ -509,13 +504,17 @@ public class Model {
                                     DirectedEdge edgeEnd = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight);
 
                                     //tilføj til liste med alle edges
-                                    listOfAllEdgesInWays.add(edgeStart);
-                                    listOfAllEdgesInWays.add(edgeEnd);
-                                    //if ensrettet - kun lav den ene
-
+                                    if(isOneway || isRoundabout) {
+                                        listOfAllEdgesInWays.add(edgeStart);
+                                    } else {
+                                        listOfAllEdgesInWays.add(edgeStart);
+                                        listOfAllEdgesInWays.add(edgeEnd);
+                                    }
+                                    //tjek om der er bil, cycle eller fodgænger
                                 }
 
-                                //sætter maxspeed til 0, fordi det er ikke alle veje der har tag maxspeed, så hvis vi ikke opdaterer dette, vil næste vej få samme værdi som den forrige
+                                //sætter maxspeed til 0, fordi det er ikke alle veje der har tag maxspeed,
+                                // så hvis vi ikke opdaterer dette, vil næste vej få samme værdi som den forrige
                                 maxspeed = 0;
                             }
                             break;

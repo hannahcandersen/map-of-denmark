@@ -198,13 +198,9 @@ public class MapCanvas extends Canvas {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCYCLEWAY())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
                     gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.CYCLEWAY);}}
-
-            if (Model.getKDTreeTRACK() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTRACK()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTRACK())) {
-                    gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
-                    gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.TRACK);}}
+                    drawable.drawWayType(gc, WayType.CYCLEWAY);}
+                gc.setLineDashes(null);
+            }
 
             if (Model.getKDTreePEDESTRIAN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePEDESTRIAN()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePEDESTRIAN())) {

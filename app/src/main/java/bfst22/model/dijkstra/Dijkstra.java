@@ -1,6 +1,6 @@
 package bfst22.model.dijkstra;
 
-/*
+
 import bfst22.model.algslib.IndexMinPQ;
 import bfst22.model.algslib.Stack;
 
@@ -148,5 +148,3 @@ public class Dijkstra {
 
 
 }
-
- */
