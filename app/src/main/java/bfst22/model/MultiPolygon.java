@@ -27,7 +27,7 @@ public class MultiPolygon implements Drawable, Serializable {
 
 
     public static final long serialVersionUID = 1325234;
-    private static List<Drawable> parts = new ArrayList<>();
+    private List<Drawable> parts = new ArrayList<>();
     private ArrayList<OSMNode> multiPolygonNodes = new ArrayList<>(); // Alle nodes der er i multipolygonet
     private static ArrayList<PolyLine> multiPolygonPolylines = new ArrayList<>();
 
@@ -133,7 +133,7 @@ public class MultiPolygon implements Drawable, Serializable {
         return this.wayType;
     }
 
-    public static List<Drawable> getParts() {
+    public List<Drawable> getParts() {
         return parts;
     }
 }
