@@ -1,8 +1,13 @@
 package bfst22.model.dijkstra;
 
 
+import bfst22.model.Model;
+import bfst22.model.OSMNode;
+import bfst22.model.PolyLine;
 import bfst22.model.algslib.IndexMinPQ;
 import bfst22.model.algslib.Stack;
+
+import java.util.ArrayList;
 
 
 // Finder shortest path fra en vertex til alle andre vertices i grafen
@@ -13,13 +18,18 @@ public class Dijkstra {
     private DirectedEdge[] edgeTo;    // Holder den sidste edge på korteste vej til hver vertex. edgeTo[v] = sidste edge på korteste vej fra Start-vertex til vertex v
     private IndexMinPQ<Double> pq;    // Minimums-priority queue med vertices
 
+    private Stack<PolyLine> polylinesInPath = new Stack<>();
 
-    public Dijkstra(EdgeWeightedDigraph graph, int startVertex) {
+
+    public Dijkstra(EdgeWeightedDigraph graph, OSMNode startVertexOSM, OSMNode endVertexOSM) {
+
+        int startVertex = Model.getMapOfOSMNodesToIndex().get(startVertexOSM);
+        int endVertex = Model.getMapOfOSMNodesToIndex().get(endVertexOSM);
 
         // Tjekker at en edge ikke har negativ vægt
-        for (DirectedEdge e : graph.allEdgesInGraph()) {
-            if (e.weight() < 0)
-                throw new IllegalArgumentException("edge " + e + " has negative weight");
+        for (DirectedEdge edge : graph.allEdgesInGraph()) {
+            if (edge.weight() < 0)
+                throw new IllegalArgumentException("edge " + edge + " has negative weight");
         }
 
         // sætter distTo til et nyt double-array med samme antal pladser, som der er vertices i grafen
@@ -29,60 +39,88 @@ public class Dijkstra {
 
         // Tjekker at startVertex er gyldig
         validateVertex(startVertex);
+        validateVertex(endVertex);
 
         // Sætter distTo[v] til uendelig for alle andre vertices end startVertex. distTo for startVertex er 0
-        for (int v = 0; v < graph.getNumberOfVertices(); v++) {
-            distTo[v] = Double.POSITIVE_INFINITY;
+        for (int vertexIndex = 0; vertexIndex < graph.getNumberOfVertices(); vertexIndex++) {
+            distTo[vertexIndex] = Double.POSITIVE_INFINITY;
         }
         distTo[startVertex] = 0.0;
 
-        // relax vertices in order of distance from s - ved brug af minimum priority queue
+        // relax vertices in order of distance from startpunkt - ved brug af minimum priority queue
         pq = new IndexMinPQ<Double>(graph.getNumberOfVertices());
         pq.insert(startVertex, distTo[startVertex]);
         while (!pq.isEmpty()) {
-            int v = pq.delMin();
-            for (DirectedEdge e : graph.getEdgesAdjacentToVertex(v))
-                relax(e);
+            int vertexLightestWeight = pq.delMin();
+            if(vertexLightestWeight == endVertex) {
+                break;
+            }
+            else {
+                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(vertexLightestWeight)))
+                relax(edge);
+            }
         }
 
         // Check optimality conditions
         assert check(graph, startVertex);
     }
 
+
     // Metoden der relaxer en edge og opdaterer priority queuen hvis nødvendigt
     private void relax(DirectedEdge edge) {
-        int v = edge.getStart(), w = edge.getEnd();
-        if (distTo[w] > distTo[v] + edge.weight()) {
-            distTo[w] = distTo[v] + edge.weight();
-            edgeTo[w] = edge;
-            if (pq.contains(w)) pq.decreaseKey(w, distTo[w]);
-            else                pq.insert(w, distTo[w]);
+        int edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
+        int edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
+        if (distTo[edgeEnd] > distTo[edgeStart] + edge.weight()) {
+            distTo[edgeEnd] = distTo[edgeStart] + edge.weight();
+            edgeTo[edgeEnd] = edge;
+            if (pq.contains(edgeEnd)) pq.decreaseKey(edgeEnd, distTo[edgeEnd]);
+            else                pq.insert(edgeEnd, distTo[edgeEnd]);
         }
     }
 
 
     // Returnerer vægten på den korteste vej fra start vertex til en vertex v
-    public double distTo(int v) {
-        validateVertex(v);
-        return distTo[v];
+    public double distTo(int vertex) {
+        validateVertex(vertex);
+        return distTo[vertex];
     }
 
     // Returnerer true hvis der er en vej mellem start vertex til vertex v
-    public boolean hasPathTo(int v) {
-        validateVertex(v);
-        return distTo[v] < Double.POSITIVE_INFINITY;
+    public boolean hasPathTo(int vertex) {
+        validateVertex(vertex);
+        return distTo[vertex] < Double.POSITIVE_INFINITY;
     }
 
     // Returnerer den korteste vej fra start vertex til en vertex v
-    public Iterable<DirectedEdge> pathTo(int v) {
-        validateVertex(v);
-        if (!hasPathTo(v)) return null;
+    public Iterable<DirectedEdge> pathTo(int vertex) { // som vi bruger det, er vertex vores slut-vertex
+        validateVertex(vertex);
+        if (!hasPathTo(vertex)) return null;
         Stack<DirectedEdge> path = new Stack<DirectedEdge>();
-        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.getStart()]) {
-            path.push(e);
+        for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[Model.getMapOfOSMNodesToIndex().get(edge.getStart())]) {
+            path.push(edge);
         }
         return path;
     }
+
+    public void caluclatePolylinesInPath(int vertex){
+        validateVertex(vertex);
+        ArrayList<OSMNode> nodesInPolyLine = new ArrayList<>();
+
+        for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[Model.getMapOfOSMNodesToIndex().get(edge.getStart())]) {
+            nodesInPolyLine.add(edge.getStart());
+            nodesInPolyLine.add(edge.getEnd());
+            PolyLine polyLine = new PolyLine(nodesInPolyLine);
+            polylinesInPath.push(polyLine);
+        }
+    }
+
+    public Iterable<PolyLine> getPolylinesInPath(int vertex){
+        if (!hasPathTo(vertex)) return null;
+        caluclatePolylinesInPath(vertex);
+        return polylinesInPath;
+    }
+
+
 
 
 
@@ -116,8 +154,8 @@ public class Dijkstra {
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.getNumberOfVertices(); v++) {
-            for (DirectedEdge e : G.getEdgesAdjacentToVertex(v)) {
-                int w = e.getEnd();
+            for (DirectedEdge e : G.getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(v))) {
+                int w = Model.getMapOfOSMNodesToIndex().get(e.getEnd());
                 if (distTo[v] + e.weight() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
                     return false;
@@ -129,8 +167,8 @@ public class Dijkstra {
         for (int w = 0; w < G.getNumberOfVertices(); w++) {
             if (edgeTo[w] == null) continue;
             DirectedEdge e = edgeTo[w];
-            int v = e.getStart();
-            if (w != e.getEnd()) return false;
+            int v = Model.getMapOfOSMNodesToIndex().get(e.getStart());
+            if (w != Model.getMapOfOSMNodesToIndex().get(e.getEnd())) return false;
             if (distTo[v] + e.weight() != distTo[w]) {
                 System.err.println("edge " + e + " on shortest path not tight");
                 return false;

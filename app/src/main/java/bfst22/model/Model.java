@@ -70,7 +70,7 @@ public class Model {
     private static KdNode KDTreeRIVER_ANDMORE;
 
 
-    NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
+    static NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
     List<Runnable> observers = new ArrayList<>();  // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
 
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
@@ -99,7 +99,7 @@ public class Model {
     //Map med OSMNode to index
     private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
 
-    private EdgeWeightedDigraph graph;
+    private static EdgeWeightedDigraph graph;
 
 
     /////////////// Konstruktør (unchecked) ///////////////////
@@ -791,6 +791,15 @@ public class Model {
         }
         return null;
 
+    }
+
+    public static NodeMap getId2node() {
+        return id2node;
+    }
+
+
+    public static EdgeWeightedDigraph getGraph() {
+        return graph;
     }
 }
 
