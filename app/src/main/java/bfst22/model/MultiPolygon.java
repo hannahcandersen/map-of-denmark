@@ -39,8 +39,6 @@ public class MultiPolygon implements Drawable, Serializable {
             parts.add(new PolyLine(way.getNodes(), wayType));
 
 
-
-
             totalX = 0;
             totalY = 0;
             totalX += way.getMiddleX();
@@ -89,20 +87,20 @@ public class MultiPolygon implements Drawable, Serializable {
 
     //Bruges til at finde min og max af x og y. Skal bruges til range search
     private void calculateMinAndMax() {
+
+        currentMinX = multiPolygonNodes.get(0).getLon();
+        currentMaxX = multiPolygonNodes.get(0).getLon();
+        currentMinY = multiPolygonNodes.get(0).getLat();
+        currentMaxY = multiPolygonNodes.get(0).getLat();
+
         for (OSMNode node : multiPolygonNodes) {
-
-            currentMinX = multiPolygonNodes.get(0).getLon();
-            currentMaxX = multiPolygonNodes.get(0).getLon();
-            currentMinY = multiPolygonNodes.get(0).getLat();
-            currentMaxY = multiPolygonNodes.get(0).getLat();
-
             if (node.getLat() > currentMaxY) {
                 currentMaxY = node.getLat();
-            } else if (node.getLat() < currentMinY) {
+            } if (node.getLat() < currentMinY) {
                 currentMinY = node.getLat();
-            } else if (node.getLon() > currentMaxX) {
+            } if (node.getLon() > currentMaxX) {
                 currentMaxX = node.getLon();
-            } else if (node.getLon() < currentMinX) {
+            } if (node.getLon() < currentMinX) {
                 currentMinX = node.getLon();
             }
         }
