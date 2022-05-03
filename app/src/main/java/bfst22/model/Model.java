@@ -469,11 +469,11 @@ public class Model {
                                 //vi vælger selv nogle standard værdier for de forskellige veje
                                 if(maxspeed == 0) {
                                     maxspeed = switch (type) {
-                                        case MOTORWAY -> 120; //110-130 km/t
+                                        case MOTORWAY -> 120; //110-130 km/t 130
                                         case TRUNK -> 110;
                                         case PRIMARY, SECONDARY, ROAD, CONSTRUCTIONWAY -> 80;
                                         //manlger typer til -LINK vejene
-                                        case UNCLASSIFIED, TERTIARY -> 50;
+                                        case UNCLASSIFIED, TERTIARY -> 50; //secondary, road
                                         case RESIDENTIALWAY -> 40; //se kommentar nedenunder
                                         case LIVING_STREET, SERVICE, CYCLEWAY -> 20;  //se kommentar nedenunder
                                         case PEDESTRIAN, FOOTWAY_ANDMORE, STEPS -> 5;
