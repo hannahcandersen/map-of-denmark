@@ -101,6 +101,9 @@ public class Controller {
     public void AddressFromUserInput(KeyEvent keyEvent) {
     }
 
+    public void search(ActionEvent actionEvent) {
+    }
+
 
 
 

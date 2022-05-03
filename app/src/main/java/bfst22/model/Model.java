@@ -550,6 +550,7 @@ public class Model {
                                 //listOfAddresses.add(new AddressObject(street, housenumber, postcode, city));
 
                                 //laver Ternary Search Tree/Trie med alle adresserne
+                                //MANGLER: String.intern() på alle strings.
                                 if(tst == null) {
                                     tst = new TST(new AddressObject(street, housenumber, postcode, city));
                                 } else {
