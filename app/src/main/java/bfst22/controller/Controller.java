@@ -98,10 +98,16 @@ public class Controller {
         to.setText("Bye");
     }
 
-    public void AddressFromUserInput(KeyEvent keyEvent) {
+    public void searchRoute(ActionEvent actionEvent) {
+
     }
 
-    public void search(ActionEvent actionEvent) {
+    public void getSearchResult(KeyEvent keyEvent) {
+        //listView setVisisble
+        String input = from.getText();
+
+        TST.get(input);
+
     }
 
 
