@@ -42,6 +42,7 @@ public class Controller {
     @FXML
     private ListView<AddressObject> listView;
 
+
     //Canvas er superklassen til vores MapCanvas.
     //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
     //Den bruger pakken GraphicsContext.
