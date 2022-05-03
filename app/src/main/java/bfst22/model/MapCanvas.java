@@ -263,37 +263,24 @@ public class MapCanvas extends Canvas {
             }}
 
 
+        /*
         //// TEST AF DIJKSTRA //////
 
+        // Tager tilfældige nodes fra grafen - TIL TEST - VIRKER IKKE
+        OSMNode startOSM = Model.getListOfAllEdgesInWays().get(0).getStart();
+        int start = Model.getMapOfOSMNodesToIndex().get(startOSM);
+        OSMNode endOSM = Model.getListOfAllEdgesInWays().get(50).getEnd();
+        int end = Model.getMapOfOSMNodesToIndex().get(endOSM);
 
-/*
-        // Random OSM Nodes fra listen
-        Random rand = new Random(); //instance of random class
-        int upperbound = Model.getMapOfOSMNodesToIndex().size()-1;
-        //generate random values from 0-upperbound
-        int int_randomStart = rand.nextInt(upperbound);
-        OSMNode start = Model.getKeyfromValueInHashMap(int_randomStart);
-        int int_randomEnd  = rand.nextInt(upperbound);
-        OSMNode end = Model.getKeyfromValueInHashMap(int_randomEnd);
-*/
-        //FIND EN START OG SLUT OSM NODE
-
-
-        /*
+        // Det her kald der fucker
         Dijkstra dijkstra = new Dijkstra(Model.getGraph(), start, end);
 
-        gc.setStroke(Color.RED);
-        for (PolyLine polyLine : dijkstra.getPolylinesInPath(Model.getMapOfOSMNodesToIndex().get(end))){
-            polyLine.draw(gc);
+        for (Drawable drawable : dijkstra.getPolylinesInPath(Model.getMapOfOSMNodesToIndex().get(end))) {
+            gc.setStroke(Color.RED);
+            drawable.draw(gc);
         }
 
- */
-
-
-
-
-
-
+         */
 
         //Tegner vores debug firkant
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);

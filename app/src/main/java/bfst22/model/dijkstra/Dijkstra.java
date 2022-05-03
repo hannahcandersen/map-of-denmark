@@ -21,10 +21,7 @@ public class Dijkstra {
     private Stack<PolyLine> polylinesInPath = new Stack<>();
 
 
-    public Dijkstra(EdgeWeightedDigraph graph, OSMNode startVertexOSM, OSMNode endVertexOSM) {
-
-        int startVertex = Model.getMapOfOSMNodesToIndex().get(startVertexOSM);
-        int endVertex = Model.getMapOfOSMNodesToIndex().get(endVertexOSM);
+    public Dijkstra(EdgeWeightedDigraph graph, int startVertex, int endVertex) {
 
         // Tjekker at en edge ikke har negativ vægt
         for (DirectedEdge edge : graph.allEdgesInGraph()) {

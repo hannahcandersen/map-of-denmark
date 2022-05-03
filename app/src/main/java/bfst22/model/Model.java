@@ -96,7 +96,8 @@ public class Model {
 
     //Liste med HIGHWAYS
     private static ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
-    //Map med OSMNode to index
+
+    //Map med OSMNode to index. Bruges til at lave en graf
     private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
 
     private static EdgeWeightedDigraph graph;
