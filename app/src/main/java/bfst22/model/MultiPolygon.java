@@ -35,9 +35,9 @@ public class MultiPolygon implements Drawable, Serializable {
     public MultiPolygon(ArrayList<OSMWay> rel, WayType wayType) {
         this.wayType = wayType;
 
-        for (var way : rel) {
-            parts.add(new PolyLine(way.getNodes(), wayType));
+        for (OSMWay way : rel) {
 
+            parts.add(new PolyLine(way.getNodes(), wayType));
 
             totalX = 0;
             totalY = 0;
@@ -45,8 +45,14 @@ public class MultiPolygon implements Drawable, Serializable {
             totalY += way.getMiddleY();
 
             // Tilføjer alle OSMNodes fra hver OSMWay til listen multiPolygonNodes
-            multiPolygonNodes.addAll(way.getNodes());}
-            multiPolygonPolylines.add(new PolyLine(multiPolygonNodes));
+            multiPolygonNodes.addAll(way.getNodes());
+        }
+
+        //hvorfor gør vi det her??
+        multiPolygonPolylines.add(new PolyLine(multiPolygonNodes));
+
+        // Udregner min x, max x, min y og max y
+        calculateMinAndMax();
 
     }
 
@@ -59,7 +65,11 @@ public class MultiPolygon implements Drawable, Serializable {
             totalX += way.getMiddleX();
             totalY += way.getMiddleY();
             // Tilføjer alle OSMNodes fra hver OSMWay til listen multiPolygonNodes
-            multiPolygonNodes.addAll(way.getNodes());}
+            multiPolygonNodes.addAll(way.getNodes());
+        }
+
+        // Udregner min x, max x, min y og max y
+        calculateMinAndMax();
     }
 
     @Override
@@ -107,22 +117,18 @@ public class MultiPolygon implements Drawable, Serializable {
     }
 
     public float getCurrentMinX() {
-        calculateMinAndMax();
         return currentMinX;
     }
 
     public float getCurrentMaxX() {
-        calculateMinAndMax();
         return currentMaxX;
     }
 
     public float getCurrentMinY() {
-        calculateMinAndMax();
         return currentMinY;
     }
 
     public float getCurrentMaxY() {
-        calculateMinAndMax();
         return currentMaxY;
     }
 
