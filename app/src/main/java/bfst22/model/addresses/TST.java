@@ -103,7 +103,7 @@ public class TST {
 
             searchedList.addAll(getAllEndOfAddressName(currentRootNode.mid));
         }
-        
+
         return searchedList;
 
     }
