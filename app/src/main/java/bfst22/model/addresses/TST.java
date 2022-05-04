@@ -12,6 +12,10 @@ import javafx.collections.ObservableList;
 public class TST {
     //rooten er det første bogstav i det første ord, som bliver tilføjet til Tree/Trie
     private static AddressNode root;   // root of trie
+    private ObservableList<AddressObject> listOfSearchResult = FXCollections.observableArrayList();
+
+
+
 
     public TST(AddressObject addressObject) {
         put(addressObject.getStreet(), addressObject);
@@ -22,7 +26,7 @@ public class TST {
     public static List<AddressObject> get(String key){
         AddressNode node = get(root, key, 0);
         if(node == null) return null;  //returner null, hvis der ikke er tilføjet noget til Tree/Trie
-        return node.listOfAddresses;
+        return node.getListOfAddresses();
     }
         //Metoden tager enten left,mid,right (x) samt hvilket bogstav der er input,
         // d er en counter der holder styr på hvor langt i ordet vi befinder os.
@@ -32,9 +36,9 @@ public class TST {
     private static AddressNode get(AddressNode node, String key, int d) {
         if (node == null) return null;
         char c = key.charAt(d);
-        if (c < node.c) return get(node.left,  key, d);
-        else if (c > node.c) return get(node.right, key, d);
-        else if (d < key.length() - 1) return get(node.mid, key, d+1);
+        if (c < node.getC()) return get(node.getLeft(), key, d);
+        else if (c > node.getC()) return get(node.getRight(), key, d);
+        else if (d < key.length() - 1) return get(node.getMid(), key, d+1);
         //Hvis ingen af disse er tilfældet, så må vi være på sidste character.
         else return node;
     }
@@ -47,11 +51,12 @@ public class TST {
     private AddressNode put(AddressNode node, String key, AddressObject address, int d) {
         char c = key.charAt(d);                                                 //finder nuværende bogstav
         if (node == null) { node = new AddressNode(c); }                      //tjekker om nuværende AddressNode er null - laver så en ny AddressNode med den nuværende char (bogstav)
-        if      (c < node.c) node.left  = put(node.left, key, address, d);      //
-        else if (c > node.c) node.right = put(node.right, key, address, d);
+        if      (c < node.getC()) node.getLeft()  = put(node.getLeft(), key, address, d);      //
+        else if (c > node.getC()) node.right = put(node.getLeft(), key, address, d);
         else if (d < key.length() - 1)
             node.mid = put(node.mid, key, address, d+1);
         else node.addAddress(address);
+        //Hvis ingen af disse er tilfældet, så må vi være på sidste character.
         return node;
     }
 

@@ -105,8 +105,9 @@ public class Controller {
     }
 
     public void getSearchResult(KeyEvent keyEvent) {
-        //listView setVisisble
         String input = from.getText();
+
+        //sætte vores liste med adresse ind i observablelist
 
         List<AddressObject> listOfSearchedAddresses = TST.get(input);
         //listView.setItems(); //lav en observablelist
