@@ -64,7 +64,6 @@ public class TST {
         if(node == null) return null;
         return node;
 
-
         /*char lastCharOfInput = input.charAt(input.length()-1);
         char c = key.charAt(d);
 
@@ -113,7 +112,4 @@ public class TST {
         return getAllEndOfAddressName(endNode);
     }
 
-    public static AddressNode getRoot() {
-        return root;
-    }
 }

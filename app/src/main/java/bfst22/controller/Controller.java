@@ -101,17 +101,20 @@ public class Controller {
 
     public void getSearchResult(KeyEvent keyEvent) {
         String input = fromTextField.getText();
-        TST tst = new TST();
-        List<AddressObject> searchListOfAddresses = tst.search(input);
+        if(input.length() > 3) {
+            TST tst = new TST();
+            List<AddressObject> searchListOfAddresses = tst.search(input);
 
-        //sætte vores liste med adresse ind i observablelist
-        ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
-        //list.addAll(searchListOfAddresses);
-        //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
-        //SortedList<AddressObject> sortedList = new SortedList<>(list);
+            //sætte vores liste med adresse ind i observablelist
+            ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
+
+            listOfObservables.addAll(searchListOfAddresses);
+            //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
+            //SortedList<AddressObject> sortedList = new SortedList<>(list);
 
 
-        listView.setItems(listOfObservables);
+            listView.setItems(listOfObservables);
+        }
     }
 
 
