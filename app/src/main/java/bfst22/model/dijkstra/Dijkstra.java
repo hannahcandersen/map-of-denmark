@@ -48,7 +48,7 @@ public class Dijkstra {
         pq = new IndexMinPQ<Double>(graph.getNumberOfVertices());
         pq.insert(startVertex, distTo[startVertex]);
         while (!pq.isEmpty()) {
-            System.out.println(pq.size());
+            //System.out.println(pq.size());
             int vertexLightestWeight = pq.delMin();
             if(vertexLightestWeight == endVertex) {
                 break;
