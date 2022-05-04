@@ -3,6 +3,8 @@ package bfst22.model;
 import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -25,11 +27,14 @@ public class MapCanvas extends Canvas {
         pan(-model.getMinLon(), -model.getMinLat());
         zoom(640 / (model.getMaxlon() - model.getMinLon()), 0, 0);
         model.addObserver(this::repaint);
-        //try {
+        repaint();
+        //repainter hver gang størrelsen på skærmen ændres
+        /*widthProperty().addListener((observable, oldValue, newValue) -> {
             repaint();
-        /*} catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }*/
+        });
+        heightProperty().addListener((observable, oldValue, newValue) -> {
+            repaint();
+        });*/
     }
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
@@ -316,11 +321,7 @@ public class MapCanvas extends Canvas {
 
     public void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
-        //try {
             repaint();
-        /*} catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }*/
     }
 
     // Zoomer med en given faktor
@@ -329,12 +330,6 @@ public class MapCanvas extends Canvas {
             trans.prependScale(factor, factor);
             trans.prependTranslation(x, y);
             repaint();
-
-        //try {
-        //  repaint();
-        /*} catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }*/
     }
 
     //oversætter window koordinater til model koordinater

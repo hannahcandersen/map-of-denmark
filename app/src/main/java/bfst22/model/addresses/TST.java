@@ -67,33 +67,29 @@ public class TST {
 
     public List<AddressObject> getAllEndOfAddressName(AddressNode currentRootNode){
         List<AddressObject> searchedList = new ArrayList<>();
-        System.out.println("currrentNode c: " + currentRootNode.c);
+        //System.out.println("currrentNode c: " + currentRootNode.c);
 
         if (currentRootNode == null) return null;
-        //vi skal have alle børnene for alle noderne efter currentRootNode
+        //vi skal have alle børnene (left, mid, right) for alle noderne efter endNode (sidste bogstav i ordet)
 
         if(currentRootNode.getListOfAddresses() != null)              //tjekker om der er en liste i currentNode
-            searchedList.addAll(currentRootNode.getListOfAddresses());
+            searchedList.addAll(currentRootNode.getListOfAddresses());//tilføjer den til listen
 
-        if(currentRootNode.left != null) {                  //tjekker om currentRootNode har venstre barn
-            System.out.println("Venstre barn");
+        if(currentRootNode.left != null) {                            //tjekker om currentRootNode har venstre barn
+            //System.out.println("Venstre barn");
                //tilføjer listen af adresser til searchResult
-
             searchedList.addAll(getAllEndOfAddressName(currentRootNode.left));
         }
-        if(currentRootNode.right != null) {          //tjekker om currentRootNode har højre barn
-            System.out.println("Højre barn");
-
+        if(currentRootNode.right != null) {                           //tjekker om currentRootNode har højre barn
+            //System.out.println("Højre barn");
             searchedList.addAll(getAllEndOfAddressName(currentRootNode.right));
         }
-        if(currentRootNode.mid != null) {            //tjekker om currentRootNode har midt barn
-            System.out.println("Mid barn");
-
+        if(currentRootNode.mid != null) {                             //tjekker om currentRootNode har mid barn
+            //System.out.println("Mid barn");
             searchedList.addAll(getAllEndOfAddressName(currentRootNode.mid));
         }
 
         return searchedList;
-
     }
 
     public List<AddressObject> search(String input) {
@@ -104,7 +100,6 @@ public class TST {
             return noMatches;
         }
         else return getAllEndOfAddressName(endNode);
-        //return getAllEndOfAddressName(endNode);
     }
 
 }
