@@ -2,12 +2,10 @@ package bfst22.controller;
 
 import bfst22.model.Model;
 import bfst22.model.MapCanvas;
-import bfst22.model.addresses.AddressNode;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -36,7 +34,9 @@ public class Controller {
     @FXML
     private TextField toTextField;
     @FXML
-    private ListView<AddressObject> listView;
+    private ListView<AddressObject> listViewFrom;
+    @FXML
+    private ListView<AddressObject> listViewTo;
 
 
     //Canvas er superklassen til vores MapCanvas.
@@ -47,7 +47,7 @@ public class Controller {
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
-        listView.setVisible(false);
+
         canvas.init(model);
     }
 
@@ -95,12 +95,12 @@ public class Controller {
     public void etEllerAndet(ActionEvent event) {
         toTextField.setText("Bye");
     }
-
+    @FXML
     public void searchRoute(ActionEvent actionEvent) {
 
     }
-
-    public void getSearchResult(KeyEvent keyEvent) {
+    @FXML
+    public void getSearchResultFrom(KeyEvent keyEvent) {
         String input = fromTextField.getText();
         if(input.length() > 3) {
             TST tst = new TST();
@@ -112,14 +112,51 @@ public class Controller {
             //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
             //SortedList<AddressObject> sortedList = new SortedList<>(listOfObservables);
 
-            listView.setVisible(true);
-            listView.setItems(listOfObservables);
-
-            //valgt adresse
-            //AddressObject chosenAddress =
-            //fromTextField.setText(chosenAddress);
+            listViewFrom.setVisible(true);
+            listViewFrom.setItems(listOfObservables);
         } else {
-            listView.setVisible(false);
+            listViewFrom.setVisible(false);
+        }
+    }
+
+    @FXML
+    public void getSearchResultTo(KeyEvent keyEvent) {
+        String input = fromTextField.getText(); //UNDGÅ KODEDUPLIKERING
+        if(input.length() > 3) {
+            TST tst = new TST();
+            List<AddressObject> searchListOfAddresses = tst.search(input);
+
+            //sætte vores liste med adresse ind i observablelist
+            ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
+            listOfObservables.addAll(searchListOfAddresses);
+            //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
+            //SortedList<AddressObject> sortedList = new SortedList<>(listOfObservables);
+
+            listViewTo.setVisible(true);
+            listViewTo.setItems(listOfObservables);
+        } else {
+            listViewTo.setVisible(false);
+        }
+    }
+
+
+    @FXML
+    public void chooseAddressFrom(MouseEvent event) {
+        //viser valgt adresse i textfield
+        AddressObject chosenAddress = listViewFrom.getSelectionModel().getSelectedItem();
+        if(chosenAddress != null) {
+            fromTextField.setText(chosenAddress.toString());
+            listViewFrom.setVisible(false);
+        }
+    }
+
+    @FXML
+    public void chooseAddressTo(MouseEvent event) {
+        //viser valgt adresse i textfield
+        AddressObject chosenAddress = listViewTo.getSelectionModel().getSelectedItem();
+        if(chosenAddress != null) {
+            toTextField.setText(chosenAddress.toString());
+            listViewTo.setVisible(false);
         }
     }
 
