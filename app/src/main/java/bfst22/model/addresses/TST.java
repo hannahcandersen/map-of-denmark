@@ -1,6 +1,12 @@
 package bfst22.model.addresses;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.ObservableList;
 
 //Ternary Search Tree/Trie
 public class TST {
@@ -22,7 +28,7 @@ public class TST {
         // d er en counter der holder styr på hvor langt i ordet vi befinder os.
         //Hvis vores det nye c er mindre end det nuværende c, returnerer den venstre character, samt d som er nuværende plads.. Tegn TST tree for at visualisere.
         //Hvis vores det nye c er større end det nuværende c, returnerer den højre character, samt d som er nuværende plads.
-        //Hvis c hverken er større eller mindre end vores nuværende c, så er c lig det den nye character og returnerer derfor midten.
+        //Hvis c hverken er større eller mindre enford vores nuværende c, så er c lig det den nye character og returnerer derfor midten.
     private static AddressNode get(AddressNode node, String key, int d) {
         if (node == null) return null;
         char c = key.charAt(d);
@@ -48,5 +54,61 @@ public class TST {
         else node.addAddress(address);
         return node;
     }
+
+    public AddressNode getEndNode(String input){
+        return get(root, input, 0);
+
+
+        /*char lastCharOfInput = input.charAt(input.length()-1);
+        char c = key.charAt(d);
+
+        if(node == null) return null;
+        if(c == lastCharOfInput) return node;
+        else if(c < node.c) return getEndNode(node.left, key, d, input);
+        else if (c > node.c) return getEndNode(node.right, key, d, input);
+        else if (d < key.length() - 1) return getEndNode(node.mid, key, d+1, input);
+
+        return null;*/
+    }
+
+    public List<AddressObject> getAllEndOfAddressName(AddressNode currentRootNode){
+        List<AddressObject> searchedList = new ArrayList<>();
+
+        if (currentRootNode == null) return null;
+        //vi skal have alle børnene for alle noderne efter currentRootNode
+        while(currentRootNode.getLeft() != null || currentRootNode.getRight() != null || currentRootNode.getMid() != null) {
+            if(!currentRootNode.getListOfAddresses().isEmpty())              //tjekker om der er en liste i currentNode
+                searchedList.addAll(currentRootNode.getListOfAddresses());
+
+            System.out.println("currrentNode c: " + currentRootNode.getC());
+            getAllEndOfAddressName(currentRootNode.getLeft());
+            getAllEndOfAddressName(currentRootNode.getRight());
+            getAllEndOfAddressName(currentRootNode.getMid());
+        }
+
+
+        /*if(currentRootNode.left != null) {                  //tjekker om currentRootNode har venstre barn
+            if(!currentRootNode.listOfAddresses.isEmpty())              //tjekker om der er en liste i currentNode
+                searchedList.addAll(currentRootNode.listOfAddresses);   //tilføjer listen af adresser til searchResult
+
+            return getAllEndOfAddressName(currentRootNode.left);
+        } else if(currentRootNode.right != null) {          //tjekker om currentRootNode har højre barn
+            if(!currentRootNode.listOfAddresses.isEmpty())
+                searchedList.addAll(currentRootNode.listOfAddresses);
+
+            return getAllEndOfAddressName(currentRootNode.right);
+        } else if(currentRootNode.mid != null) {            //tjekker om currentRootNode har midt barn
+                if(!currentRootNode.listOfAddresses.isEmpty())
+                    searchedList.addAll(currentRootNode.listOfAddresses);
+
+            return getAllEndOfAddressName(currentRootNode.mid);
+        }*/
+
+
+        return currentRootNode.listOfAddresses; //?
+
+    }
+
+
 
 }
