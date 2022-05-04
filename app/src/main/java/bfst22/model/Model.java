@@ -424,9 +424,7 @@ public class Model {
 
                         case "relation":
                             if (WayType.FOREST == type && !rel.isEmpty()) {
-                                System.out.println("Typen for et multiplygon: " + type);
                                 lines.get(type).add(new MultiPolygon(rel, type));
-                                System.out.println("laver et multipolygon");
                             }
                             rel.clear();
                             break;}break;}}

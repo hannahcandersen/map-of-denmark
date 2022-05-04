@@ -36,11 +36,8 @@ public class MultiPolygon implements Drawable, Serializable {
         this.wayType = wayType;
 
         for (var way : rel) {
+            //Mangler at tilføj veje i den rigtige rækkefølge
             parts.add(new PolyLine(way.getNodes(), wayType));
-
-
-
-
             totalX = 0;
             totalY = 0;
             totalX += way.getMiddleX();
@@ -67,12 +64,12 @@ public class MultiPolygon implements Drawable, Serializable {
     @Override
     //Tegner
     public void trace(GraphicsContext gc) {
-        gc.beginPath();
+       // gc.beginPath();
         gc.setFillRule(FillRule.EVEN_ODD);
         for (var part : parts){
             part.trace(gc);
         }
-        gc.fill();
+       // gc.fill();
     }
 
     @Override

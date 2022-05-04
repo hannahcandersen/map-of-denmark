@@ -85,9 +85,8 @@ public class MapCanvas extends Canvas {
 
         //Tegner forest
         if (Model.getKDTreeFOREST() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST()) != null) {
-            gc.setFill(Color.PURPLE);
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST())) {
-                if (drawable instanceof MultiPolygon) System.out.println("Multipolygon forest");
+               // if (drawable instanceof MultiPolygon) System.out.println("Multipolygon forest");
                 drawable.fillWayType(gc, WayType.FOREST);}}
 
 
@@ -227,7 +226,7 @@ public class MapCanvas extends Canvas {
                     drawable.drawWayType(gc, WayType.BRIDLEWAY);}}
 
             if (Model.getKDTreeFOOTWAY_ANDMORE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOOTWAY_ANDMORE()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY())) {
+                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOOTWAY_ANDMORE())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
                     gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);}}
