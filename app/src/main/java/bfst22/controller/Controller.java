@@ -2,11 +2,12 @@ package bfst22.controller;
 
 import bfst22.model.Model;
 import bfst22.model.MapCanvas;
-import bfst22.model.addresses.AddressCollection;
 import bfst22.model.addresses.AddressNode;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
-import com.sun.glass.ui.CommonDialogs;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -16,17 +17,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.FileChooser;
-import javafx.scene.control.ListView;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 //LINK//https://gist.github.com/Da9el00/cde4381b8f17299693bab886ec700a78
 
@@ -37,9 +32,9 @@ public class Controller {
     @FXML
     private Point2D lastMouse;
     @FXML
-    private TextField from;
+    private TextField fromTextField;
     @FXML
-    private TextField to;
+    private TextField toTextField;
     @FXML
     private ListView<AddressObject> listView;
 
@@ -97,7 +92,7 @@ public class Controller {
 
     @FXML
     public void etEllerAndet(ActionEvent event) {
-        to.setText("Bye");
+        toTextField.setText("Bye");
     }
 
     public void searchRoute(ActionEvent actionEvent) {
@@ -105,12 +100,18 @@ public class Controller {
     }
 
     public void getSearchResult(KeyEvent keyEvent) {
-        String input = from.getText();
+        String input = fromTextField.getText();
+        TST tst = new TST();
+        List<AddressObject> searchListOfAddresses = tst.search(input);
 
         //sætte vores liste med adresse ind i observablelist
+        ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
+        //list.addAll(searchListOfAddresses);
+        //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
+        //SortedList<AddressObject> sortedList = new SortedList<>(list);
 
-        List<AddressObject> listOfSearchedAddresses = TST.get(input);
-        //listView.setItems(); //lav en observablelist
+
+        listView.setItems(listOfObservables);
     }
 
 

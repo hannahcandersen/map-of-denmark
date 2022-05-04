@@ -553,8 +553,10 @@ public class Model {
                                 //MANGLER: String.intern() på alle strings.
                                 if(tst == null) {
                                     tst = new TST(new AddressObject(street, housenumber, postcode, city));
+                                    System.out.println("Laver TST");
                                 } else {
                                     tst.put(street, new AddressObject(street, housenumber, postcode, city));
+                                    //System.out.println("Tilføjer til TST");
                                 }
                             }
                             break;
@@ -567,8 +569,6 @@ public class Model {
         //listOfOSMNodesOfCoastlines = getListOfOSMNodesOfCoastlines(coastlines);
 
         list = makeCoastlineObject(coastlines);
-        System.out.println(tst.get("Sankt Mortens Gade"));
-        System.out.println(tst.get("Sankt Mortens Gade"));
         System.out.println("Done");
 
     }
