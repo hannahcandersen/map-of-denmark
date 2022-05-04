@@ -42,6 +42,7 @@ public class Controller {
     @FXML
     private ListView<AddressObject> listView;
 
+
     //Canvas er superklassen til vores MapCanvas.
     //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
     //Den bruger pakken GraphicsContext.
@@ -98,10 +99,16 @@ public class Controller {
         to.setText("Bye");
     }
 
-    public void AddressFromUserInput(KeyEvent keyEvent) {
+    public void searchRoute(ActionEvent actionEvent) {
+
     }
 
-    public void search(ActionEvent actionEvent) {
+    public void getSearchResult(KeyEvent keyEvent) {
+        //listView setVisisble
+        String input = from.getText();
+
+        TST.get(input);
+
     }
 
 
