@@ -1,13 +1,15 @@
 package bfst22.model.kdtree;
 
+import bfst22.model.MapCanvas;
+import bfst22.model.Model;
+import bfst22.model.OSMNode;
+import bfst22.model.OSMWay;
 import bfst22.view.Drawable;
 import java.util.*;
 
+import static java.awt.geom.Point2D.distanceSq;
+
 public class KdTree {
-
-
-    // Har vi faktisk lavet et RTree??
-
 
 
     //Erklærer roden.
@@ -44,48 +46,80 @@ public class KdTree {
 
         // Laver leaves
         if (drawables.size() < 100) {
-            kdNode = new Leaf(drawables);
-            //System.out.println("Laver et blad");
+            kdNode = new Leaf(drawables);}
 
-            //Test - printer hvert blad
-            /*for(int i = 0; i < drawables.size(); i++) {
-                System.out.print("(" + drawables.get(i).getLon());
-                System.out.println(" , " + drawables.get(i).getLat() + ")"); */
-
-            //System.out.println(((Leaf) kdNode).getListOfOSMNodes());
-            //}
-
-        } else {
+        else {
             //Laver en ny node
             Node node = new Node();
-            //System.out.println("Laver en node");
 
             //sorter listen på x
             if (isXcoord) {
                 //Vi sorterer listen drawables ved at bruge sort, som tager parametren Comparator.comparing.
                 //Den fortæller at vi skal hive fat i OSMNode-klassen og kalde getLon-metoden. Sorter på x.
-                drawables.sort(Comparator.comparing(Drawable::getMiddleX));
-            } else {
+                drawables.sort(Comparator.comparing(Drawable::getMiddleX));}
+            else {
                 //sorter listen på y
-                drawables.sort(Comparator.comparing(Drawable::getMiddleY));
-            }
+                drawables.sort(Comparator.comparing(Drawable::getMiddleY));}
 
             //Finder midterste indeks af listen
             int mid = drawables.size() / 2;
-            //System.out.println("Dette er midten: " + mid);
+
 
             //Sætter splitværdien
             if (isXcoord) {
-                node.setSplit(drawables.get(mid).getMiddleX());
-                //System.out.println("SplitX: " + node.getSplit());
-            } else { //!isXcoord
-                node.setSplit(drawables.get(mid).getMiddleY());
-                //System.out.println("SplitY: " + node.getSplit());
-            }
+                node.setSplit(drawables.get(mid).getMiddleX());}
+            else { //!isXcoord
+                node.setSplit(drawables.get(mid).getMiddleY());}
 
             //Laver left og right nodes
             node.setLeft(buildKDTree(drawables.subList(0, mid), !isXcoord));
             node.setRight(buildKDTree(drawables.subList(mid, drawables.size()), !isXcoord));
+
+            kdNode = node;
+        }
+        root = kdNode;
+        return kdNode;
+    }
+
+    //////////////////// BULDING KDTREE OF OSM NODES///////////////////////
+    public static KdNode buildKDTreeOfOSMNodes(List<OSMNode> OSMNodes, boolean isXcoord) {
+        //If statement der tjekker om der findes et træ
+        if (OSMNodes == null || OSMNodes.size() == 0) {
+            return null;}
+
+        //Erklærer
+        KdNode kdNode;
+
+        // Laver leaves
+        if (OSMNodes.size() < 100) {
+            kdNode = new Leaf(OSMNodes, 0);}
+
+        else {
+            //Laver en ny node
+            Node node = new Node();
+
+            //sorter listen på x
+            if (isXcoord) {
+                //Vi sorterer listen drawables ved at bruge sort, som tager parametren Comparator.comparing.
+                //Den fortæller at vi skal hive fat i OSMNode-klassen og kalde getLon-metoden. Sorter på x.
+                OSMNodes.sort(Comparator.comparing(OSMNode::getLon));}
+            else {
+                //sorter listen på y
+                OSMNodes.sort(Comparator.comparing(OSMNode::getLat));}
+
+            //Finder midterste indeks af listen
+            int mid = OSMNodes.size() / 2;
+
+
+            //Sætter splitværdien
+            if (isXcoord) {
+                node.setSplit(OSMNodes.get(mid).getLon());}
+            else { //!isXcoord
+                node.setSplit(OSMNodes.get(mid).getLat());}
+
+            //Laver left og right nodes
+            node.setLeft(buildKDTreeOfOSMNodes(OSMNodes.subList(0, mid), !isXcoord));
+            node.setRight(buildKDTreeOfOSMNodes(OSMNodes.subList(mid, OSMNodes.size()), !isXcoord));
 
             kdNode = node;
         }
@@ -114,7 +148,6 @@ public class KdTree {
     //Privat RangeSearch metode
     private static List<Drawable> rangeSearch(RangeSerachRectangle rangeSearchRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
         if (splitNode == null){
-            //System.out.println("splitnode er tom!!!");
             return null;
         }
 
@@ -126,10 +159,7 @@ public class KdTree {
                 if (doRectanglesOverlap(d, rangeSearchRectangle)) {
                     result.add(d);
                 }
-                leavesAdded++;
-            }
-
-        }
+                leavesAdded++;}}
 
         //Ellers er vores splitnode en splitnode, og vi skal kalde rekursivt ned gennem træet
         else{
@@ -205,30 +235,51 @@ public class KdTree {
             return true;
     }
 
-
-
-    /*
-    public static void main(String[] args) {
-        List<OSMNode> OSMNodesTEST = new ArrayList<>();
-
-        OSMNode o1 = new OSMNode(1, 2, 3);
-        OSMNode o2 = new OSMNode(2, 1, 4);
-        OSMNode o3 = new OSMNode(3, 2, 1);
-        OSMNode o4 = new OSMNode(4, 3, 2);
-        OSMNode o5 = new OSMNode(5, 5, 4);
-        OSMNode o6 = new OSMNode(6, 3, 3);
-        OSMNode o7 = new OSMNode(7, 3, 1);
-
-        OSMNodesTEST.add(o1);
-        OSMNodesTEST.add(o2);
-        OSMNodesTEST.add(o3);
-        OSMNodesTEST.add(o4);
-        OSMNodesTEST.add(o5);
-        OSMNodesTEST.add(o6);
-        OSMNodesTEST.add(o7);
-
-        KDTree2 test = new KDTree2(OSMNodesTEST);
+    public static OSMNode findNearestNeighbour(float x, float y){
+       return findNearestNeighbour(Model.getKDTreeNodesInGraph(), x, y, true);
     }
 
-     */
+    private static OSMNode findNearestNeighbour (KdNode searchKdNode, float x, float y, boolean divX){
+
+        //Tjekker om vores KdNode er 0
+        if (searchKdNode == null) return null;
+
+        //Sætter closestDis til
+        double closestDist = Double.POSITIVE_INFINITY;
+        OSMNode closestNode = null;
+
+        // hvis vi er i et leaf: Løb leaf igennem og udregn distancen. Kald rekursivt til andre leaves
+        if (searchKdNode instanceof Leaf){
+                for (OSMNode osmNode : ((Leaf) searchKdNode).getListOfOSMNodes()){
+                    double d = distanceSq(osmNode.getLon(), osmNode.getLat(), x, y);
+
+                    if (closestDist > d) {
+                        closestDist = d;
+                        closestNode = osmNode;
+                    }}}
+
+        if (searchKdNode instanceof Node){
+        // hvis divX er true: Sammenlign node.getSplitX med punktets x. Kald rekursivt til den side
+        // Hvis x er mindre end nodens splitX, leder vi til venstre
+            if(divX){
+            if(x <= ((Node) searchKdNode).getSplit()){
+                findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);
+            }
+            //Hvis x er større end nodens splitX, går vi til højre
+            if(x > ((Node) searchKdNode).getSplit()){
+                findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);
+            }}
+
+            // hvis divY er false: Sammenlign node.getSplitY med punktets y. Kald rekursivt til den side
+            else{
+            if(x <= ((Node) searchKdNode).getSplit()){
+                findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);
+            }
+            //Hvis x er større end nodens splitX, går vi til højre
+            if(x > ((Node) searchKdNode).getSplit()){
+                findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);
+        }}}
+
+        return closestNode;}
+
 }

@@ -1,5 +1,6 @@
 package bfst22.model;
 
+import bfst22.controller.Controller;
 import bfst22.model.dijkstra.Dijkstra;
 import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.kdtree.KdTree;
@@ -26,6 +27,7 @@ public class MapCanvas extends Canvas {
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
+    private Controller controller = new Controller();
 
     public void init(Model model) {
         this.model = model;
@@ -45,7 +47,7 @@ public class MapCanvas extends Canvas {
 
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
-        System.out.println(searchRangeSerachRectangle);
+        //System.out.println(searchRangeSerachRectangle);
 
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
@@ -302,7 +304,7 @@ public class MapCanvas extends Canvas {
 
 
         //// TEST AF DIJKSTRA //////
-
+/*
         // Tager tilfældige nodes fra grafen - TIL TEST - VIRKER IKKE
         OSMNode startOSM = Model.getListOfAllEdgesInWays().get(0).getStart();
         int start = Model.getMapOfOSMNodesToIndex().get(startOSM);
@@ -314,7 +316,7 @@ public class MapCanvas extends Canvas {
 
 
         //HER SKER FEJLEN, FORDI VI HAR VALGT EN ENDNODE DER IKKE FINDES EN ROUTE TIL
-        /*for (Drawable drawable : dijkstra.pathTo(Model.getMapOfOSMNodesToIndex().get(endOSM))) {
+        for (Drawable drawable : dijkstra.pathTo(Model.getMapOfOSMNodesToIndex().get(endOSM))) {
             gc.setStroke(Color.RED);
             drawable.draw(gc);
         }*/
@@ -327,6 +329,21 @@ public class MapCanvas extends Canvas {
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
         gc.setFill(rectangleColor);
         gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
+
+
+        //Tegner nearest neighbour
+        if(controller.getDrawPunkt() != null) {
+            Point2D punkt = new Point2D(controller.getDrawPunkt().getLon(), controller.getDrawPunkt().getLat());
+            Line drawPointLine = new Line(punkt, punkt);
+
+            gc.setStroke(Color.RED);
+            gc.setFill(Color.RED);
+            drawPointLine.draw(gc);
+            drawPointLine.fill(gc);
+        }
+
+
+
 
     }
 

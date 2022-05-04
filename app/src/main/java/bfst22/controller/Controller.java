@@ -2,6 +2,8 @@ package bfst22.controller;
 
 import bfst22.model.Model;
 import bfst22.model.MapCanvas;
+import bfst22.model.OSMNode;
+import bfst22.model.kdtree.KdTree;
 import bfst22.view.View;
 import com.sun.glass.ui.CommonDialogs;
 import javafx.event.ActionEvent;
@@ -11,14 +13,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.stage.FileChooser;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 //Controller klassen håndterer alle kliks og scrolls eller andet som brugeren foretager sig.
 //Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
+
 
 public class Controller {
     @FXML
@@ -27,6 +33,10 @@ public class Controller {
     public TextField from;
     @FXML
     public TextField to;
+
+    OSMNode drawPunkt;
+    private Affine trans = new Affine();
+
 
     //Canvas er superklassen til vores MapCanvas.
     //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
@@ -58,12 +68,35 @@ public class Controller {
     @FXML
     public void onMousePressed(MouseEvent e) {
         lastMouse = new Point2D(e.getX(), e.getY());
-    }
+
+        try {
+            Point2D lastMouseOnMap = trans.inverseTransform(lastMouse);
+            if(e.getClickCount() == 2){
+
+                double x = lastMouseOnMap.getX();
+                float fX = (float)x;
+
+                double y = lastMouseOnMap.getY();
+                float fY = (float)y;
+                drawPunkt = KdTree.findNearestNeighbour(fX, fY);
+
+                System.out.println("jeg har dobbeltklikket");
+
+            }}
+
+        catch (NonInvertibleTransformException en) {
+            //ikke alle lineære transformer kan transverteres, derfor kaster den denne exception
+            //men Troels er så sikker på, at dette ikke vil ske, så hvis det sker skal programmet bare crashe
+            //dette er en Java funktion, som udkommenterer "this can not happen"
+            throw new RuntimeException(en);
+        }}
+
+   /* @FXML
+    public void onMouseClicked(MouseEvent e) {
+        lastMouse = new Point2D(e.getX(), e.getY());}*/
 
     @FXML
-    public void AddressFromUserInput(KeyEvent keyEvent) {
-
-    }
+    public void AddressFromUserInput(KeyEvent keyEvent) {}
 
     @FXML
     public void openFile(ActionEvent event) throws XMLStreamException, IOException, ClassNotFoundException {
@@ -83,5 +116,9 @@ public class Controller {
     @FXML
     public void etEllerAndet(ActionEvent event) {
         to.setText("Bye");
+    }
+
+    public OSMNode getDrawPunkt(){
+        return drawPunkt;
     }
 }
