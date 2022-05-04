@@ -263,24 +263,28 @@ public class MapCanvas extends Canvas {
             }}
 
 
-        /*
+        
         //// TEST AF DIJKSTRA //////
 
         // Tager tilfældige nodes fra grafen - TIL TEST - VIRKER IKKE
         OSMNode startOSM = Model.getListOfAllEdgesInWays().get(0).getStart();
         int start = Model.getMapOfOSMNodesToIndex().get(startOSM);
-        OSMNode endOSM = Model.getListOfAllEdgesInWays().get(50).getEnd();
+        OSMNode endOSM = Model.getListOfAllEdgesInWays().get(10).getEnd();
         int end = Model.getMapOfOSMNodesToIndex().get(endOSM);
 
         // Det her kald der fucker
         Dijkstra dijkstra = new Dijkstra(Model.getGraph(), start, end);
 
-        for (Drawable drawable : dijkstra.getPolylinesInPath(Model.getMapOfOSMNodesToIndex().get(end))) {
+
+        //HER SKER FEJLEN, FORDI VI HAR VALGT EN ENDNODE DER IKKE FINDES EN ROUTE TIL
+        /*for (Drawable drawable : dijkstra.pathTo(Model.getMapOfOSMNodesToIndex().get(endOSM))) {
             gc.setStroke(Color.RED);
             drawable.draw(gc);
-        }
+        }*/
 
-         */
+
+
+
 
         //Tegner vores debug firkant
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);

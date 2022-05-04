@@ -24,10 +24,10 @@ public class Dijkstra {
     public Dijkstra(EdgeWeightedDigraph graph, int startVertex, int endVertex) {
 
         // Tjekker at en edge ikke har negativ vægt
-        for (DirectedEdge edge : graph.allEdgesInGraph()) {
+        /*for (DirectedEdge edge : graph.allEdgesInGraph()) {
             if (edge.weight() < 0)
                 throw new IllegalArgumentException("edge " + edge + " has negative weight");
-        }
+        }*/
 
         // sætter distTo til et nyt double-array med samme antal pladser, som der er vertices i grafen
         distTo = new double[graph.getNumberOfVertices()];
@@ -48,6 +48,7 @@ public class Dijkstra {
         pq = new IndexMinPQ<Double>(graph.getNumberOfVertices());
         pq.insert(startVertex, distTo[startVertex]);
         while (!pq.isEmpty()) {
+            System.out.println(pq.size());
             int vertexLightestWeight = pq.delMin();
             if(vertexLightestWeight == endVertex) {
                 break;
@@ -99,6 +100,7 @@ public class Dijkstra {
         return path;
     }
 
+    /*
     public void caluclatePolylinesInPath(int vertex){
         validateVertex(vertex);
         ArrayList<OSMNode> nodesInPolyLine = new ArrayList<>();
@@ -116,6 +118,7 @@ public class Dijkstra {
         caluclatePolylinesInPath(vertex);
         return polylinesInPath;
     }
+     */
 
 
 
