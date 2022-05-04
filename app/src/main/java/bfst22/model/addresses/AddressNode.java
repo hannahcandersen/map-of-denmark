@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddressNode {
-
-    char c;                                 // character
-    AddressNode left, mid, right;           // left, middle, and right subtries
-    List<AddressObject> listOfAddresses;    // value associated with string
+    private char c;                                 // character
+    private AddressNode left, mid, right;           // left, middle, and right subtries
+    private List<AddressObject> listOfAddresses;    // value associated with string
 
     public AddressNode(char c) {
         this.c = c;
@@ -23,5 +22,22 @@ public class AddressNode {
             listOfAddresses = new ArrayList<>();
         }
         listOfAddresses.add(addressObject);
+    }
+
+
+    public char getC() {
+        return c;
+    }
+
+    public AddressNode getLeft() {
+        return left;
+    }
+
+    public AddressNode getMid() {
+        return mid;
+    }
+
+    public AddressNode getRight() {
+        return right;
     }
 }

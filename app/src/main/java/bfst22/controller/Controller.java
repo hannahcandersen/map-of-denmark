@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.FileChooser;
+import javafx.scene.control.ListView;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -104,11 +105,12 @@ public class Controller {
     }
 
     public void getSearchResult(KeyEvent keyEvent) {
-        //listView setVisisble
         String input = from.getText();
 
-        TST.get(input);
+        //sætte vores liste med adresse ind i observablelist
 
+        List<AddressObject> listOfSearchedAddresses = TST.get(input);
+        //listView.setItems(); //lav en observablelist
     }
 
 
