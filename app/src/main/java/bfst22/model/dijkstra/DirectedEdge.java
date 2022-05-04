@@ -7,11 +7,14 @@ import bfst22.model.WayType;
 import bfst22.view.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 
+import java.util.ArrayList;
+
 public class DirectedEdge implements Drawable{
 
     private final OSMNode start; // En vertex (start)
     private final OSMNode end; // En anden vertex (slut)
     private final double weight; // Vægten
+    private ArrayList<OSMNode> nodesInEdge;
 
     // skal evt. tilføjes som parameter for en edge:z
     /*
@@ -87,4 +90,12 @@ public class DirectedEdge implements Drawable{
     public WayType getType() {
         return null;
     }
+
+    @Override
+    public ArrayList<OSMNode> getNodes(){
+        nodesInEdge.add(getStart());
+        nodesInEdge.add(getEnd());
+        return nodesInEdge;
+    }
 }
+

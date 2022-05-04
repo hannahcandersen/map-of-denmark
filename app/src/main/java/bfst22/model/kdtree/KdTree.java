@@ -5,7 +5,10 @@ import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.model.OSMWay;
 import bfst22.view.Drawable;
+
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import static java.awt.geom.Point2D.distanceSq;
 
@@ -15,6 +18,11 @@ public class KdTree {
     //Erklærer roden.
     private static KdNode root;
     static int leavesAdded = 0;
+
+    double closestDist = Double.POSITIVE_INFINITY;
+    OSMNode closestNode = null;
+
+    RangeSerachRectangle rangeSearchFromPoin;
 
 
     public KdTree() {
@@ -235,33 +243,61 @@ public class KdTree {
             return true;
     }
 
-    public static OSMNode findNearestNeighbour(float x, float y){
+    public OSMNode findNearestNeighbour(float x, float y){
        return findNearestNeighbour(Model.getKDTreeNodesInGraph(), x, y, true);
     }
 
-    private static OSMNode findNearestNeighbour (KdNode searchKdNode, float x, float y, boolean divX){
+    private OSMNode findNearestNeighbour (KdNode searchKdNode, float x, float y, boolean divX){
 
         //Tjekker om vores KdNode er 0
-        if (searchKdNode == null) return null;
-
-        //Sætter closestDis til
-        double closestDist = Double.POSITIVE_INFINITY;
-        OSMNode closestNode = null;
+        //if (searchKdNode == null) return null;
 
         // hvis vi er i et leaf: Løb leaf igennem og udregn distancen. Kald rekursivt til andre leaves
         if (searchKdNode instanceof Leaf){
+
                 for (OSMNode osmNode : ((Leaf) searchKdNode).getListOfOSMNodes()){
                     double d = distanceSq(osmNode.getLon(), osmNode.getLat(), x, y);
-
                     if (closestDist > d) {
                         closestDist = d;
                         closestNode = osmNode;
-                    }}}
+                    }}
+
+
+        }
 
         if (searchKdNode instanceof Node){
         // hvis divX er true: Sammenlign node.getSplitX med punktets x. Kald rekursivt til den side
         // Hvis x er mindre end nodens splitX, leder vi til venstre
-            if(divX){
+
+            //Hvad er afstanden fra punkt til linje? Nok som en metode
+
+            // kan mit venstre barn have et punkt, der er bedre end champion?? (er afstand fra klikpunkt til splitlinjen er kortere end closestDist?)
+            // hvis ja, søg videre ned i venstre barn
+
+            // kan mit højre barn have et punkt, der er bedre end champion??
+            // hvis ja, søg videre ned i højre barn
+
+            if(!divX){
+
+                //Laver en linje line(getsplit, 7)
+                //Laver linje line (getsplit, 9)
+                // if (distance((distance fra x --> left.getSplit) < closestDist){
+                // findNearestNeighbor((Node) searchKdNode).getLeft), x, y, !divX)}
+
+                // if (distance((distance fra x --> right.getSplit) < closestDist){
+                // findNearestNeighbor((Node) searchKdNode).getRight), x, y, !divX)}
+            }
+            else{
+                // if (distance((distance fra y --> left.getSplitLine) < closestDist){
+                // findNearestNeighbor((Node) searchKdNode).getLeft), x, y, !divX)}
+
+                // if (distance((distance fra y --> right.getSplit) < closestDist){
+                // findNearestNeighbor((Node) searchKdNode).getRight), x, y, !divX)}
+
+            }
+
+
+            if(!divX){
             if(x <= ((Node) searchKdNode).getSplit()){
                 findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);
             }
@@ -272,14 +308,33 @@ public class KdTree {
 
             // hvis divY er false: Sammenlign node.getSplitY med punktets y. Kald rekursivt til den side
             else{
-            if(x <= ((Node) searchKdNode).getSplit()){
+            if(y <= ((Node) searchKdNode).getSplit()){
                 findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);
             }
-            //Hvis x er større end nodens splitX, går vi til højre
-            if(x > ((Node) searchKdNode).getSplit()){
+            //Hvis x er større end nodens splitY, går vi til højre
+            if(y > ((Node) searchKdNode).getSplit()){
                 findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);
         }}}
 
+        //range search med afstand til closestNode
+
+
         return closestNode;}
+
+    //returns the distance between the infinite line(x1,y1)(x2,y2) and a point(x,y)
+    public float pDistance(float x, float y, float x1, float y1, float x2, float y2) {
+
+        float A = x - x1; // position of point rel one end of line
+        float B = y - y1;
+        float C = x2 - x1; // vector along line
+        float D = y2 - y1;
+        float E = -D; // orthogonal vector
+        float F = C;
+
+        float dot = A * E + B * F;
+        float len_sq = E * E + F * F;
+
+        return (float) ((float) Math.abs(dot) / Math.sqrt(len_sq));
+    }
 
 }

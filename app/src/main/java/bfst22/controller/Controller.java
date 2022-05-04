@@ -35,7 +35,9 @@ public class Controller {
     public TextField to;
 
     OSMNode drawPunkt;
-    private Affine trans = new Affine();
+    OSMNode TestdrawPunkt;
+    KdTree kdTree = new KdTree();
+
 
 
     //Canvas er superklassen til vores MapCanvas.
@@ -69,27 +71,21 @@ public class Controller {
     public void onMousePressed(MouseEvent e) {
         lastMouse = new Point2D(e.getX(), e.getY());
 
-        try {
-            Point2D lastMouseOnMap = trans.inverseTransform(lastMouse);
+
             if(e.getClickCount() == 2){
 
-                double x = lastMouseOnMap.getX();
-                float fX = (float)x;
+               Point2D MapPointX = canvas.mouseToModel(lastMouse);
+               float mapPointx = (float) MapPointX.getX();
+                float mapPointy = (float) MapPointX.getY();
 
-                double y = lastMouseOnMap.getY();
-                float fY = (float)y;
-                drawPunkt = KdTree.findNearestNeighbour(fX, fY);
-
+                //canvas.TestdrawPunkt = new OSMNode(mapPointx, mapPointy);
+                canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointx, mapPointy);
+                canvas.repaint();
                 System.out.println("jeg har dobbeltklikket");
 
-            }}
+            }
 
-        catch (NonInvertibleTransformException en) {
-            //ikke alle lineære transformer kan transverteres, derfor kaster den denne exception
-            //men Troels er så sikker på, at dette ikke vil ske, så hvis det sker skal programmet bare crashe
-            //dette er en Java funktion, som udkommenterer "this can not happen"
-            throw new RuntimeException(en);
-        }}
+      }
 
    /* @FXML
     public void onMouseClicked(MouseEvent e) {
@@ -120,5 +116,9 @@ public class Controller {
 
     public OSMNode getDrawPunkt(){
         return drawPunkt;
+    }
+
+    public OSMNode getTestdrawPunkt(){
+        return TestdrawPunkt;
     }
 }

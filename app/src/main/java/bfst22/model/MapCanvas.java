@@ -23,11 +23,12 @@ import java.util.Random;
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
 public class MapCanvas extends Canvas {
+    public OSMNode TestdrawPunkt;
+    public OSMNode drawPunkt;
     private Model model;
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
-    private Controller controller = new Controller();
 
     public void init(Model model) {
         this.model = model;
@@ -331,16 +332,22 @@ public class MapCanvas extends Canvas {
         gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
 
 
-        //Tegner nearest neighbour
-        if(controller.getDrawPunkt() != null) {
-            Point2D punkt = new Point2D(controller.getDrawPunkt().getLon(), controller.getDrawPunkt().getLat());
-            Line drawPointLine = new Line(punkt, punkt);
 
+        if(drawPunkt != null){
+            gc.setFill(Color.RED);
+            gc.fillOval(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
+            gc.setFill(Color.BLUE);
+            gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.004, 0.004);
+
+        }
+
+        //Tegner nearest neighbour
+        /*if(controller.getDrawPunkt() != null) {
             gc.setStroke(Color.RED);
             gc.setFill(Color.RED);
-            drawPointLine.draw(gc);
-            drawPointLine.fill(gc);
-        }
+            gc.fillOval(controller.getDrawPunkt().getLon(), controller.getDrawPunkt().getLat(), 100, 100);
+
+        }*/
 
 
 

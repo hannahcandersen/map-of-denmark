@@ -22,6 +22,11 @@ public class OSMNode implements Serializable {
         this.lon = lon;
     }
 
+    public OSMNode(float lat, float lon) {
+        this.lat = lat;
+        this.lon = lon;
+    }
+
     public long getId(){
         return id;
     }
