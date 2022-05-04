@@ -1,5 +1,7 @@
 package bfst22.model;
 
+import bfst22.model.dijkstra.Dijkstra;
+import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
@@ -9,11 +11,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
+import bfst22.model.dijkstra.Dijkstra;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
@@ -45,7 +49,7 @@ public class MapCanvas extends Canvas {
 
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
-        System.out.println("Currentzoomlevel: " + zoomLevel);
+        //System.out.println("Currentzoomlevel: " + zoomLevel);
 
         //Result listen, med de drawables der er inRange
         var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
@@ -59,8 +63,6 @@ public class MapCanvas extends Canvas {
         gc.fillRect(0, 0, getWidth(), getHeight());
         gc.setTransform(trans);
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
-
-
 
         //Tegner kystlinjer
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
@@ -77,24 +79,14 @@ public class MapCanvas extends Canvas {
 
         // Tegner og farvelægger kortet
         //Tegner alt UNKNOWN
-        if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN()) != null) {
-
+        /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN())) {
-                if (drawable.getType()==WayType.FOREST){
-                drawable.drawWayType(gc, WayType.UNKNOWN);}}}
-
+                drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
 
         //Tegner forest
         if (Model.getKDTreeFOREST() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST())) {
                 drawable.fillWayType(gc, WayType.FOREST);}}
-
-        if (MultiPolygon.getMultiPolygonPolylines().size() != 0) {
-            for (PolyLine polyline : MultiPolygon.getMultiPolygonPolylines()) {
-                System.out.println("JEg tegner et multipolygon");
-
-            }}
-
 
         // Alt der skal tegnes ved zoom level 29
         if (zoomLevel >= 29){
@@ -235,23 +227,20 @@ public class MapCanvas extends Canvas {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
                     gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);}}
+                    drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);}
+            gc.setLineDashes(null);
+            }
 
             if (Model.getKDTreeCYCLEWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCYCLEWAY()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCYCLEWAY())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
                     gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.CYCLEWAY);}}
-
-            if (Model.getKDTreeTRACK() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTRACK()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTRACK())) {
-                    gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.TRACK.getDashes());
-                    gc.setLineWidth(WayType.TRACK.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.TRACK);}}
+                    drawable.drawWayType(gc, WayType.CYCLEWAY);}
+                gc.setLineDashes(null);
+            }
 
             if (Model.getKDTreePEDESTRIAN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePEDESTRIAN()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePEDESTRIAN())) {
-                    gc.setLineDashes(null);
                     gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.PEDESTRIAN);}}
 
@@ -276,10 +265,10 @@ public class MapCanvas extends Canvas {
                     gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.RESIDENTIALWAY);}}
 
-            /*if (Model.getKDTreeSECONDARY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY()) != null) {
+            if (Model.getKDTreeSECONDARY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY())) {
                     gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
-                    drawable.drawWayType(gc, WayType.SECONDARY);}}*/
+                    drawable.drawWayType(gc, WayType.SECONDARY);}}
 
             if (Model.getKDTreeTERTIARY() != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTERTIARY())) {
@@ -309,6 +298,30 @@ public class MapCanvas extends Canvas {
                 gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
                 drawable.drawWayType(gc, WayType.PRIMARY);
             }}
+
+
+
+        //// TEST AF DIJKSTRA //////
+
+        // Tager tilfældige nodes fra grafen - TIL TEST - VIRKER IKKE
+        OSMNode startOSM = Model.getListOfAllEdgesInWays().get(0).getStart();
+        int start = Model.getMapOfOSMNodesToIndex().get(startOSM);
+        OSMNode endOSM = Model.getListOfAllEdgesInWays().get(10).getEnd();
+        int end = Model.getMapOfOSMNodesToIndex().get(endOSM);
+
+        // Det her kald der fucker
+        Dijkstra dijkstra = new Dijkstra(Model.getGraph(), start, end);
+
+
+        //HER SKER FEJLEN, FORDI VI HAR VALGT EN ENDNODE DER IKKE FINDES EN ROUTE TIL
+        /*for (Drawable drawable : dijkstra.pathTo(Model.getMapOfOSMNodesToIndex().get(endOSM))) {
+            gc.setStroke(Color.RED);
+            drawable.draw(gc);
+        }*/
+
+
+
+
 
         //Tegner vores debug firkant
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);

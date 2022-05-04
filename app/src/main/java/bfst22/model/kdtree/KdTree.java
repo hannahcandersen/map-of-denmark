@@ -126,7 +126,6 @@ public class KdTree {
                 if (doRectanglesOverlap(d, rangeSearchRectangle)) {
                     result.add(d);
                 }
-
                 leavesAdded++;
             }
 
