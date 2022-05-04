@@ -51,7 +51,7 @@ public class TST {
         char c = key.charAt(d);                                                 //finder nuværende bogstav
         if (node == null) { node = new AddressNode(c); }                      //tjekker om nuværende AddressNode er null - laver så en ny AddressNode med den nuværende char (bogstav)
         if      (c < node.c) node.left  = put(node.left, key, address, d);      //
-        else if (c > node.c) node.right = put(node.left, key, address, d);
+        else if (c > node.c) node.right = put(node.right, key, address, d);
         else if (d < key.length() - 1)
             node.mid = put(node.mid, key, address, d+1);
         else node.addAddress(address);
@@ -63,17 +63,6 @@ public class TST {
         AddressNode node = get(root, input, 0);
         if(node == null) return null;
         return node;
-
-        /*char lastCharOfInput = input.charAt(input.length()-1);
-        char c = key.charAt(d);
-
-        if(node == null) return null;
-        if(c == lastCharOfInput) return node;
-        else if(c < node.c) return getEndNode(node.left, key, d, input);
-        else if (c > node.c) return getEndNode(node.right, key, d, input);
-        else if (d < key.length() - 1) return getEndNode(node.mid, key, d+1, input);
-
-        return null;*/
     }
 
     public List<AddressObject> getAllEndOfAddressName(AddressNode currentRootNode){
@@ -109,7 +98,13 @@ public class TST {
 
     public List<AddressObject> search(String input) {
         AddressNode endNode = getEndNode(input);
-        return getAllEndOfAddressName(endNode);
+        if(endNode == null) {
+            List<AddressObject> noMatches = new ArrayList<>();
+            noMatches.add(new AddressObject("", "", "", ""));
+            return noMatches;
+        }
+        else return getAllEndOfAddressName(endNode);
+        //return getAllEndOfAddressName(endNode);
     }
 
 }

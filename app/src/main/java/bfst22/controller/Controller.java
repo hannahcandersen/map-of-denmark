@@ -47,6 +47,7 @@ public class Controller {
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
+        listView.setVisible(false);
         canvas.init(model);
     }
 
@@ -107,13 +108,18 @@ public class Controller {
 
             //sætte vores liste med adresse ind i observablelist
             ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
-
             listOfObservables.addAll(searchListOfAddresses);
             //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
-            //SortedList<AddressObject> sortedList = new SortedList<>(list);
+            //SortedList<AddressObject> sortedList = new SortedList<>(listOfObservables);
 
-
+            listView.setVisible(true);
             listView.setItems(listOfObservables);
+
+            //valgt adresse
+            //AddressObject chosenAddress =
+            //fromTextField.setText(chosenAddress);
+        } else {
+            listView.setVisible(false);
         }
     }
 
