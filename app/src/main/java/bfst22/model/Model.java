@@ -2,6 +2,9 @@ package bfst22.model;
 
 import bfst22.model.dijkstra.DirectedEdge;
 import bfst22.model.dijkstra.EdgeWeightedDigraph;
+import bfst22.model.addresses.AddressCollection;
+import bfst22.model.addresses.AddressObject;
+import bfst22.model.addresses.TST;
 import bfst22.model.kdtree.KdNode;
 import bfst22.model.kdtree.KdTree;
 import bfst22.view.Drawable;
@@ -86,6 +89,10 @@ public class Model {
     private boolean isOneway;
     private boolean isRoundabout;
     private static List<PolyLine> list;
+
+    private List<AddressObject> listOfAddresses = new ArrayList<>();
+    private TST tst;
+
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
     Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);
@@ -233,6 +240,10 @@ public class Model {
         var rel = new ArrayList<OSMWay>(); // liste med osm ways
         var innerRole = new ArrayList<Drawable>();
         var outerRole = new ArrayList<Drawable>();
+        String city = "";
+        String housenumber = "";
+        String postcode = "";
+        String street = "";
         long relID = 0; // giver et id til en relation
         var type = WayType.UNKNOWN; // sætter først typen til unknows. kan ændres undervejs i metoden til f.eks. LAKE
         while (reader.hasNext()) { // læser hver linje én af gangen
@@ -254,6 +265,7 @@ public class Model {
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
+                            //map der en node, her er key gadenavn og value id
                             break;
                         // en way har i osm-filen en reference til de nodes der angiver vejen kaldet nd, der indeholder nodes' id nummer.
                         // her gemmes disse nodes i en arrayliste "nodes"
@@ -271,6 +283,18 @@ public class Model {
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
                             switch (k) {
+                                case "addr:city":
+                                    city = v;
+                                    break;
+                                case "addr:housenumber":
+                                    housenumber = v;
+                                    break;
+                                case "addr:postcode":
+                                    postcode = v;
+                                    break;
+                                case "addr:street":
+                                    street = v;
+                                    break;
                                 case "landuse":
                                     type = switch (v) {
                                         //currentElement.setWayType(WayType.valueOf(v.toUpperCase(Locale.ROOT)));
@@ -520,6 +544,23 @@ public class Model {
                             }
                             rel.clear();
                             break;
+                        case "node":
+                            if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
+                                //Map<AddressObject, OSMNode>
+                                //listOfAddresses.add(new AddressObject(street, housenumber, postcode, city));
+
+                                //laver Ternary Search Tree/Trie med alle adresserne
+                                //MANGLER: String.intern() på alle strings.
+                                if(tst == null) {
+                                    tst = new TST(new AddressObject(street, housenumber, postcode, city));
+                                    System.out.println("Laver TST");
+                                } else {
+                                    tst.put(street, new AddressObject(street, housenumber, postcode, city));
+                                    //System.out.println("Tilføjer til TST");
+                                }
+                            }
+                            break;
+
                     }
                     break;
             }
@@ -527,6 +568,7 @@ public class Model {
 
         list = makeCoastlineObject(coastlinesMap);
         System.out.println("Done");
+
     }
 
     // tilføjer en observer til listen observers

@@ -1,4 +1,4 @@
-package bfst22.model;
+package bfst22.model.addresses;
 
 import java.util.List;
 
@@ -7,7 +7,16 @@ public class AddressCollection {
     private List<AddressObject> addressList;
 
     public AddressCollection(List<AddressObject> addressList) {
-        //this.addressList = new ...;
+        //this.addressList
+
+        //sorter liste på bogstav= new .
+
+        //For(næste index)
+        //for(AddressObject ao : addressList) {
+          //  TST.put(ao.getStreet(), ao);
+
+        //}
+
     }
 
     public List<AddressObject> getAddressList() {

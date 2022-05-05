@@ -5,8 +5,14 @@ import bfst22.model.MapCanvas;
 import bfst22.view.View;
 import com.sun.glass.ui.CommonDialogs;
 import javafx.event.ActionEvent;
+import bfst22.model.addresses.AddressObject;
+import bfst22.model.addresses.TST;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -16,6 +22,14 @@ import javafx.stage.FileChooser;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import javafx.stage.FileChooser;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+//LINK//https://gist.github.com/Da9el00/cde4381b8f17299693bab886ec700a78
 
 //Controller klassen håndterer alle kliks og scrolls eller andet som brugeren foretager sig.
 //Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
@@ -24,15 +38,20 @@ public class Controller {
     @FXML
     private Point2D lastMouse;
     @FXML
-    public TextField from;
+    private TextField fromTextField;
     @FXML
-    public TextField to;
+    private TextField toTextField;
+    @FXML
+    private ListView<AddressObject> listViewFrom;
+    @FXML
+    private ListView<AddressObject> listViewTo;
+
 
     //Canvas er superklassen til vores MapCanvas.
     //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
     //Den bruger pakken GraphicsContext.
     @FXML
-    public MapCanvas canvas;
+    private MapCanvas canvas;
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
@@ -61,7 +80,7 @@ public class Controller {
     }
 
     @FXML
-    public void AddressFromUserInput(KeyEvent keyEvent) {
+    public void addressParse(KeyEvent keyEvent) {
 
     }
 
@@ -73,7 +92,6 @@ public class Controller {
         File selectedFile = fc.showOpenDialog(null);
 
         if(selectedFile != null) {
-            //init(new Model(selectedFile.getAbsolutePath()));
             Model model = new Model(selectedFile.getAbsolutePath());
         } else {
             System.out.println("File is not valid");
@@ -82,6 +100,75 @@ public class Controller {
 
     @FXML
     public void etEllerAndet(ActionEvent event) {
-        to.setText("Bye");
+        toTextField.setText("Bye");
     }
+    @FXML
+    public void searchRoute(ActionEvent actionEvent) {
+
+    }
+    @FXML
+    public void getSearchResultFrom(KeyEvent keyEvent) {
+        String input = fromTextField.getText();
+        if(input.length() > 3) {
+            TST tst = new TST();
+            List<AddressObject> searchListOfAddresses = tst.search(input);
+
+            //sætte vores liste med adresse ind i observablelist
+            ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
+            listOfObservables.addAll(searchListOfAddresses);
+            //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
+            //SortedList<AddressObject> sortedList = new SortedList<>(listOfObservables);
+
+            listViewFrom.setVisible(true);
+            listViewFrom.setItems(listOfObservables);
+        } else {
+            listViewFrom.setVisible(false);
+        }
+    }
+
+    @FXML
+    public void getSearchResultTo(KeyEvent keyEvent) {
+        String input = toTextField.getText(); //UNDGÅ KODEDUPLIKERING
+        if(input.length() > 3) {
+            TST tst = new TST();
+            List<AddressObject> searchListOfAddresses = tst.search(input);
+
+            //sætte vores liste med adresse ind i observablelist
+            ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
+            listOfObservables.addAll(searchListOfAddresses);
+            //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
+            //SortedList<AddressObject> sortedList = new SortedList<>(listOfObservables);
+
+            listViewTo.setVisible(true);
+            listViewTo.setItems(listOfObservables);
+        } else {
+            listViewTo.setVisible(false);
+        }
+    }
+
+
+    @FXML
+    public void chooseAddressFrom(MouseEvent event) {
+        //viser valgt adresse i textfield
+        AddressObject chosenAddress = listViewFrom.getSelectionModel().getSelectedItem();
+        if(chosenAddress != null) {
+            fromTextField.setText(chosenAddress.toString());
+            listViewFrom.setVisible(false);
+        }
+    }
+
+    @FXML
+    public void chooseAddressTo(MouseEvent event) {
+        //viser valgt adresse i textfield
+        AddressObject chosenAddress = listViewTo.getSelectionModel().getSelectedItem();
+        if(chosenAddress != null) {
+            toTextField.setText(chosenAddress.toString());
+            listViewTo.setVisible(false);
+        }
+    }
+
+
+
+
+
 }

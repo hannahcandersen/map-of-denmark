@@ -1,13 +1,13 @@
-package bfst22.model;
+package bfst22.model.addresses;
 
 public class AddressObject {
     private String street, house, floor, side, postcode, city;
 
-    public AddressObject(String street, String house, String floor, String side, String postcode, String city) {
+    public AddressObject(String street, String house, String postcode, String city) {
         this.street = street;
         this.house = house;
-        this.floor = floor;
-        this.side = side;
+        //this.floor = floor;
+        //this.side = side;
         this.postcode = postcode;
         this.city = city;
     }
@@ -21,7 +21,9 @@ public class AddressObject {
 
     @Override
     public String toString() {
-        return street + " " + house + " " + floor + " " + side + " " + postcode + " " + city;
+        return street + " " + house + " " + postcode + " " + city;
     }
+
+
 
 }

@@ -5,6 +5,8 @@ import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -27,29 +29,41 @@ public class MapCanvas extends Canvas {
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
 
+
+
     public void init(Model model) {
         this.model = model;
         pan(-model.getMinLon(), -model.getMinLat());
         zoom(640 / (model.getMaxlon() - model.getMinLon()), 0, 0);
         model.addObserver(this::repaint);
         repaint();
+        //repainter hver gang størrelsen på skærmen ændres
+        /*widthProperty().addListener((observable, oldValue, newValue) -> {
+            repaint();
+        });
+        heightProperty().addListener((observable, oldValue, newValue) -> {
+            repaint();
+        });*/
     }
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() { //throws NullPointerException
         //Får punkterne i vinduet og laver dem om til punkter i kortet
         Point2D screenMin = new Point2D(100, 100);
-        Point2D screenMax = new Point2D(getWidth() - 100, getHeight() - 100);
+        Point2D screenMax = new Point2D(getWidth()-100, getHeight()-100);
         Point2D realMin = mouseToModel(screenMin);
         Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
-        System.out.println(searchRangeSerachRectangle);
+        //System.out.println(searchRangeSerachRectangle);
+        
+        //Udregnet zoomLevel
 
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
-        zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
+        zoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         //System.out.println("Currentzoomlevel: " + zoomLevel);
+        
 
         //Result listen, med de drawables der er inRange
         var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
@@ -341,11 +355,7 @@ public class MapCanvas extends Canvas {
 
     public void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
-        //try {
             repaint();
-        /*} catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }*/
     }
 
     // Zoomer med en given faktor
@@ -354,12 +364,6 @@ public class MapCanvas extends Canvas {
             trans.prependScale(factor, factor);
             trans.prependTranslation(x, y);
             repaint();
-
-        //try {
-        //  repaint();
-        /*} catch (NullPointerException e) {
-            System.out.println(e.getMessage());
-        }*/
     }
 
     //oversætter window koordinater til model koordinater

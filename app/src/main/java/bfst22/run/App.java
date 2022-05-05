@@ -4,6 +4,10 @@ import bfst22.model.Model;
 import bfst22.view.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 
 //Starter rammen/programmet med Danmarkskortet
 public class App extends Application {
