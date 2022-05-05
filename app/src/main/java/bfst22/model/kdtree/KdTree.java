@@ -20,9 +20,9 @@ public class KdTree {
     private static KdNode root;
     static int leavesAdded = 0;
 
+    private OSMNode closestNodeField = null;
+    private double closestDistField = Double.POSITIVE_INFINITY;
 
-
-    RangeSerachRectangle rangeSearchFromPoin;
 
 
     public KdTree() {
@@ -338,11 +338,13 @@ public class KdTree {
         searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, false);
         searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, false);
 
-        System.out.println("Champnode: " + searchKdNode.getClosestNode());
-        return searchKdNode.getClosestNode();
+        System.out.println("Fra kdTree: ClosestNode: " + closestNode);
+        System.out.println("Fra kdTree: ClosestDist: " + closestDist);
+        return closestNode;
 
     }
 
+    //Det der er galt: Den opdaterer ik closestDist i ovenstående metode. Den finder en for hver blad, og giver den ikke med videre
 
         //returns the distance between the infinite line(x1,y1)(x2,y2) and a point(x,y)
     public float pDistance(float x, float y, float x1, float y1, float x2, float y2) {
@@ -357,7 +359,27 @@ public class KdTree {
         float dot = A * E + B * F;
         float len_sq = E * E + F * F;
 
-        return (float) ((float) Math.abs(dot) / Math.sqrt(len_sq));
+        return (float) (Math.abs(dot) / Math.sqrt(len_sq));
     }
+
+    /*
+    public OSMNode getClosestNodeField() {
+        return closestNodeField;
+    }
+
+    public void setClosestNodeField(OSMNode closestNodeField) {
+        this.closestNodeField = closestNodeField;
+    }
+
+    public double getClosestDistField() {
+        return closestDistField;
+    }
+
+    public void setClosestDistField(double closestDistField) {
+        this.closestDistField = closestDistField;
+    }
+
+     */
+
 
 }

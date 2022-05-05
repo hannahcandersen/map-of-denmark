@@ -38,7 +38,7 @@ public class Node extends KdNode {
     @Override
     public void findNearestNeighbourKDNode(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX) {
             //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
-        System.out.println("Jeg er en node");
+        //System.out.println("Jeg er en node");
             Node searchNodeNode = ((Node) searchKdNode);
             if(!divX) {
 

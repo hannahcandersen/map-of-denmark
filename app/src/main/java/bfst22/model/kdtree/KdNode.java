@@ -4,14 +4,18 @@ import bfst22.model.OSMNode;
 
 public abstract class KdNode {
 
-    protected OSMNode closestNode;
-    protected double closestDist;
+    /*
+    protected OSMNode closestNode = null;
+    protected double closestDist = Double.POSITIVE_INFINITY;
+
+     */
 
     public KdNode(){
     }
 
     public abstract void findNearestNeighbourKDNode(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX);
 
+    /*
     public OSMNode getClosestNode() {
         return closestNode;
     }
@@ -20,10 +24,13 @@ public abstract class KdNode {
         return closestDist;
     }
 
+     */
+
     public abstract KdNode getLeft();
     public abstract KdNode getRight();
 
 
+    /*
     public void setClosestNode(OSMNode closestNode) {
         this.closestNode = closestNode;
     }
@@ -31,4 +38,6 @@ public abstract class KdNode {
     public void setClosestDist(double closestDist) {
         this.closestDist = closestDist;
     }
+
+     */
 }
