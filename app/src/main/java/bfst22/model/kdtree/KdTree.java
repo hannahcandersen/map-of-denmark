@@ -7,6 +7,7 @@ import bfst22.model.OSMWay;
 import bfst22.view.Drawable;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.util.*;
 import java.util.List;
 
@@ -121,9 +122,12 @@ public class KdTree {
 
             //Sætter splitværdien
             if (isXcoord) {
-                node.setSplit(OSMNodes.get(mid).getLon());}
+                node.setSplit(OSMNodes.get(mid).getLon());
+                node.setSplitDenAndenKoordinat(OSMNodes.get(mid).getLat());}
+
             else { //!isXcoord
-                node.setSplit(OSMNodes.get(mid).getLat());}
+                node.setSplit(OSMNodes.get(mid).getLat());
+                node.setSplitDenAndenKoordinat(OSMNodes.get(mid).getLon());}
 
             //Laver left og right nodes
             node.setLeft(buildKDTreeOfOSMNodes(OSMNodes.subList(0, mid), !isXcoord));
@@ -256,18 +260,17 @@ public class KdTree {
         if (searchKdNode instanceof Leaf){
 
                 for (OSMNode osmNode : ((Leaf) searchKdNode).getListOfOSMNodes()){
-                    double d = distanceSq(osmNode.getLon(), osmNode.getLat(), x, y);
-                    if (closestDist > d) {
-                        closestDist = d;
+                    double distanceCurrent = distanceSq(osmNode.getLon(), osmNode.getLat(), x, y);
+                    if (closestDist > distanceCurrent) {
+                        closestDist = distanceCurrent;
                         closestNode = osmNode;
                     }}
-
-
         }
 
         if (searchKdNode instanceof Node){
-        // hvis divX er true: Sammenlign node.getSplitX med punktets x. Kald rekursivt til den side
-        // Hvis x er mindre end nodens splitX, leder vi til venstre
+
+            // hvis divX er true: Sammenlign node.getSplitX med punktets x. Kald rekursivt til den side
+            // Hvis x er mindre end nodens splitX, leder vi til venstre
 
             //Hvad er afstanden fra punkt til linje? Nok som en metode
 
@@ -277,26 +280,37 @@ public class KdTree {
             // kan mit højre barn have et punkt, der er bedre end champion??
             // hvis ja, søg videre ned i højre barn
 
+            
+            
+            
+            //Kigger på x
             if(!divX){
+                
+                
+                
+                //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
+                if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getLeft()).getSplit(), ((Node) ((Node) searchKdNode).getLeft()).getSplitDenAndenKoordinat())< closestDist){
+                    findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);}
 
-                //Laver en linje line(getsplit, 7)
-                //Laver linje line (getsplit, 9)
-                // if (distance((distance fra x --> left.getSplit) < closestDist){
-                // findNearestNeighbor((Node) searchKdNode).getLeft), x, y, !divX)}
+                //Hvis distancen til mit højre barns splitpunkt er mindre end closestDist, så led til højre
+                if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getRight()).getSplit(), ((Node) ((Node) searchKdNode).getRight()).getSplitDenAndenKoordinat()) < closestDist){
+                    findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);}}
 
-                // if (distance((distance fra x --> right.getSplit) < closestDist){
-                // findNearestNeighbor((Node) searchKdNode).getRight), x, y, !divX)}
-            }
+            //Kigger på y
             else{
-                // if (distance((distance fra y --> left.getSplitLine) < closestDist){
-                // findNearestNeighbor((Node) searchKdNode).getLeft), x, y, !divX)}
+                //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
+                if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getLeft()).getSplitDenAndenKoordinat(), ((Node) ((Node) searchKdNode).getLeft()).getSplit()) < closestDist){
+                    findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);}
+                //Hvis distancen til mit højre barns splitpunkt er mindre end closestDist, så led til højre
+                if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getRight()).getSplitDenAndenKoordinat(), ((Node) ((Node) searchKdNode).getRight()).getSplit()) < closestDist){
+                    findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);}
 
-                // if (distance((distance fra y --> right.getSplit) < closestDist){
-                // findNearestNeighbor((Node) searchKdNode).getRight), x, y, !divX)}
 
             }
+        }
 
 
+            /*
             if(!divX){
             if(x <= ((Node) searchKdNode).getSplit()){
                 findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);
@@ -314,10 +328,9 @@ public class KdTree {
             //Hvis x er større end nodens splitY, går vi til højre
             if(y > ((Node) searchKdNode).getSplit()){
                 findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);
-        }}}
 
-        //range search med afstand til closestNode
 
+        }}*/
 
         return closestNode;}
 

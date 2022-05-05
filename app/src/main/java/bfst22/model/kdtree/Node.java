@@ -5,6 +5,7 @@ public class Node extends KdNode {
 
     //Enten lat/y-værdien eller lon/x-værdien
     private float split;
+    private float splitDenAndenKoordinat;
 
     public Node() {
         super();
@@ -13,6 +14,7 @@ public class Node extends KdNode {
     public KdNode getLeft() {return left;}
     public KdNode getRight() {return right;}
     public float  getSplit(){return split;}
+    public float  getSplitDenAndenKoordinat(){return splitDenAndenKoordinat;}
 
     public void setLeft(KdNode left) {
         this.left = left;
@@ -22,5 +24,9 @@ public class Node extends KdNode {
     }
     public void setSplit(float split) {
         this.split = split;
+    }
+
+    public void setSplitDenAndenKoordinat(float split) {
+        this.splitDenAndenKoordinat = split;
     }
 }
