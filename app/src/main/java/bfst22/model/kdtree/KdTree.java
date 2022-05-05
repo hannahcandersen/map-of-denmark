@@ -273,12 +273,9 @@ public class KdTree {
 
             // hvis divX er true: Sammenlign node.getSplitX med punktets x. Kald rekursivt til den side
             // Hvis x er mindre end nodens splitX, leder vi til venstre
-
             //Hvad er afstanden fra punkt til linje? Nok som en metode
-
             // kan mit venstre barn have et punkt, der er bedre end champion?? (er afstand fra klikpunkt til splitlinjen er kortere end closestDist?)
             // hvis ja, søg videre ned i venstre barn
-
             // kan mit højre barn have et punkt, der er bedre end champion??
             // hvis ja, søg videre ned i højre barn
             //Kigger på x
