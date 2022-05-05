@@ -93,6 +93,12 @@ public class Controller {
 
         if(selectedFile != null) {
             Model model = new Model(selectedFile.getAbsolutePath());
+            canvas.init(model);
+            //flytter canvas
+            /*private void moveCanvas(int x, int y) {
+                canvas.setTranslateX(x);
+                canvas.setTranslateY(y);
+            }*/
         } else {
             System.out.println("File is not valid");
         }
