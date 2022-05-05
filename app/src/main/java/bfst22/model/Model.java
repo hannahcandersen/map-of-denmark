@@ -2,7 +2,6 @@ package bfst22.model;
 
 import bfst22.model.dijkstra.DirectedEdge;
 import bfst22.model.dijkstra.EdgeWeightedDigraph;
-import bfst22.model.addresses.AddressCollection;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
 import bfst22.model.kdtree.KdNode;
@@ -80,7 +79,7 @@ public class Model {
 
 
 //Måske static
-    static NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
+    NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
     List<Runnable> observers = new ArrayList<>();  // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
 
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
@@ -88,9 +87,9 @@ public class Model {
     private int maxspeed = 0;
     private boolean isOneway;
     private boolean isRoundabout;
-    private static List<PolyLine> list;
+    private static List<PolyLine> listOfCoastlines;
 
-    private List<AddressObject> listOfAddresses = new ArrayList<>();
+    private final List<AddressObject> listOfAddresses = new ArrayList<>();
     private TST tst;
 
 
@@ -102,7 +101,7 @@ public class Model {
     }
 
     //Map med coastlines
-    static Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);
+    Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);
 
     {
         for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());
@@ -195,6 +194,10 @@ public class Model {
         KDTreeRIVER_ANDMORE = KdTree.buildKDTree(lines.get(WayType.RIVER_ANDMORE), true);
         KDTreeCOASTLINE = KdTree.buildKDTree(coastlinesMap.get(WayType.COASTLINE), true);
 
+        //lav liste med coastlines
+        listOfCoastlines = makeCoastlineObject(coastlinesMap);
+
+        //lav dijkstra graf
         makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
         makeGraph();
         //System.out.println(graph);
@@ -238,8 +241,6 @@ public class Model {
         var id2way = new HashMap<Long, OSMWay>(); // map til veje, der gemmer rel-id og listen af nodes for vejen
         var nodes = new ArrayList<OSMNode>(); // liste af nodes for den enkelte vej
         var rel = new ArrayList<OSMWay>(); // liste med osm ways
-        var innerRole = new ArrayList<Drawable>();
-        var outerRole = new ArrayList<Drawable>();
         String city = "";
         String housenumber = "";
         String postcode = "";
@@ -546,14 +547,10 @@ public class Model {
                             break;
                         case "node":
                             if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
-                                //Map<AddressObject, OSMNode>
-                                //listOfAddresses.add(new AddressObject(street, housenumber, postcode, city));
-
                                 //laver Ternary Search Tree/Trie med alle adresserne
-                                //MANGLER: String.intern() på alle strings.
                                 if(tst == null) {
                                     tst = new TST(new AddressObject(street, housenumber, postcode, city));
-                                    System.out.println("Laver TST");
+                                    //System.out.println("Laver TST");
                                 } else {
                                     tst.put(street, new AddressObject(street, housenumber, postcode, city));
                                     //System.out.println("Tilføjer til TST");
@@ -566,9 +563,7 @@ public class Model {
             }
         }
 
-        list = makeCoastlineObject(coastlinesMap);
         System.out.println("Done");
-
     }
 
     // tilføjer en observer til listen observers
@@ -635,7 +630,7 @@ public class Model {
 
 
 
-    public static Map<WayType, List<Drawable>> getCoastlinesMap() {return coastlinesMap;}
+    public Map<WayType, List<Drawable>> getCoastlinesMap() {return coastlinesMap;}
 
     public static List<OSMNode> getListOfOSMNodesOfCoastlines(Map<WayType, List<Drawable>> coastlines) {
         //så længe dens startpunkt ikke er dens slutpunkt - kør while loop
@@ -814,8 +809,8 @@ public class Model {
         return distance / maxspeed;
     }
 
-    public static List<PolyLine> getList() {
-        return list;
+    public static List<PolyLine> getListOfCoastlines() {
+        return listOfCoastlines;
     }
 
     public static List<DirectedEdge> getListOfAllEdgesInWays() {
@@ -838,7 +833,7 @@ public class Model {
 
     }
 
-    public static NodeMap getId2node() {
+    public NodeMap getId2node() {
         return id2node;
     }
 

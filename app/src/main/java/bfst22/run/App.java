@@ -14,8 +14,6 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // var filename = getParameters().getRaw().get(0);
-
-        //skrive en if statement
         var model = new Model("data/læsø.osm");
         new View(model, primaryStage);
     }

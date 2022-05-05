@@ -1,25 +1,15 @@
 package bfst22.model;
 
 import bfst22.model.dijkstra.Dijkstra;
-import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
-import bfst22.model.dijkstra.Dijkstra;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
@@ -34,16 +24,17 @@ public class MapCanvas extends Canvas {
     public void init(Model model) {
         this.model = model;
         pan(-model.getMinLon(), -model.getMinLat());
+        //tallet 640 bestemmer hvor tæt eller hvor langt fra vi er på kortet, når programmet starter
         zoom(640 / (model.getMaxlon() - model.getMinLon()), 0, 0);
         model.addObserver(this::repaint);
         repaint();
         //repainter hver gang størrelsen på skærmen ændres
-        /*widthProperty().addListener((observable, oldValue, newValue) -> {
+        widthProperty().addListener((observable, oldValue, newValue) -> {
             repaint();
         });
         heightProperty().addListener((observable, oldValue, newValue) -> {
             repaint();
-        });*/
+        });
     }
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
@@ -81,7 +72,7 @@ public class MapCanvas extends Canvas {
         //Tegner kystlinjer
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         {
-            for (Drawable drawable : Model.getList()) {
+            for (Drawable drawable : Model.getListOfCoastlines()) {
                 if (zoomLevel<=29){
                     drawable.drawWayType(gc, WayType.COASTLINE);
                     gc.setFill(Color.rgb(238, 240, 216));

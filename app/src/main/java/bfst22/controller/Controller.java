@@ -95,13 +95,17 @@ public class Controller {
             Model model = new Model(selectedFile.getAbsolutePath());
             canvas.init(model);
             //flytter canvas
-            /*private void moveCanvas(int x, int y) {
-                canvas.setTranslateX(x);
-                canvas.setTranslateY(y);
-            }*/
+            //canvas.zoom(650 / (model.getMaxlon() - model.getMinLon()), 0, 0);
+
         } else {
             System.out.println("File is not valid");
         }
+    }
+
+    //gør ikke helt det jeg håbede
+    private void moveCanvas(float x, float y) {
+        canvas.setTranslateX(x);
+        canvas.setTranslateY(y);
     }
 
     @FXML
