@@ -335,9 +335,10 @@ public class KdTree {
         //hvis venstre: kald findNearestNeighbor for .getLeft()
         //hvis højre: kald findNearest for .getRight()
 
-        searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, true);
-        searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, true);
+        searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, false);
+        searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, false);
 
+        System.out.println("Champnode: " + searchKdNode.getClosestNode());
         return searchKdNode.getClosestNode();
 
     }

@@ -38,28 +38,28 @@ public class Node extends KdNode {
     @Override
     public void findNearestNeighbourKDNode(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX) {
             //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
-
+        System.out.println("Jeg er en node");
             Node searchNodeNode = ((Node) searchKdNode);
             if(!divX) {
 
                 if (distanceSq(x, y, searchNodeNode.getSplit(), searchNodeNode.getSplitDenAndenKoordinat()) < closestDist) {
-                   findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
+                    searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
                 }
 
                 //Hvis distancen til mit højre barns splitpunkt er mindre end closestDist, så led til højre
                 if (distanceSq(x, y, searchNodeNode.getSplit(), searchNodeNode.getSplitDenAndenKoordinat()) < closestDist) {
-                    findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
+                    searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
                 }}
 
         //Kigger på y
         else {
             if (distanceSq(x, y, searchNodeNode.getSplitDenAndenKoordinat(), searchNodeNode.getSplit()) < closestDist) {
-               findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
+                searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
             }
 
             //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
             if (distanceSq(x, y, searchNodeNode.getSplitDenAndenKoordinat(), searchNodeNode.getSplit()) < closestDist) {
-                findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
+                searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
             }}
     }
 }
