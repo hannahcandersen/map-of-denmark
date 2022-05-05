@@ -121,7 +121,7 @@ public class Controller {
 
     @FXML
     public void getSearchResultTo(KeyEvent keyEvent) {
-        String input = fromTextField.getText(); //UNDGÅ KODEDUPLIKERING
+        String input = toTextField.getText(); //UNDGÅ KODEDUPLIKERING
         if(input.length() > 3) {
             TST tst = new TST();
             List<AddressObject> searchListOfAddresses = tst.search(input);

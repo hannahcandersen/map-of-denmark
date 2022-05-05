@@ -12,13 +12,10 @@
 <?import javafx.scene.text.Text?>
 
 <?import bfst22.model.*?>
-
 <Scene fx:id="scene" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bfst22.controller.Controller">
     <root>
         <AnchorPane prefHeight="480.0" prefWidth="640.0">
-                <MapCanvas
-                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="38.0" AnchorPane.bottomAnchor="0.0"
-                        fx:id="canvas" height="${scene.height}" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onScroll="#onScroll" width="${scene.width}">
+                <MapCanvas fx:id="canvas" height="${scene.height}" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" onScroll="#onScroll" width="${scene.width}" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="38.0">
 
                 </MapCanvas>
          <Pane maxWidth="1.7976931348623157E308" prefHeight="38.0" style="-fx-background-color: EFC0E8;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -38,11 +35,11 @@
                         <TextField fx:id="toTextField" layoutX="347.0" layoutY="7.0" onKeyReleased="#getSearchResultTo" prefHeight="25.0" prefWidth="184.0" promptText="Search address" />
                         <Text layoutX="86.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From:" />
                         <Text layoutX="321.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To:" />
-                                <Button layoutX="548.0" layoutY="7.0" mnemonicParsing="false" onAction="#searchRoute" prefHeight="25.0" prefWidth="71.0" text="Find route" />
+                                <Button layoutX="552.0" layoutY="7.0" mnemonicParsing="false" onAction="#searchRoute" prefHeight="26.0" prefWidth="82.0" text="Find route" />
             </children>
          </Pane>
-            <ListView fx:id="listViewFrom" visible="false" layoutX="124.0" layoutY="42.0" onMouseClicked="#chooseAddressFrom" prefHeight="184.0" prefWidth="184.0" />
-            <ListView fx:id="listViewTo" visible="false" layoutX="348.0" layoutY="42.0" onMouseClicked="#chooseAddressTo" prefHeight="184.0" prefWidth="184.0" />
+            <ListView fx:id="listViewFrom" layoutX="124.0" layoutY="42.0" onMouseClicked="#chooseAddressFrom" prefHeight="184.0" prefWidth="184.0" visible="false" />
+            <ListView fx:id="listViewTo" layoutX="348.0" layoutY="42.0" onMouseClicked="#chooseAddressTo" prefHeight="184.0" prefWidth="184.0" visible="false" />
         </AnchorPane>
     </root>
 </Scene>
