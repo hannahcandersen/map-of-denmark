@@ -20,8 +20,7 @@ public class KdTree {
     private static KdNode root;
     static int leavesAdded = 0;
 
-    double closestDist = Double.POSITIVE_INFINITY;
-    OSMNode closestNode = null;
+
 
     RangeSerachRectangle rangeSearchFromPoin;
 
@@ -247,10 +246,13 @@ public class KdTree {
             return true;
     }
 
+    /*
     public OSMNode findNearestNeighbour(float x, float y){
        return findNearestNeighbour(Model.getKDTreeNodesInGraph(), x, y, true);
     }
-
+    // LAV EN ABSTRAKT METODE I KDNODE
+    // LAV TO FORSKELLIGE METODER - EN I NODE OG EN I LEAF
+    // GIV METODEN CLOSESTDIST MED SOM PARAMETER
     private OSMNode findNearestNeighbour (KdNode searchKdNode, float x, float y, boolean divX){
 
         //Tjekker om vores KdNode er 0
@@ -279,15 +281,8 @@ public class KdTree {
 
             // kan mit højre barn have et punkt, der er bedre end champion??
             // hvis ja, søg videre ned i højre barn
-
-            
-            
-            
             //Kigger på x
             if(!divX){
-                
-                
-                
                 //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
                 if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getLeft()).getSplit(), ((Node) ((Node) searchKdNode).getLeft()).getSplitDenAndenKoordinat())< closestDist){
                     findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);}
@@ -304,13 +299,8 @@ public class KdTree {
                 //Hvis distancen til mit højre barns splitpunkt er mindre end closestDist, så led til højre
                 if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getRight()).getSplitDenAndenKoordinat(), ((Node) ((Node) searchKdNode).getRight()).getSplit()) < closestDist){
                     findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);}
+            }  }
 
-
-            }
-        }
-
-
-            /*
             if(!divX){
             if(x <= ((Node) searchKdNode).getSplit()){
                 findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);
@@ -330,11 +320,33 @@ public class KdTree {
                 findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);
 
 
-        }}*/
+        }}
 
         return closestNode;}
 
-    //returns the distance between the infinite line(x1,y1)(x2,y2) and a point(x,y)
+    */
+
+
+
+
+    public OSMNode findNearestNeighbour(float x, float y){
+        return findNearestNeighbour(Model.getKDTreeNodesInGraph(), Double.POSITIVE_INFINITY, null, x, y, true);
+    }
+
+    public OSMNode findNearestNeighbour(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX) {
+        //undersøg om den skal til venstre eller højre
+        //hvis venstre: kald findNearestNeighbor for .getLeft()
+        //hvis højre: kald findNearest for .getRight()
+
+        searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, true);
+        searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, true);
+
+        return searchKdNode.getClosestNode();
+
+    }
+
+
+        //returns the distance between the infinite line(x1,y1)(x2,y2) and a point(x,y)
     public float pDistance(float x, float y, float x1, float y1, float x2, float y2) {
 
         float A = x - x1; // position of point rel one end of line

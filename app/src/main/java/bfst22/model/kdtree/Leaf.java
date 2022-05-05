@@ -5,6 +5,8 @@ import bfst22.view.Drawable;
 
 import java.util.List;
 
+import static java.awt.geom.Point2D.distanceSq;
+
 /*
     Hvis vi til sidst har 4-10 noder, som vi ikke synes er nødvendigt at dele ud på træet,
     så kan vi til sidst tilføje en liste med de sidste noder
@@ -31,4 +33,21 @@ public class Leaf extends KdNode {
         public List<OSMNode> getListOfOSMNodes(){
                 return listOfOSMNodes;
         }
+        public KdNode getLeft(){return null;}
+        public KdNode getRight(){return null;}
+
+
+        @Override
+        public void findNearestNeighbourKDNode(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX) {
+
+                for (OSMNode osmNode : getListOfOSMNodes()){
+                        double distanceCurrent = distanceSq(x, y, osmNode.getLon(), osmNode.getLat());
+
+                        if (getClosestDist() > distanceCurrent) {
+                                setClosestDist(distanceCurrent);
+                                setClosestNode(osmNode);
+                        }
+                }
+        }
+
 }

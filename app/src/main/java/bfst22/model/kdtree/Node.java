@@ -1,5 +1,9 @@
 package bfst22.model.kdtree;
 
+import bfst22.model.OSMNode;
+
+import static java.awt.geom.Point2D.distanceSq;
+
 public class Node extends KdNode {
     private KdNode left, right;
 
@@ -29,4 +33,34 @@ public class Node extends KdNode {
     public void setSplitDenAndenKoordinat(float split) {
         this.splitDenAndenKoordinat = split;
     }
+
+
+    @Override
+    public void findNearestNeighbourKDNode(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX) {
+            //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
+
+            Node searchNodeNode = ((Node) searchKdNode);
+            if(!divX) {
+
+                if (distanceSq(x, y, searchNodeNode.getSplit(), searchNodeNode.getSplitDenAndenKoordinat()) < closestDist) {
+                   findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
+                }
+
+                //Hvis distancen til mit højre barns splitpunkt er mindre end closestDist, så led til højre
+                if (distanceSq(x, y, searchNodeNode.getSplit(), searchNodeNode.getSplitDenAndenKoordinat()) < closestDist) {
+                    findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
+                }}
+
+        //Kigger på y
+        else {
+            if (distanceSq(x, y, searchNodeNode.getSplitDenAndenKoordinat(), searchNodeNode.getSplit()) < closestDist) {
+               findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
+            }
+
+            //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
+            if (distanceSq(x, y, searchNodeNode.getSplitDenAndenKoordinat(), searchNodeNode.getSplit()) < closestDist) {
+                findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, !divX); //Måske kommer vi til at gå 2 gange til venstre
+            }}
+    }
 }
+
