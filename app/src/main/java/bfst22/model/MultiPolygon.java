@@ -36,6 +36,7 @@ public class MultiPolygon implements Drawable, Serializable {
         this.wayType = wayType;
 
         for (var way : rel) {
+
             //Mangler at tilføj veje i den rigtige rækkefølge
             parts.add(new PolyLine(way.getNodes(), wayType));
 
