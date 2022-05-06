@@ -47,6 +47,11 @@ public class Controller {
     @FXML
     private ListView<AddressObject> listViewTo;
 
+    @FXML
+    private CheckBox colorCheckBox;
+
+
+
 
     //Canvas er superklassen til vores MapCanvas.
     //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
@@ -175,8 +180,23 @@ public class Controller {
         if(chosenAddress != null) {
             toTextField.setText(chosenAddress.toString());
             listViewTo.setVisible(false);
-        }
-    }
+        }}
+
+    @FXML
+    public void partyColorToggle(ActionEvent event) {
+       if(colorCheckBox.isSelected()){
+           canvas.isPartySelected = true;}
+       else{
+           canvas.isPartySelected = false;}
+
+       canvas.repaint();}
+
+
+
+
+
+
+
 
 
 

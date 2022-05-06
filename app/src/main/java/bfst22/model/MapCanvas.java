@@ -20,7 +20,15 @@ public class MapCanvas extends Canvas {
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
+    public boolean isPartySelected;
 
+    //Random c
+    Random rand = new Random();
+    // Java 'Color' class takes 3 floats, from 0 to 1.
+    public float r = rand.nextFloat();
+    public float g = rand.nextFloat();
+    public float b = rand.nextFloat();
+    Color randomColor = new Color(r, g, b);
 
 
     public void init(Model model) {
@@ -93,7 +101,16 @@ public class MapCanvas extends Canvas {
         //Tegner forest
         if (Model.getKDTreeFOREST() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST())) {
-                drawable.fillWayType(gc, WayType.FOREST);}}
+
+
+
+                if(isPartySelected){
+                    gc.setFill(Color.RED);
+                    drawable.fill(gc);
+                }
+                else{ drawable.fillWayType(gc, WayType.FOREST);}
+
+               }}
 
         // Alt der skal tegnes ved zoom level 29
         if (zoomLevel >= 29){
@@ -370,4 +387,5 @@ public class MapCanvas extends Canvas {
             throw new RuntimeException(e);
         }
     }
+
 }
