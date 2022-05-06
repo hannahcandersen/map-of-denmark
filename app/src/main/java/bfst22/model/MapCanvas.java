@@ -11,6 +11,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
+import java.util.Random;
+
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
 public class MapCanvas extends Canvas {

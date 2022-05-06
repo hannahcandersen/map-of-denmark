@@ -2,6 +2,7 @@
 
 <?import javafx.scene.Scene?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -40,6 +41,7 @@
          </Pane>
             <ListView fx:id="listViewFrom" layoutX="124.0" layoutY="42.0" onMouseClicked="#chooseAddressFrom" prefHeight="184.0" prefWidth="184.0" visible="false" />
             <ListView fx:id="listViewTo" layoutX="348.0" layoutY="42.0" onMouseClicked="#chooseAddressTo" prefHeight="184.0" prefWidth="184.0" visible="false" />
+            <CheckBox fx:id="colorCheckBox" layoutX="556.0" layoutY="54.0" mnemonicParsing="false" onAction="#partyColorToggle" text="Change color" AnchorPane.rightAnchor="9.599999999999994" />
         </AnchorPane>
     </root>
 </Scene>

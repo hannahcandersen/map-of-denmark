@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.FileChooser;
+import javafx.scene.control.CheckBox;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
