@@ -15,7 +15,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
 
-import java.util.Random;
+
 
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
@@ -25,6 +25,12 @@ public class MapCanvas extends Canvas {
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
     public boolean isPartySelected;
+    public boolean isPinkSelected;
+
+    //Randomme farver
+    int r;
+    int g;
+    int b;
 
 
 
@@ -58,14 +64,12 @@ public class MapCanvas extends Canvas {
         //System.out.println(searchRangeSerachRectangle);
         
         //Udregnet zoomLevel
-
-        //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         //System.out.println("Currentzoomlevel: " + zoomLevel);
-        
+
 
         //Result listen, med de drawables der er inRange
-        var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
+        //var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
 
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
@@ -80,11 +84,16 @@ public class MapCanvas extends Canvas {
         //Tegner kystlinjer
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         {
+            gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
             for (Drawable drawable : Model.getListOfCoastlines()) {
                 if (zoomLevel<=29){
+                    if(isPartySelected){
+                        drawable.drawWayType(gc, WayType.COASTLINE);
+                        drawable.fill(gc);}
+                    else{
                     drawable.drawWayType(gc, WayType.COASTLINE);
                     gc.setFill(Color.rgb(238, 240, 216));
-                    drawable.fill(gc);}
+                    drawable.fill(gc);}}
                 if (zoomLevel >= 30) {
                     if(isPartySelected) {
                         drawable.drawWayType(gc, WayType.COASTLINE);
@@ -102,43 +111,43 @@ public class MapCanvas extends Canvas {
 
         //Tegner forest
         if (Model.getKDTreeFOREST() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST()) != null) {
+            gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST())) {
-
-
-
                 if(isPartySelected){
-                    gc.setFill(Color.RED);
-                    drawable.fill(gc);
-                }
-                else{ drawable.fillWayType(gc, WayType.FOREST);}
-
-               }}
+                    drawable.fill(gc);}
+                else{ drawable.fillWayType(gc, WayType.FOREST);}}}
 
         // Alt der skal tegnes ved zoom level 29
         if (zoomLevel >= 29){
             if (Model.getKDTreeFARMLAND() != null  && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFARMLAND()) != null) {
+                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFARMLAND())) {
-                    drawable.fillWayType(gc, WayType.FARMLAND);}}
+                    if(isPartySelected){drawable.fill(gc);}
+                    else{drawable.fillWayType(gc, WayType.FARMLAND);}}}
 
             if (Model.getKDTreeGRASS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS())) {
-                    drawable.fillWayType(gc, WayType.GRASS);}}
+                    if(isPartySelected){drawable.fill(gc);}
+                    else{drawable.fillWayType(gc, WayType.GRASS);}}}
 
             if (Model.getKDTreeRAILWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRAILWAY()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRAILWAY())) {
-                    drawable.fillWayType(gc, WayType.RAILWAY);}}
+                    if(isPartySelected){drawable.fill(gc);}
+                    else{drawable.fillWayType(gc, WayType.RAILWAY);}}}
 
             if (Model.getKDTreeWATER() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeWATER()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeWATER())) {
-                    drawable.fillWayType(gc, WayType.WATER);}}
+                    if(isPartySelected){drawable.fill(gc);}
+                    else{drawable.fillWayType(gc, WayType.WATER);}}}
 
             if (Model.getKDTreeRIVER_ANDMORE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRIVER_ANDMORE()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRIVER_ANDMORE())) {
-                    drawable.drawWayType(gc, WayType.RIVER_ANDMORE);}}}
+                    if(isPartySelected){drawable.fill(gc);}
+                    else{drawable.drawWayType(gc, WayType.RIVER_ANDMORE);}}}
 
         if (Model.getKDTreeFERRY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFERRY()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFERRY())) {
@@ -168,17 +177,20 @@ public class MapCanvas extends Canvas {
             if (Model.getKDTreeGREENHOUSE_HORTICULTURE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGREENHOUSE_HORTICULTURE()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGREENHOUSE_HORTICULTURE())) {
-                    drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}}
+                    if(isPartySelected){drawable.fill(gc);}
+                    else{drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}}
 
             if (Model.getKDTreeRELIGIOUS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRELIGIOUS()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRELIGIOUS())) {
-                    drawable.fillWayType(gc, WayType.RELIGIOUS);}}
+                    if(isPartySelected){drawable.fill(gc);}
+                    else{drawable.fillWayType(gc, WayType.RELIGIOUS);}}
 
             if (Model.getKDTreeGRASS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS())) {
-                    drawable.fillWayType(gc, WayType.GRASS);}}}
+                    if(isPartySelected){drawable.fill(gc);}
+                    else{drawable.fillWayType(gc, WayType.GRASS);}}}
 
         // Alt der skal tegnes ved zoom level 31 og højere
         if (zoomLevel >= 31){
@@ -355,15 +367,21 @@ public class MapCanvas extends Canvas {
                     drawable.drawWayType(gc, WayType.TERTIARY);}}
 
             if (Model.getKDTreeGRASS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()))
-            {drawable.fillWayType(gc, WayType.GRASS);}}
+            {gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()))
+            {if(isPartySelected){drawable.fill(gc);}
+            else{drawable.fillWayType(gc, WayType.GRASS);}}}
 
             if(Model.getKDTreeBUILDING() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBUILDING()) != null){
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBUILDING())) {
                     gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
+                    if(isPartySelected){
+                        drawable.fill(gc);
+                        drawable.drawWayType(gc, WayType.BUILDING);}
+                    else{
                     drawable.fillWayType(gc, WayType.BUILDING);
-                    drawable.drawWayType(gc, WayType.BUILDING);
+                    drawable.drawWayType(gc, WayType.BUILDING);}
                 }}}
 
         //Tegner motorway
@@ -442,6 +460,33 @@ public class MapCanvas extends Canvas {
             //dette er en Java funktion, som udkommenterer "this can not happen"
             throw new RuntimeException(e);
         }
+    }
+
+    public int randomR(){
+        //Random c
+        Random rand = new Random();
+        int upperbound = 255;
+        // Java 'Color' class takes 3 floats, from 0 to 1.
+        this.r = Math.abs(rand.nextInt(upperbound));
+        return r;
+    }
+
+    public int randomG(){
+        //Random c
+        Random rand = new Random();
+        int upperbound = 255;
+        // Java 'Color' class takes 3 floats, from 0 to 1.
+        this.g = Math.abs(rand.nextInt(upperbound));
+        return g;
+    }
+
+    public int randomB(){
+        //Random c
+        Random rand = new Random();
+        int upperbound = 255;
+        // Java 'Color' class takes 3 floats, from 0 to 1.
+        this.b = Math.abs(rand.nextInt(upperbound));
+        return b;
     }
 
 }

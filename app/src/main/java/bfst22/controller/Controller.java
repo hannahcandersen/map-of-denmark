@@ -49,10 +49,15 @@ public class Controller {
     private ListView<AddressObject> listViewFrom;
     @FXML
     private ListView<AddressObject> listViewTo;
-
     @FXML
     private CheckBox colorCheckBox;
+    @FXML
+    private CheckBox pinkCheckBox;
+    @FXML
+    private Pane warningPane;
 
+    @FXML
+    private Button warningOkButton;
 
 
 
@@ -194,8 +199,23 @@ public class Controller {
            canvas.isPartySelected = true;}
        else{
            canvas.isPartySelected = false;}
+       canvas.repaint();
+    }
 
-       canvas.repaint();}
+    @FXML
+    public void pinkColorToggle(ActionEvent event){
+        if(pinkCheckBox.isSelected()){
+            canvas.isPinkSelected = true;}
+        else{
+            canvas.isPinkSelected = false;}
+        canvas.repaint();
+    }
+
+    @FXML
+    public void onClickWarningOk(ActionEvent event){
+       warningPane.setVisible(false);
+    }
+
 
 
 
