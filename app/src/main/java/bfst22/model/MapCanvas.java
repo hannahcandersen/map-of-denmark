@@ -1,8 +1,5 @@
 package bfst22.model;
 
-import bfst22.controller.Controller;
-import bfst22.model.dijkstra.Dijkstra;
-import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
@@ -10,7 +7,6 @@ import javafx.scene.canvas.Canvas;
 import java.util.Random;
 
 import javafx.scene.paint.Color;
-//import java.awt.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
@@ -21,12 +17,12 @@ import javafx.scene.transform.NonInvertibleTransformException;
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
 public class MapCanvas extends Canvas {
-    public OSMNode TestdrawPunkt;
-    private OSMNode drawPunkt;
     private Model model;
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
+    public OSMNode TestdrawPunkt;
+    private OSMNode drawPunkt;
     public boolean isPartySelected;
     public boolean isPinkSelected;
 
@@ -73,7 +69,7 @@ public class MapCanvas extends Canvas {
 
 
         //Result listen, med de drawables der er inRange
-        //var resultUNKNOWN = KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN());
+        //var resultUNKNOWN = model.getKDTreeUNKNOWN().rangeSearch(rangeSearchRectangle, model.getKDTreeUNKNOWN().getRoot());
 
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
@@ -115,8 +111,8 @@ public class MapCanvas extends Canvas {
 
         // Tegner og farvelægger kortet
         //Tegner alt UNKNOWN
-        /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN()) != null) {
-            for (Drawable drawable : KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN())) {
+        /*if (model.getKDTreeUNKNOWN() != null && model.getKDTreeUNKNOWN().rangeSearch(rangeSearchRectangle, model.getKDTreeUNKNOWN().getRoot()) != null) {
+            for (Drawable drawable : model.getKDTreeUNKNOWN().rangeSearch(rangeSearchRectangle, model.getKDTreeUNKNOWN().getRoot())) {
                 drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
 
         //Tegner forest
@@ -126,6 +122,7 @@ public class MapCanvas extends Canvas {
                 if (isPartySelected) {
                     drawable.fill(gc);
                 } else {
+                    //if (drawable instanceof MultiPolygon) System.out.println("Multipolygon forest");
                     drawable.fillWayType(gc, WayType.FOREST);
                 }
             }

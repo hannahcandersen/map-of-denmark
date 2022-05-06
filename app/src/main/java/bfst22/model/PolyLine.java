@@ -15,11 +15,11 @@ import javafx.scene.canvas.GraphicsContext;
  */
 
 public class PolyLine implements Drawable, Serializable {
-    float currentMinX;
-    float currentMaxX;
-    float currentMinY;
-    float currentMaxY;
-    WayType wayType;
+    private float currentMinX;
+    private float currentMaxX;
+    private float currentMinY;
+    private float currentMaxY;
+    private WayType wayType;
 
     public static final long serialVersionUID = 134123;
     //Programmet skal kun huske en sekvens af floats koordinater

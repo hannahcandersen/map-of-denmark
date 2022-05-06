@@ -91,21 +91,17 @@ public class Model {
 
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
-    Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);
-
-    {
+    private Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);{
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
 
     //Map med coastlines
-    Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);
-
-    {
+    private Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);{
         for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());
     }
 
     //Liste med HIGHWAYS
-    private static ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
 
     //Liste med alle OSMNodes in graph
     private List<OSMNode> listOfAlleNodesInGraph = new ArrayList<>();
@@ -113,7 +109,7 @@ public class Model {
     //Map med OSMNode to index. Bruges til at lave en graf
     private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
 
-    private static EdgeWeightedDigraph graph;
+    private EdgeWeightedDigraph graph;
 
 
     /////////////// Konstruktør (unchecked) ///////////////////
@@ -199,8 +195,6 @@ public class Model {
         makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
         makeGraph();
         //System.out.println(graph);
-
-        //calculateDistance(listOfAllEdgesInWays.get(10).getStart(), listOfAllEdgesInWays.get(10).getEnd());
     }
 
 
@@ -390,7 +384,6 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
-
                                 case "leisure":
                                     type = switch (v) {
                                         case "park" -> WayType.PARK;
@@ -427,24 +420,21 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
-                                case "lanes":
-                                    var lane = Integer.parseInt(v);
-                                    //ikke alle har line
-                                    //hvordan vælger vi hvilke der har to og ikke?
-                                    break;
                                 case "maxspeed":
                                     maxspeed = Integer.parseInt(v);
 
                                     //primary, secondary, tertiary = 80
                                     //primary, secondary, tertiary = 50
                                     //tertiary, residential = 40
-                                    //nogle veje har ikke maxspeed (tertiary)
-
+                                    //nogle veje har ikke maxspeed (tertiary o.a.)
+                                    break;
                                 case "oneway":
                                     if (v.equals("no")) isOneway = false;
                                     else if (v.equals("yes")) isOneway = true;
+                                    break;
                                 case "junction":
                                     isRoundabout = v.equals("roundabout");
+                                    break;
                             }
                             break;
                         // relations har member-tags, der referer til
@@ -477,6 +467,8 @@ public class Model {
                                 nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
                             }
 
+                            //Sætter forskellige oplysninger for veje, fx. maxspeed
+                            //Bygger grafen for alle veje
                             if (type == WayType.MOTORWAY || type == WayType.PRIMARY || type == WayType.TRUNK || type == WayType.SECONDARY || type == WayType.TERTIARY
                                     || type == WayType.UNCLASSIFIED || type == WayType.RESIDENTIALWAY || type == WayType.LIVING_STREET || type == WayType.SERVICE
                                     || type == WayType.PEDESTRIAN || type == WayType.ROAD || type == WayType.FOOTWAY_ANDMORE || type == WayType.STEPS
@@ -490,7 +482,6 @@ public class Model {
                                         case MOTORWAY -> 120; //110-130 km/t 130
                                         case TRUNK -> 110;
                                         case PRIMARY, SECONDARY, ROAD, CONSTRUCTIONWAY -> 80;
-                                        //manlger typer til -LINK vejene
                                         case UNCLASSIFIED, TERTIARY -> 50; //secondary, road
                                         case RESIDENTIALWAY -> 40; //se kommentar nedenunder
                                         case LIVING_STREET, SERVICE, CYCLEWAY -> 20;  //se kommentar nedenunder
@@ -560,7 +551,6 @@ public class Model {
                                 }
                             }
                             break;
-
                     }
                     break;
             }
@@ -850,7 +840,7 @@ public class Model {
         return listOfCoastlines;
     }
 
-    public static List<DirectedEdge> getListOfAllEdgesInWays() {
+    public List<DirectedEdge> getListOfAllEdgesInWays() {
         return listOfAllEdgesInWays;
     }
 
@@ -875,7 +865,7 @@ public class Model {
     }
 
 
-    public static EdgeWeightedDigraph getGraph() {
+    public EdgeWeightedDigraph getGraph() {
         return graph;
     }
 }

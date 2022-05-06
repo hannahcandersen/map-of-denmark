@@ -18,13 +18,13 @@ public class MultiPolygon implements Drawable, Serializable {
         Det er ligemeget hvilke tal vi giver den
      */
 
-    float totalX;
-    float totalY;
-    float currentMinX = 0;
-    float currentMaxX = 0;
-    float currentMinY = 0;
-    float currentMaxY = 0;
-    WayType wayType;
+    private float totalX;
+    private float totalY;
+    private float currentMinX = 0;
+    private float currentMaxX = 0;
+    private float currentMinY = 0;
+    private float currentMaxY = 0;
+    private WayType wayType;
 
 
     public static final long serialVersionUID = 1325234;
