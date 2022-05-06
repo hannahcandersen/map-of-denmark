@@ -1,6 +1,7 @@
 package bfst22.model;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,6 +133,10 @@ public class MultiPolygon implements Drawable, Serializable {
 
     public static ArrayList<PolyLine> getMultiPolygonPolylines() {
         return multiPolygonPolylines;
+    }
+
+    public ArrayList<OSMNode> getNodes(){
+        return multiPolygonNodes;
     }
 }
 

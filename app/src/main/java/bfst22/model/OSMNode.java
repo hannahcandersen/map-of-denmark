@@ -16,8 +16,16 @@ public class OSMNode implements Serializable {
     private float lat, lon;
 
     //Tager parameterne ID, bredde- (lat) og længdegrader (lon), fra Noden i .osm filen.
+    // Bornholm: Lat = 8, Lon = -55
+
+
     public OSMNode(long id, float lat, float lon) {
         this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+    }
+
+    public OSMNode(float lat, float lon) {
         this.lat = lat;
         this.lon = lon;
     }
