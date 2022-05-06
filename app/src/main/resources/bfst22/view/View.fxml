@@ -44,7 +44,7 @@
             <ListView fx:id="listViewFrom" layoutX="124.0" layoutY="42.0" onMouseClicked="#chooseAddressFrom" prefHeight="184.0" prefWidth="184.0" visible="false" />
             <ListView fx:id="listViewTo" layoutX="348.0" layoutY="42.0" onMouseClicked="#chooseAddressTo" prefHeight="184.0" prefWidth="184.0" visible="false" />
             <CheckBox fx:id="colorCheckBox" layoutX="556.0" layoutY="54.0" mnemonicParsing="false" onAction="#partyColorToggle" text="Party mode" AnchorPane.rightAnchor="9.599999999999994" />
-         <Pane fx:id="warningPane" layoutX="246.0" layoutY="206.0" maxHeight="60.0" maxWidth="90.0" minHeight="60.0" minWidth="90.0" prefHeight="60.0" prefWidth="90.0" style="-fx-background-color: EE4B2B;" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="246.0" AnchorPane.rightAnchor="248.0" AnchorPane.topAnchor="206.0">
+         <Pane fx:id="warningPane" layoutX="246.0" layoutY="206.0" maxHeight="74.0" maxWidth="146.0" minHeight="74.0" minWidth="146.0" prefHeight="74.0" prefWidth="146.0" centerShape="true" scaleShape="false" style="-fx-background-color: EE4B2B;">
             <children>
                <Label fx:id="Warning" layoutX="9.0" layoutY="3.0" text="Epilepsy Warning">
                   <font>
