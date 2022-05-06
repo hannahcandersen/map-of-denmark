@@ -4,7 +4,6 @@ import bfst22.model.dijkstra.DirectedEdge;
 import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
-import bfst22.model.kdtree.KdNode;
 import bfst22.model.kdtree.KdTree;
 import bfst22.view.Drawable;
 
@@ -32,50 +31,49 @@ import static java.util.stream.Collectors.toList;
 public class Model {
 
     //KD Trees
-    private KdTree KDTreeUNKNOWN;
-    private KdTree KDTreeNAVIGATION_LINE;
-    private KdTree KDTreeRESIDENTIAL;
-    private KdTree KDTreeLAKE;
-    private KdTree KDTreeBEACH;
-    private KdTree KDTreeSAND;
-    private KdTree KDTreeFOREST;
-    private KdTree KDTreeWATER;
-    private KdTree KDTreeBUILDING;
-    private KdTree KDTreeINDUSTRIAL;
-    private KdTree KDTreeMEADOW;
-    private KdTree KDTreePARK;
-    private KdTree KDTreeCEMETERY;
-    private KdTree KDTreeALLOTMENTS;
-    private KdTree KDTreeCOMMERCIAL;
-    private KdTree KDTreeCONSTRUCTION;
-    private KdTree KDTreeRETAIL;
-    private KdTree KDTreeFARMLAND;
-    private KdTree KDTreeGRASS;
-    private KdTree KDTreeGREENHOUSE_HORTICULTURE;
-    private KdTree KDTreeRAILWAY;
-    private KdTree KDTreeRELIGIOUS;
-    private KdTree KDTreeMOTORWAY;
-    private KdTree KDTreeCOASTLINE;
-    private KdTree KDTreePRIMARY;
-    private KdTree KDTreeSECONDARY;
-    private KdTree KDTreeTERTIARY;
-    private KdTree KDTreeLIVING_STREET;
-    private KdTree KDTreeSERVICE;
-    private KdTree KDTreePEDESTRIAN;
-    private KdTree KDTreeTRACK;
-    private KdTree KDTreeROAD;
-    private KdTree KDTreeFOOTWAY_ANDMORE;
-    private KdTree KDTreeBRIDLEWAY;
-    private KdTree KDTreeCYCLEWAY;
-    private KdTree KDTreeRESIDENTIALWAY;
-    private KdTree KDTreeCONSTRUCTIONWAY;
-    private KdTree KDTreeRIVER_ANDMORE;
-    private KdTree KDTreeHOSPITAL;
-    private KdTree KDTreePITCH;
-    private KdTree KDTreeRECREATION_GROUND;
-    private KdTree KDTreeSCHOOL;
-    private KdTree KDTreeFERRY;
-    private KdTree KDTreeNodesInGraph;
+    private final KdTree KDTreeUNKNOWN;
+    private final KdTree KDTreeRESIDENTIAL;
+    private final KdTree KDTreeLAKE;
+    private final KdTree KDTreeBEACH;
+    private final KdTree KDTreeSAND;
+    private final KdTree KDTreeFOREST;
+    private final KdTree KDTreeWATER;
+    private final KdTree KDTreeBUILDING;
+    private final KdTree KDTreeINDUSTRIAL;
+    private final KdTree KDTreeMEADOW;
+    private final KdTree KDTreePARK;
+    private final KdTree KDTreeCEMETERY;
+    private final KdTree KDTreeALLOTMENTS;
+    private final KdTree KDTreeCOMMERCIAL;
+    private final KdTree KDTreeCONSTRUCTION;
+    private final KdTree KDTreeRETAIL;
+    private final KdTree KDTreeFARMLAND;
+    private final KdTree KDTreeGRASS;
+    private final KdTree KDTreeGREENHOUSE_HORTICULTURE;
+    private final KdTree KDTreeRAILWAY;
+    private final KdTree KDTreeRELIGIOUS;
+    private final KdTree KDTreeMOTORWAY;
+    private final KdTree KDTreeCOASTLINE;
+    private final KdTree KDTreePRIMARY;
+    private final KdTree KDTreeSECONDARY;
+    private final KdTree KDTreeTERTIARY;
+    private final KdTree KDTreeLIVING_STREET;
+    private final KdTree KDTreeSERVICE;
+    private final KdTree KDTreePEDESTRIAN;
+    private final KdTree KDTreeTRACK;
+    private final KdTree KDTreeROAD;
+    private final KdTree KDTreeFOOTWAY_ANDMORE;
+    private final KdTree KDTreeBRIDLEWAY;
+    private final KdTree KDTreeCYCLEWAY;
+    private final KdTree KDTreeRESIDENTIALWAY;
+    private final KdTree KDTreeCONSTRUCTIONWAY;
+    private final KdTree KDTreeRIVER_ANDMORE;
+    private final KdTree KDTreeHOSPITAL;
+    private final KdTree KDTreePITCH;
+    private final KdTree KDTreeRECREATION_GROUND;
+    private final KdTree KDTreeSCHOOL;
+    private final KdTree KDTreeFERRY;
+    private final KdTree KDTreeNodesInGraph;
 
 
 
@@ -88,7 +86,7 @@ public class Model {
     private int maxspeed = 0;
     private boolean isOneway;
     private boolean isRoundabout;
-    private static List<PolyLine> listOfCoastlines;
+    private List<PolyLine> listOfCoastlines;
     private TST tst;
 
 
@@ -623,11 +621,12 @@ public class Model {
     public KdTree getKDTreeBRIDLEWAY () {return KDTreeBRIDLEWAY;}
     public KdTree getKDTreeCYCLEWAY () {return KDTreeCYCLEWAY;}
     public KdTree getKDTreeRESIDENTIALWAY () {return KDTreeRESIDENTIALWAY;}
+    public KdTree getKDTreeCONSTRUCTIONWAY() {return KDTreeCONSTRUCTIONWAY;}
     public KdTree getKDTreeRIVER_ANDMORE () {return KDTreeRIVER_ANDMORE;}
     public KdTree getKDTreeHOSPITAL () {return KDTreeHOSPITAL;}
     public KdTree getKDTreeRECREATION_GROUND () {return KDTreeRECREATION_GROUND;}
     public KdTree getKDTreePITCH () {return KDTreePITCH;}
-    public KdTree getKDTreeSCHOOL () {return KDTreePITCH;}
+    public KdTree getKDTreeSCHOOL () {return KDTreeSCHOOL;}
     public KdTree getKDTreeFERRY () {return KDTreeFERRY;}
     public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
 
@@ -847,7 +846,7 @@ public class Model {
         return distance / maxspeed;
     }
 
-    public static List<PolyLine> getListOfCoastlines() {
+    public List<PolyLine> getListOfCoastlines() {
         return listOfCoastlines;
     }
 

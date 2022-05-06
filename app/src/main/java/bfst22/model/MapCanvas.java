@@ -89,7 +89,7 @@ public class MapCanvas extends Canvas {
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
         //{
         gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
-        for (Drawable drawable : Model.getListOfCoastlines()) {
+        for (Drawable drawable : model.getListOfCoastlines()) {
             if (zoomLevel <= 29) {
                 if (isPartySelected) {
                     drawable.drawWayType(gc, WayType.COASTLINE);
