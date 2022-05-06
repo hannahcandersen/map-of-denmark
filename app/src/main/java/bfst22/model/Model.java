@@ -751,7 +751,7 @@ public class Model {
 
                 }
 
-            } //Forloop stop
+            }
 
            if(buildUpCoastlinesList.size() == unSortedCoastlines.size()) {
                System.out.println("listOfNodesInCoastline størelse: " + listOfNodesInCoastline.size());
@@ -787,7 +787,7 @@ public class Model {
            // unSortedCoastlines = buildUpCoastlinesList;
             //System.out.println("unSortedCoastlines: " + unSortedCoastlines.size());
 
-        }
+        } //Forloop stop
 
         //hvis start og slut ikke er det samme - sæt en linje imellem
         System.out.println("done med kystliner");
