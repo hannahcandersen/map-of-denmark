@@ -12,7 +12,7 @@ public class KdTree {
 
 
     //Erklærer roden.
-    private static KdNode root;
+    private KdNode root;
     static int leavesAdded = 0;
 
     private OSMNode closestNodeField = null;
@@ -41,7 +41,7 @@ public class KdTree {
 
 
     //////////////////// BULDING KDTREE ///////////////////////
-    public static KdNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
+    public KdNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if (drawables == null || drawables.size() == 0) {
             //System.out.println("OSMNode list is empty!");

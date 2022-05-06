@@ -93,8 +93,8 @@ public class MapCanvas extends Canvas {
                 drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
 
         //Tegner forest
-        if (Model.getKDTreeFOREST() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST()) != null) {
-            for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOREST())) {
+        if (model.getKDTreeFOREST() != null && model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot()) != null) {
+            for (Drawable drawable : model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot())) {
                 drawable.fillWayType(gc, WayType.FOREST);}}
 
         // Alt der skal tegnes ved zoom level 29
