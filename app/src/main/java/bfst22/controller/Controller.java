@@ -65,6 +65,8 @@ public class Controller {
     @FXML
     private Button warningOkButton;
 
+    private int clickOnWaringButtonCounter = 0;
+
 
 
     KdTree kdTree = new KdTree();
@@ -222,7 +224,8 @@ public class Controller {
     @FXML
     public void partyColorToggle(ActionEvent event) {
        if(colorCheckBox.isSelected()){
-            warningPane.setVisible(true);
+           if(clickOnWaringButtonCounter<1){
+            warningPane.setVisible(true);}
            canvas.isPartySelected = true;}
        else{
            canvas.isPartySelected = false;}
@@ -241,6 +244,7 @@ public class Controller {
     @FXML
     public void onClickWarningOk(ActionEvent event){
        warningPane.setVisible(false);
+        clickOnWaringButtonCounter++;
     }
 
 
