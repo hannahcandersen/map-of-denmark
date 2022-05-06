@@ -251,87 +251,10 @@ public class KdTree {
             return true;
     }
 
-    /*
-    public OSMNode findNearestNeighbour(float x, float y){
-       return findNearestNeighbour(Model.getKDTreeNodesInGraph(), x, y, true);
-    }
-    // LAV EN ABSTRAKT METODE I KDNODE
-    // LAV TO FORSKELLIGE METODER - EN I NODE OG EN I LEAF
-    // GIV METODEN CLOSESTDIST MED SOM PARAMETER
-    private OSMNode findNearestNeighbour (KdNode searchKdNode, float x, float y, boolean divX){
-
-        //Tjekker om vores KdNode er 0
-        //if (searchKdNode == null) return null;
-
-        // hvis vi er i et leaf: Løb leaf igennem og udregn distancen. Kald rekursivt til andre leaves
-        if (searchKdNode instanceof Leaf){
-
-                for (OSMNode osmNode : ((Leaf) searchKdNode).getListOfOSMNodes()){
-                    double distanceCurrent = distanceSq(osmNode.getLon(), osmNode.getLat(), x, y);
-                    if (closestDist > distanceCurrent) {
-                        closestDist = distanceCurrent;
-                        closestNode = osmNode;
-                    }}
-        }
-
-        if (searchKdNode instanceof Node){
-
-            // hvis divX er true: Sammenlign node.getSplitX med punktets x. Kald rekursivt til den side
-            // Hvis x er mindre end nodens splitX, leder vi til venstre
-            //Hvad er afstanden fra punkt til linje? Nok som en metode
-            // kan mit venstre barn have et punkt, der er bedre end champion?? (er afstand fra klikpunkt til splitlinjen er kortere end closestDist?)
-            // hvis ja, søg videre ned i venstre barn
-            // kan mit højre barn have et punkt, der er bedre end champion??
-            // hvis ja, søg videre ned i højre barn
-            //Kigger på x
-            if(!divX){
-                //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
-                if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getLeft()).getSplit(), ((Node) ((Node) searchKdNode).getLeft()).getSplitDenAndenKoordinat())< closestDist){
-                    findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);}
-
-                //Hvis distancen til mit højre barns splitpunkt er mindre end closestDist, så led til højre
-                if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getRight()).getSplit(), ((Node) ((Node) searchKdNode).getRight()).getSplitDenAndenKoordinat()) < closestDist){
-                    findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);}}
-
-            //Kigger på y
-            else{
-                //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
-                if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getLeft()).getSplitDenAndenKoordinat(), ((Node) ((Node) searchKdNode).getLeft()).getSplit()) < closestDist){
-                    findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);}
-                //Hvis distancen til mit højre barns splitpunkt er mindre end closestDist, så led til højre
-                if (distanceSq(x, y, ((Node) ((Node) searchKdNode).getRight()).getSplitDenAndenKoordinat(), ((Node) ((Node) searchKdNode).getRight()).getSplit()) < closestDist){
-                    findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);}
-            }  }
-
-            if(!divX){
-            if(x <= ((Node) searchKdNode).getSplit()){
-                findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);
-            }
-            //Hvis x er større end nodens splitX, går vi til højre
-            if(x > ((Node) searchKdNode).getSplit()){
-                findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);
-            }}
-
-            // hvis divY er false: Sammenlign node.getSplitY med punktets y. Kald rekursivt til den side
-            else{
-            if(y <= ((Node) searchKdNode).getSplit()){
-                findNearestNeighbour(((Node) searchKdNode).getLeft(), x, y, !divX);
-            }
-            //Hvis x er større end nodens splitY, går vi til højre
-            if(y > ((Node) searchKdNode).getSplit()){
-                findNearestNeighbour(((Node) searchKdNode).getRight(), x, y, !divX);
-
-
-        }}
-
-        return closestNode;}
-
-    */
-
-
-
 
     public OSMNode findNearestNeighbour(float x, float y){
+        closestDistField = Double.POSITIVE_INFINITY;
+        closestNodeField = null;
         return findNearestNeighbour(Model.getKDTreeNodesInGraph(), x, y, true);
     }
 
@@ -350,7 +273,8 @@ public class KdTree {
             if (searchKdNode instanceof Node) {
 
                 Node node = ((Node) searchKdNode);
-//her hvis y er mindre end splitY
+
+                //her hvis y er mindre end splitY
                 //nearest neighbour i venstre side og ellers så højre side
                 if(x < splitX) {
 
@@ -360,7 +284,7 @@ public class KdTree {
 
                 // hvis venstre er en node
                 if (searchKdNode.getLeft() instanceof Node) {
-                    Node leftNode = ((Node) node.getLeft())
+                    Node leftNode = ((Node) node.getLeft());
 
                     //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, leftNode.getSplit(), y) < this.closestDistField) {
@@ -406,7 +330,11 @@ public class KdTree {
 
                 //////her hvis x er mindre end splitX
                 //////nearest neighbour i venstre side og ellers så højre side
-
+                if(x < ((Node) searchKdNode).getSplit()) {
+                    findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
+                }else {
+                    findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
+                }
 
                 // hvis venstre er en node
                 if (searchKdNode.getLeft() instanceof Node) {
@@ -443,8 +371,9 @@ public class KdTree {
             }
         }
 
-        System.out.println("Fra kdTree: ClosestNode: " + closestNodeField);
-        System.out.println("Fra kdTree: ClosestDist: " + closestDistField);
+        //System.out.println("Fra kdTree: ClosestNode: " + closestNodeField);
+        //System.out.println("Fra kdTree: ClosestDist: " + closestDistField);
+        //System.out.println("Final node med lat og lon: " + closestNodeField.getLat() + " " + closestNodeField.getLon());
         return closestNodeField;
     }
 
@@ -465,71 +394,8 @@ public class KdTree {
         }
 
         KdNode node = ((KdNode) leaf);
-        System.out.println("Fra leaf Champnode: " + this.closestNodeField);
-        System.out.println("Fra leaf ChampDist: " + this.closestDistField);
-    }
-
-    //Det der er galt: Den opdaterer ik closestDist i ovenstående metode. Den finder en for hver blad, og giver den ikke med videre
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    public void findNearestNeighbourNode(KdNode searchKdNode, float x, float y, boolean divX) {
-        //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
-        System.out.println("Jeg er en node");
-        Node searchNodeNode = ((Node) searchKdNode);
-
-        if(!divX) {
-
-            if (distanceSq(x, y, searchNodeNode.getSplit(), searchNodeNode.getSplitDenAndenKoordinat()) < kdTree.getClosestDistField()) {
-                searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), x, y, !divX);
-            }
-
-            // !!!! HER STÅR DET SAMME SOM OVENOVER. Den skal tjekke til højre og til venstre, men nu tjekker den på den, som den står på
-            // Men hvis vi siger getLeft() kan man risikere det er et leaf
-
-            if (distanceSq(x, y, searchNodeNode.getSplit(), searchNodeNode.getSplitDenAndenKoordinat()) < kdTree.getClosestDistField()) {
-                searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), x, y, !divX);
-            }}
-
-        //Kigger på y
-        else {
-            if (distanceSq(x, y, searchNodeNode.getSplitDenAndenKoordinat(), searchNodeNode.getSplit()) < kdTree.getClosestDistField()) {
-                searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), x, y, !divX);
-            }
-
-            //Hvis distancen til mit venstre barns splitpunkt er mindre end closestDist, så led til venstre
-            if (distanceSq(x, y, searchNodeNode.getSplitDenAndenKoordinat(), searchNodeNode.getSplit()) < kdTree.getClosestDistField()) {
-                searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), x, y, !divX);
-            }}
-    }
-
- */
-
-        //returns the distance between the infinite line(x1,y1)(x2,y2) and a point(x,y)
-    public float pDistance(float x, float y, float x1, float y1, float x2, float y2) {
-
-        float A = x - x1; // position of point rel one end of line
-        float B = y - y1;
-        float C = x2 - x1; // vector along line
-        float D = y2 - y1;
-        float E = -D; // orthogonal vector
-        float F = C;
-
-        float dot = A * E + B * F;
-        float len_sq = E * E + F * F;
-
-        return (float) (Math.abs(dot) / Math.sqrt(len_sq));
+        //System.out.println("Fra leaf Champnode: " + this.closestNodeField);
+        //System.out.println("Fra leaf ChampDist: " + this.closestDistField);
     }
 
 

@@ -335,22 +335,8 @@ public class MapCanvas extends Canvas {
 
         if(drawPunkt != null){
             gc.setFill(Color.RED);
-            gc.fillOval(drawPunkt.getLat(), drawPunkt.getLon(), 1, 1);
-            gc.fillOval(drawPunkt.getLon(), drawPunkt.getLat(), 1, 1);
-
             gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
             gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
-
-        //Tegner nearest neighbour
-        /*if(controller.getDrawPunkt() != null) {
-            gc.setStroke(Color.RED);
-            gc.setFill(Color.RED);
-            gc.fillOval(controller.getDrawPunkt().getLon(), controller.getDrawPunkt().getLat(), 100, 100);
-
-        }*/
-
-
-
 
     }
 

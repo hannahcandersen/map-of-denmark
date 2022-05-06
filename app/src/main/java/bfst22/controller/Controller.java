@@ -34,10 +34,7 @@ public class Controller {
     @FXML
     public TextField to;
 
-    OSMNode drawPunkt;
-    OSMNode TestdrawPunkt;
     KdTree kdTree = new KdTree();
-
 
 
     //Canvas er superklassen til vores MapCanvas.
@@ -78,18 +75,14 @@ public class Controller {
                float mapPointx = (float) MapPointX.getX();
                 float mapPointy = (float) MapPointX.getY();
 
-                //canvas.TestdrawPunkt = new OSMNode(mapPointx, mapPointy);
-                canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);
-                canvas.repaint();
-                System.out.println("jeg har dobbeltklikket");
-
-            }
-
-      }
-
-   /* @FXML
-    public void onMouseClicked(MouseEvent e) {
-        lastMouse = new Point2D(e.getX(), e.getY());}*/
+            //canvas.TestdrawPunkt = new OSMNode(mapPointx, mapPointy);
+            canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);
+            canvas.repaint();
+            System.out.println("jeg har dobbeltklikket");
+            System.out.println("mapPointX " + mapPointx);
+            System.out.println("mapPointY " + mapPointy);
+        }
+    }
 
     @FXML
     public void AddressFromUserInput(KeyEvent keyEvent) {}
@@ -114,11 +107,5 @@ public class Controller {
         to.setText("Bye");
     }
 
-    public OSMNode getDrawPunkt(){
-        return drawPunkt;
-    }
 
-    public OSMNode getTestdrawPunkt(){
-        return TestdrawPunkt;
-    }
 }

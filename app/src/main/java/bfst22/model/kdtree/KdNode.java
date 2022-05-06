@@ -1,32 +1,12 @@
 package bfst22.model.kdtree;
 
-import bfst22.model.OSMNode;
-
 public abstract class KdNode {
 
-    /*
-    protected OSMNode closestNode = null;
-    protected double closestDist = Double.POSITIVE_INFINITY;
-
-     */
-
-    public KdNode(){
+    public KdNode() {
     }
-
-
 
     public abstract KdNode getLeft();
+
     public abstract KdNode getRight();
-
-
-    /*
-    public void setClosestNode(OSMNode closestNode) {
-        this.closestNode = closestNode;
-    }
-
-    public void setClosestDist(double closestDist) {
-        this.closestDist = closestDist;
-    }
-
-     */
 }
+
