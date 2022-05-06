@@ -27,6 +27,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainClass = 'bfst22.run.App'
+    applicationDefaultJvmArgs = ['-Xmx6000m']
 }
 
 tasks.named('test') {
