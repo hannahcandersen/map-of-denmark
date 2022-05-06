@@ -749,14 +749,14 @@ public class Model {
 
                 }
 
-            } //Forloop stop
+            }
 
 
             // gammel liste = ny liste (ting vi mangler at kigge på)
             unSortedCoastlines = buildUpCoastlinesList;
             //System.out.println("unSortedCoastlines: " + unSortedCoastlines.size());
 
-        }
+        } //Forloop stop
 
         //hvis start og slut ikke er det samme - sæt en linje imellem
         System.out.println("done med kystliner");
