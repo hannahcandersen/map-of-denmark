@@ -703,7 +703,7 @@ public class Model {
 
                 currentStartOSMNode = ((PolyLine) coastline).getNodes().get(0);
                 currentEndOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
-
+//
                 // SITUATION 1: Begge pile mod højre.
                 if (currentStartOSMNode.getLat() == endOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
