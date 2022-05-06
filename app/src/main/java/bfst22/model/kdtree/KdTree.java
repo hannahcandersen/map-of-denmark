@@ -33,6 +33,10 @@ public class KdTree {
         this.root = buildKDTree(drawables, true);
     }
 
+    public KdTree(List<OSMNode> osmNodes, int nul) {
+        this.root = buildKDTreeOfOSMNodes(osmNodes, true);
+    }
+
     public static int getLeavesAdded() {
         return leavesAdded;
     }
@@ -335,6 +339,7 @@ public class KdTree {
         //undersøg om den skal til venstre eller højre
         //hvis venstre: kald findNearestNeighbor for .getLeft()
         //hvis højre: kald findNearest for .getRight()
+
 
         searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, false);
         searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, false);

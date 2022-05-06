@@ -74,6 +74,7 @@ public class Model {
     private static KdNode KDTreeSCHOOL;
     private static KdNode KDTreeFERRY;
     private static KdNode KDTreeNodesInGraph;
+    private KdTree KDTreeNodesInGraphTEST;
 
 
 
@@ -143,6 +144,9 @@ public class Model {
         // gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
         if (!filename.endsWith(".obj")) save(filename);
 
+
+        //TEST at bygge med Kdtree
+        KDTreeNodesInGraphTEST = new KdTree(listOfAlleNodesInGraph, 0);
         //Lav træer
         KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
         KDTreeLAKE = KdTree.buildKDTree(lines.get(WayType.LAKE), true);
@@ -599,6 +603,7 @@ public class Model {
     public static KdNode getKDTreeSCHOOL () {return KDTreePITCH;}
     public static KdNode getKDTreeFERRY () {return KDTreeFERRY;}
     public static KdNode getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
+    public  KdTree getKDTreeNodesInGrapTEST () {return KDTreeNodesInGraphTEST;}
 
 
 

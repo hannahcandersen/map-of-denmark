@@ -1,5 +1,6 @@
 package bfst22.model.kdtree;
 
+import bfst22.model.Model;
 import bfst22.model.OSMNode;
 
 import static java.awt.geom.Point2D.distanceSq;
@@ -10,7 +11,7 @@ public class Node extends KdNode {
     //Enten lat/y-værdien eller lon/x-værdien
     private float split;
     private float splitDenAndenKoordinat;
-    private KdTree kdTree = Model.getKDTreeNodesInGraphTEST();
+    private KdTree kdTree = new KdTree(); //virker forkert (opretter nyt træ, så felterne i det oprindelige træ bliver ikke opdateret)
 
     public Node() {
         super();
