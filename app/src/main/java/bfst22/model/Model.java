@@ -32,51 +32,50 @@ import static java.util.stream.Collectors.toList;
 public class Model {
 
     //KD Trees
-    private static KdNode KDTreeUNKNOWN;
-    private static KdNode KDTreeNAVIGATION_LINE;
-    private static KdNode KDTreeRESIDENTIAL;
-    private static KdNode KDTreeLAKE;
-    private static KdNode KDTreeBEACH;
-    private static KdNode KDTreeSAND;
-    private static KdNode KDTreeFOREST;
-    private static KdNode KDTreeWATER;
-    private static KdNode KDTreeBUILDING;
-    private static KdNode KDTreeINDUSTRIAL;
-    private static KdNode KDTreeMEADOW;
-    private static KdNode KDTreePARK;
-    private static KdNode KDTreeCEMETERY;
-    private static KdNode KDTreeALLOTMENTS;
-    private static KdNode KDTreeCOMMERCIAL;
-    private static KdNode KDTreeCONSTRUCTION;
-    private static KdNode KDTreeRETAIL;
-    private static KdNode KDTreeFARMLAND;
-    private static KdNode KDTreeGRASS;
-    private static KdNode KDTreeGREENHOUSE_HORTICULTURE;
-    private static KdNode KDTreeRAILWAY;
-    private static KdNode KDTreeRELIGIOUS;
-    private static KdNode KDTreeCOASTLINE;
-    private static KdNode KDTreeMOTORWAY;
-    private static KdNode KDTreePRIMARY;
-    private static KdNode KDTreeSECONDARY;
-    private static KdNode KDTreeTERTIARY;
-    private static KdNode KDTreeLIVING_STREET;
-    private static KdNode KDTreeSERVICE;
-    private static KdNode KDTreePEDESTRIAN;
-    private static KdNode KDTreeTRACK;
-    private static KdNode KDTreeROAD;
-    private static KdNode KDTreeFOOTWAY_ANDMORE;
-    private static KdNode KDTreeBRIDLEWAY;
-    private static KdNode KDTreeCYCLEWAY;
-    private static KdNode KDTreeRESIDENTIALWAY;
-    private static KdNode KDTreeCONSTRUCTIONWAY;
-    private static KdNode KDTreeRIVER_ANDMORE;
-    private static KdNode KDTreeHOSPITAL;
-    private static KdNode KDTreeRECREATION_GROUND;
-    private static KdNode KDTreePITCH;
-    private static KdNode KDTreeSCHOOL;
-    private static KdNode KDTreeFERRY;
-    private static KdNode KDTreeNodesInGraph;
-    private KdTree KDTreeNodesInGraphTEST;
+    private KdTree KDTreeUNKNOWN;
+    private KdTree KDTreeNAVIGATION_LINE;
+    private KdTree KDTreeRESIDENTIAL;
+    private KdTree KDTreeLAKE;
+    private KdTree KDTreeBEACH;
+    private KdTree KDTreeSAND;
+    private KdTree KDTreeFOREST;
+    private KdTree KDTreeWATER;
+    private KdTree KDTreeBUILDING;
+    private KdTree KDTreeINDUSTRIAL;
+    private KdTree KDTreeMEADOW;
+    private KdTree KDTreePARK;
+    private KdTree KDTreeCEMETERY;
+    private KdTree KDTreeALLOTMENTS;
+    private KdTree KDTreeCOMMERCIAL;
+    private KdTree KDTreeCONSTRUCTION;
+    private KdTree KDTreeRETAIL;
+    private KdTree KDTreeFARMLAND;
+    private KdTree KDTreeGRASS;
+    private KdTree KDTreeGREENHOUSE_HORTICULTURE;
+    private KdTree KDTreeRAILWAY;
+    private KdTree KDTreeRELIGIOUS;
+    private KdTree KDTreeMOTORWAY;
+    private KdTree KDTreeCOASTLINE;
+    private KdTree KDTreePRIMARY;
+    private KdTree KDTreeSECONDARY;
+    private KdTree KDTreeTERTIARY;
+    private KdTree KDTreeLIVING_STREET;
+    private KdTree KDTreeSERVICE;
+    private KdTree KDTreePEDESTRIAN;
+    private KdTree KDTreeTRACK;
+    private KdTree KDTreeROAD;
+    private KdTree KDTreeFOOTWAY_ANDMORE;
+    private KdTree KDTreeBRIDLEWAY;
+    private KdTree KDTreeCYCLEWAY;
+    private KdTree KDTreeRESIDENTIALWAY;
+    private KdTree KDTreeCONSTRUCTIONWAY;
+    private KdTree KDTreeRIVER_ANDMORE;
+    private KdTree KDTreeHOSPITAL;
+    private KdTree KDTreePITCH;
+    private KdTree KDTreeRECREATION_GROUND;
+    private KdTree KDTreeSCHOOL;
+    private KdTree KDTreeFERRY;
+    private KdTree KDTreeNodesInGraph;
 
 
 
@@ -90,8 +89,6 @@ public class Model {
     private boolean isOneway;
     private boolean isRoundabout;
     private static List<PolyLine> listOfCoastlines;
-
-    private final List<AddressObject> listOfAddresses = new ArrayList<>();
     private TST tst;
 
 
@@ -151,57 +148,51 @@ public class Model {
         if (!filename.endsWith(".obj")) save(filename);
 
 
-        //TEST at bygge med Kdtree
-        KDTreeNodesInGraphTEST = new KdTree(listOfAlleNodesInGraph, 0);
         //Lav træer
-        KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
-        KDTreeLAKE = KdTree.buildKDTree(lines.get(WayType.LAKE), true);
-        KDTreeBEACH = KdTree.buildKDTree(lines.get(WayType.BEACH), true);
-        KDTreeSAND = KdTree.buildKDTree(lines.get(WayType.SAND), true);
-        KDTreeFOREST = KdTree.buildKDTree(lines.get(WayType.FOREST), true);
-        KDTreeBUILDING = KdTree.buildKDTree(lines.get(WayType.BUILDING), true);
-        KDTreeRESIDENTIAL = KdTree.buildKDTree(lines.get(WayType.RESIDENTIAL), true);
-        KDTreeINDUSTRIAL = KdTree.buildKDTree(lines.get(WayType.INDUSTRIAL), true);
-        KDTreeMEADOW = KdTree.buildKDTree(lines.get(WayType.MEADOW), true);
-        KDTreeWATER = KdTree.buildKDTree(lines.get(WayType.WATER), true);
-        KDTreeBUILDING = KdTree.buildKDTree(lines.get(WayType.BUILDING), true);
-        KDTreeRESIDENTIAL = KdTree.buildKDTree(lines.get(WayType.RESIDENTIAL), true);
-        KDTreeINDUSTRIAL = KdTree.buildKDTree(lines.get(WayType.INDUSTRIAL), true);
-        KDTreeMEADOW = KdTree.buildKDTree(lines.get(WayType.MEADOW), true);
-        KDTreePARK = KdTree.buildKDTree(lines.get(WayType.PARK), true);
-        KDTreeCEMETERY = KdTree.buildKDTree(lines.get(WayType.CEMETERY), true);
-        KDTreeALLOTMENTS = KdTree.buildKDTree(lines.get(WayType.ALLOTMENTS), true);
-        KDTreeCOMMERCIAL = KdTree.buildKDTree(lines.get(WayType.COMMERCIAL), true);
-        KDTreeCONSTRUCTION = KdTree.buildKDTree(lines.get(WayType.CONSTRUCTION), true);
-        KDTreeRETAIL = KdTree.buildKDTree(lines.get(WayType.RETAIL), true);
-        KDTreeFARMLAND = KdTree.buildKDTree(lines.get(WayType.FARMLAND), true);
-        KDTreeGRASS = KdTree.buildKDTree(lines.get(WayType.GRASS), true);
-        KDTreeGREENHOUSE_HORTICULTURE = KdTree.buildKDTree(lines.get(WayType.GREENHOUSE_HORTICULTURE), true);
-        KDTreeRAILWAY = KdTree.buildKDTree(lines.get(WayType.RAILWAY), true);
-        KDTreeRELIGIOUS = KdTree.buildKDTree(lines.get(WayType.RELIGIOUS), true);
-        KDTreeMOTORWAY = KdTree.buildKDTree(lines.get(WayType.MOTORWAY), true);
-        KDTreePRIMARY = KdTree.buildKDTree(lines.get(WayType.PRIMARY), true);
-        KDTreeSECONDARY = KdTree.buildKDTree(lines.get(WayType.SECONDARY), true);
-        KDTreeTERTIARY = KdTree.buildKDTree(lines.get(WayType.TERTIARY), true);
-        KDTreeLIVING_STREET = KdTree.buildKDTree(lines.get(WayType.LIVING_STREET), true);
-        KDTreeSERVICE = KdTree.buildKDTree(lines.get(WayType.SERVICE), true);
-        KDTreePEDESTRIAN = KdTree.buildKDTree(lines.get(WayType.PEDESTRIAN), true);
-        KDTreeTRACK = KdTree.buildKDTree(lines.get(WayType.TRACK), true);
-        KDTreeROAD = KdTree.buildKDTree(lines.get(WayType.ROAD), true);
-        KDTreeFOOTWAY_ANDMORE = KdTree.buildKDTree(lines.get(WayType.FOOTWAY_ANDMORE), true);
-        KDTreeROAD = KdTree.buildKDTree(lines.get(WayType.ROAD), true);
-        KDTreeBRIDLEWAY = KdTree.buildKDTree(lines.get(WayType.BRIDLEWAY), true);
-        KDTreeCYCLEWAY = KdTree.buildKDTree(lines.get(WayType.CYCLEWAY), true);
-        KDTreeRESIDENTIALWAY = KdTree.buildKDTree(lines.get(WayType.RESIDENTIALWAY), true);
-        KDTreeCONSTRUCTIONWAY = KdTree.buildKDTree(lines.get(WayType.CONSTRUCTIONWAY), true);
-        KDTreeHOSPITAL = KdTree.buildKDTree(lines.get(WayType.HOSPITAL), true);
-        KDTreeRECREATION_GROUND = KdTree.buildKDTree(lines.get(WayType.RECREATION_GROUND), true);
-        KDTreePITCH = KdTree.buildKDTree(lines.get(WayType.PITCH), true);
-        KDTreeSCHOOL = KdTree.buildKDTree(lines.get(WayType.SCHOOL), true);
-        KDTreeFERRY = KdTree.buildKDTree(lines.get(WayType.FERRY), true);
-        KDTreeRIVER_ANDMORE = KdTree.buildKDTree(lines.get(WayType.RIVER_ANDMORE), true);
-        KDTreeCOASTLINE = KdTree.buildKDTree(coastlinesMap.get(WayType.COASTLINE), true);
-        KDTreeNodesInGraph = KdTree.buildKDTreeOfOSMNodes(listOfAlleNodesInGraph, true);
+        KDTreeUNKNOWN = new KdTree(lines.get(WayType.UNKNOWN));
+        KDTreeLAKE = new KdTree(lines.get(WayType.LAKE));
+        KDTreeBEACH = new KdTree(lines.get(WayType.BEACH));
+        KDTreeSAND = new KdTree(lines.get(WayType.SAND));
+        KDTreeFOREST = new KdTree(lines.get(WayType.FOREST));
+        KDTreeBUILDING = new KdTree(lines.get(WayType.BUILDING));
+        KDTreeRESIDENTIAL = new KdTree(lines.get(WayType.RESIDENTIAL));
+        KDTreeINDUSTRIAL = new KdTree(lines.get(WayType.INDUSTRIAL));
+        KDTreeMEADOW = new KdTree(lines.get(WayType.MEADOW));
+        KDTreeWATER = new KdTree(lines.get(WayType.WATER));
+        KDTreePARK = new KdTree(lines.get(WayType.PARK));
+        KDTreeCEMETERY = new KdTree(lines.get(WayType.CEMETERY));
+        KDTreeALLOTMENTS = new KdTree(lines.get(WayType.ALLOTMENTS));
+        KDTreeCOMMERCIAL = new KdTree(lines.get(WayType.COMMERCIAL));
+        KDTreeCONSTRUCTION = new KdTree(lines.get(WayType.CONSTRUCTION));
+        KDTreeRETAIL = new KdTree(lines.get(WayType.RETAIL));
+        KDTreeFARMLAND = new KdTree(lines.get(WayType.FARMLAND));
+        KDTreeGRASS = new KdTree(lines.get(WayType.GRASS));
+        KDTreeGREENHOUSE_HORTICULTURE = new KdTree(lines.get(WayType.GREENHOUSE_HORTICULTURE));
+        KDTreeRAILWAY = new KdTree(lines.get(WayType.RAILWAY));
+        KDTreeRELIGIOUS = new KdTree(lines.get(WayType.RELIGIOUS));
+        KDTreeMOTORWAY = new KdTree(lines.get(WayType.MOTORWAY));
+        KDTreePRIMARY = new KdTree(lines.get(WayType.PRIMARY));
+        KDTreeSECONDARY = new KdTree(lines.get(WayType.SECONDARY));
+        KDTreeTERTIARY = new KdTree(lines.get(WayType.TERTIARY));
+        KDTreeLIVING_STREET = new KdTree(lines.get(WayType.LIVING_STREET));
+        KDTreeSERVICE = new KdTree(lines.get(WayType.SERVICE));
+        KDTreePEDESTRIAN = new KdTree(lines.get(WayType.PEDESTRIAN));
+        KDTreeTRACK = new KdTree(lines.get(WayType.TRACK));
+        KDTreeROAD = new KdTree(lines.get(WayType.ROAD));
+        KDTreeFOOTWAY_ANDMORE = new KdTree(lines.get(WayType.FOOTWAY_ANDMORE));
+        KDTreeBRIDLEWAY = new KdTree(lines.get(WayType.BRIDLEWAY));
+        KDTreeCYCLEWAY = new KdTree(lines.get(WayType.CYCLEWAY));
+        KDTreeRESIDENTIALWAY = new KdTree(lines.get(WayType.RESIDENTIALWAY));
+        KDTreeCONSTRUCTIONWAY = new KdTree(lines.get(WayType.CONSTRUCTIONWAY));
+        KDTreeHOSPITAL = new KdTree(lines.get(WayType.HOSPITAL));
+        KDTreeRECREATION_GROUND = new KdTree(lines.get(WayType.RECREATION_GROUND));
+        KDTreePITCH = new KdTree(lines.get(WayType.PITCH));
+        KDTreeSCHOOL = new KdTree(lines.get(WayType.SCHOOL));
+        KDTreeFERRY = new KdTree(lines.get(WayType.FERRY));
+        KDTreeRIVER_ANDMORE = new KdTree(lines.get(WayType.RIVER_ANDMORE));
+        KDTreeCOASTLINE = new KdTree(lines.get(WayType.COASTLINE));
+        KDTreeNodesInGraph = new KdTree(listOfAlleNodesInGraph, 0);
+
 
         //lav liste med coastlines
         listOfCoastlines = makeCoastlineObject(coastlinesMap);
@@ -598,49 +589,47 @@ public class Model {
     // iterator over types
     public Iterable<Drawable> iterable(WayType type) {return lines.get(type);}
 
-    public static KdNode getKDTreeUNKNOWN() {return KDTreeUNKNOWN;}
-    public static KdNode getKDTreeNAVIGATION_LINE() {return KDTreeNAVIGATION_LINE;}
-    public static KdNode getKDTreeRESIDENTIAL() {return KDTreeRESIDENTIAL;}
-    public static KdNode getKDTreeLAKE() {return KDTreeLAKE;}
-    public static KdNode getKDTreeBEACH() {return KDTreeBEACH;}
-    public static KdNode getKDTreeSAND() {return KDTreeSAND;}
-    public static KdNode getKDTreeFOREST() {return KDTreeFOREST;}
-    public static KdNode getKDTreeWATER() {return KDTreeWATER;}
-    public static KdNode getKDTreeBUILDING() {return KDTreeBUILDING;}
-    public static KdNode getKDTreeINDUSTRIAL() {return KDTreeINDUSTRIAL;}
-    public static KdNode getKDTreeMEADOW() {return KDTreeMEADOW;}
-    public static KdNode getKDTreePARK() {return KDTreePARK;}
-    public static KdNode getKDTreeCEMETERY() {return KDTreeCEMETERY;}
-    public static KdNode getKDTreeALLOTMENTS() {return KDTreeALLOTMENTS;}
-    public static KdNode getKDTreeCOMMERCIAL() {return KDTreeCOMMERCIAL;}
-    public static KdNode getKDTreeCONSTRUCTION() {return KDTreeCONSTRUCTION;}
-    public static KdNode getKDTreeRETAIL() {return KDTreeRETAIL;}
-    public static KdNode getKDTreeFARMLAND() {return KDTreeFARMLAND;}
-    public static KdNode getKDTreeGRASS () {return KDTreeGRASS;}
-    public static KdNode getKDTreeGREENHOUSE_HORTICULTURE () {return KDTreeGREENHOUSE_HORTICULTURE;}
-    public static KdNode getKDTreeRAILWAY () {return KDTreeRAILWAY;}
-    public static KdNode getKDTreeRELIGIOUS () {return KDTreeRELIGIOUS;}
-    public static KdNode getKDTreeMOTORWAY () {return KDTreeMOTORWAY;}
-    public static KdNode getKDTreePRIMARY () {return KDTreePRIMARY;}
-    public static KdNode getKDTreeSECONDARY () {return KDTreeSECONDARY;}
-    public static KdNode getKDTreeTERTIARY () {return KDTreeTERTIARY;}
-    public static KdNode getKDTreeLIVING_STREET () {return KDTreeLIVING_STREET;}
-    public static KdNode getKDTreeSERVICE () {return KDTreeSERVICE;}
-    public static KdNode getKDTreePEDESTRIAN () {return KDTreePEDESTRIAN;}
-    public static KdNode getKDTreeTRACK () {return KDTreeTRACK;}
-    public static KdNode getKDTreeROAD () {return KDTreeROAD;}
-    public static KdNode getKDTreeFOOTWAY_ANDMORE () {return KDTreeFOOTWAY_ANDMORE;}
-    public static KdNode getKDTreeBRIDLEWAY () {return KDTreeBRIDLEWAY;}
-    public static KdNode getKDTreeCYCLEWAY () {return KDTreeCYCLEWAY;}
-    public static KdNode getKDTreeRESIDENTIALWAY () {return KDTreeRESIDENTIALWAY;}
-    public static KdNode getKDTreeRIVER_ANDMORE () {return KDTreeRIVER_ANDMORE;}
-    public static KdNode getKDTreeHOSPITAL () {return KDTreeHOSPITAL;}
-    public static KdNode getKDTreeRECREATION_GROUND () {return KDTreeRECREATION_GROUND;}
-    public static KdNode getKDTreePITCH () {return KDTreePITCH;}
-    public static KdNode getKDTreeSCHOOL () {return KDTreePITCH;}
-    public static KdNode getKDTreeFERRY () {return KDTreeFERRY;}
-    public static KdNode getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
-    public  KdTree getKDTreeNodesInGrapTEST () {return KDTreeNodesInGraphTEST;}
+    public KdTree getKDTreeUNKNOWN() {return KDTreeUNKNOWN;}
+    public KdTree getKDTreeRESIDENTIAL() {return KDTreeRESIDENTIAL;}
+    public KdTree getKDTreeLAKE() {return KDTreeLAKE;}
+    public KdTree getKDTreeBEACH() {return KDTreeBEACH;}
+    public KdTree getKDTreeSAND() {return KDTreeSAND;}
+    public KdTree getKDTreeFOREST() {return KDTreeFOREST;}
+    public KdTree getKDTreeWATER() {return KDTreeWATER;}
+    public KdTree getKDTreeBUILDING() {return KDTreeBUILDING;}
+    public KdTree getKDTreeINDUSTRIAL() {return KDTreeINDUSTRIAL;}
+    public KdTree getKDTreeMEADOW() {return KDTreeMEADOW;}
+    public KdTree getKDTreePARK() {return KDTreePARK;}
+    public KdTree getKDTreeCEMETERY() {return KDTreeCEMETERY;}
+    public KdTree getKDTreeALLOTMENTS() {return KDTreeALLOTMENTS;}
+    public KdTree getKDTreeCONSTRUCTION() {return KDTreeCONSTRUCTION;}
+    public KdTree getKDTreeCOMMERCIAL() {return KDTreeCOMMERCIAL;}
+    public KdTree getKDTreeRETAIL() {return KDTreeRETAIL;}
+    public KdTree getKDTreeFARMLAND() {return KDTreeFARMLAND;}
+    public KdTree getKDTreeGRASS () {return KDTreeGRASS;}
+    public KdTree getKDTreeGREENHOUSE_HORTICULTURE () {return KDTreeGREENHOUSE_HORTICULTURE;}
+    public KdTree getKDTreeRAILWAY () {return KDTreeRAILWAY;}
+    public KdTree getKDTreeRELIGIOUS () {return KDTreeRELIGIOUS;}
+    public KdTree getKDTreeMOTORWAY () {return KDTreeMOTORWAY;}
+    public KdTree getKDTreePRIMARY () {return KDTreePRIMARY;}
+    public KdTree getKDTreeSECONDARY () {return KDTreeSECONDARY;}
+    public KdTree getKDTreeTERTIARY () {return KDTreeTERTIARY;}
+    public KdTree getKDTreeLIVING_STREET () {return KDTreeLIVING_STREET;}
+    public KdTree getKDTreeSERVICE () {return KDTreeSERVICE;}
+    public KdTree getKDTreePEDESTRIAN () {return KDTreePEDESTRIAN;}
+    public KdTree getKDTreeTRACK () {return KDTreeTRACK;}
+    public KdTree getKDTreeROAD () {return KDTreeROAD;}
+    public KdTree getKDTreeFOOTWAY_ANDMORE () {return KDTreeFOOTWAY_ANDMORE;}
+    public KdTree getKDTreeBRIDLEWAY () {return KDTreeBRIDLEWAY;}
+    public KdTree getKDTreeCYCLEWAY () {return KDTreeCYCLEWAY;}
+    public KdTree getKDTreeRESIDENTIALWAY () {return KDTreeRESIDENTIALWAY;}
+    public KdTree getKDTreeRIVER_ANDMORE () {return KDTreeRIVER_ANDMORE;}
+    public KdTree getKDTreeHOSPITAL () {return KDTreeHOSPITAL;}
+    public KdTree getKDTreeRECREATION_GROUND () {return KDTreeRECREATION_GROUND;}
+    public KdTree getKDTreePITCH () {return KDTreePITCH;}
+    public KdTree getKDTreeSCHOOL () {return KDTreePITCH;}
+    public KdTree getKDTreeFERRY () {return KDTreeFERRY;}
+    public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
 
 
 

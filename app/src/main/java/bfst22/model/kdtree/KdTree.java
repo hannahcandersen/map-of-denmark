@@ -12,7 +12,7 @@ public class KdTree {
 
 
     //Erklærer roden.
-    private static KdNode root;
+    private KdNode root;
     static int leavesAdded = 0;
 
     private OSMNode closestNodeField = null;
@@ -41,7 +41,7 @@ public class KdTree {
 
 
     //////////////////// BULDING KDTREE ///////////////////////
-    public static KdNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
+    public KdNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if (drawables == null || drawables.size() == 0) {
             //System.out.println("OSMNode list is empty!");
@@ -89,7 +89,7 @@ public class KdTree {
     }
 
     //////////////////// BULDING KDTREE OF OSM NODES///////////////////////
-    public static KdNode buildKDTreeOfOSMNodes(List<OSMNode> OSMNodes, boolean isXcoord) {
+    public KdNode buildKDTreeOfOSMNodes(List<OSMNode> OSMNodes, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if (OSMNodes == null || OSMNodes.size() == 0) {
             return null;}
@@ -142,21 +142,21 @@ public class KdTree {
 
     //Public den der kaldt i MapCanvas
     //RangeSearch der tager rectangle og root
-    public static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode root) {
+    public List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode root) {
         // kald den anden rangesearch, der returner en liste med inrange resultaterne
         leavesAdded = 0;
         return rangeSearch(rangeSerachRectangle, root, true, new ArrayList<>());
     }
 
     // RangeSearch der kun tager rectangle
-    public static List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle) {
+    public List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle) {
         // kald den anden rangesearch, der returner en liste med inrange resultaterne
         leavesAdded = 0;
         return rangeSearch(rangeSerachRectangle, root, true, new ArrayList<>());
     }
 
     //Privat RangeSearch metode
-    private static List<Drawable> rangeSearch(RangeSerachRectangle rangeSearchRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
+    private List<Drawable> rangeSearch(RangeSerachRectangle rangeSearchRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
         if (splitNode == null){
             return null;
         }
@@ -225,7 +225,7 @@ public class KdTree {
 
 
     // checker om et element af drawable overlapper med searchTriangle. https://stackoverflow.com/questions/23302698/java-check-if-two-rectangles-overlap-at-any-point
-    public static boolean doRectanglesOverlap(Drawable drawable, RangeSerachRectangle rangeSerachRectangle) {
+    public boolean doRectanglesOverlap(Drawable drawable, RangeSerachRectangle rangeSerachRectangle) {
 
         //sandt hvis de ikke overlapper
         if (drawable.getCurrentMinX() > rangeSerachRectangle.getMaxLon()){
@@ -246,10 +246,10 @@ public class KdTree {
     }
 
 
-    public OSMNode findNearestNeighbour(float x, float y){
+    public OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y){
         closestDistField = Double.POSITIVE_INFINITY;
         closestNodeField = null;
-        return findNearestNeighbour(Model.getKDTreeNodesInGraph(), x, y, true);
+        return findNearestNeighbour(searchKdNode, x, y, true);
     }
 
     private OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y, boolean divX) {
