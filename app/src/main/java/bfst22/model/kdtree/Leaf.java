@@ -39,23 +39,4 @@ public class Leaf extends KdNode {
         public KdNode getRight(){return null;}
 
 
-        @Override
-        public void findNearestNeighbourKDNode(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX) {
-                System.out.println("Jeg er et leaf");
-                for (OSMNode osmNode : getListOfOSMNodes()){
-                        double distanceCurrent = distanceSq(x, y, osmNode.getLat(), osmNode.getLon());
-
-                        if (kdTree.getClosestDistField() > distanceCurrent) {
-                                kdTree.setClosestDistField(distanceCurrent);
-                                kdTree.setClosestNodeField(osmNode);
-
-                                // evt gemme i et map, hvis problemet stadig er, at den gemmer en for gang
-                        }
-                }
-
-
-                System.out.println("Fra leaf Champnode: " + kdTree.getClosestNodeField());
-                System.out.println("Fra leaf ChampDist: " + kdTree.getClosestDistField());
-        }
-
 }

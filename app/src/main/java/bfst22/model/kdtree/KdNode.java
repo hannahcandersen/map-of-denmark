@@ -13,18 +13,7 @@ public abstract class KdNode {
     public KdNode(){
     }
 
-    public abstract void findNearestNeighbourKDNode(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX);
 
-    /*
-    public OSMNode getClosestNode() {
-        return closestNode;
-    }
-
-    public double getClosestDist() {
-        return closestDist;
-    }
-
-     */
 
     public abstract KdNode getLeft();
     public abstract KdNode getRight();
