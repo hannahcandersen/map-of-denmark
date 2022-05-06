@@ -12,13 +12,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.scene.control.CheckBox;
+import javafx.scene.Node;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -61,7 +64,9 @@ public class Controller {
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
+        warningPane.setVisible(false);
         canvas.init(model);
+
     }
 
     //Metoden har et scroll event, som handler efter når brugeren scroller i kortet.
@@ -185,6 +190,7 @@ public class Controller {
     @FXML
     public void partyColorToggle(ActionEvent event) {
        if(colorCheckBox.isSelected()){
+            warningPane.setVisible(true);
            canvas.isPartySelected = true;}
        else{
            canvas.isPartySelected = false;}
