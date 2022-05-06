@@ -3,10 +3,7 @@ package bfst22.model.kdtree;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.awt.geom.Point2D.distanceSq;
 
 /*
     Hvis vi til sidst har 4-10 noder, som vi ikke synes er nødvendigt at dele ud på træet,
@@ -16,7 +13,6 @@ import static java.awt.geom.Point2D.distanceSq;
 public class Leaf extends KdNode {
         protected List<Drawable> listOfDrawables;
         protected List<OSMNode> listOfOSMNodes;
-        private KdTree kdTree = new KdTree();
 
         public Leaf(List<Drawable> leaves){
                 super();

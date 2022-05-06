@@ -69,11 +69,11 @@ public class Controller {
         lastMouse = new Point2D(e.getX(), e.getY());
 
 
-            if(e.getClickCount() == 2){
+        if(e.getClickCount() == 2){
 
-               Point2D MapPointX = canvas.mouseToModel(lastMouse);
-               float mapPointx = (float) MapPointX.getX();
-                float mapPointy = (float) MapPointX.getY();
+            Point2D MapPointX = canvas.mouseToModel(lastMouse);
+            float mapPointx = (float) MapPointX.getX();
+            float mapPointy = (float) MapPointX.getY();
 
             //canvas.TestdrawPunkt = new OSMNode(mapPointx, mapPointy);
             canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);

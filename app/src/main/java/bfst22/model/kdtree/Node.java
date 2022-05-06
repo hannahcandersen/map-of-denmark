@@ -1,9 +1,5 @@
 package bfst22.model.kdtree;
 
-import bfst22.model.Model;
-import bfst22.model.OSMNode;
-
-import static java.awt.geom.Point2D.distanceSq;
 
 public class Node extends KdNode {
     private KdNode left, right;

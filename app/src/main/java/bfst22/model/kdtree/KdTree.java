@@ -1,13 +1,8 @@
 package bfst22.model.kdtree;
 
-import bfst22.model.MapCanvas;
 import bfst22.model.Model;
 import bfst22.model.OSMNode;
-import bfst22.model.OSMWay;
 import bfst22.view.Drawable;
-
-import java.awt.*;
-import java.awt.geom.Line2D;
 import java.util.*;
 import java.util.List;
 
@@ -29,7 +24,6 @@ public class KdTree {
     }
 
     public KdTree(List<Drawable> drawables) {
-        // buildKDTree(OSMNodes, false);
         this.root = buildKDTree(drawables, true);
     }
 
@@ -276,8 +270,11 @@ public class KdTree {
 
                 //her hvis y er mindre end splitY
                 //nearest neighbour i venstre side og ellers så højre side
-                if(x < splitX) {
+                if(y < ((Node) searchKdNode).getSplit()) {
+                    findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
 
+                }else {
+                    findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
                 }
 
                 //if x < searchnode.getSplit
@@ -414,8 +411,4 @@ public class KdTree {
     public void setClosestDistField(double closestDistField) {
         this.closestDistField = closestDistField;
     }
-
-
-
-
 }
