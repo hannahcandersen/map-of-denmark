@@ -246,10 +246,10 @@ public class KdTree {
     }
 
 
-    public OSMNode findNearestNeighbour(float x, float y){
+    public OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y){
         closestDistField = Double.POSITIVE_INFINITY;
         closestNodeField = null;
-        return findNearestNeighbour(Model.getKDTreeNodesInGraph(), x, y, true);
+        return findNearestNeighbour(searchKdNode, x, y, true);
     }
 
     private OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y, boolean divX) {

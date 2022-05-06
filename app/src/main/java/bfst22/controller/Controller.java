@@ -95,7 +95,10 @@ public class Controller {
             float mapPointy = (float) MapPointX.getY();
 
             //canvas.TestdrawPunkt = new OSMNode(mapPointx, mapPointy);
-            canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);
+
+            canvas.setDrawPunkt(canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), mapPointy, mapPointx));
+
+            //canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);
             canvas.repaint();
             System.out.println("jeg har dobbeltklikket");
             System.out.println("mapPointX " + mapPointx);

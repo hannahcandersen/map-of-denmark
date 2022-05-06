@@ -76,7 +76,6 @@ public class Model {
     private KdTree KDTreeSCHOOL;
     private KdTree KDTreeFERRY;
     private KdTree KDTreeNodesInGraph;
-    private KdTree KDTreeNodesInGraphTEST;
 
 
 
@@ -149,8 +148,6 @@ public class Model {
         if (!filename.endsWith(".obj")) save(filename);
 
 
-        //TEST at bygge med Kdtree
-        KDTreeNodesInGraphTEST = new KdTree(listOfAlleNodesInGraph, 0);
         //Lav træer
         KDTreeUNKNOWN = new KdTree(lines.get(WayType.UNKNOWN));
         KDTreeLAKE = new KdTree(lines.get(WayType.LAKE));

@@ -16,7 +16,7 @@ import javafx.scene.transform.NonInvertibleTransformException;
 
 public class MapCanvas extends Canvas {
     public OSMNode TestdrawPunkt;
-    public OSMNode drawPunkt;
+    private OSMNode drawPunkt;
     private Model model;
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
@@ -345,6 +345,13 @@ public class MapCanvas extends Canvas {
 
     }
 
+    public Model getModel() {
+        return model;
+    }
+
+    public void setDrawPunkt(OSMNode drawPunkt) {
+        this.drawPunkt = drawPunkt;
+    }
 
     private int getZoomLevel(double r) {
         if (r != 0){
