@@ -41,6 +41,7 @@ public class KdTree {
         return root;
     }
 
+
     //////////////////// BULDING KDTREE ///////////////////////
     public static KdNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
@@ -338,9 +339,9 @@ public class KdTree {
         searchKdNode.getLeft().findNearestNeighbourKDNode(searchKdNode.getLeft(), closestDist, closestNode, x, y, false);
         searchKdNode.getRight().findNearestNeighbourKDNode(searchKdNode.getRight(), closestDist, closestNode, x, y, false);
 
-        System.out.println("Fra kdTree: ClosestNode: " + closestNode);
-        System.out.println("Fra kdTree: ClosestDist: " + closestDist);
-        return closestNode;
+        System.out.println("Fra kdTree: ClosestNode: " + closestNodeField);
+        System.out.println("Fra kdTree: ClosestDist: " + closestDistField);
+        return closestNodeField;
 
     }
 
@@ -362,7 +363,7 @@ public class KdTree {
         return (float) (Math.abs(dot) / Math.sqrt(len_sq));
     }
 
-    /*
+
     public OSMNode getClosestNodeField() {
         return closestNodeField;
     }
@@ -379,7 +380,7 @@ public class KdTree {
         this.closestDistField = closestDistField;
     }
 
-     */
+
 
 
 }

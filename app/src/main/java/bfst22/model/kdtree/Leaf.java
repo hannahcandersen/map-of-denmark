@@ -3,6 +3,7 @@ package bfst22.model.kdtree;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distanceSq;
@@ -15,6 +16,7 @@ import static java.awt.geom.Point2D.distanceSq;
 public class Leaf extends KdNode {
         protected List<Drawable> listOfDrawables;
         protected List<OSMNode> listOfOSMNodes;
+        private KdTree kdTree = new KdTree();
 
         public Leaf(List<Drawable> leaves){
                 super();
@@ -39,21 +41,21 @@ public class Leaf extends KdNode {
 
         @Override
         public void findNearestNeighbourKDNode(KdNode searchKdNode, double closestDist, OSMNode closestNode, float x, float y, boolean divX) {
-                //System.out.println("Jeg er et leaf");
+                System.out.println("Jeg er et leaf");
                 for (OSMNode osmNode : getListOfOSMNodes()){
                         double distanceCurrent = distanceSq(x, y, osmNode.getLat(), osmNode.getLon());
 
-                        if (closestDist > distanceCurrent) {
-                                closestDist = distanceCurrent;
-                                closestNode = osmNode;
+                        if (kdTree.getClosestDistField() > distanceCurrent) {
+                                kdTree.setClosestDistField(distanceCurrent);
+                                kdTree.setClosestNodeField(osmNode);
 
                                 // evt gemme i et map, hvis problemet stadig er, at den gemmer en for gang
                         }
                 }
 
 
-                System.out.println("Fra leaf Champnode: " + closestNode);
-                System.out.println("Fra leaf ChampDist: " + closestDist);
+                System.out.println("Fra leaf Champnode: " + kdTree.getClosestNodeField());
+                System.out.println("Fra leaf ChampDist: " + kdTree.getClosestDistField());
         }
 
 }

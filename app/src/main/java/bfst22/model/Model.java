@@ -106,7 +106,7 @@ public class Model {
     private static ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
 
     //Liste med alle OSMNodes in graph
-    private ArrayList<OSMNode> listOfAlleNodesInGraph = new ArrayList<>();
+    private List<OSMNode> listOfAlleNodesInGraph = new ArrayList<>();
 
     //Map med OSMNode to index. Bruges til at lave en graf
     private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
