@@ -49,9 +49,9 @@ public class MapCanvas extends Canvas {
         Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
-        RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
-        //System.out.println(searchRangeSerachRectangle);
-        //System.out.println(searchRangeSerachRectangle);
+        RangeSerachRectangle rangeSearchRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
+        //System.out.println(rangeSearchRectangle);
+        //System.out.println(rangeSearchRectangle);
 
         //Udregnet zoomLevel
 
@@ -61,7 +61,7 @@ public class MapCanvas extends Canvas {
 
 
         //Result listen, med de drawables der er inRange
-        var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
+        //var resultUNKNOWN = KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN());
 
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
@@ -88,8 +88,8 @@ public class MapCanvas extends Canvas {
 
         // Tegner og farvelægger kortet
         //Tegner alt UNKNOWN
-        /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN()) != null) {
-            for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN())) {
+        /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN()) != null) {
+            for (Drawable drawable : KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN())) {
                 drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
 
         //Tegner forest
@@ -99,211 +99,210 @@ public class MapCanvas extends Canvas {
 
         // Alt der skal tegnes ved zoom level 29
         if (zoomLevel >= 29){
-            if (Model.getKDTreeFARMLAND() != null  && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFARMLAND()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFARMLAND())) {
+            if (model.getKDTreeFARMLAND() != null  && model.getKDTreeFARMLAND().rangeSearch(rangeSearchRectangle, model.getKDTreeFARMLAND().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeFARMLAND().rangeSearch(rangeSearchRectangle, model.getKDTreeFARMLAND().getRoot())) {
                     drawable.fillWayType(gc, WayType.FARMLAND);}}
 
-            if (Model.getKDTreeGRASS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS())) {
+            if (model.getKDTreeGRASS() != null && model.getKDTreeGRASS().rangeSearch(rangeSearchRectangle, model.getKDTreeGRASS().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeGRASS().rangeSearch(rangeSearchRectangle, model.getKDTreeGRASS().getRoot())) {
                     drawable.fillWayType(gc, WayType.GRASS);}}
 
-            if (Model.getKDTreeRAILWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRAILWAY()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRAILWAY())) {
+            if (model.getKDTreeRAILWAY() != null && model.getKDTreeRAILWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRAILWAY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeRAILWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRAILWAY().getRoot())) {
                     drawable.fillWayType(gc, WayType.RAILWAY);}}
 
-            if (Model.getKDTreeWATER() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeWATER()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeWATER())) {
+            if (model.getKDTreeWATER() != null && model.getKDTreeWATER().rangeSearch(rangeSearchRectangle, model.getKDTreeWATER().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeWATER().rangeSearch(rangeSearchRectangle, model.getKDTreeWATER().getRoot())) {
                     drawable.fillWayType(gc, WayType.WATER);}}
 
-            if (Model.getKDTreeRIVER_ANDMORE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRIVER_ANDMORE()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRIVER_ANDMORE())) {
+            if (model.getKDTreeRIVER_ANDMORE() != null && model.getKDTreeRIVER_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeRIVER_ANDMORE().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeRIVER_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeRIVER_ANDMORE().getRoot())) {
                     drawable.drawWayType(gc, WayType.RIVER_ANDMORE);}}}
 
-        if (Model.getKDTreeFERRY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFERRY()) != null) {
-            for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFERRY())) {
+        if (model.getKDTreeFERRY() != null && model.getKDTreeFERRY().rangeSearch(rangeSearchRectangle, model.getKDTreeFERRY().getRoot()) != null) {
+            for (Drawable drawable : model.getKDTreeFERRY().rangeSearch(rangeSearchRectangle, model.getKDTreeFERRY().getRoot())) {
                 gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
                 drawable.drawWayType(gc, WayType.FERRY);}}
 
-        if (Model.getKDTreeSECONDARY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY()) != null) {
-            for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY())) {
+        if (model.getKDTreeSECONDARY() != null && model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot()) != null) {
+            for (Drawable drawable : model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot())) {
                 gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
                 drawable.drawWayType(gc, WayType.SECONDARY);}}
 
         // Alt der skal tegnes ved zoom level 30
         if(zoomLevel == 30){
-            if(Model.getKDTreeRESIDENTIAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()))
+            if(model.getKDTreeRESIDENTIAL() != null && model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()))
             {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
 
-            if(Model.getKDTreeMEADOW() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW()))
+            if(model.getKDTreeMEADOW() != null && model.getKDTreeMEADOW().rangeSearch(rangeSearchRectangle, model.getKDTreeMEADOW().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeMEADOW().rangeSearch(rangeSearchRectangle, model.getKDTreeMEADOW().getRoot()))
             {drawable.fillWayType(gc, WayType.MEADOW);}}
 
-            if (Model.getKDTreeGREENHOUSE_HORTICULTURE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGREENHOUSE_HORTICULTURE()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGREENHOUSE_HORTICULTURE())) {
+            if (model.getKDTreeGREENHOUSE_HORTICULTURE() != null && model.getKDTreeGREENHOUSE_HORTICULTURE().rangeSearch(rangeSearchRectangle, model.getKDTreeGREENHOUSE_HORTICULTURE().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeGREENHOUSE_HORTICULTURE().rangeSearch(rangeSearchRectangle, model.getKDTreeGREENHOUSE_HORTICULTURE().getRoot())) {
                     drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);}}
 
-            if (Model.getKDTreeRELIGIOUS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRELIGIOUS()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRELIGIOUS())) {
+            if (model.getKDTreeRELIGIOUS() != null && model.getKDTreeRELIGIOUS().rangeSearch(rangeSearchRectangle, model.getKDTreeRELIGIOUS().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeRELIGIOUS().rangeSearch(rangeSearchRectangle, model.getKDTreeRELIGIOUS().getRoot())) {
                     drawable.fillWayType(gc, WayType.RELIGIOUS);}}
 
-            if (Model.getKDTreeGRASS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS())) {
+            if (model.getKDTreeGRASS() != null && model.getKDTreeGRASS().rangeSearch(rangeSearchRectangle, model.getKDTreeGRASS().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeGRASS().rangeSearch(rangeSearchRectangle, model.getKDTreeGRASS().getRoot())) {
                     drawable.fillWayType(gc, WayType.GRASS);}}}
 
         // Alt der skal tegnes ved zoom level 31 og højere
         if (zoomLevel >= 31){
-            if(Model.getKDTreeRESIDENTIAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIAL()))
+            if(model.getKDTreeRESIDENTIAL() != null && model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()))
             {drawable.fillWayType(gc, WayType.RESIDENTIAL);}}
 
-            if(Model.getKDTreeINDUSTRIAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeINDUSTRIAL()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeINDUSTRIAL()))
+            if(model.getKDTreeINDUSTRIAL() != null && model.getKDTreeINDUSTRIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeINDUSTRIAL().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeINDUSTRIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeINDUSTRIAL().getRoot()))
             {drawable.fillWayType(gc, WayType.INDUSTRIAL);}}
 
-            if(Model.getKDTreeLAKE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()))
+            if(model.getKDTreeLAKE() != null && model.getKDTreeLAKE().rangeSearch(rangeSearchRectangle, model.getKDTreeLAKE().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeLAKE().rangeSearch(rangeSearchRectangle, model.getKDTreeLAKE().getRoot()))
             {drawable.fillWayType(gc, WayType.LAKE);}}
 
-            if(Model.getKDTreeMEADOW() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMEADOW()))
+            if(model.getKDTreeMEADOW() != null && model.getKDTreeMEADOW().rangeSearch(rangeSearchRectangle, model.getKDTreeMEADOW().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeMEADOW().rangeSearch(rangeSearchRectangle, model.getKDTreeMEADOW().getRoot()))
             {drawable.fillWayType(gc, WayType.MEADOW);}}
 
-            if(Model.getKDTreeCEMETERY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCEMETERY()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCEMETERY()))
+            if(model.getKDTreeCEMETERY() != null && model.getKDTreeCEMETERY().rangeSearch(rangeSearchRectangle, model.getKDTreeCEMETERY().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeCEMETERY().rangeSearch(rangeSearchRectangle, model.getKDTreeCEMETERY().getRoot()))
             {drawable.fillWayType(gc, WayType.CEMETERY);}}
 
-            if(Model.getKDTreeALLOTMENTS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeALLOTMENTS()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeALLOTMENTS()))
+            if(model.getKDTreeALLOTMENTS() != null && model.getKDTreeALLOTMENTS().rangeSearch(rangeSearchRectangle, model.getKDTreeALLOTMENTS().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeALLOTMENTS().rangeSearch(rangeSearchRectangle, model.getKDTreeALLOTMENTS().getRoot()))
             {drawable.fillWayType(gc, WayType.ALLOTMENTS);}}
 
-            if(Model.getKDTreeCOMMERCIAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCOMMERCIAL()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCOMMERCIAL()))
+            if(model.getKDTreeCOMMERCIAL() != null && model.getKDTreeCOMMERCIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeCOMMERCIAL().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeCOMMERCIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeCOMMERCIAL().getRoot()))
             {drawable.fillWayType(gc, WayType.COMMERCIAL);}}
 
-            if(Model.getKDTreeCONSTRUCTION() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCONSTRUCTION()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCONSTRUCTION()))
+            if(model.getKDTreeCONSTRUCTION() != null && model.getKDTreeCONSTRUCTION().rangeSearch(rangeSearchRectangle, model.getKDTreeCONSTRUCTION().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeCONSTRUCTION().rangeSearch(rangeSearchRectangle, model.getKDTreeCONSTRUCTION().getRoot()))
             {drawable.fillWayType(gc, WayType.CONSTRUCTION);}}
 
-            if(Model.getKDTreeRETAIL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRETAIL()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRETAIL()))
+            if(model.getKDTreeRETAIL() != null && model.getKDTreeRETAIL().rangeSearch(rangeSearchRectangle, model.getKDTreeRETAIL().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeRETAIL().rangeSearch(rangeSearchRectangle, model.getKDTreeRETAIL().getRoot()))
             {drawable.fillWayType(gc, WayType.RETAIL);}}
 
-            if (Model.getKDTreeRELIGIOUS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRELIGIOUS()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRELIGIOUS()))
+            if (model.getKDTreeRELIGIOUS() != null && model.getKDTreeRELIGIOUS().rangeSearch(rangeSearchRectangle, model.getKDTreeRELIGIOUS().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeRELIGIOUS().rangeSearch(rangeSearchRectangle, model.getKDTreeRELIGIOUS().getRoot()))
             {drawable.fillWayType(gc, WayType.RELIGIOUS);}}
 
-            if (Model.getKDTreePARK() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePARK()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePARK()))
+            if (model.getKDTreePARK() != null && model.getKDTreePARK().rangeSearch(rangeSearchRectangle, model.getKDTreePARK().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreePARK().rangeSearch(rangeSearchRectangle, model.getKDTreePARK().getRoot()))
             {drawable.fillWayType(gc, WayType.PARK);}}
 
-            if (Model.getKDTreeSCHOOL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSCHOOL()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSCHOOL()))
+            if (model.getKDTreeSCHOOL() != null && model.getKDTreeSCHOOL().rangeSearch(rangeSearchRectangle, model.getKDTreeSCHOOL().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeSCHOOL().rangeSearch(rangeSearchRectangle, model.getKDTreeSCHOOL().getRoot()))
             {drawable.fillWayType(gc, WayType.SCHOOL);}}
 
-            if (Model.getKDTreeBEACH() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBEACH()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBEACH()))
+            if (model.getKDTreeBEACH() != null && model.getKDTreeBEACH().rangeSearch(rangeSearchRectangle, model.getKDTreeBEACH().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeBEACH().rangeSearch(rangeSearchRectangle, model.getKDTreeBEACH().getRoot()))
             {drawable.fillWayType(gc, WayType.BEACH);}}
 
-            if (Model.getKDTreeSAND() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSAND()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSAND()))
+            if (model.getKDTreeSAND() != null && model.getKDTreeSAND().rangeSearch(rangeSearchRectangle, model.getKDTreeSAND().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeSAND().rangeSearch(rangeSearchRectangle, model.getKDTreeSAND().getRoot()))
             {drawable.fillWayType(gc, WayType.SAND);}}
 
-
-            if (Model.getKDTreeHOSPITAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeHOSPITAL()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeHOSPITAL()))
+            if (model.getKDTreeHOSPITAL() != null && model.getKDTreeHOSPITAL().rangeSearch(rangeSearchRectangle, model.getKDTreeHOSPITAL().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeHOSPITAL().rangeSearch(rangeSearchRectangle, model.getKDTreeHOSPITAL().getRoot()))
             {drawable.fillWayType(gc, WayType.HOSPITAL);}}
 
-            if (Model.getKDTreeRECREATION_GROUND() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRECREATION_GROUND()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRECREATION_GROUND()))
+            if (model.getKDTreeRECREATION_GROUND() != null && model.getKDTreeRECREATION_GROUND().rangeSearch(rangeSearchRectangle, model.getKDTreeRECREATION_GROUND().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeRECREATION_GROUND().rangeSearch(rangeSearchRectangle, model.getKDTreeRECREATION_GROUND().getRoot()))
             {drawable.fillWayType(gc, WayType.RECREATION_GROUND);}}
 
-            if (Model.getKDTreePITCH() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePITCH()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePITCH()))
+            if (model.getKDTreePITCH() != null && model.getKDTreePITCH().rangeSearch(rangeSearchRectangle, model.getKDTreePITCH().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreePITCH().rangeSearch(rangeSearchRectangle, model.getKDTreePITCH().getRoot()))
             {drawable.fillWayType(gc, WayType.PITCH);}}
 
-            if(Model.getKDTreeLAKE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLAKE()))
+            if(model.getKDTreeLAKE() != null && model.getKDTreeLAKE().rangeSearch(rangeSearchRectangle, model.getKDTreeLAKE().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeLAKE().rangeSearch(rangeSearchRectangle, model.getKDTreeLAKE().getRoot()))
             {drawable.fillWayType(gc, WayType.LAKE);}}
 
-            if (Model.getKDTreeBRIDLEWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBRIDLEWAY())) {
+            if (model.getKDTreeBRIDLEWAY() != null && model.getKDTreeBRIDLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeBRIDLEWAY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeBRIDLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeBRIDLEWAY().getRoot())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
                     gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.BRIDLEWAY);}}
 
-            if (Model.getKDTreeFOOTWAY_ANDMORE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOOTWAY_ANDMORE()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeFOOTWAY_ANDMORE())) {
+            if (model.getKDTreeFOOTWAY_ANDMORE() != null && model.getKDTreeFOOTWAY_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeFOOTWAY_ANDMORE().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeFOOTWAY_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeFOOTWAY_ANDMORE().getRoot())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
                     gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);}
             gc.setLineDashes(null);
             }
 
-            if (Model.getKDTreeCYCLEWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCYCLEWAY()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeCYCLEWAY())) {
+            if (model.getKDTreeCYCLEWAY() != null && model.getKDTreeCYCLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeCYCLEWAY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeCYCLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeCYCLEWAY().getRoot())) {
                     gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
                     gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.CYCLEWAY);}
                 gc.setLineDashes(null);
             }
 
-            if (Model.getKDTreePEDESTRIAN() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePEDESTRIAN()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePEDESTRIAN())) {
+            if (model.getKDTreePEDESTRIAN() != null && model.getKDTreePEDESTRIAN().rangeSearch(rangeSearchRectangle, model.getKDTreePEDESTRIAN().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreePEDESTRIAN().rangeSearch(rangeSearchRectangle, model.getKDTreePEDESTRIAN().getRoot())) {
                     gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.PEDESTRIAN);}}
 
-            if (Model.getKDTreeSERVICE() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSERVICE()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSERVICE())) {
+            if (model.getKDTreeSERVICE() != null && model.getKDTreeSERVICE().rangeSearch(rangeSearchRectangle, model.getKDTreeSERVICE().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeSERVICE().rangeSearch(rangeSearchRectangle, model.getKDTreeSERVICE().getRoot())) {
                     gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.SERVICE);}}
 
 
-            if (Model.getKDTreeROAD() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeROAD()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeROAD())) {
+            if (model.getKDTreeROAD() != null && model.getKDTreeROAD().rangeSearch(rangeSearchRectangle, model.getKDTreeROAD().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeROAD().rangeSearch(rangeSearchRectangle, model.getKDTreeROAD().getRoot())) {
                     gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.ROAD);}}
 
-            if (Model.getKDTreeLIVING_STREET() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLIVING_STREET()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeLIVING_STREET())) {
+            if (model.getKDTreeLIVING_STREET() != null && model.getKDTreeLIVING_STREET().rangeSearch(rangeSearchRectangle, model.getKDTreeLIVING_STREET().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeLIVING_STREET().rangeSearch(rangeSearchRectangle, model.getKDTreeLIVING_STREET().getRoot())) {
                     gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.LIVING_STREET);}}
 
-            if (Model.getKDTreeRESIDENTIALWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIALWAY()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeRESIDENTIALWAY())) {
+            if (model.getKDTreeRESIDENTIALWAY() != null && model.getKDTreeRESIDENTIALWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIALWAY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeRESIDENTIALWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIALWAY().getRoot())) {
                     gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.RESIDENTIALWAY);}}
 
-            if (Model.getKDTreeSECONDARY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY()) != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSECONDARY())) {
+            if (model.getKDTreeSECONDARY() != null && model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot())) {
                     gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.SECONDARY);}}
 
-            if (Model.getKDTreeTERTIARY() != null) {
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeTERTIARY())) {
+            if (model.getKDTreeTERTIARY() != null && model.getKDTreeTERTIARY().rangeSearch(rangeSearchRectangle, model.getKDTreeTERTIARY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeTERTIARY().rangeSearch(rangeSearchRectangle, model.getKDTreeTERTIARY().getRoot())) {
                     gc.setLineWidth(WayType.TERTIARY.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.TERTIARY);}}
 
-            if (Model.getKDTreeGRASS() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()) != null)
-            {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeGRASS()))
+            if (model.getKDTreeGRASS() != null && model.getKDTreeGRASS().rangeSearch(rangeSearchRectangle, model.getKDTreeGRASS().getRoot()) != null)
+            {for (Drawable drawable : model.getKDTreeGRASS().rangeSearch(rangeSearchRectangle, model.getKDTreeGRASS().getRoot()))
             {drawable.fillWayType(gc, WayType.GRASS);}}
 
-            if(Model.getKDTreeBUILDING() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBUILDING()) != null){
-                for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeBUILDING())) {
+            if(model.getKDTreeBUILDING() != null && model.getKDTreeBUILDING().rangeSearch(rangeSearchRectangle, model.getKDTreeBUILDING().getRoot()) != null){
+                for (Drawable drawable : model.getKDTreeBUILDING().rangeSearch(rangeSearchRectangle, model.getKDTreeBUILDING().getRoot())) {
                     gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.fillWayType(gc, WayType.BUILDING);
                     drawable.drawWayType(gc, WayType.BUILDING);
                 }}}
 
         //Tegner motorway
-        if(Model.getKDTreeMOTORWAY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMOTORWAY()) != null) {
-            for (Drawable drawable :  KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeMOTORWAY()))
+        if(model.getKDTreeMOTORWAY() != null && model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot()) != null) {
+            for (Drawable drawable :  model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot()))
             {gc.setLineWidth(WayType.MOTORWAY.getWidth()/Math.sqrt(trans.determinant()));
                 drawable.fillWayType(gc, WayType.MOTORWAY);}}
 
         // Tegner hovedveje
-        if (Model.getKDTreePRIMARY() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePRIMARY()) != null) {
-            for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreePRIMARY())) {
+        if (model.getKDTreePRIMARY() != null && model.getKDTreePRIMARY().rangeSearch(rangeSearchRectangle, model.getKDTreePRIMARY().getRoot()) != null) {
+            for (Drawable drawable : model.getKDTreePRIMARY().rangeSearch(rangeSearchRectangle, model.getKDTreePRIMARY().getRoot())) {
                 gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
                 drawable.drawWayType(gc, WayType.PRIMARY);
             }}
