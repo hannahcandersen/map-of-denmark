@@ -1,5 +1,6 @@
 package bfst22.model;
 
+import bfst22.controller.Controller;
 import bfst22.model.dijkstra.Dijkstra;
 import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
@@ -14,6 +15,8 @@ import javafx.scene.transform.NonInvertibleTransformException;
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
 public class MapCanvas extends Canvas {
+    public OSMNode TestdrawPunkt;
+    public OSMNode drawPunkt;
     private Model model;
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
@@ -48,13 +51,14 @@ public class MapCanvas extends Canvas {
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle searchRangeSerachRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         //System.out.println(searchRangeSerachRectangle);
-        
+        //System.out.println(searchRangeSerachRectangle);
+
         //Udregnet zoomLevel
 
         //currentZoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY())/2);
         //System.out.println("Currentzoomlevel: " + zoomLevel);
-        
+
 
         //Result listen, med de drawables der er inRange
         var resultUNKNOWN = KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeUNKNOWN());
@@ -307,7 +311,7 @@ public class MapCanvas extends Canvas {
 
 
         //// TEST AF DIJKSTRA //////
-
+/*
         // Tager tilfældige nodes fra grafen - TIL TEST - VIRKER IKKE
         OSMNode startOSM = Model.getListOfAllEdgesInWays().get(0).getStart();
         int start = Model.getMapOfOSMNodesToIndex().get(startOSM);
@@ -319,7 +323,7 @@ public class MapCanvas extends Canvas {
 
 
         //HER SKER FEJLEN, FORDI VI HAR VALGT EN ENDNODE DER IKKE FINDES EN ROUTE TIL
-        /*for (Drawable drawable : dijkstra.pathTo(Model.getMapOfOSMNodesToIndex().get(endOSM))) {
+        for (Drawable drawable : dijkstra.pathTo(Model.getMapOfOSMNodesToIndex().get(endOSM))) {
             gc.setStroke(Color.RED);
             drawable.draw(gc);
         }*/
@@ -332,6 +336,13 @@ public class MapCanvas extends Canvas {
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
         gc.setFill(rectangleColor);
         gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
+
+
+
+        if(drawPunkt != null){
+            gc.setFill(Color.RED);
+            gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
+            gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
 
     }
 

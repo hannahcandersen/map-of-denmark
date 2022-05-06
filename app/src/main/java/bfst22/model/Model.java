@@ -75,6 +75,8 @@ public class Model {
     private static KdNode KDTreePITCH;
     private static KdNode KDTreeSCHOOL;
     private static KdNode KDTreeFERRY;
+    private static KdNode KDTreeNodesInGraph;
+    private KdTree KDTreeNodesInGraphTEST;
 
 
 
@@ -109,6 +111,9 @@ public class Model {
 
     //Liste med HIGHWAYS
     private static ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
+
+    //Liste med alle OSMNodes in graph
+    private List<OSMNode> listOfAlleNodesInGraph = new ArrayList<>();
 
     //Map med OSMNode to index. Bruges til at lave en graf
     private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
@@ -145,6 +150,9 @@ public class Model {
         // gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
         if (!filename.endsWith(".obj")) save(filename);
 
+
+        //TEST at bygge med Kdtree
+        KDTreeNodesInGraphTEST = new KdTree(listOfAlleNodesInGraph, 0);
         //Lav træer
         KDTreeUNKNOWN = KdTree.buildKDTree(lines.get(WayType.UNKNOWN), true);
         KDTreeLAKE = KdTree.buildKDTree(lines.get(WayType.LAKE), true);
@@ -193,6 +201,7 @@ public class Model {
         KDTreeFERRY = KdTree.buildKDTree(lines.get(WayType.FERRY), true);
         KDTreeRIVER_ANDMORE = KdTree.buildKDTree(lines.get(WayType.RIVER_ANDMORE), true);
         KDTreeCOASTLINE = KdTree.buildKDTree(coastlinesMap.get(WayType.COASTLINE), true);
+        KDTreeNodesInGraph = KdTree.buildKDTreeOfOSMNodes(listOfAlleNodesInGraph, true);
 
         //lav liste med coastlines
         listOfCoastlines = makeCoastlineObject(coastlinesMap);
@@ -526,9 +535,14 @@ public class Model {
                                     //tilføj til liste med alle edges
                                     if(isOneway || isRoundabout) {
                                         listOfAllEdgesInWays.add(edgeStart);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j));
                                     } else {
                                         listOfAllEdgesInWays.add(edgeStart);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j));
+
                                         listOfAllEdgesInWays.add(edgeEnd);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j+1));
+
                                     }
                                     //tjek om der er bil, cycle eller fodgænger
                                 }
@@ -625,6 +639,10 @@ public class Model {
     public static KdNode getKDTreePITCH () {return KDTreePITCH;}
     public static KdNode getKDTreeSCHOOL () {return KDTreePITCH;}
     public static KdNode getKDTreeFERRY () {return KDTreeFERRY;}
+    public static KdNode getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
+    public  KdTree getKDTreeNodesInGrapTEST () {return KDTreeNodesInGraphTEST;}
+
+
 
 
 

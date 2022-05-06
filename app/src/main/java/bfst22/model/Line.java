@@ -4,6 +4,8 @@ import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
+import java.util.ArrayList;
+
 public class Line implements Drawable {
     private Point2D from, to;
 
@@ -64,6 +66,10 @@ public class Line implements Drawable {
 
     @Override
     public WayType getType() {
+        return null;
+    }
+
+    public ArrayList<OSMNode> getNodes(){
         return null;
     }
 }

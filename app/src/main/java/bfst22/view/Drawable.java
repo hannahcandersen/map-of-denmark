@@ -1,7 +1,11 @@
 package bfst22.view;
 
+import bfst22.model.OSMNode;
 import bfst22.model.WayType;
 import javafx.scene.canvas.GraphicsContext;
+
+
+import java.util.ArrayList;
 
 //Canvas = lærred
 //https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/GraphicsContext.html
@@ -48,4 +52,6 @@ public interface Drawable {
     public float getCurrentMaxY();
 
     WayType getType();
+
+    public ArrayList<OSMNode> getNodes();
 }
