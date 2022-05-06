@@ -58,10 +58,12 @@ public enum WayType {
             case SCHOOL -> Color.valueOf("FFFFE6");
 
 
+
             //case COASTLINE -> Color.valueOf("GREEN");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
         };
     }
+
 
     public Paint getStrokeColor() {
         return switch (this) {

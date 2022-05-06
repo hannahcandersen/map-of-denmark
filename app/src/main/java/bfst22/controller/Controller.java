@@ -14,14 +14,18 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.stage.FileChooser;
+import javafx.scene.control.CheckBox;
+import javafx.scene.Node;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -51,6 +55,18 @@ public class Controller {
     private ListView<AddressObject> listViewFrom;
     @FXML
     private ListView<AddressObject> listViewTo;
+    @FXML
+    private CheckBox colorCheckBox;
+    @FXML
+    private CheckBox pinkCheckBox;
+    @FXML
+    private Pane warningPane;
+
+    @FXML
+    private Button warningOkButton;
+
+    private int clickOnWaringButtonCounter = 0;
+
 
 
     KdTree kdTree = new KdTree();
@@ -64,7 +80,9 @@ public class Controller {
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
+        warningPane.setVisible(false);
         canvas.init(model);
+
     }
 
     //Metoden har et scroll event, som handler efter når brugeren scroller i kortet.
@@ -201,8 +219,41 @@ public class Controller {
         if(chosenAddress != null) {
             toTextField.setText(chosenAddress.toString());
             listViewTo.setVisible(false);
-        }
+        }}
+
+    @FXML
+    public void partyColorToggle(ActionEvent event) {
+       if(colorCheckBox.isSelected()){
+           if(clickOnWaringButtonCounter<1){
+            warningPane.setVisible(true);}
+           canvas.isPartySelected = true;}
+       else{
+           canvas.isPartySelected = false;}
+       canvas.repaint();
     }
+
+    @FXML
+    public void pinkColorToggle(ActionEvent event){
+        if(pinkCheckBox.isSelected()){
+            canvas.isPinkSelected = true;}
+        else{
+            canvas.isPinkSelected = false;}
+        canvas.repaint();
+    }
+
+    @FXML
+    public void onClickWarningOk(ActionEvent event){
+       warningPane.setVisible(false);
+        clickOnWaringButtonCounter++;
+    }
+
+
+
+
+
+
+
+
 
 
 
