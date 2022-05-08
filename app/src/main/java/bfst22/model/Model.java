@@ -88,6 +88,7 @@ public class Model {
     private boolean isRoundabout;
     private List<PolyLine> listOfCoastlines;
     private TST tst;
+    private long id;
 
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
@@ -260,7 +261,7 @@ public class Model {
                             break;
                         // giver id, lat og lon på nodes og tilføjer det til et NodeMap
                         case "node":
-                            var id = Long.parseLong(reader.getAttributeValue(null, "id"));
+                            id = Long.parseLong(reader.getAttributeValue(null, "id"));
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             id2node.add(new OSMNode(id, 0.56f * lon, -lat));
@@ -549,13 +550,16 @@ public class Model {
                             rel.clear();
                             break;
                         case "node":
+                            var getLat = id2node.get(id).getLat();
+                            var getLon = id2node.get(id).getLon();
+
                             if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
                                 //laver Ternary Search Tree/Trie med alle adresserne
                                 if(tst == null) {
-                                    tst = new TST(new AddressObject(street, housenumber, postcode, city));
+                                    tst = new TST(new AddressObject(street, housenumber, postcode, city, getLat, getLon));
                                     //System.out.println("Laver TST");
                                 } else {
-                                    tst.put(street, new AddressObject(street, housenumber, postcode, city));
+                                    tst.put(street, new AddressObject(street, housenumber, postcode, city, getLat, getLon));
                                     //System.out.println("Tilføjer til TST");
                                 }
                             }

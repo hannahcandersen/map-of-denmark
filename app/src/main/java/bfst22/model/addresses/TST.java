@@ -96,7 +96,7 @@ public class TST {
         AddressNode endNode = getEndNode(input);
         if(endNode == null) {
             List<AddressObject> noMatches = new ArrayList<>();
-            noMatches.add(new AddressObject("", "", "", ""));
+            noMatches.add(new AddressObject("", "", "", "", 0, 0));
             return noMatches;
         }
         else return getAllEndOfAddressName(endNode);
