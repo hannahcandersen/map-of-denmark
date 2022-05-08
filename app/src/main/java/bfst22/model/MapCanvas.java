@@ -123,6 +123,7 @@ public class MapCanvas extends Canvas {
                     drawable.fill(gc);
                 } else {
                     //if (drawable instanceof MultiPolygon) System.out.println("Multipolygon forest");
+                    drawable.drawWayType(gc, WayType.FOREST);
                     drawable.fillWayType(gc, WayType.FOREST);
                 }
             }
