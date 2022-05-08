@@ -1,7 +1,6 @@
 package bfst22.model;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,17 +13,16 @@ public class MultiPolygon implements Drawable, Serializable {
         SerialVersionUID is a unique identifier for each class, JVM uses it to compare the versions of the
         class ensuring that the same class was used during Serialization is loaded during Deserialization.
         Specifying one gives more control, though JVM does generate one if you don't specify.
-
         Det er ligemeget hvilke tal vi giver den
      */
 
-    private float totalX;
-    private float totalY;
-    private float currentMinX = 0;
-    private float currentMaxX = 0;
-    private float currentMinY = 0;
-    private float currentMaxY = 0;
-    private WayType wayType;
+    float totalX;
+    float totalY;
+    float currentMinX = 0;
+    float currentMaxX = 0;
+    float currentMinY = 0;
+    float currentMaxY = 0;
+    WayType wayType;
 
 
     public static final long serialVersionUID = 1325234;
@@ -35,11 +33,13 @@ public class MultiPolygon implements Drawable, Serializable {
     //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes" Og WayType
     public MultiPolygon(ArrayList<OSMWay> rel, WayType wayType) {
         this.wayType = wayType;
+
         for (var way : rel) {
 
-            //TODO Mangler at tilføj veje i den rigtige rækkefølge
-            parts.add(new PolyLine(way.getNodes())); //Tilføjer OSMWay til listen parts
+            //Mangler at tilføj veje i den rigtige rækkefølge
+            parts.add(new PolyLine(way.getNodes(), wayType));
 
+            //hvorfor først sætte til 0 ??
             totalX = 0;
             totalY = 0;
             totalX += way.getMiddleX();
@@ -48,9 +48,10 @@ public class MultiPolygon implements Drawable, Serializable {
             // Tilføjer alle OSMNodes fra hver OSMWay til listen multiPolygonNodes
             multiPolygonNodes.addAll(way.getNodes());
         }
-
-        //hvorfor gør vi det her??
+        //hvorfor gør vi det her?? - det er disse vi skal tegne, måske?
         multiPolygonPolylines.add(new PolyLine(multiPolygonNodes));
+
+
 
         // Udregner min x, max x, min y og max y
         calculateMinAndMax();
@@ -66,9 +67,12 @@ public class MultiPolygon implements Drawable, Serializable {
             totalX += way.getMiddleX();
             totalY += way.getMiddleY();
             // Tilføjer alle OSMNodes fra hver OSMWay til listen multiPolygonNodes
-            multiPolygonNodes.addAll(way.getNodes());}
-    }
+            multiPolygonNodes.addAll(way.getNodes());
+        }
 
+        // Udregner min x, max x, min y og max y
+        calculateMinAndMax();
+    }
 
     @Override
     //Tegner
@@ -115,22 +119,18 @@ public class MultiPolygon implements Drawable, Serializable {
     }
 
     public float getCurrentMinX() {
-        calculateMinAndMax();
         return currentMinX;
     }
 
     public float getCurrentMaxX() {
-        calculateMinAndMax();
         return currentMaxX;
     }
 
     public float getCurrentMinY() {
-        calculateMinAndMax();
         return currentMinY;
     }
 
     public float getCurrentMaxY() {
-        calculateMinAndMax();
         return currentMaxY;
     }
 
@@ -139,18 +139,16 @@ public class MultiPolygon implements Drawable, Serializable {
         return this.wayType;
     }
 
+    @Override
+    public ArrayList<OSMNode> getNodes() {
+        return multiPolygonNodes;
+    }
+
     public ArrayList<PolyLine> getMultiPolygonPolylines() {
         return multiPolygonPolylines;
     }
 
-    @Override
-    public ArrayList<OSMNode> getNodes(){return multiPolygonNodes;}
-
-    public List<Drawable> getParts() {return parts;}
-
+    public List<Drawable> getParts() {
+        return parts;
+    }
 }
-
-
-
-
-

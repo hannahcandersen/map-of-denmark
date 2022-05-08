@@ -665,10 +665,10 @@ public class Model {
 
         while (!unSortedCoastlines.isEmpty()) {
 
-            System.out.println("unSortedCoastlines size: " + unSortedCoastlines.size());
+            //System.out.println("unSortedCoastlines size: " + unSortedCoastlines.size());
             // De coastlines som ikke passede
             List<Drawable> buildUpCoastlinesList = new ArrayList<>();
-            System.out.println("buildUpCoastlinesList size: " + buildUpCoastlinesList.size());
+            //System.out.println("buildUpCoastlinesList size: " + buildUpCoastlinesList.size());
             for (Drawable coastline : unSortedCoastlines) {
 
                 if (listOfNodesInCoastline.size() == 0) {
@@ -732,7 +732,7 @@ public class Model {
             }
 
            if(buildUpCoastlinesList.size() == unSortedCoastlines.size()) {
-               System.out.println("listOfNodesInCoastline størelse: " + listOfNodesInCoastline.size());
+               //System.out.println("listOfNodesInCoastline størelse: " + listOfNodesInCoastline.size());
 
                 //Måske kan vi undlade at tilføje punkterne
                 //Hvis coastline ikke er en lukket figur
