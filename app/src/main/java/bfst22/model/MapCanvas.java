@@ -1,5 +1,6 @@
 package bfst22.model;
 
+import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
@@ -123,7 +124,6 @@ public class MapCanvas extends Canvas {
                     drawable.fill(gc);
                 } else {
                     //if (drawable instanceof MultiPolygon) System.out.println("Multipolygon forest");
-                    drawable.drawWayType(gc, WayType.FOREST);
                     drawable.fillWayType(gc, WayType.FOREST);
                 }
             }
