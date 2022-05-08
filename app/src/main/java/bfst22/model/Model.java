@@ -550,16 +550,16 @@ public class Model {
                             rel.clear();
                             break;
                         case "node":
-                            var getLat = id2node.get(id).getLat();
-                            var getLon = id2node.get(id).getLon();
-
                             if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
+                                //var getLatFromList = id2node.get(id).getLat();
+                                //var getLonFromList = id2node.get(id).getLon();
                                 //laver Ternary Search Tree/Trie med alle adresserne
                                 if(tst == null) {
-                                    tst = new TST(new AddressObject(street, housenumber, postcode, city, getLat, getLon));
+                                    tst = new TST(new AddressObject(street, housenumber, postcode, city, id2node.get(id).getLat(), id2node.get(id).getLon()));
+                                    //getLatFromList, getLonFromList
                                     //System.out.println("Laver TST");
                                 } else {
-                                    tst.put(street, new AddressObject(street, housenumber, postcode, city, getLat, getLon));
+                                    tst.put(street, new AddressObject(street, housenumber, postcode, city, id2node.get(id).getLat(), id2node.get(id).getLon()));
                                     //System.out.println("Tilføjer til TST");
                                 }
                             }
