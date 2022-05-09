@@ -88,7 +88,6 @@ public class Model {
     private boolean isRoundabout;
     private List<PolyLine> listOfCoastlines;
     private TST tst;
-    private long id;
 
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
@@ -244,6 +243,7 @@ public class Model {
         String housenumber = "";
         String postcode = "";
         String street = "";
+        OSMNode osmNodeToAddress = null;
         long relID = 0; // giver et id til en relation
         var type = WayType.UNKNOWN; // sætter først typen til unknows. kan ændres undervejs i metoden til f.eks. LAKE
         while (reader.hasNext()) { // læser hver linje én af gangen
@@ -261,10 +261,11 @@ public class Model {
                             break;
                         // giver id, lat og lon på nodes og tilføjer det til et NodeMap
                         case "node":
-                            id = Long.parseLong(reader.getAttributeValue(null, "id"));
+                            var id = Long.parseLong(reader.getAttributeValue(null, "id"));
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
-                            id2node.add(new OSMNode(id, 0.56f * lon, -lat));
+                            osmNodeToAddress = new OSMNode(id, 0.56f * lon, -lat);
+                            id2node.add(osmNodeToAddress);
                             //map der en node, her er key gadenavn og value id
                             break;
                         // en way har i osm-filen en reference til de nodes der angiver vejen kaldet nd, der indeholder nodes' id nummer.
@@ -551,15 +552,16 @@ public class Model {
                             break;
                         case "node":
                             if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
+
                                 //var getLatFromList = id2node.get(id).getLat();
                                 //var getLonFromList = id2node.get(id).getLon();
                                 //laver Ternary Search Tree/Trie med alle adresserne
                                 if(tst == null) {
-                                    tst = new TST(new AddressObject(street, housenumber, postcode, city, id2node.get(id).getLat(), id2node.get(id).getLon()));
+                                    tst = new TST(new AddressObject(street, housenumber, postcode, city, osmNodeToAddress.getLat(), osmNodeToAddress.getLon()));
                                     //getLatFromList, getLonFromList
                                     //System.out.println("Laver TST");
                                 } else {
-                                    tst.put(street, new AddressObject(street, housenumber, postcode, city, id2node.get(id).getLat(), id2node.get(id).getLon()));
+                                    tst.put(street, new AddressObject(street, housenumber, postcode, city, osmNodeToAddress.getLat(), osmNodeToAddress.getLon()));
                                     //System.out.println("Tilføjer til TST");
                                 }
                             }
