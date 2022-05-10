@@ -605,6 +605,16 @@ public class MapCanvas extends Canvas {
             gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
             gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
 
+        if(drawPunktStartOfRoute != null){
+            gc.setFill(Color.RED);
+            gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
+            gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
+
+        if(drawPunktEndOfRoute != null){
+            gc.setFill(Color.RED);
+            gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
+            gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
+
     }
 
     public Model getModel() {
