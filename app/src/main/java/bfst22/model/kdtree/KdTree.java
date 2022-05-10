@@ -376,7 +376,7 @@ public class KdTree {
 
 
     public void findNearestNeighbourLeaf(KdNode searchKdNode, float x, float y, boolean divX) {
-        System.out.println("Jeg er et leaf");
+        //System.out.println("Jeg er et leaf");
 
         Leaf leaf = ((Leaf) searchKdNode);
 

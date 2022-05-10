@@ -2,6 +2,7 @@ package bfst22.model;
 
 import bfst22.controller.Controller;
 import bfst22.model.dijkstra.Dijkstra;
+import bfst22.model.dijkstra.DirectedEdge;
 import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
@@ -29,6 +30,8 @@ public class MapCanvas extends Canvas {
     private int zoomLevel;
     public boolean isPartySelected;
     public boolean isPinkSelected;
+    private Iterable<DirectedEdge> dijkstraShortestPath;
+
 
     //Randomme farver
     int r;
@@ -668,4 +671,11 @@ public class MapCanvas extends Canvas {
         return b;
     }
 
+    public Iterable<DirectedEdge> getDijkstraShortestPath() {
+        return dijkstraShortestPath;
+    }
+
+    public void setDijkstraShortestPath(Iterable<DirectedEdge> dijkstraShortestPath) {
+        this.dijkstraShortestPath = dijkstraShortestPath;
+    }
 }

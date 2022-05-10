@@ -272,4 +272,5 @@ public class Controller {
     public AddressObject getChosenAddressTo() {
         return chosenAddressTo;
     }
+
 }
