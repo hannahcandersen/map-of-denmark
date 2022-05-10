@@ -9,6 +9,7 @@ import java.util.Random;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.FillRule;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
@@ -32,6 +33,7 @@ public class MapCanvas extends Canvas {
     private boolean isPartySelected; //skal laves private
     private boolean isPinkSelected; //skal laves private
     private Iterable<DirectedEdge> dijkstraShortestPath;
+
 
 
     public void setPartySelected(boolean partySelected) {
@@ -108,12 +110,12 @@ public class MapCanvas extends Canvas {
 
 
         Point2D realscalebarPoint1 = mouseToModel(scalebarPoint1);
-        System.out.println("Point 1: " + realscalebarPoint1.getX() + realscalebarPoint1.getY());
+        //System.out.println("Point 1: " + realscalebarPoint1.getX() + realscalebarPoint1.getY());
         Point2D realscalebarPoint2 = mouseToModel(scalebarPoint2);
-        System.out.println("Point 2: " + realscalebarPoint2.getX() + realscalebarPoint2.getY());
+        //System.out.println("Point 2: " + realscalebarPoint2.getX() + realscalebarPoint2.getY());
 
         ration = calculateRation(realscalebarPoint1.getX(),realscalebarPoint2.getX());
-        System.out.println("ration: " + ration);
+        //System.out.println("ration: " + ration);
 
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
@@ -169,6 +171,11 @@ public class MapCanvas extends Canvas {
             for (Drawable drawable : KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN())) {
                 drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
 
+        //Tegner multipolygon
+
+
+
+
         //Tegner forest
         if (model.getKDTreeFOREST() != null && model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot()) != null) {
             gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
@@ -176,7 +183,15 @@ public class MapCanvas extends Canvas {
                 if (isPartySelected) {
                     drawable.fill(gc);
                 } else {
+
+
+                    if(drawable instanceof MultiPolygon){
+                        System.out.println("Jeg er en forrest multipolygon");
+
+                    }
+                    gc.setFillRule(FillRule.EVEN_ODD);
                     drawable.fillWayType(gc, WayType.FOREST);
+
                 }
             }
         }

@@ -562,6 +562,8 @@ public class Model {
                         case "relation":
                             if (type == WayType.FOREST && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel, type));
+                                //System.out.println("Tilføjer multipolygon");
+
                             }
                             rel.clear();
                             break;
