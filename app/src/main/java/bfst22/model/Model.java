@@ -683,7 +683,7 @@ public class Model {
         PolyLine currentWay = null;
 
 
-        List<OSMNode> listOfNodesInCoastline = new ArrayList<>();
+        ArrayList<OSMNode> listOfNodesInCoastline = new ArrayList<>();
 
         //Holder på vores færdige coastlines
         List<PolyLine> listOfCoastlines = new ArrayList<>();
@@ -701,47 +701,47 @@ public class Model {
 
                 if (listOfNodesInCoastline.size() == 0) {
                     //listOfNodesInCoastline.addAll((lines.get(WayType.COASTLINE).get(0)));
-                    listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
-                    startOSMNode = ((PolyLine) coastline).getNodes().get(0);
-                    endOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
+                    listOfNodesInCoastline.addAll(coastline.getNodes());
+                    startOSMNode = coastline.getNodes().get(0);
+                    endOSMNode = coastline.getNodes().get(coastline.getNodes().size() - 1);
                     //Opretter currentWay med Nodes i vores første vej
-                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    currentWay = new PolyLine(listOfNodesInCoastline);
                     //System.out.println("Vi er ved o case");
                     continue;
                 }
 
-                currentStartOSMNode = ((PolyLine) coastline).getNodes().get(0);
-                currentEndOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
+                currentStartOSMNode = coastline.getNodes().get(0);
+                currentEndOSMNode = coastline.getNodes().get(coastline.getNodes().size() - 1);
 //
                 // SITUATION 1: Begge pile mod højre.
                 if (currentStartOSMNode.getLat() == endOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
+                    listOfNodesInCoastline.addAll(coastline.getNodes());
                     endOSMNode = currentEndOSMNode;
-                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    currentWay = new PolyLine(listOfNodesInCoastline);
                     //System.out.println("Vi er ved situation 1");
                 }
                 // SITUATION 2: Begge pile mod midten
                 else if (endOSMNode.getLat() == currentEndOSMNode.getLat() && endOSMNode.getLon() == currentEndOSMNode.getLon()) {
                     // Vend nummer to pil om og tilføjer til listOfNodesInCoastLine
-                    Collections.reverse(((PolyLine) coastline).getNodes());
-                    listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
+                    Collections.reverse(coastline.getNodes());
+                    listOfNodesInCoastline.addAll(coastline.getNodes());
                     endOSMNode = currentEndOSMNode;
-                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    currentWay = new PolyLine(listOfNodesInCoastline);
                     //System.out.println("Vi er ved situation 2");
                 }
                 // SITUATION 3: Begge pile væk fra midten // Start og start mødes //Første pil drejet rundt
                 else if (currentStartOSMNode.getLat() == startOSMNode.getLat() && currentStartOSMNode.getLon() == startOSMNode.getLon()) {
-                    Collections.reverse(((PolyLine) coastline).getNodes());
-                    listOfNodesInCoastline.addAll(0, ((PolyLine) coastline).getNodes());
+                    Collections.reverse(coastline.getNodes());
+                    listOfNodesInCoastline.addAll(0, coastline.getNodes());
                     startOSMNode = listOfNodesInCoastline.get(0);
-                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    currentWay = new PolyLine(listOfNodesInCoastline);
                     //System.out.println("Vi er ved situation 3");
                 }
                 // SITUATION 4: Begge pile mod venstre // Vores start == nye slut
                 else if (currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(0, ((PolyLine) coastline).getNodes());
+                    listOfNodesInCoastline.addAll(0, coastline.getNodes());
                     startOSMNode = listOfNodesInCoastline.get(0);
-                    currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
+                    currentWay = new PolyLine(listOfNodesInCoastline);
                     //System.out.println("Vi er ved situation 4");
                 } else {
                     buildUpCoastlinesList.add(coastline);
@@ -750,7 +750,7 @@ public class Model {
                 }
                 //Hvis end og start det samme, ville alle coastlines være tilføjet
                 if (endOSMNode.getLat() == startOSMNode.getLat() && endOSMNode.getLon() == startOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());
+                    listOfNodesInCoastline.addAll(coastline.getNodes());
                     listOfCoastlines.add(currentWay);
                     listOfNodesInCoastline.clear();
                     //System.out.println("Vi er færdige med kystlinjen og har tilføjet den");

@@ -1,9 +1,6 @@
 package bfst22.model;
 
-import bfst22.controller.Controller;
-import bfst22.model.dijkstra.Dijkstra;
 import bfst22.model.dijkstra.DirectedEdge;
-import bfst22.model.kdtree.KdTree;
 import bfst22.model.kdtree.RangeSerachRectangle;
 import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
@@ -11,7 +8,6 @@ import javafx.scene.canvas.Canvas;
 import java.util.Random;
 
 import javafx.scene.paint.Color;
-//import java.awt.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
