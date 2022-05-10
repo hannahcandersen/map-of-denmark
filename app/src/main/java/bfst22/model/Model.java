@@ -803,8 +803,7 @@ public class Model {
 
     public void makeGraph(){
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
-
-        graph.get
+        
         for (DirectedEdge edge : listOfAllEdgesInWays){
             graph.addEdge(edge);
         }
