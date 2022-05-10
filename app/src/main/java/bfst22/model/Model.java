@@ -6,6 +6,7 @@ import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
 import bfst22.model.kdtree.KdTree;
 import bfst22.view.Drawable;
+import javafx.scene.shape.Polyline;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -88,20 +89,17 @@ public class Model {
     private boolean isOneway;
     private boolean isRoundabout;
     private List<PolyLine> listOfCoastlines;
+    private EdgeWeightedDigraph graph;
     private TST tst;
 
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
-    Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);
-
-    {
+    Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);{
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
 
     //Map med coastlines
-    Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);
-
-    {
+    Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);{
         for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());
     }
 
@@ -114,7 +112,6 @@ public class Model {
     //Map med OSMNode to index. Bruges til at lave en graf
     private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
 
-    private EdgeWeightedDigraph graph;
 
 
     /////////////// Konstruktør (unchecked) ///////////////////
@@ -133,6 +130,10 @@ public class Model {
                 maxlat = input.readFloat();
                 maxlon = input.readFloat();
                 lines = (Map<WayType, List<Drawable>>) input.readObject();
+                listOfCoastlines = (List<PolyLine>) input.readObject();
+                graph = (EdgeWeightedDigraph) input.readObject();
+                //tst = (TST) input.readObject();
+
                 //VIGTIGT at skrive i samme rækkefølge som i save()
                 //tilføj de ting vi har tilføjet i save
             }
@@ -217,7 +218,13 @@ public class Model {
             out.writeFloat(maxlat);
             out.writeFloat(maxlon);
             out.writeObject(lines);
-            //tilføj alle de ting vi har lavet: coastline, graf,
+            out.writeObject(listOfCoastlines);
+            out.writeObject(graph);
+            //out.writeObject(tst);
+
+
+
+            //tilføj alle de ting vi har lavet: tst
 
             //Gem kystlinjer her
         }
@@ -749,7 +756,6 @@ public class Model {
                     //System.out.println("Vi er færdige med kystlinjen og har tilføjet den");
 
                 }
-
             }
 
            if(buildUpCoastlinesList.size() == unSortedCoastlines.size()) {
