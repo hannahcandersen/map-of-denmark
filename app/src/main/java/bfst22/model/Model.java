@@ -133,6 +133,8 @@ public class Model {
                 maxlat = input.readFloat();
                 maxlon = input.readFloat();
                 lines = (Map<WayType, List<Drawable>>) input.readObject();
+                //VIGTIGT at skrive i samme rækkefølge som i save()
+                //tilføj de ting vi har tilføjet i save
             }
         } else {
             lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
@@ -215,6 +217,7 @@ public class Model {
             out.writeFloat(maxlat);
             out.writeFloat(maxlon);
             out.writeObject(lines);
+            //tilføj alle de ting vi har lavet: coastline, graf,
         }
     }
 

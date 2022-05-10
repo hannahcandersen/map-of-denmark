@@ -48,9 +48,12 @@ public class MapCanvas extends Canvas {
 
     public void init(Model model) {
         this.model = model;
+        //mouseToModel()  -  så får vi hvor den
         pan(-model.getMinLon(), -model.getMinLat());
         //tallet 640 bestemmer hvor tæt eller hvor langt fra vi er på kortet, når programmet starter
-        zoom(640 / (model.getMaxlon() - model.getMinLon()), 0, 0);
+        //640 er hvor mange pixels bredden af canvas
+        //skift 640 ud med getCanvasWidth
+        zoom(getWidth() / (model.getMaxlon() - model.getMinLon()), 0, 0);
         model.addObserver(this::repaint);
         repaint();
         //repainter hver gang størrelsen på skærmen ændres
