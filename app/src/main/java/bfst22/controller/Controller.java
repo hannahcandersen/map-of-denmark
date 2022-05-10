@@ -4,6 +4,8 @@ import bfst22.model.Model;
 import bfst22.model.MapCanvas;
 import bfst22.model.OSMNode;
 import bfst22.model.dijkstra.Dijkstra;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
@@ -11,16 +13,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import javafx.scene.control.CheckBox;
-
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
@@ -71,7 +69,6 @@ public class Controller {
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
-        warningPane.setVisible(false);
         canvas.init(model);
 
     }
@@ -82,6 +79,7 @@ public class Controller {
     public void onScroll(ScrollEvent e) {
         var factor = e.getDeltaY();
         canvas.zoom(Math.pow(1.05, factor), e.getX(), e.getY());
+
     }
     //Metoden gør det muligt at trække i kortet ved at trække musens sidste koordinater fra musens nye koordinater.
     @FXML
@@ -265,5 +263,6 @@ public class Controller {
         }
         canvas.repaint();
     }
+
 
 }

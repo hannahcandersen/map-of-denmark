@@ -61,6 +61,10 @@ public class MapCanvas extends Canvas {
     private Point2D screenMin;
     private Point2D screenMax;
 
+    private double ration;
+
+
+
 
 
 
@@ -682,6 +686,7 @@ public class MapCanvas extends Canvas {
             trans.prependTranslation(-x, -y);
             trans.prependScale(factor, factor);
             trans.prependTranslation(x, y);
+            ration = calculateRation();
             repaint();
     }
 
