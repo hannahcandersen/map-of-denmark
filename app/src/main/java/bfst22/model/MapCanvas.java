@@ -33,15 +33,15 @@ public class MapCanvas extends Canvas {
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
-    public boolean isPartySelected;
-    public boolean isPinkSelected;
+    public boolean isPartySelected; //skal laves private
+    public boolean isPinkSelected; //skal laves private
     private Iterable<DirectedEdge> dijkstraShortestPath;
 
 
     //Randomme farver
-    int r;
-    int g;
-    int b;
+    private int r;
+    private int g;
+    private int b;
 
 
 
