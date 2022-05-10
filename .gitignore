@@ -143,3 +143,5 @@ gradle-app.setting
 *.osm
 *.obj
 *.osm.obj
+*.osm.pbf
+*.exe
