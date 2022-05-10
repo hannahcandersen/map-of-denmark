@@ -215,8 +215,7 @@ public class Controller {
         if(chosenAddressFrom != null) {
             fromTextField.setText(chosenAddressFrom.toString());
             listViewFrom.setVisible(false);
-        }
-    }
+        }}
 
     @FXML
     public void chooseAddressTo(MouseEvent event) {

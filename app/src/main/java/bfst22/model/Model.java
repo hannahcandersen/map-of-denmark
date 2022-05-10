@@ -204,7 +204,7 @@ public class Model {
         //lav dijkstra graf
         makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
         makeGraph();
-        //System.out.println(graph);
+        System.out.println(graph);
 
         //calculateDistance(listOfAllEdgesInWays.get(10).getStart(), listOfAllEdgesInWays.get(10).getEnd());
     }
@@ -800,7 +800,7 @@ public class Model {
 
     public void makeGraph(){
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
-
+        
         for (DirectedEdge edge : listOfAllEdgesInWays){
             graph.addEdge(edge);
         }

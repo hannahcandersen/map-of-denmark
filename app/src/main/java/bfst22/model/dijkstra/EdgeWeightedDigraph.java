@@ -34,6 +34,7 @@ public class EdgeWeightedDigraph {
         // Opretter en tom bag for hver index/vertex i adj. Den første vertex er index 0, den anden index 1, osv.
         for (int v = 0; v < numberOfVerticesInGraph; v++)
             adjacencyList[v] = new Bag<DirectedEdge>();
+
     }
 
     // Antal vertices i grafen
