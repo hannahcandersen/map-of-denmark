@@ -686,7 +686,7 @@ public class MapCanvas extends Canvas {
             trans.prependTranslation(-x, -y);
             trans.prependScale(factor, factor);
             trans.prependTranslation(x, y);
-            ration = calculateRation();
+            //ration = calculateRation();
             repaint();
     }
 

@@ -79,7 +79,7 @@ public class Controller {
     public void onScroll(ScrollEvent e) {
         var factor = e.getDeltaY();
         canvas.zoom(Math.pow(1.05, factor), e.getX(), e.getY());
-
+        scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
     }
     //Metoden gør det muligt at trække i kortet ved at trække musens sidste koordinater fra musens nye koordinater.
     @FXML
