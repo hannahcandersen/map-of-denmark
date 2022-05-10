@@ -72,7 +72,7 @@ public class MapCanvas extends Canvas {
         Point2D screenMax = new Point2D(getWidth() - 100, getHeight() - 100);
         Point2D realMin = mouseToModel(screenMin);
         Point2D realMax = mouseToModel(screenMax);
-
+//
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle rangeSearchRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         //System.out.println(rangeSearchRectangle);
