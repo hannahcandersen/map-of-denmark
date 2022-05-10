@@ -598,6 +598,14 @@ public class MapCanvas extends Canvas {
         }
 
 
+        // TEGNER GRAFEN
+        for (Drawable drawable : Model.getListOfAllEdgesInWays()) {
+            gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
+            gc.setStroke(Color.RED);
+            drawable.draw(gc);
+        }
+
+
         //Tegner vores debug firkant
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
         gc.setFill(rectangleColor);

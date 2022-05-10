@@ -550,6 +550,7 @@ public class Model {
                                         listOfAllEdgesInWays.add(edgeOtherWay);
                                         listOfAlleNodesInGraph.add(way.getNodes().get(j+1)); /// obs på at vi tilføjer nodes to gange
                                     }
+
                                     //tjek om der er bil, cycle eller fodgænger
                                 }
 
@@ -793,6 +794,12 @@ public class Model {
             }
         }
     }
+
+
+    //Laver ikke grafen ordentligt - Mangler at tilføje random veje rundt omkring
+    // Ikke noget med typen - nogle tertiary bliver tilføjet, nogle gør ikke
+    // Nogle nodes i vejene peger ikke på nogen nodes i OSM-filen. Kan det være derfor???
+    //hvis start-element er 'nd', så tilføjer den således: nodes.add(id2node.get(ref)) - det burde give NullPointerException (da ref ikke pejer på en node)??
 
     public void makeGraph(){
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
