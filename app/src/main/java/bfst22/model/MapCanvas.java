@@ -593,6 +593,8 @@ public class MapCanvas extends Canvas {
                 drawable.draw(gc);
             }
             System.out.println("Jeg har tegnet Dijkstra");
+        }else {
+            System.out.println("Dijkstra er null");
         }
 
 
@@ -610,17 +612,19 @@ public class MapCanvas extends Canvas {
             gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
 
         //Tegner start og end node af en rute
-        if(drawPunktStartOfRoute != null){
+        /*if(drawPunktStartOfRoute != null){
             gc.setFill(Color.RED);
             gc.fillRect(drawPunktStartOfRoute.getLat(), drawPunktStartOfRoute.getLon(), 0.0002, 0.0002);
             gc.fillRect(drawPunktStartOfRoute.getLon(), drawPunktStartOfRoute.getLat(), 0.0002, 0.0002);
-            System.out.println("Tegner drawPunktStartOfRoute");}
+            //System.out.println("Tegner drawPunktStartOfRoute");
+            }*/
 
-        if(drawPunktEndOfRoute != null){
+        /*if(drawPunktEndOfRoute != null){
             gc.setFill(Color.BLUE);
             gc.fillRect(drawPunktEndOfRoute.getLat(), drawPunktEndOfRoute.getLon(), 0.0002, 0.0002);
             gc.fillRect(drawPunktEndOfRoute.getLon(), drawPunktEndOfRoute.getLat(), 0.0002, 0.0002);
-            System.out.println("Tegner drawPunktEndOfRoute");}}
+            //System.out.println("Tegner drawPunktEndOfRoute");
+            }*/}
 
     public Model getModel() {
         return model;

@@ -536,19 +536,19 @@ public class Model {
                                     double weight = calculateTime(way.getNodes().get(j), way.getNodes().get(j+1));
                                     //System.out.println(weight);
 
-                                    DirectedEdge edgeStart = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight);
-                                    DirectedEdge edgeEnd = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight);
+                                    DirectedEdge edgeOneWay = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight);
+                                    DirectedEdge edgeOtherWay = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight);
 
                                     //tilføj til liste med alle edges
                                     if(isOneway || isRoundabout) {
-                                        listOfAllEdgesInWays.add(edgeStart);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j));
+                                        listOfAllEdgesInWays.add(edgeOneWay);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j)); //måske lave denne liste om til et Set?
                                     } else {
-                                        listOfAllEdgesInWays.add(edgeStart);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j));
+                                        listOfAllEdgesInWays.add(edgeOneWay);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j)); // obs på at vi tilføjer nodes to gange
 
-                                        listOfAllEdgesInWays.add(edgeEnd);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j+1));
+                                        listOfAllEdgesInWays.add(edgeOtherWay);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j+1)); /// obs på at vi tilføjer nodes to gange
 
                                     }
                                     //tjek om der er bil, cycle eller fodgænger
