@@ -6,6 +6,7 @@ import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
 import bfst22.model.kdtree.KdTree;
 import bfst22.view.Drawable;
+import javafx.scene.shape.Polyline;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -73,6 +74,7 @@ public class Model {
     private final KdTree KDTreeRECREATION_GROUND;
     private final KdTree KDTreeSCHOOL;
     private final KdTree KDTreeFERRY;
+    private final KdTree KDTreeGRAVEYARD;
     private final KdTree KDTreeNodesInGraph;
 
 
@@ -87,20 +89,17 @@ public class Model {
     private boolean isOneway;
     private boolean isRoundabout;
     private List<PolyLine> listOfCoastlines;
+    private EdgeWeightedDigraph graph;
     private TST tst;
 
 
     // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
-    Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);
-
-    {
+    Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);{
         for (var type : WayType.values()) lines.put(type, new ArrayList<>());
     }
 
     //Map med coastlines
-    Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);
-
-    {
+    Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);{
         for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());
     }
 
@@ -113,7 +112,6 @@ public class Model {
     //Map med OSMNode to index. Bruges til at lave en graf
     private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
 
-    private static EdgeWeightedDigraph graph;
 
 
     /////////////// Konstruktør (unchecked) ///////////////////
@@ -132,6 +130,12 @@ public class Model {
                 maxlat = input.readFloat();
                 maxlon = input.readFloat();
                 lines = (Map<WayType, List<Drawable>>) input.readObject();
+                listOfCoastlines = (List<PolyLine>) input.readObject();
+                graph = (EdgeWeightedDigraph) input.readObject();
+                //tst = (TST) input.readObject();
+
+                //VIGTIGT at skrive i samme rækkefølge som i save()
+                //tilføj de ting vi har tilføjet i save
             }
         } else {
             lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
@@ -187,6 +191,7 @@ public class Model {
         KDTreePITCH = new KdTree(lines.get(WayType.PITCH));
         KDTreeSCHOOL = new KdTree(lines.get(WayType.SCHOOL));
         KDTreeFERRY = new KdTree(lines.get(WayType.FERRY));
+        KDTreeGRAVEYARD = new KdTree(lines.get(WayType.GRAVEYARD));
         KDTreeRIVER_ANDMORE = new KdTree(lines.get(WayType.RIVER_ANDMORE));
         KDTreeCOASTLINE = new KdTree(lines.get(WayType.COASTLINE));
         KDTreeNodesInGraph = new KdTree(listOfAlleNodesInGraph, 0);
@@ -213,6 +218,15 @@ public class Model {
             out.writeFloat(maxlat);
             out.writeFloat(maxlon);
             out.writeObject(lines);
+            out.writeObject(listOfCoastlines);
+            out.writeObject(graph);
+            //out.writeObject(tst);
+
+
+
+            //tilføj alle de ting vi har lavet: tst
+
+            //Gem kystlinjer her
         }
     }
 
@@ -352,10 +366,11 @@ public class Model {
                                     break;
                                 case "amenity":
                                     type = switch (v) {
-                                        case "school" -> WayType.SCHOOL;
+                                        case "school", "kindergarten" -> WayType.SCHOOL;
                                         case "parking" -> WayType.PARKING;
                                         case "hospital" -> WayType.HOSPITAL;
-                                        case "kindergarten" -> WayType.BUILDING;
+                                        //case "kindergarten" -> WayType.SCHOOL;
+                                        case "grave_yard" -> WayType.GRAVEYARD;
                                         default -> type;
                                     };
                                     break;
@@ -630,6 +645,7 @@ public class Model {
     public KdTree getKDTreePITCH () {return KDTreePITCH;}
     public KdTree getKDTreeSCHOOL () {return KDTreeSCHOOL;}
     public KdTree getKDTreeFERRY () {return KDTreeFERRY;}
+    public KdTree getKDTreeGRAVEYARD () {return KDTreeGRAVEYARD;}
     public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
 
 
@@ -677,10 +693,10 @@ public class Model {
 
         while (!unSortedCoastlines.isEmpty()) {
 
-            System.out.println("unSortedCoastlines size: " + unSortedCoastlines.size());
+            //System.out.println("unSortedCoastlines size: " + unSortedCoastlines.size());
             // De coastlines som ikke passede
             List<Drawable> buildUpCoastlinesList = new ArrayList<>();
-            System.out.println("buildUpCoastlinesList size: " + buildUpCoastlinesList.size());
+            //System.out.println("buildUpCoastlinesList size: " + buildUpCoastlinesList.size());
             for (Drawable coastline : unSortedCoastlines) {
 
                 if (listOfNodesInCoastline.size() == 0) {
@@ -740,11 +756,10 @@ public class Model {
                     //System.out.println("Vi er færdige med kystlinjen og har tilføjet den");
 
                 }
-
             }
 
            if(buildUpCoastlinesList.size() == unSortedCoastlines.size()) {
-               System.out.println("listOfNodesInCoastline størelse: " + listOfNodesInCoastline.size());
+               //System.out.println("listOfNodesInCoastline størelse: " + listOfNodesInCoastline.size());
 
                     //tilføjer den færdige polyline figur til listen, der gemmer alle øerne i form af polylines
                     listOfCoastlines.add(currentWay);
@@ -837,6 +852,8 @@ public class Model {
         return mapOfOSMNodesToIndex;
     }
 
+
+    /// Den her metode tager 99% af tiden i Dijkstra kald!!!
     public static OSMNode getKeyfromValueInHashMap(int value){
         if(mapOfOSMNodesToIndex.containsValue(value)) {
             for (Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()){
@@ -854,9 +871,12 @@ public class Model {
     }
 
 
-    public static EdgeWeightedDigraph getGraph() {
+    public EdgeWeightedDigraph getGraph() {
         return graph;
     }
+
+
+
 }
 
 

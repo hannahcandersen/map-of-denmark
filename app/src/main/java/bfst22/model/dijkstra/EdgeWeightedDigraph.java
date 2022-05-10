@@ -4,6 +4,8 @@ import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.model.algslib.Bag;
 
+import java.util.Map;
+
 
 // En edge weighted graf der består af et antal vertices og et antal directed edges (der har et from, to og en vægt).
 // Bygges som en adjacency list, hvor hver index er en vertex, med en tilhørende bag af adjacent vertices

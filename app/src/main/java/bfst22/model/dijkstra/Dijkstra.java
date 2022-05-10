@@ -8,6 +8,7 @@ import bfst22.model.algslib.IndexMinPQ;
 import bfst22.model.algslib.Stack;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 // Finder shortest path fra en vertex til alle andre vertices i grafen
@@ -24,10 +25,10 @@ public class Dijkstra {
     public Dijkstra(EdgeWeightedDigraph graph, int startVertex, int endVertex) {
 
         // Tjekker at en edge ikke har negativ vægt
-        /*for (DirectedEdge edge : graph.allEdgesInGraph()) {
+        for (DirectedEdge edge : graph.allEdgesInGraph()) {
             if (edge.weight() < 0)
                 throw new IllegalArgumentException("edge " + edge + " has negative weight");
-        }*/
+        }
 
         // sætter distTo til et nyt double-array med samme antal pladser, som der er vertices i grafen
         distTo = new double[graph.getNumberOfVertices()];
@@ -66,6 +67,11 @@ public class Dijkstra {
 
     // Metoden der relaxer en edge og opdaterer priority queuen hvis nødvendigt
     private void relax(DirectedEdge edge) {
+        //relax(edge, from)
+        //if(from == edge.start)
+            //gør det som vi har lavet
+        //else
+            //byt og start og slut om
         int edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
         int edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
         if (distTo[edgeEnd] > distTo[edgeStart] + edge.weight()) {
@@ -97,6 +103,7 @@ public class Dijkstra {
         for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[Model.getMapOfOSMNodesToIndex().get(edge.getStart())]) {
             path.push(edge);
         }
+        System.out.println("Færdig med pathTo");
         return path;
     }
 
