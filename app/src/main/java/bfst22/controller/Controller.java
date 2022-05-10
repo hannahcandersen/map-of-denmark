@@ -243,7 +243,7 @@ public class Controller {
         if(pinkCheckBox.isSelected()){
             canvas.isPinkSelected = true;}
         else{
-            canvas.isPinkSelected = false;}
+            canvas.setPinkSelected(false);}
         canvas.repaint();
     }
 
@@ -251,6 +251,16 @@ public class Controller {
     public void onClickWarningOk(ActionEvent event){
        warningPane.setVisible(false);
         clickOnWaringButtonCounter++;
+    }
+
+    @FXML
+    public void onClickdebugBox(ActionEvent event) {
+        if(debugBox.isSelected()){
+            canvas.setDebugSelected(true);
+        }
+        else{
+            canvas.setDebugSelected(false);
+        }
     }
 
 }

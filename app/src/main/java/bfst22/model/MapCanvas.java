@@ -33,9 +33,24 @@ public class MapCanvas extends Canvas {
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
-    public boolean isPartySelected; //skal laves private
-    public boolean isPinkSelected; //skal laves private
+    private boolean isPartySelected; //skal laves private
+    private boolean isPinkSelected; //skal laves private
     private Iterable<DirectedEdge> dijkstraShortestPath;
+
+
+    public void setPartySelected(boolean partySelected) {
+        isPartySelected = partySelected;
+    }
+
+    public void setPinkSelected(boolean pinkSelected) {
+        isPinkSelected = pinkSelected;
+    }
+
+    public void setDebugSelected(boolean debugSelected) {
+        isDebugSelected = debugSelected;
+    }
+
+    private boolean isDebugSelected;
 
 
     //Randomme farver
@@ -68,11 +83,17 @@ public class MapCanvas extends Canvas {
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() { //throws NullPointerException
         //Får punkterne i vinduet og laver dem om til punkter i kortet
-        Point2D screenMin = new Point2D(100, 100);
-        Point2D screenMax = new Point2D(getWidth() - 100, getHeight() - 100);
-        Point2D realMin = mouseToModel(screenMin);
-        Point2D realMax = mouseToModel(screenMax);
-//
+        if(isDebugSelected) {
+            Point2D screenMin = new Point2D(100, 100);
+            Point2D screenMax = new Point2D(getWidth() - 100, getHeight() - 100);
+
+        }
+        else{
+            Point2D screenMin = new Point2D(0, 0 );
+            Point2D screenMax = new Point2D(getWidth(), getHeight());
+        }
+            Point2D realMin = mouseToModel(screenMin);
+            Point2D realMax = mouseToModel(screenMax);
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle rangeSearchRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         //System.out.println(rangeSearchRectangle);
@@ -597,9 +618,11 @@ public class MapCanvas extends Canvas {
 
 
         //Tegner vores debug firkant
-        Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
-        gc.setFill(rectangleColor);
-        gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
+        if(isDebugSelected) {
+            Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
+            gc.setFill(rectangleColor);
+            gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
+        }
 
 
 
