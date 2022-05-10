@@ -50,6 +50,8 @@ public class Controller {
     @FXML
     private CheckBox pinkCheckBox;
     @FXML
+    private CheckBox debugBox;
+    @FXML
     private Pane warningPane;
 
     @FXML
@@ -232,16 +234,16 @@ public class Controller {
        if(colorCheckBox.isSelected()){
            if(clickOnWaringButtonCounter<1){
             warningPane.setVisible(true);}
-           canvas.isPartySelected = true;}
+           canvas.setPartySelected(true);}
        else{
-           canvas.isPartySelected = false;}
+           canvas.setPartySelected(false);}
        canvas.repaint();
     }
 
     @FXML
     public void pinkColorToggle(ActionEvent event){
         if(pinkCheckBox.isSelected()){
-            canvas.isPinkSelected = true;}
+            canvas.setPinkSelected(true);}
         else{
             canvas.setPinkSelected(false);}
         canvas.repaint();

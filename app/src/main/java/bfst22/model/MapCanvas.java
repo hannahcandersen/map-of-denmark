@@ -58,6 +58,10 @@ public class MapCanvas extends Canvas {
     private int g;
     private int b;
 
+    private Point2D screenMin;
+    private Point2D screenMax;
+
+
 
 
 
@@ -727,4 +731,6 @@ public class MapCanvas extends Canvas {
     public void setDijkstraShortestPath(Iterable<DirectedEdge> dijkstraShortestPath) {
         this.dijkstraShortestPath = dijkstraShortestPath;
     }
+
+
 }
