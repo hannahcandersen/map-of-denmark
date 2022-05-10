@@ -593,9 +593,9 @@ public class MapCanvas extends Canvas {
                 drawable.draw(gc);
             }
             System.out.println("Jeg har tegnet Dijkstra");
-        }else {
+        }/*else {
             System.out.println("Dijkstra er null");
-        }
+        }*/
 
 
         // TEGNER GRAFEN
