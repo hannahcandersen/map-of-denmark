@@ -95,8 +95,8 @@ public class MapCanvas extends Canvas {
              screenMin = new Point2D(0, 0 );
              screenMax = new Point2D(getWidth(), getHeight());}
 
-            Point2D realMin = mouseToModel(screenMin);
-            Point2D realMax = mouseToModel(screenMax);
+        Point2D realMin = mouseToModel(screenMin);
+        Point2D realMax = mouseToModel(screenMax);
 
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle rangeSearchRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
@@ -108,12 +108,12 @@ public class MapCanvas extends Canvas {
 
 
         Point2D realscalebarPoint1 = mouseToModel(scalebarPoint1);
-        System.out.println("Point 1: " + realscalebarPoint1.getX() + realscalebarPoint1.getY());
+        //System.out.println("Point 1: " + realscalebarPoint1.getX() + realscalebarPoint1.getY());
         Point2D realscalebarPoint2 = mouseToModel(scalebarPoint2);
-        System.out.println("Point 2: " + realscalebarPoint2.getX() + realscalebarPoint2.getY());
+        //System.out.println("Point 2: " + realscalebarPoint2.getX() + realscalebarPoint2.getY());
 
         ration = calculateRation(realscalebarPoint1.getX(),realscalebarPoint2.getX());
-        System.out.println("ration: " + ration);
+        //System.out.println("ration: " + ration);
 
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
@@ -308,6 +308,13 @@ public class MapCanvas extends Canvas {
                     } else {
                         drawable.fillWayType(gc, WayType.RELIGIOUS);
                     }
+                }
+            }
+
+            if (model.getKDTreeSECONDARY() != null && model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot())) {
+                    gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.SECONDARY);
                 }
             }
 

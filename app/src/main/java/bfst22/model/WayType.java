@@ -93,12 +93,10 @@ public enum WayType {
 
     public int getWidth() {
         return switch (this) {
-            case MOTORWAY -> 9;
-            case TRUNK, PRIMARY -> 4;
-            case SECONDARY -> 4;
-            //case TERTIARY -> 6;
-            case UNCLASSIFIED, LIVING_STREET -> 5;
-            case ROAD, RACEWAY, TERTIARY -> 3;
+            case MOTORWAY -> 6;
+            case TRUNK, PRIMARY, SECONDARY -> 5;
+            case UNCLASSIFIED, LIVING_STREET, TERTIARY -> 4;
+            case ROAD, RACEWAY -> 3;
             case CONSTRUCTIONWAY, SERVICE, PEDESTRIAN, STEPS, RESIDENTIALWAY -> 2;
             default -> 1;
         };
