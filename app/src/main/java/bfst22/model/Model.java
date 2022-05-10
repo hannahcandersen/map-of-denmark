@@ -746,38 +746,15 @@ public class Model {
            if(buildUpCoastlinesList.size() == unSortedCoastlines.size()) {
                System.out.println("listOfNodesInCoastline størelse: " + listOfNodesInCoastline.size());
 
-                //Måske kan vi undlade at tilføje punkterne
-                //Hvis coastline ikke er en lukket figur
-                //sæt end og start punkt sammen
-                 //lave et if statement, som er sidste udvej
-                    //opretter en liste at lave vores fiktive coastline
-
-                    //List<OSMNode> lastMadeUpCoastline = new ArrayList<>();
-
-                    //Tilføjer start og slut nodes til Arraylisten
-                    //vores fiktive coastline startpunkt må være dens store coastlines endpunkt
-
-                    //lastMadeUpCoastline.add(endOSMNode);
-                   // lastMadeUpCoastline.add(startOSMNode);
-
-                    //tilføjer den fiktive coastline til den store coastline liste
-                    //listOfNodesInCoastline.addAll(lastMadeUpCoastline);
-
-                    //currentWay = new PolyLine((ArrayList<OSMNode>) listOfNodesInCoastline);
                     //tilføjer den færdige polyline figur til listen, der gemmer alle øerne i form af polylines
                     listOfCoastlines.add(currentWay);
                     listOfNodesInCoastline.clear();
 
             }
             else {
-                // gammel liste = ny liste (ting vi mangler at kigge på)
-                unSortedCoastlines = buildUpCoastlinesList;
-            }
-            // gammel liste = ny liste (ting vi mangler at kigge på)
-           // unSortedCoastlines = buildUpCoastlinesList;
-            //System.out.println("unSortedCoastlines: " + unSortedCoastlines.size());
-
-        } //Forloop stop
+               // gammel liste = ny liste (ting vi mangler at kigge på)
+               unSortedCoastlines = buildUpCoastlinesList;
+           }} //Forloop stop
 
         //hvis start og slut ikke er det samme - sæt en linje imellem
         System.out.println("done med kystliner");
