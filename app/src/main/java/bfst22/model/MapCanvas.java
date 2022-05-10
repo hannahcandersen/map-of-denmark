@@ -202,7 +202,6 @@ public class MapCanvas extends Canvas {
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSAND()))
             {drawable.fillWayType(gc, WayType.SAND);}}
 
-
             if (Model.getKDTreeHOSPITAL() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeHOSPITAL()) != null)
             {for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeHOSPITAL()))
             {drawable.fillWayType(gc, WayType.HOSPITAL);}}
@@ -253,7 +252,6 @@ public class MapCanvas extends Canvas {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeSERVICE())) {
                     gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
                     drawable.drawWayType(gc, WayType.SERVICE);}}
-
 
             if (Model.getKDTreeROAD() != null && KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeROAD()) != null) {
                 for (Drawable drawable : KdTree.rangeSearch(searchRangeSerachRectangle, Model.getKDTreeROAD())) {

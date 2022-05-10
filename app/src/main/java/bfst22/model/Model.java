@@ -133,7 +133,7 @@ public class Model {
         KDTreeBEACH = KdTree.buildKDTree(lines.get(WayType.BEACH), true);
         KDTreeSAND = KdTree.buildKDTree(lines.get(WayType.SAND), true);
         KDTreeFOREST = KdTree.buildKDTree(lines.get(WayType.FOREST), true);
-        KDTreeBUILDING = KdTree.buildKDTree(lines.get(WayType.BUILDING), true);
+        //KDTreeBUILDING = KdTree.buildKDTree(lines.get(WayType.BUILDING), true);
         KDTreeRESIDENTIAL = KdTree.buildKDTree(lines.get(WayType.RESIDENTIAL), true);
         KDTreeINDUSTRIAL = KdTree.buildKDTree(lines.get(WayType.INDUSTRIAL), true);
         KDTreeMEADOW = KdTree.buildKDTree(lines.get(WayType.MEADOW), true);
