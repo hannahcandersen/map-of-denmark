@@ -66,6 +66,8 @@ public class Controller {
     private Button warningOkButton;
 
     private int clickOnWaringButtonCounter = 0;
+    private AddressObject chosenAddressFrom;
+    private AddressObject chosenAddressTo;
 
 
 
@@ -208,9 +210,9 @@ public class Controller {
     @FXML
     public void chooseAddressFrom(MouseEvent event) {
         //viser valgt adresse i textfield
-        AddressObject chosenAddress = listViewFrom.getSelectionModel().getSelectedItem();
-        if(chosenAddress != null) {
-            fromTextField.setText(chosenAddress.toString());
+        chosenAddressFrom = listViewFrom.getSelectionModel().getSelectedItem();
+        if(chosenAddressFrom != null) {
+            fromTextField.setText(chosenAddressFrom.toString());
             listViewFrom.setVisible(false);
         }
     }
@@ -218,9 +220,9 @@ public class Controller {
     @FXML
     public void chooseAddressTo(MouseEvent event) {
         //viser valgt adresse i textfield
-        AddressObject chosenAddress = listViewTo.getSelectionModel().getSelectedItem();
-        if(chosenAddress != null) {
-            toTextField.setText(chosenAddress.toString());
+        chosenAddressTo = listViewTo.getSelectionModel().getSelectedItem();
+        if(chosenAddressTo != null) {
+            toTextField.setText(chosenAddressTo.toString());
             listViewTo.setVisible(false);
         }}
 
@@ -250,16 +252,10 @@ public class Controller {
         clickOnWaringButtonCounter++;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    public AddressObject getChosenAddressFrom() {
+        return chosenAddressFrom;
+    }
+    public AddressObject getChosenAddressTo() {
+        return chosenAddressTo;
+    }
 }
