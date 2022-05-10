@@ -95,17 +95,29 @@ public class MapCanvas extends Canvas {
              screenMin = new Point2D(100, 100);
              screenMax = new Point2D(getWidth() - 100, getHeight() - 100);
 
-        }
-        else{
+        } else{
              screenMin = new Point2D(0, 0 );
-             screenMax = new Point2D(getWidth(), getHeight());
-        }
+             screenMax = new Point2D(getWidth(), getHeight());}
+
             Point2D realMin = mouseToModel(screenMin);
             Point2D realMax = mouseToModel(screenMax);
+
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle rangeSearchRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         //System.out.println(rangeSearchRectangle);
-        //System.out.println(rangeSearchRectangle);
+
+        Point2D scalebarPoint1 = new Point2D(0,0);
+        Point2D scalebarPoint2 = new Point2D(10, 0);
+
+
+
+        Point2D realscalebarPoint1 = mouseToModel(scalebarPoint1);
+        System.out.println("Point 1: " + realscalebarPoint1.getX() + realscalebarPoint1.getY());
+        Point2D realscalebarPoint2 = mouseToModel(scalebarPoint2);
+        System.out.println("Point 2: " + realscalebarPoint2.getX() + realscalebarPoint2.getY());
+
+        ration = calculateRation(realscalebarPoint1.getX(),realscalebarPoint2.getX());
+        System.out.println("ration: " + ration);
 
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
@@ -118,6 +130,8 @@ public class MapCanvas extends Canvas {
         //Sætter de generelle indstillinger for MapCanvas
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
+
+
 
         //Laver baggrunden
         gc.setFill(Color.LIGHTBLUE);
@@ -632,8 +646,6 @@ public class MapCanvas extends Canvas {
             gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
         }
 
-
-
         //Tegner nearest node når man double klikker
         if(drawPunkt != null){
             gc.setFill(Color.RED);
@@ -651,7 +663,17 @@ public class MapCanvas extends Canvas {
             gc.setFill(Color.BLUE);
             gc.fillRect(drawPunktEndOfRoute.getLat(), drawPunktEndOfRoute.getLon(), 0.0002, 0.0002);
             gc.fillRect(drawPunktEndOfRoute.getLon(), drawPunktEndOfRoute.getLat(), 0.0002, 0.0002);
-            System.out.println("Tegner drawPunktEndOfRoute");}}
+            System.out.println("Tegner drawPunktEndOfRoute");}
+
+        /*gc.setFill(Color.YELLOW);
+        gc.fillRect(realscalebarPoint1.getX(), realscalebarPoint1.getY(), 0.02, 0.02);
+        gc.fillRect(realscalebarPoint2.getX(), realscalebarPoint2.getY(), 0.02, 0.02);*/
+    }
+
+    public double calculateRation(double x1, double x2){
+                double distX = x2-x1;
+                return 10/distX;
+    }
 
     public Model getModel() {
         return model;
@@ -735,6 +757,10 @@ public class MapCanvas extends Canvas {
 
     public void setDijkstraShortestPath(Iterable<DirectedEdge> dijkstraShortestPath) {
         this.dijkstraShortestPath = dijkstraShortestPath;
+    }
+
+    public String getRationToString(){
+        return String.valueOf(this.ration);
     }
 
 

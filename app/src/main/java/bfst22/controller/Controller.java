@@ -51,9 +51,10 @@ public class Controller {
     private CheckBox debugBox;
     @FXML
     private Pane warningPane;
-
     @FXML
     private Button warningOkButton;
+    @FXML
+    private Label scaleInfo;
 
     private int clickOnWaringButtonCounter = 0;
     private AddressObject chosenAddressFrom;
@@ -70,6 +71,14 @@ public class Controller {
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
         canvas.init(model);
+        warningPane.setVisible(false);
+        scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
+
+
+
+
+
+
 
     }
 
