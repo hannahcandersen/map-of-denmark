@@ -56,7 +56,7 @@ public class Dijkstra {
             }
             else {
                 for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexLightestWeight]))
-                relax(edge);
+                relax(edge, vertexLightestWeight);
             }
         }
 
@@ -106,29 +106,6 @@ public class Dijkstra {
         System.out.println("Færdig med pathTo");
         return path;
     }
-
-    /*
-    public void caluclatePolylinesInPath(int vertex){
-        validateVertex(vertex);
-        ArrayList<OSMNode> nodesInPolyLine = new ArrayList<>();
-
-        for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[Model.getMapOfOSMNodesToIndex().get(edge.getStart())]) {
-            nodesInPolyLine.add(edge.getStart());
-            nodesInPolyLine.add(edge.getEnd());
-            PolyLine polyLine = new PolyLine(nodesInPolyLine);
-            polylinesInPath.push(polyLine);
-        }
-    }
-
-    public Iterable<PolyLine> getPolylinesInPath(int vertex){
-        if (!hasPathTo(vertex)) return null;
-        caluclatePolylinesInPath(vertex);
-        return polylinesInPath;
-    }
-     */
-
-
-
 
 
     ///////////// METODER TIL VALIDERING ///////////////////

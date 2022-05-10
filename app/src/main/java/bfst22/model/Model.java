@@ -856,22 +856,6 @@ public class Model {
     }
 
 
-    /*
-    /// Den her metode tager 99% af tiden i Dijkstra kald!!!
-    public static OSMNode getKeyfromValueInHashMap(int value){
-        if(mapOfOSMNodesToIndex.containsValue(value)) {
-            for (Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()){
-                if (entry.getValue() == value){
-                    return entry.getKey();
-                }
-            }
-        }
-        return null;
-
-    }
-
-     */
-
     //Laver et array der holder hver OSMNodes i grafen på dens tilhørende index. Bruges til at få OSMNode udfra index
     public void makeArrayOfOSMNodesInGraph(Map<OSMNode, Integer> mapOfOSMNodesToIndex){
         arrayOfOSMNodesInGraph = new OSMNode[mapOfOSMNodesToIndex.size()];
