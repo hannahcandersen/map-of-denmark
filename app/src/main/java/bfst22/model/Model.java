@@ -90,6 +90,7 @@ public class Model {
     private boolean isRoundabout;
     private List<PolyLine> listOfCoastlines;
     private EdgeWeightedDigraph graph;
+    private static OSMNode[] arrayOfOSMNodesInGraph;
     private TST tst;
 
 
