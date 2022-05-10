@@ -3,6 +3,8 @@ package bfst22.controller;
 import bfst22.model.Model;
 import bfst22.model.MapCanvas;
 import bfst22.model.OSMNode;
+import bfst22.model.dijkstra.Dijkstra;
+import bfst22.model.dijkstra.DirectedEdge;
 import bfst22.model.kdtree.KdTree;
 import bfst22.view.View;
 import com.sun.glass.ui.CommonDialogs;
@@ -68,8 +70,6 @@ public class Controller {
     private int clickOnWaringButtonCounter = 0;
     private AddressObject chosenAddressFrom;
     private AddressObject chosenAddressTo;
-
-
 
     KdTree kdTree = new KdTree();
 
