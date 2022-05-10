@@ -800,6 +800,8 @@ public class Model {
         for (DirectedEdge edge : listOfAllEdgesInWays){
             graph.addEdge(edge);
         }
+
+        makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndex);
     }
 
 
@@ -853,6 +855,7 @@ public class Model {
     }
 
 
+    /*
     /// Den her metode tager 99% af tiden i Dijkstra kald!!!
     public static OSMNode getKeyfromValueInHashMap(int value){
         if(mapOfOSMNodesToIndex.containsValue(value)) {
@@ -866,6 +869,17 @@ public class Model {
 
     }
 
+     */
+
+    //Laver et array der holder hver OSMNodes i grafen på dens tilhørende index. Bruges til at få OSMNode udfra index
+    public void makeArrayOfOSMNodesInGraph(Map<OSMNode, Integer> mapOfOSMNodesToIndex){
+        arrayOfOSMNodesInGraph = new OSMNode[mapOfOSMNodesToIndex.size()];
+        for(Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()) {
+            int index = entry.getValue();
+            arrayOfOSMNodesInGraph[index] = entry.getKey();
+        }
+    }
+
     public NodeMap getId2node() {
         return id2node;
     }
@@ -876,7 +890,9 @@ public class Model {
     }
 
 
-
+    public static OSMNode[] getArrayOfOSMNodesInGraph() {
+        return arrayOfOSMNodesInGraph;
+    }
 }
 
 

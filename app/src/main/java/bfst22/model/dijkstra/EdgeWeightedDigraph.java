@@ -76,7 +76,7 @@ public class EdgeWeightedDigraph {
     public Iterable<DirectedEdge> allEdgesInGraph() {
         Bag<DirectedEdge> listOfEdges = new Bag<DirectedEdge>();
         for (int vertexIndex = 0; vertexIndex < numberOfVertices; vertexIndex++) {
-            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(vertexIndex))) {
+            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexIndex])) {
                 listOfEdges.add(edge);
             }
         }

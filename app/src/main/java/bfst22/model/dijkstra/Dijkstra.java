@@ -55,7 +55,7 @@ public class Dijkstra {
                 break;
             }
             else {
-                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(vertexLightestWeight)))
+                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexLightestWeight]))
                 relax(edge);
             }
         }
@@ -161,7 +161,7 @@ public class Dijkstra {
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.getNumberOfVertices(); v++) {
-            for (DirectedEdge e : G.getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(v))) {
+            for (DirectedEdge e : G.getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[v])) {
                 int w = Model.getMapOfOSMNodesToIndex().get(e.getEnd());
                 if (distTo[v] + e.weight() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
