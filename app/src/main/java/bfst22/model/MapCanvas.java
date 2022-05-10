@@ -88,13 +88,13 @@ public class MapCanvas extends Canvas {
     public void repaint() { //throws NullPointerException
         //Får punkterne i vinduet og laver dem om til punkter i kortet
         if(isDebugSelected) {
-            Point2D screenMin = new Point2D(100, 100);
-            Point2D screenMax = new Point2D(getWidth() - 100, getHeight() - 100);
+             screenMin = new Point2D(100, 100);
+             screenMax = new Point2D(getWidth() - 100, getHeight() - 100);
 
         }
         else{
-            Point2D screenMin = new Point2D(0, 0 );
-            Point2D screenMax = new Point2D(getWidth(), getHeight());
+             screenMin = new Point2D(0, 0 );
+             screenMax = new Point2D(getWidth(), getHeight());
         }
             Point2D realMin = mouseToModel(screenMin);
             Point2D realMax = mouseToModel(screenMax);

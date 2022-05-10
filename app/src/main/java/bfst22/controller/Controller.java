@@ -263,6 +263,7 @@ public class Controller {
         else{
             canvas.setDebugSelected(false);
         }
+        canvas.repaint();
     }
 
 }
