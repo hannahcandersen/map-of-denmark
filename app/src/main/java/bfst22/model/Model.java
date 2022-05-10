@@ -552,13 +552,9 @@ public class Model {
                             break;
                         case "node":
                             if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
-
-                                //var getLatFromList = id2node.get(id).getLat();
-                                //var getLonFromList = id2node.get(id).getLon();
                                 //laver Ternary Search Tree/Trie med alle adresserne
                                 if(tst == null) {
                                     tst = new TST(new AddressObject(street, housenumber, postcode, city, osmNodeToAddress.getLat(), osmNodeToAddress.getLon()));
-                                    //getLatFromList, getLonFromList
                                     //System.out.println("Laver TST");
                                 } else {
                                     tst.put(street, new AddressObject(street, housenumber, postcode, city, osmNodeToAddress.getLat(), osmNodeToAddress.getLon()));
