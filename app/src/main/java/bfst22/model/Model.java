@@ -215,6 +215,8 @@ public class Model {
             out.writeFloat(maxlat);
             out.writeFloat(maxlon);
             out.writeObject(lines);
+
+            //Gem kystlinjer her
         }
     }
 
@@ -354,10 +356,10 @@ public class Model {
                                     break;
                                 case "amenity":
                                     type = switch (v) {
-                                        case "school" -> WayType.SCHOOL;
+                                        case "school", "kindergarten" -> WayType.SCHOOL;
                                         case "parking" -> WayType.PARKING;
                                         case "hospital" -> WayType.HOSPITAL;
-                                        case "kindergarten" -> WayType.BUILDING;
+                                        //case "kindergarten" -> WayType.SCHOOL;
                                         case "grave_yard" -> WayType.GRAVEYARD;
                                         default -> type;
                                     };
@@ -841,6 +843,8 @@ public class Model {
         return mapOfOSMNodesToIndex;
     }
 
+
+    /// Den her metode tager 99% af tiden i Dijkstra kald!!!
     public static OSMNode getKeyfromValueInHashMap(int value){
         if(mapOfOSMNodesToIndex.containsValue(value)) {
             for (Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()){

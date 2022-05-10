@@ -98,7 +98,7 @@ public class MapCanvas extends Canvas {
         //{
         gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
         for (Drawable drawable : model.getListOfCoastlines()) {
-            if (zoomLevel <= 29) {
+            if (zoomLevel <= 30) {
                 if (isPartySelected) {
                     drawable.drawWayType(gc, WayType.COASTLINE);
                     drawable.fill(gc);
@@ -108,7 +108,7 @@ public class MapCanvas extends Canvas {
                     drawable.fill(gc);
                 }
             }
-            if (zoomLevel >= 30) {
+            if (zoomLevel >= 31) {
                 if (isPartySelected) {
                     drawable.drawWayType(gc, WayType.COASTLINE);
                     drawable.fill(gc);
