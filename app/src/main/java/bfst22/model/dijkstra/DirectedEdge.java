@@ -52,9 +52,6 @@ public class DirectedEdge implements Drawable{
         return start + "->" + end + " " + String.format("%5.2f", weight);
     }
 
-    @Override
-    public void trace(GraphicsContext gc) {
-    }
 
     @Override
     public float getMiddleX() {
@@ -97,5 +94,14 @@ public class DirectedEdge implements Drawable{
         nodesInEdge.add(getEnd());
         return nodesInEdge;
     }
+
+    @Override
+    public void trace(GraphicsContext gc) {
+        gc.beginPath();
+        gc.moveTo(start.getLat(), start.getLon());
+        gc.lineTo(end.getLat(), end.getLon());
+        gc.stroke();
+    }
+
 }
 

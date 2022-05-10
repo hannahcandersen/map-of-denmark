@@ -548,15 +548,35 @@ public class MapCanvas extends Canvas {
                         }
                     }
 
+
+
+            if (model.getKDTreeGRAVEYARD() != null && model.getKDTreeGRAVEYARD().rangeSearch(rangeSearchRectangle, model.getKDTreeGRAVEYARD().getRoot()) != null) {
+                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+                for (Drawable drawable : model.getKDTreeGRAVEYARD().rangeSearch(rangeSearchRectangle, model.getKDTreeGRAVEYARD().getRoot())) {
+                    if (isPartySelected) {
+                        drawable.fill(gc);
+                    } else {
+                        drawable.fillWayType(gc, WayType.GRAVEYARD);
+                    }
+                }
+            }
+
+
+
+
+
+
                     if (model.getKDTreeBUILDING() != null && model.getKDTreeBUILDING().rangeSearch(rangeSearchRectangle, model.getKDTreeBUILDING().getRoot()) != null) {
                         gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         for (Drawable drawable : model.getKDTreeBUILDING().rangeSearch(rangeSearchRectangle, model.getKDTreeBUILDING().getRoot())) {
                             gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
                             if (isPartySelected) {
                                 drawable.fill(gc);
+                                gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
                                 drawable.drawWayType(gc, WayType.BUILDING);
                             } else {
                                 drawable.fillWayType(gc, WayType.BUILDING);
+                                gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
                                 drawable.drawWayType(gc, WayType.BUILDING);
                             }
                         }
@@ -582,11 +602,10 @@ public class MapCanvas extends Canvas {
 
 
         //// TEGNER SHORTEST PATH //////
-        if (getDijkstraShortestPath() != null){
-            for (Drawable drawable : getDijkstraShortestPath()) {
-                gc.setLineWidth(10);
+        if (dijkstraShortestPath != null){
+            for (Drawable drawable : dijkstraShortestPath) {
+                gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
                 gc.setStroke(Color.RED);
-                gc.setFill(Color.RED);
                 drawable.draw(gc);
             }
             System.out.println("Jeg har tegnet Dijkstra");
@@ -607,13 +626,17 @@ public class MapCanvas extends Canvas {
 
         if(drawPunktStartOfRoute != null){
             gc.setFill(Color.RED);
-            gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
-            gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
+            gc.fillRect(drawPunktStartOfRoute.getLat(), drawPunktStartOfRoute.getLon(), 0.0002, 0.0002);
+            gc.fillRect(drawPunktStartOfRoute.getLon(), drawPunktStartOfRoute.getLat(), 0.0002, 0.0002);
+            System.out.println("Tegner drawPunktStartOfRoute");
+
+        }
 
         if(drawPunktEndOfRoute != null){
             gc.setFill(Color.RED);
-            gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
-            gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
+            gc.fillRect(drawPunktEndOfRoute.getLat(), drawPunktEndOfRoute.getLon(), 0.0002, 0.0002);
+            gc.fillRect(drawPunktEndOfRoute.getLon(), drawPunktEndOfRoute.getLat(), 0.0002, 0.0002);
+            System.out.println("Tegner drawPunktEndOfRoute");}
 
     }
 
@@ -625,10 +648,10 @@ public class MapCanvas extends Canvas {
         this.drawPunkt = drawPunkt;
     }
 
-    public void drawPunktStartOfRoute(OSMNode drawPunkt) {
+    public void setDrawPunktStartOfRoute(OSMNode drawPunkt) {
         this.drawPunktStartOfRoute = drawPunkt;
     }
-    public void drawPunktEndOfRoute(OSMNode drawPunkt) {
+    public void setDrawPunktEndOfRoute(OSMNode drawPunkt) {
         this.drawPunktEndOfRoute = drawPunkt;
     }
 

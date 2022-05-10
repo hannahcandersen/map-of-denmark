@@ -17,7 +17,7 @@ public enum WayType {
     MOTORWAY, PRIMARY, TRUNK, SECONDARY, TERTIARY, UNCLASSIFIED, LIVING_STREET, SERVICE, PEDESTRIAN, TRACK, ROAD, RACEWAY,
     BUS_GUIDEWAY, FOOTWAY_ANDMORE, STEPS, BRIDLEWAY, CYCLEWAY, RESIDENTIALWAY, CONSTRUCTIONWAY, DOG_PARK, GOLF_COURSE,
     ICE_RINK, MARINA, MINIATURE_GOLF, NATURE_RESERVE, PITCH, SPORTS_CENTRE, SWIMMING_POOL, RIVER_ANDMORE, SCHOOL,
-    STREAM_ANDMORE, DOCK, POND_ANDMORE, HARBOUR, PARKING, HOSPITAL, FERRY, MULTIPOLYGON;
+    STREAM_ANDMORE, DOCK, POND_ANDMORE, HARBOUR, PARKING, HOSPITAL, FERRY, MULTIPOLYGON, GRAVEYARD;
 
     /*
     Her er også stroke farve, men fordi BUILDING skal have to forskellige farver, er der lavet to metoder.
@@ -56,6 +56,7 @@ public enum WayType {
             case RECREATION_GROUND -> Color.valueOf("E0FCE3");
             case PITCH -> Color.valueOf("ACE0CC");
             case SCHOOL -> Color.valueOf("FFFFE6");
+            case GRAVEYARD -> Color.valueOf("ABCBB0");
 
 
 
@@ -95,9 +96,9 @@ public enum WayType {
             case MOTORWAY -> 9;
             case TRUNK, PRIMARY -> 4;
             case SECONDARY -> 4;
-            case TERTIARY -> 6;
-            case UNCLASSIFIED, RESIDENTIALWAY, LIVING_STREET -> 5;
-            case ROAD, RACEWAY -> 3;
+            //case TERTIARY -> 6;
+            case UNCLASSIFIED, LIVING_STREET, TERTIARY -> 5;
+            case ROAD, RACEWAY, RESIDENTIALWAY -> 3;
             case CONSTRUCTIONWAY, SERVICE, PEDESTRIAN, STEPS -> 2;
             default -> 1;
         };

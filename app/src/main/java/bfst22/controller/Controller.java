@@ -71,7 +71,6 @@ public class Controller {
     private AddressObject chosenAddressFrom;
     private AddressObject chosenAddressTo;
 
-    KdTree kdTree = new KdTree();
 
 
     //Canvas er superklassen til vores MapCanvas.
@@ -163,18 +162,23 @@ public class Controller {
     @FXML
     public void searchRoute(ActionEvent actionEvent) {
         //Finder den tætteste node fra søgt adresse (nearest neighbour)
-        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressFrom.getLat(), chosenAddressFrom.getLon()); //EVT byt om på lat og lon
-        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressTo.getLat(), chosenAddressTo.getLon());
+        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
+        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+
+        System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
+        System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
+        canvas.setDrawPunktStartOfRoute(startOfRoute);
+        canvas.setDrawPunktEndOfRoute(endOfRoute);
 
         //Find indeks for startOfRoute og endOfRoute
-        int startOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(startOfRoute);
-        int endOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(endOfRoute);
+        int startOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndex().get(startOfRoute);
+        int endOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndex().get(endOfRoute);
 
         //Dijkstra
-        Dijkstra dijkstra = new Dijkstra(Model.getGraph(), startOfRouteIndex, endOfRouteIndex);
+        Dijkstra dijkstra = new Dijkstra(Model.getGraph(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndex());
 
         //Gemmer den korteste route i et felt
-        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex));
+        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndex()));
         canvas.repaint();
 
     }

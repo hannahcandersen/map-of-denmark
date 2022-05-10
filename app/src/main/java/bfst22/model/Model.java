@@ -73,6 +73,7 @@ public class Model {
     private final KdTree KDTreeRECREATION_GROUND;
     private final KdTree KDTreeSCHOOL;
     private final KdTree KDTreeFERRY;
+    private final KdTree KDTreeGRAVEYARD;
     private final KdTree KDTreeNodesInGraph;
 
 
@@ -187,6 +188,7 @@ public class Model {
         KDTreePITCH = new KdTree(lines.get(WayType.PITCH));
         KDTreeSCHOOL = new KdTree(lines.get(WayType.SCHOOL));
         KDTreeFERRY = new KdTree(lines.get(WayType.FERRY));
+        KDTreeGRAVEYARD = new KdTree(lines.get(WayType.GRAVEYARD));
         KDTreeRIVER_ANDMORE = new KdTree(lines.get(WayType.RIVER_ANDMORE));
         KDTreeCOASTLINE = new KdTree(lines.get(WayType.COASTLINE));
         KDTreeNodesInGraph = new KdTree(listOfAlleNodesInGraph, 0);
@@ -356,6 +358,7 @@ public class Model {
                                         case "parking" -> WayType.PARKING;
                                         case "hospital" -> WayType.HOSPITAL;
                                         case "kindergarten" -> WayType.BUILDING;
+                                        case "grave_yard" -> WayType.GRAVEYARD;
                                         default -> type;
                                     };
                                     break;
@@ -630,6 +633,7 @@ public class Model {
     public KdTree getKDTreePITCH () {return KDTreePITCH;}
     public KdTree getKDTreeSCHOOL () {return KDTreeSCHOOL;}
     public KdTree getKDTreeFERRY () {return KDTreeFERRY;}
+    public KdTree getKDTreeGRAVEYARD () {return KDTreeGRAVEYARD;}
     public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
 
 
@@ -783,7 +787,7 @@ public class Model {
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
 
         for (DirectedEdge edge : listOfAllEdgesInWays){
-            graph.addEdge(edge);
+            graph.addEdge(edge, mapOfOSMNodesToIndex);
         }
     }
 
@@ -833,7 +837,7 @@ public class Model {
         return listOfAllEdgesInWays;
     }
 
-    public static Map<OSMNode, Integer> getMapOfOSMNodesToIndex() {
+    public Map<OSMNode, Integer> getMapOfOSMNodesToIndex() {
         return mapOfOSMNodesToIndex;
     }
 
