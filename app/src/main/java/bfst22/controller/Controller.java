@@ -163,8 +163,8 @@ public class Controller {
     @FXML
     public void searchRoute(ActionEvent actionEvent) {
         //Finder den tætteste node fra søgt adresse (nearest neighbour)
-        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressFrom.getLat(), chosenAddressFrom.getLon()); //EVT byt om på lat og lon
-        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressTo.getLat(), chosenAddressTo.getLon());
+        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
+        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
 
         //Find indeks for startOfRoute og endOfRoute
         int startOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(startOfRoute);

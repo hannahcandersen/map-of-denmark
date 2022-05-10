@@ -579,14 +579,13 @@ public class MapCanvas extends Canvas {
         //// TEGNER SHORTEST PATH //////
         if (getDijkstraShortestPath() != null){
             for (Drawable drawable : getDijkstraShortestPath()) {
-            gc.setStroke(Color.RED);
-            drawable.draw(gc);
+                gc.setLineWidth(10);
+                gc.setStroke(Color.RED);
+                gc.setFill(Color.RED);
+                drawable.draw(gc);
             }
             System.out.println("Jeg har tegnet Dijkstra");
         }
-
-
-
 
 
         //Tegner vores debug firkant
