@@ -549,7 +549,6 @@ public class Model {
 
                                         listOfAllEdgesInWays.add(edgeOtherWay);
                                         listOfAlleNodesInGraph.add(way.getNodes().get(j+1)); /// obs på at vi tilføjer nodes to gange
-
                                     }
                                     //tjek om der er bil, cycle eller fodgænger
                                 }
