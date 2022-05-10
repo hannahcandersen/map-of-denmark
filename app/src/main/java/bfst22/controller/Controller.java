@@ -4,16 +4,11 @@ import bfst22.model.Model;
 import bfst22.model.MapCanvas;
 import bfst22.model.OSMNode;
 import bfst22.model.dijkstra.Dijkstra;
-import bfst22.model.dijkstra.DirectedEdge;
-import bfst22.model.kdtree.KdTree;
-import bfst22.view.View;
-import com.sun.glass.ui.CommonDialogs;
 import javafx.event.ActionEvent;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
@@ -23,20 +18,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.transform.Affine;
-import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.stage.FileChooser;
 import javafx.scene.control.CheckBox;
-import javafx.scene.Node;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
-import javafx.stage.FileChooser;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 //LINK//https://gist.github.com/Da9el00/cde4381b8f17299693bab886ec700a78
@@ -107,7 +95,7 @@ public class Controller {
         lastMouse = new Point2D(e.getX(), e.getY());
 
 
-        if(e.getClickCount() == 2){
+        if (e.getClickCount() == 2) {
 
             Point2D MapPointX = canvas.mouseToModel(lastMouse);
             float mapPointx = (float) MapPointX.getX();
@@ -124,12 +112,6 @@ public class Controller {
             System.out.println("mapPointY " + mapPointy);
         }
     }
-
-    @FXML
-    public void addressParse(KeyEvent keyEvent) {
-
-    }
-    public void AddressFromUserInput(KeyEvent keyEvent) {}
 
     @FXML
     public void openFile(ActionEvent event) throws XMLStreamException, IOException, ClassNotFoundException {
@@ -159,26 +141,27 @@ public class Controller {
     public void etEllerAndet(ActionEvent event) {
         toTextField.setText("Bye");
     }
+
     @FXML
     public void searchRoute(ActionEvent actionEvent) {
         //Finder den tætteste node fra søgt adresse (nearest neighbour)
         OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
         OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
 
-        System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
-        System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
+        //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
+        //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
         canvas.setDrawPunktStartOfRoute(startOfRoute);
         canvas.setDrawPunktEndOfRoute(endOfRoute);
 
         //Find indeks for startOfRoute og endOfRoute
-        int startOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndex().get(startOfRoute);
-        int endOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndex().get(endOfRoute);
+        int startOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(startOfRoute);
+        int endOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(endOfRoute);
 
         //Dijkstra
-        Dijkstra dijkstra = new Dijkstra(Model.getGraph(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndex());
+        Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraph(), startOfRouteIndex, endOfRouteIndex);
 
         //Gemmer den korteste route i et felt
-        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndex()));
+        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex));
         canvas.repaint();
 
     }
@@ -268,13 +251,6 @@ public class Controller {
     public void onClickWarningOk(ActionEvent event){
        warningPane.setVisible(false);
         clickOnWaringButtonCounter++;
-    }
-
-    public AddressObject getChosenAddressFrom() {
-        return chosenAddressFrom;
-    }
-    public AddressObject getChosenAddressTo() {
-        return chosenAddressTo;
     }
 
 }

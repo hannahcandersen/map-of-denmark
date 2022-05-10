@@ -48,35 +48,35 @@ public class EdgeWeightedDigraph {
 
 
     // Tilføjer en Directed Edge til grafen
-    public void addEdge(DirectedEdge edge, Map<OSMNode, Integer> mapOfOSMNodesToIndex) {
+    public void addEdge(DirectedEdge edge) {
         OSMNode start = edge.getStart();
         OSMNode end = edge.getEnd();
 
-        adjacencyList[mapOfOSMNodesToIndex.get(start)].add(edge);
-        indegree[mapOfOSMNodesToIndex.get(end)]++;
+        adjacencyList[Model.getMapOfOSMNodesToIndex().get(start)].add(edge);
+        indegree[Model.getMapOfOSMNodesToIndex().get(end)]++;
         numberOfEdges++;
     }
 
     // Returnerer de edges der er adjacent med vertex v
-    public Iterable<DirectedEdge> getEdgesAdjacentToVertex(OSMNode vertex, Map<OSMNode, Integer> mapOfOSMNodesToIndex) {
-        return adjacencyList[mapOfOSMNodesToIndex.get(vertex)]; //returnere bag for den valgte vertex/index
+    public Iterable<DirectedEdge> getEdgesAdjacentToVertex(OSMNode vertex) {
+        return adjacencyList[Model.getMapOfOSMNodesToIndex().get(vertex)]; //returnere bag for den valgte vertex/index
     }
 
     // Returnerer antallet af Directed Edges fra vertex v (der går ud af den)
-    public int outdegreeFromVertex(int vertex, Map<OSMNode, Integer> mapOfOSMNodesToIndex) {
-        return adjacencyList[mapOfOSMNodesToIndex.get(vertex)].size();
+    public int outdegreeFromVertex(int vertex) {
+        return adjacencyList[Model.getMapOfOSMNodesToIndex().get(vertex)].size();
     }
 
     // Returnerer antallet af Directed Edges fra vertex v (der går ind på den)
-    public int indegreeFromVertex(OSMNode vertex, Map<OSMNode, Integer> mapOfOSMNodesToIndex) {
-        return indegree[mapOfOSMNodesToIndex.get(vertex)];
+    public int indegreeFromVertex(OSMNode vertex) {
+        return indegree[Model.getMapOfOSMNodesToIndex().get(vertex)];
     }
 
     // Returnerer alle edges i grafen
-    public Iterable<DirectedEdge> allEdgesInGraph(Map<OSMNode, Integer> mapOfOSMNodesToIndex) {
+    public Iterable<DirectedEdge> allEdgesInGraph() {
         Bag<DirectedEdge> listOfEdges = new Bag<DirectedEdge>();
         for (int vertexIndex = 0; vertexIndex < numberOfVertices; vertexIndex++) {
-            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(vertexIndex), mapOfOSMNodesToIndex)) {
+            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(vertexIndex))) {
                 listOfEdges.add(edge);
             }
         }

@@ -114,7 +114,7 @@ public class Model {
     //Map med OSMNode to index. Bruges til at lave en graf
     private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
 
-    private static EdgeWeightedDigraph graph;
+    private EdgeWeightedDigraph graph;
 
 
     /////////////// Konstruktør (unchecked) ///////////////////
@@ -787,7 +787,7 @@ public class Model {
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
 
         for (DirectedEdge edge : listOfAllEdgesInWays){
-            graph.addEdge(edge, mapOfOSMNodesToIndex);
+            graph.addEdge(edge);
         }
     }
 
@@ -837,7 +837,7 @@ public class Model {
         return listOfAllEdgesInWays;
     }
 
-    public Map<OSMNode, Integer> getMapOfOSMNodesToIndex() {
+    public static Map<OSMNode, Integer> getMapOfOSMNodesToIndex() {
         return mapOfOSMNodesToIndex;
     }
 
@@ -858,7 +858,7 @@ public class Model {
     }
 
 
-    public static EdgeWeightedDigraph getGraph() {
+    public EdgeWeightedDigraph getGraph() {
         return graph;
     }
 

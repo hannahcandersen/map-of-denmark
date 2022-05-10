@@ -97,9 +97,9 @@ public enum WayType {
             case TRUNK, PRIMARY -> 4;
             case SECONDARY -> 4;
             //case TERTIARY -> 6;
-            case UNCLASSIFIED, LIVING_STREET, TERTIARY -> 5;
-            case ROAD, RACEWAY, RESIDENTIALWAY -> 3;
-            case CONSTRUCTIONWAY, SERVICE, PEDESTRIAN, STEPS -> 2;
+            case UNCLASSIFIED, LIVING_STREET -> 5;
+            case ROAD, RACEWAY, TERTIARY -> 3;
+            case CONSTRUCTIONWAY, SERVICE, PEDESTRIAN, STEPS, RESIDENTIALWAY -> 2;
             default -> 1;
         };
     }
