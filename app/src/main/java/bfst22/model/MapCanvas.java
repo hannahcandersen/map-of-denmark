@@ -93,7 +93,7 @@ public class MapCanvas extends Canvas {
         //Får punkterne i vinduet og laver dem om til punkter i kortet
         if(isDebugSelected) {
              screenMin = new Point2D(100, 100);
-             screenMax = new Point2D(getWidth() - 100, getHeight() - 100);
+             screenMax = new Point2D(getWidth() - 200, getHeight() - 200);
 
         } else{
              screenMin = new Point2D(0, 0 );
