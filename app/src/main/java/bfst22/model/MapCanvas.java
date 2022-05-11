@@ -21,6 +21,7 @@ import javafx.scene.transform.NonInvertibleTransformException;
 public class MapCanvas extends Canvas {
     private Model model;
     private Affine trans = new Affine();
+    //TODO hvad er det her? *Paint color
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
     private OSMNode drawPunkt, drawPunktStartOfRoute, drawPunktEndOfRoute;
