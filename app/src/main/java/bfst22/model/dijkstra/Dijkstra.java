@@ -26,7 +26,7 @@ public class Dijkstra {
     public Dijkstra(EdgeWeightedDigraph graph, int startVertex, int endVertex, OSMNode[] arrayOfOSMNodesInGraph, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
 
         // Tjekker at en edge ikke har negativ vægt
-        for (DirectedEdge edge : graph.allEdgesInGraph()) {
+        for (DirectedEdge edge : graph.allEdgesInGraph(mapOfOSMNodesToIndex, arrayOfOSMNodesInGraph)) {
             if (edge.weight() < 0)
                 throw new IllegalArgumentException("edge " + edge + " has negative weight");
         }
@@ -56,7 +56,7 @@ public class Dijkstra {
                 break;
             }
             else {
-                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[vertexLightestWeight]))
+                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[vertexLightestWeight], mapOfOSMNodesToIndex))
                 relax(edge, mapOfOSMNodesToIndex);
             }
         }
@@ -117,7 +117,7 @@ public class Dijkstra {
     private boolean check(EdgeWeightedDigraph G, int s, OSMNode[] arrayOfOSMNodesInGraph, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
 
         // check that edge weights are non-negative
-        for (DirectedEdge e : G.allEdgesInGraph()) {
+        for (DirectedEdge e : G.allEdgesInGraph(mapOfOSMNodesToIndex, arrayOfOSMNodesInGraph)) {
             if (e.weight() < 0) {
                 System.err.println("negative edge weight detected");
                 return false;
@@ -139,7 +139,7 @@ public class Dijkstra {
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.getNumberOfVertices(); v++) {
-            for (DirectedEdge e : G.getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[v])) {
+            for (DirectedEdge e : G.getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[v], mapOfOSMNodesToIndex)) {
                 int w = mapOfOSMNodesToIndex.get(e.getEnd());
                 if (distTo[v] + e.weight() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");

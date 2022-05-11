@@ -20,16 +20,11 @@ public class KdTree {
     private OSMNode closestNodeField = null;
     private double closestDistField = Double.POSITIVE_INFINITY;
 
-
-
-    public KdTree() {
-    }
-
     public KdTree(List<Drawable> drawables) {
         this.root = buildKDTree(drawables, true);
     }
 
-    public KdTree(List<OSMNode> osmNodes, int nul) {
+    public KdTree(ArrayList<OSMNode> osmNodes, int nul) {
         this.root = buildKDTreeOfOSMNodes(osmNodes, true);
     }
 
@@ -91,7 +86,7 @@ public class KdTree {
     }
 
     //////////////////// BULDING KDTREE OF OSM NODES///////////////////////
-    public KdNode buildKDTreeOfOSMNodes(ArrayList<OSMNode> OSMNodes, boolean isXcoord) {
+    public KdNode buildKDTreeOfOSMNodes(List<OSMNode> OSMNodes, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if (OSMNodes == null || OSMNodes.size() == 0) {
             return null;}

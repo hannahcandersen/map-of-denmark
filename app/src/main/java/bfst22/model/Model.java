@@ -11,6 +11,8 @@ import javafx.scene.shape.Polyline;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.zip.ZipFile;
+import java.io.File;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -87,7 +89,7 @@ public class Model {
 
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     private float minlat, minlon, maxlat, maxlon;
-    private int maxspeed = 0;
+    private double maxspeed = 0;
     private boolean isOneway;
     private boolean isRoundabout;
     private boolean vehicle;
@@ -120,9 +122,9 @@ public class Model {
 
     //Liste med alle OSMNodes in graph
     private ArrayList<OSMNode> listOfAlleNodesInGraphAllWays = new ArrayList<>();
-    private List<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
-    private List<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
-    private List<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
 
 
     //Map med OSMNode to index. Bruges til at lave en graf
@@ -136,9 +138,9 @@ public class Model {
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         var time = -System.nanoTime();
         if (filename.endsWith(".zip")) {   // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
-            var zip = new ZipInputStream(new FileInputStream(filename)); //læser zip-filen én fil af gangen
-            zip.getNextEntry(); // læser næste fil i zip-filen
-            loadOSM(zip);
+            var zip = new ZipFile(new File(filename)); //læser zip-filen én fil af gangen
+            var entry = zip.entries().nextElement(); // læser næste fil i zip-filen
+            loadOSM(zip.getInputStream(entry));
         } else if (filename.endsWith(".osm")) {// læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
         } else if (filename.endsWith(".obj")) { // kan læse den .obj-fil der er blevet gemt (binary file)
@@ -330,7 +332,7 @@ public class Model {
                             var v = reader.getAttributeValue(null, "v");
                             switch (k) {
                                 case "maxspeed":
-                                    maxspeed = Integer.parseInt(v);
+                                    maxspeed = Double.parseDouble(v);
                                 case "oneway":
                                     isOneway = v.equals("yes");
                                 case "junction":
@@ -509,6 +511,8 @@ public class Model {
                     switch (reader.getLocalName()) {
                         // laver en ny OSMWay ud fra listen af de nodes, som vejen indeholder
                         case "way":
+                            if (nodes.size() == 0) break;
+
                             var way = new PolyLine(nodes, type);
                             //var way = new PolyLine(nodes);
                             id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
@@ -882,7 +886,7 @@ public class Model {
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
 
         for (DirectedEdge edge : listOfAllEdgesInWays) {
-            graph.addEdge(edge);
+            graph.addEdge(edge, mapOfOSMNodesToIndex);
         }
         return graph;
     }
