@@ -55,11 +55,23 @@ public class Controller {
     private Button warningOkButton;
     @FXML
     private Label scaleInfo;
+    @FXML
+    private CheckBox checkBoxBicycle;
+    @FXML
+    private CheckBox checkBoxWalking;
+    @FXML
+    private CheckBox checkBoxCar;
+    @FXML
+    private Pane transportTypePane;
+    @FXML
+    private Button findRouteButton;
+    @FXML
+    private Button transportCloseButton;
 
     private int clickOnWaringButtonCounter = 0;
     private AddressObject chosenAddressFrom;
     private AddressObject chosenAddressTo;
-
+    private int onSearchRouteClickCounter = 0;
 
 
     //Canvas er superklassen til vores MapCanvas.
@@ -112,13 +124,13 @@ public class Controller {
 
             //canvas.TestdrawPunkt = new OSMNode(mapPointx, mapPointy);
 
-            canvas.setDrawPunkt(canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), mapPointy, mapPointx));
+            canvas.setDrawPunkt(canvas.getModel().getKDTreeNodesInGraphAllWays().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphAllWays().getRoot(), mapPointy, mapPointx));
 
             //canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);
             canvas.repaint();
-            System.out.println("jeg har dobbeltklikket");
-            System.out.println("mapPointX " + mapPointx);
-            System.out.println("mapPointY " + mapPointy);
+            //System.out.println("jeg har dobbeltklikket");
+            //System.out.println("mapPointX " + mapPointx);
+            //System.out.println("mapPointY " + mapPointy);
         }
     }
 
@@ -154,27 +166,54 @@ public class Controller {
     @FXML
     public void searchRoute(ActionEvent actionEvent) {
         //Finder den tætteste node fra søgt adresse (nearest neighbour)
-        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
-        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+        //OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
+        //OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
 
         //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
         //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
-        canvas.setDrawPunktStartOfRoute(startOfRoute);
-        canvas.setDrawPunktEndOfRoute(endOfRoute);
+        //canvas.setDrawPunktStartOfRoute(startOfRoute);
+        //canvas.setDrawPunktEndOfRoute(endOfRoute);
 
         //Find indeks for startOfRoute og endOfRoute
-        int startOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(startOfRoute);
-        int endOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(endOfRoute);
+        //int startOfRouteIndex = Model.getMapOfOSMNodesToIndexX().get(startOfRoute);
+        //int endOfRouteIndex = Model.getMapOfOSMNodesToIndexX().get(endOfRoute);
 
         //Dijkstra
-        Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraph(), startOfRouteIndex, endOfRouteIndex);
+        //Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphX(), startOfRouteIndex, endOfRouteIndex);
 
         //Gemmer den korteste route i et felt
-        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex));
+        //canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex));
+        //canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex)); //tilføj Hashmap
+
+        //if()
+        //kald på searchByCar
+        //kald på searchByBike
+        transportTypePane.setVisible(true);
+        checkBoxCar.setSelected(true);
+        onClickedcheckBoxCar(actionEvent);
+
+
         canvas.repaint();
 
+        //onClickedSearchRoute();
+
+    }
+ /*
+    @FXML
+    public void onClickedSearchRoute() {
+        onSearchRouteClickCounter++;
+        System.out.println(onSearchRouteClickCounter);
+        if(onSearchRouteClickCounter % 2 == 1 ) {
+            transportTypePane.setVisible(true);
+            System.out.println("pane vises");
+        } else {
+            transportTypePane.setVisible(false);
+            System.out.println("pane vises ikke");
+
+        }
     }
 
+  */
 
     @FXML
     public void getSearchResultFrom(KeyEvent keyEvent) {
@@ -272,5 +311,130 @@ public class Controller {
         canvas.repaint();
     }
 
+    @FXML
+    public void onClickedcheckBoxBicycle(ActionEvent event) {
+        if(checkBoxBicycle.isSelected()) {
+            checkBoxWalking.setSelected(false);
+            checkBoxCar.setSelected(false);
+
+            //Finder den tætteste node fra søgt adresse (nearest neighbour)
+            OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphBIKE().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphBIKE().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
+            OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphBIKE().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphBIKE().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+
+            //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
+            //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
+            canvas.setDrawPunktStartOfRoute(startOfRoute);
+            canvas.setDrawPunktEndOfRoute(endOfRoute);
+
+            //Find indeks for startOfRoute og endOfRoute
+            int startOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndexBIKE().get(startOfRoute);
+            int endOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndexBIKE().get(endOfRoute);
+
+            //Dijkstra
+            Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphBIKE(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getArrayOfOSMNodesInGraphBIKE(), canvas.getModel().getMapOfOSMNodesToIndexBIKE());
+
+            //Gemmer den korteste route i et felt
+            canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndexBIKE()));
+            canvas.repaint();
+        }
+    }
+
+    @FXML
+    public void onClickedcheckBoxWalking(ActionEvent event) {
+        if(checkBoxWalking.isSelected()) {
+            checkBoxCar.setSelected(false);
+            checkBoxBicycle.setSelected(false);
+
+            //Finder den tætteste node fra søgt adresse (nearest neighbour)
+            OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphFOOT().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphFOOT().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
+            OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphFOOT().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphFOOT().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+
+            //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
+            //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
+            canvas.setDrawPunktStartOfRoute(startOfRoute);
+            canvas.setDrawPunktEndOfRoute(endOfRoute);
+
+            //Find indeks for startOfRoute og endOfRoute
+            int startOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndexFOOT().get(startOfRoute);
+            int endOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndexFOOT().get(endOfRoute);
+
+            //Dijkstra
+            Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphFOOT(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getArrayOfOSMNodesInGraphFOOT(), canvas.getModel().getMapOfOSMNodesToIndexFOOT());
+
+            //Gemmer den korteste route i et felt
+            canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndexFOOT()));
+            canvas.repaint();
+        }
+    }
+
+    @FXML
+    public void onClickedcheckBoxCar(ActionEvent event) {
+        if(checkBoxCar.isSelected()) {
+            checkBoxBicycle.setSelected(false);
+            checkBoxWalking.setSelected(false);
+
+            //Finder den tætteste node fra søgt adresse (nearest neighbour)
+            OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
+            OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+
+            //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
+            //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
+            canvas.setDrawPunktStartOfRoute(startOfRoute);
+            canvas.setDrawPunktEndOfRoute(endOfRoute);
+
+            //Find indeks for startOfRoute og endOfRoute
+            int startOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndexCAR().get(startOfRoute);
+            int endOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndexCAR().get(endOfRoute);
+
+            //Dijkstra
+            Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphCAR(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getArrayOfOSMNodesInGraphCAR(), canvas.getModel().getMapOfOSMNodesToIndexCAR());
+
+            //Gemmer den korteste route i et felt
+            canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndexCAR()));
+            canvas.repaint();
+        }
+    }
+
+    @FXML
+    public void onClickedTransportCloseButton(MouseEvent mouseEvent) {
+        transportTypePane.setVisible(false);
+    }
+    /*public OSMNode getStartOfRoute() {
+        return canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
+    }
+    public OSMNode getEndOfRoute() {
+        return canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+    }*/
+
+
+    public void searchRouteByCar(ActionEvent actionEvent) {
+        //Finder den tætteste node fra søgt adresse (nearest neighbour)
+        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
+        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+
+        //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
+        //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
+        canvas.setDrawPunktStartOfRoute(startOfRoute);
+        canvas.setDrawPunktEndOfRoute(endOfRoute);
+
+        //Find indeks for startOfRoute og endOfRoute
+        int startOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndexCAR().get(startOfRoute);
+        int endOfRouteIndex = canvas.getModel().getMapOfOSMNodesToIndexCAR().get(endOfRoute);
+
+        //Dijkstra
+        Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphCAR(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getArrayOfOSMNodesInGraphCAR(), canvas.getModel().getMapOfOSMNodesToIndexCAR());
+
+        //Gemmer den korteste route i et felt
+        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndexCAR()));
+        canvas.repaint();
+
+    }
+
+    public void searchRouteByBike(ActionEvent actionEvent) {
+
+    }
+    public void searchRouteByFoot(ActionEvent actionEvent) {
+
+    }
 
 }

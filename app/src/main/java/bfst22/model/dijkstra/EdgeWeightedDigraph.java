@@ -4,6 +4,7 @@ import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.model.algslib.Bag;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -49,37 +50,37 @@ public class EdgeWeightedDigraph {
 
 
     // Tilføjer en Directed Edge til grafen
-    public void addEdge(DirectedEdge edge) {
+    public void addEdge(DirectedEdge edge, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
         OSMNode start = edge.getStart();
         OSMNode end = edge.getEnd();
 
-        adjacencyList[Model.getMapOfOSMNodesToIndex().get(start)].add(edge);
+        adjacencyList[mapOfOSMNodesToIndex.get(start)].add(edge);
         //System.out.println(Model.getMapOfOSMNodesToIndex().get(start));
 
-        indegree[Model.getMapOfOSMNodesToIndex().get(end)]++;
+        indegree[mapOfOSMNodesToIndex.get(end)]++;
         numberOfEdges++;
     }
 
     // Returnerer de edges der er adjacent med vertex v
-    public Iterable<DirectedEdge> getEdgesAdjacentToVertex(OSMNode vertex) {
-        return adjacencyList[Model.getMapOfOSMNodesToIndex().get(vertex)]; //returnere bag for den valgte vertex/index
+    public Iterable<DirectedEdge> getEdgesAdjacentToVertex(OSMNode vertex, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
+        return adjacencyList[mapOfOSMNodesToIndex.get(vertex)]; //returnere bag for den valgte vertex/index
     }
 
     // Returnerer antallet af Directed Edges fra vertex v (der går ud af den)
-    public int outdegreeFromVertex(int vertex) {
-        return adjacencyList[Model.getMapOfOSMNodesToIndex().get(vertex)].size();
+    public int outdegreeFromVertex(int vertex, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
+        return adjacencyList[mapOfOSMNodesToIndex.get(vertex)].size();
     }
 
     // Returnerer antallet af Directed Edges fra vertex v (der går ind på den)
-    public int indegreeFromVertex(OSMNode vertex) {
-        return indegree[Model.getMapOfOSMNodesToIndex().get(vertex)];
+    public int indegreeFromVertex(OSMNode vertex, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
+        return indegree[mapOfOSMNodesToIndex.get(vertex)];
     }
 
     // Returnerer alle edges i grafen
-    public Iterable<DirectedEdge> allEdgesInGraph() {
+    public Iterable<DirectedEdge> allEdgesInGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, OSMNode[] arrayOfOSMNodesInGraph) {
         Bag<DirectedEdge> listOfEdges = new Bag<DirectedEdge>();
         for (int vertexIndex = 0; vertexIndex < numberOfVertices; vertexIndex++) {
-            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexIndex])) {
+            for (DirectedEdge edge : getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[vertexIndex], mapOfOSMNodesToIndex)) {
                 listOfEdges.add(edge);
             }
         }

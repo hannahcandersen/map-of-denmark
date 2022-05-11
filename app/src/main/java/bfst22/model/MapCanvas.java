@@ -354,7 +354,7 @@ public class MapCanvas extends Canvas {
         }
 
         // Alt der skal tegnes ved zoom level 31 og højere
-        if (zoomLevel >= 32){
+        if (zoomLevel >= 31){
             if(model.getKDTreeRESIDENTIAL() != null && model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot())) {
@@ -646,7 +646,7 @@ public class MapCanvas extends Canvas {
                 if (model.getKDTreeMOTORWAY() != null && model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot()) != null) {
                     for (Drawable drawable : model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot())) {
                         gc.setLineWidth(WayType.MOTORWAY.getWidth() / Math.sqrt(trans.determinant()));
-                        drawable.fillWayType(gc, WayType.MOTORWAY);
+                        drawable.drawWayType(gc, WayType.MOTORWAY);
                     }
                 }
 
@@ -680,7 +680,6 @@ public class MapCanvas extends Canvas {
             gc.setStroke(Color.RED);
             drawable.draw(gc);
         }
-
          */
 
         //Tegner vores debug firkant - TIL DEBUG MODE
@@ -708,7 +707,8 @@ public class MapCanvas extends Canvas {
             gc.setFill(Color.BLUE);
             gc.fillRect(drawPunktEndOfRoute.getLat(), drawPunktEndOfRoute.getLon(), 0.00002, 0.00002);
             gc.fillRect(drawPunktEndOfRoute.getLon(), drawPunktEndOfRoute.getLat(), 0.00002, 0.00002);
-            System.out.println("Tegner drawPunktEndOfRoute");}
+            //System.out.println("Tegner drawPunktEndOfRoute");
+            }
 
         /*gc.setFill(Color.YELLOW);
         gc.fillRect(realscalebarPoint1.getX(), realscalebarPoint1.getY(), 0.02, 0.02);

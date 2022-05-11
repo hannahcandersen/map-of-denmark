@@ -11,6 +11,8 @@ import javafx.scene.shape.Polyline;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.zip.ZipFile;
+import java.io.File;
 import java.util.zip.ZipInputStream;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -75,24 +77,34 @@ public class Model {
     private final KdTree KDTreeSCHOOL;
     private final KdTree KDTreeFERRY;
     private final KdTree KDTreeGRAVEYARD;
+    private final KdTree KDTreeNodesInGraphAllWays;
+    private final KdTree KDTreeNodesInGraphCAR;
+    private final KdTree KDTreeNodesInGraphBIKE;
+    private final KdTree KDTreeNodesInGraphFOOT;
     private final KdTree KDTreeNodesInGraph;
     private final KdTree KDTreeTERRITORIAl;
 
 
 
 
-//Måske static
+    //Måske static
     NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
     List<Runnable> observers = new ArrayList<>();  // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
 
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     private float minlat, minlon, maxlat, maxlon;
-    private int maxspeed = 0;
+    private double maxspeed = 0;
     private boolean isOneway;
     private boolean isRoundabout;
+    private boolean vehicle;
+    private boolean bicycle;
+    private boolean foot;
+    private boolean canGoByCar;
+    private boolean canGoByBike;
+    private boolean canGoByFoot;
     private List<PolyLine> listOfCoastlines;
-    private EdgeWeightedDigraph graph;
-    private static OSMNode[] arrayOfOSMNodesInGraph;
+    private EdgeWeightedDigraph graphCAR, graphBIKE, graphFOOT;
+    private OSMNode[] arrayOfOSMNodesInGraphCAR, arrayOfOSMNodesInGraphBIKE, arrayOfOSMNodesInGraphFOOT;
     private TST tst;
 
 
@@ -108,12 +120,21 @@ public class Model {
 
     //Liste med HIGHWAYS
     private static ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
+    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
+    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
+    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
 
     //Liste med alle OSMNodes in graph
-    private List<OSMNode> listOfAlleNodesInGraph = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphAllWays = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
+
 
     //Map med OSMNode to index. Bruges til at lave en graf
-    private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
+    private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexCAR = new HashMap<>();
+    private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexBIKE = new HashMap<>();
+    private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexFOOT = new HashMap<>();
 
 
 
@@ -121,9 +142,9 @@ public class Model {
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         var time = -System.nanoTime();
         if (filename.endsWith(".zip")) {   // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
-            var zip = new ZipInputStream(new FileInputStream(filename)); //læser zip-filen én fil af gangen
-            zip.getNextEntry(); // læser næste fil i zip-filen
-            loadOSM(zip);
+            var zip = new ZipFile(new File(filename)); //læser zip-filen én fil af gangen
+            var entry = zip.entries().nextElement(); // læser næste fil i zip-filen
+            loadOSM(zip.getInputStream(entry));
         } else if (filename.endsWith(".osm")) {// læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
         } else if (filename.endsWith(".obj")) { // kan læse den .obj-fil der er blevet gemt (binary file)
@@ -134,7 +155,7 @@ public class Model {
                 maxlon = input.readFloat();
                 lines = (Map<WayType, List<Drawable>>) input.readObject();
                 listOfCoastlines = (List<PolyLine>) input.readObject();
-                graph = (EdgeWeightedDigraph) input.readObject();
+                //graph = (EdgeWeightedDigraph) input.readObject();
                 //tst = (TST) input.readObject();
 
                 //VIGTIGT at skrive i samme rækkefølge som i save()
@@ -197,22 +218,34 @@ public class Model {
         KDTreeGRAVEYARD = new KdTree(lines.get(WayType.GRAVEYARD));
         KDTreeRIVER_ANDMORE = new KdTree(lines.get(WayType.RIVER_ANDMORE));
         KDTreeCOASTLINE = new KdTree(lines.get(WayType.COASTLINE));
+        KDTreeNodesInGraphAllWays = new KdTree(listOfAlleNodesInGraphAllWays, 0); // bruges til nearest neigbour når man dobbeltklikker
+        KDTreeNodesInGraphCAR = new KdTree(listOfAlleNodesInGraphCAR, 0);
+        KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
+        KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
         KDTreeTERRITORIAl = new KdTree(lines.get(WayType.TERRITORIAl));
-        KDTreeNodesInGraph = new KdTree(listOfAlleNodesInGraph, 0);
+        //KDTreeNodesInGraph = new KdTree(listOfAlleNodesInGraph, 0);
 
 
         //lav liste med coastlines
         listOfCoastlines = makeCoastlineObject(coastlinesMap);
 
         //lav dijkstra graf
-        makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
-        makeGraph();
-        //System.out.println(graph);
+        //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
+        mapOfOSMNodesToIndexCAR = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysCAR, mapOfOSMNodesToIndexCAR);
+        mapOfOSMNodesToIndexBIKE = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysBIKE, mapOfOSMNodesToIndexBIKE);
+        mapOfOSMNodesToIndexFOOT = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysFOOT, mapOfOSMNodesToIndexFOOT);
+
+        //Laver graf for veje hvor man kan henholdsvis køre bil, cykle og gå
+        graphCAR = makeGraph(mapOfOSMNodesToIndexCAR, listOfAllEdgesInWaysCAR, graphCAR);
+        graphBIKE = makeGraph(mapOfOSMNodesToIndexBIKE, listOfAllEdgesInWaysBIKE, graphBIKE);
+        graphFOOT = makeGraph(mapOfOSMNodesToIndexFOOT, listOfAllEdgesInWaysFOOT, graphFOOT);
+
+        // Laver arrays for veje hvor man kan henholdsvis køre bil, cykle og gå
+        arrayOfOSMNodesInGraphCAR = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexCAR, arrayOfOSMNodesInGraphCAR);
+        arrayOfOSMNodesInGraphBIKE = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexBIKE, arrayOfOSMNodesInGraphBIKE);
+        arrayOfOSMNodesInGraphFOOT = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexFOOT, arrayOfOSMNodesInGraphFOOT);
 
         //System.out.println("indegree " + graph.getIndegree()[484]);
-
-
-        //calculateDistance(listOfAllEdgesInWays.get(10).getStart(), listOfAllEdgesInWays.get(10).getEnd());
     }
 
 
@@ -226,7 +259,7 @@ public class Model {
             out.writeFloat(maxlon);
             out.writeObject(lines);
             out.writeObject(listOfCoastlines);
-            out.writeObject(graph);
+            //out.writeObject(graph);
             //out.writeObject(tst);
 
 
@@ -293,7 +326,9 @@ public class Model {
                         // her gemmes disse nodes i en arrayliste "nodes"
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
-                            nodes.add(id2node.get(ref));
+                            var node = id2node.get(ref);
+                            if (node == null) break;
+                            nodes.add(node);
                             break;
                         // sætter type til UNKNOWN for veje (kan måske sættes til noget andet, når vi har defineret flere typer veje?)
                         case "way":
@@ -306,11 +341,25 @@ public class Model {
                             var v = reader.getAttributeValue(null, "v");
                             switch (k) {
                                 case "maxspeed":
-                                    maxspeed = Integer.parseInt(v);
+                                    try {
+                                        maxspeed = Double.parseDouble(v);
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Invalid maxspeed: " + v);
+                                    }
                                 case "oneway":
                                     isOneway = v.equals("yes");
                                 case "junction":
                                     isRoundabout = v.equals("roundabout");
+                                case "motor-vehicle":
+                                    vehicle = v.equals("yes");
+                                case "vehicle":
+                                    vehicle = v.equals("yes");
+                                case "bicycle":
+                                    if(v.equals("yes") || v.equals("designated")) {
+                                        bicycle = true;
+                                    }
+                                case "foot":
+                                    foot = v.equals("designated");
                                 case "addr:city":
                                     city = v;
                                     break;
@@ -441,8 +490,6 @@ public class Model {
                                     break;
                                 case "highway":
                                     type = switch (v) {
-                                        //highway - primary.. ??
-                                        //cycleway - track, lane ??
                                         case "motorway", "motorway_link" -> WayType.MOTORWAY;
                                         case "primary", "primary_link" -> WayType.PRIMARY;
                                         case "trunk", "trunk_link" -> WayType.TRUNK;
@@ -464,11 +511,10 @@ public class Model {
                                         default -> WayType.UNKNOWN;
                                     };
                                     break;
-                            }
+                                    }
                             break;
                         // relations har member-tags, der referer til
                         case "member":
-                            //if(relID !=48925553)
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             var elm = id2way.get(ref); //man får et OSMWay objekt
                             if (elm != null && type != WayType.TERRITORIAl) rel.add(elm); //tilføjer OSMWay objekt til listen rel
@@ -486,6 +532,8 @@ public class Model {
                         // laver en ny OSMWay ud fra listen af de nodes, som vejen indeholder
                         case "way":
                             if(type == null) break;
+                            if (nodes.size() == 0) break;
+
                             var way = new PolyLine(nodes, type);
 
 
@@ -521,47 +569,105 @@ public class Model {
                                         default -> 0; //skal vi have en default værdi på 20 måske?
                                     };
                                 }
-                                /////The order of values for the highway-tag ordered by assumed speed is://///
-                                    //motorway - Usually the maxspeed can be kept for long distances, but these roads can be sensitive to long traffic jams. Usually forbidden for slow traffic (pedestrians, cyclists, agricultural, ...)
-                                    //trunk - 	Similar to motorways, but these roads can have level crossings, so the stretches where the maximum speed can be reached are shorter. Best avoided when using slow vehicles (sometimes forbidden, depending on the local legislation).
-                                    //primary, secondary, tertiary - Usually around 90-100 km/t in the countryside, and 50 (or even 30) km/t when crossing a residential center.
-                                    //motorway-link - Reachable speed depends a lot on curvature, usually around 60-90 km/h
-                                    //trunk-, primary-, secondary-, tertiary-link - The speed on these road pieces is very slow, as these often need to give way to the other traffic.
-                                    //unclassified - will rarely exceed 50 km/t
-                                    //residential - 50 km/t to 30 km/t
-                                    //living_street - 20km/t
-                                    //service - Service roads are usually found on private property or parking lots. The driver has to pay attention to manoeuvring vehicles, and must wait often
-                                    //track (måske ikke tegne) - Tracks are roads of agricultural purpose. They usually connect fields to farms. The surface sometimes makes them inaccessible for regular cars, or at least limits the speeds to a very slow pace. Tracks should always be avoided for through-going traffic.
-                                    //pedestrian - Pedestrian roads are normally forbidden for motorised vehicles, but can be allowed on certain hours (f.e. early in the morning), or for certain purposes (like delivering goods to shops). Even when allowed, only pedestrian speed is advisable. Cycling can also be forbidden on pedestrian highways.
-                                    //road - er et wildcard; kan være motorway, men også living-street (vælger ca. midten af 20 og 110)
-                                    //constuctionway - en vej, som er midlertidig under arbejde, men openstreetmap er måske ikke opdateret (sætter samme værdi som road)
 
+                                //sætte booleans for om der må køres, cykles eller gåes på vejen
+                                if(type == WayType.MOTORWAY || type == WayType.TRUNK) {
+                                    canGoByCar = true;
+
+                                }
+                                if(type == WayType.PRIMARY || type == WayType.SECONDARY || type == WayType.TERTIARY ||
+                                        type == WayType.UNCLASSIFIED || type == WayType.RESIDENTIALWAY || type == WayType.LIVING_STREET ||
+                                        type == WayType.SERVICE || type == WayType.ROAD || type == WayType.CONSTRUCTIONWAY) {
+                                    canGoByCar = true;
+                                    canGoByBike = true;
+                                    canGoByFoot = true;
+                                }
+                                if(type == WayType.PEDESTRIAN || type == WayType.FOOTWAY_ANDMORE || type == WayType.STEPS) {
+                                    canGoByFoot = true;
+                                    if(bicycle) {
+                                        canGoByBike = true;
+                                    }
+                                    if(vehicle) {
+                                        canGoByCar = true;
+                                    }
+                                }
+                                if(type == WayType.CYCLEWAY) {
+                                    canGoByBike = true;
+                                    if(foot) {
+                                        canGoByFoot = true;
+                                    }
+                                }
+
+
+                                //Laver alle edges'ene
                                 for (int j = 0; j < way.getNodes().size()-1; j++){
                                     double weight = calculateTime(way.getNodes().get(j), way.getNodes().get(j+1));
                                     //System.out.println(weight);
 
-                                    DirectedEdge edgeOneWay = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight);
-                                    DirectedEdge edgeOtherWay = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight);
+                                    DirectedEdge edgeOneWay = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight, canGoByCar, canGoByBike, canGoByFoot);
+                                    DirectedEdge edgeOtherWay = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight, canGoByCar, canGoByBike, canGoByFoot);
 
-                                    //tilføj til liste med alle edges
-                                    if(isOneway || isRoundabout) {
-                                        listOfAllEdgesInWays.add(edgeOneWay);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j)); //måske lave denne liste om til et Set?
-                                    } else {
-                                        listOfAllEdgesInWays.add(edgeOneWay);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j)); // obs på at vi tilføjer nodes to gange
+                                    //Tilføjer edge og dens nodes til listerne med edges og nodes
+                                    if(isOneway || isRoundabout) {  // Tilføjer en edge den ene vej
 
-                                        listOfAllEdgesInWays.add(edgeOtherWay);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j+1)); /// obs på at vi tilføjer nodes to gange
+                                        if(canGoByCar) {
+                                          listOfAllEdgesInWaysCAR.add(edgeOneWay);
+                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j));
+                                        }
+                                        if(canGoByBike) {
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWay);
+                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j));
+                                        }
+                                        if(canGoByFoot) {
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWay);
+                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
+                                        }
+                                        // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
+                                        listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
+
+                                    } else { // Tilføjer en edge den ene vej og den anden vej
+                                        // Den ene vej
+                                        if(canGoByCar) {
+                                            listOfAllEdgesInWaysCAR.add(edgeOneWay);
+                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j));
+                                        }
+                                        if(canGoByBike) {
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWay);
+                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j));
+                                        }
+                                        if(canGoByFoot) {
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWay);
+                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
+                                        }
+                                        // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
+                                        listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
+
+                                        // Den anden vej
+                                        if(canGoByCar) {
+                                            listOfAllEdgesInWaysCAR.add(edgeOtherWay);
+                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j+1));
+                                        }
+                                        if(canGoByBike) {
+                                            listOfAllEdgesInWaysBIKE.add(edgeOtherWay);
+                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j+1));
+                                        }
+                                        if(canGoByFoot) {
+                                            listOfAllEdgesInWaysFOOT.add(edgeOtherWay);
+                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j+1));
+                                        }
+                                        // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
+                                        listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j+1));
                                     }
-
-                                    //tjek om der er bil, cycle eller fodgænger
                                 }
 
                                 //sætter maxspeed til 0, fordi det er ikke alle veje der har tag maxspeed,
                                 // så hvis vi ikke opdaterer dette, vil næste vej få samme værdi som den forrige
+                                //sætter alle til standard værdi, så det ikke kommer med til næste vej.
                                 maxspeed = 0;
                                 isOneway = false;
+                                canGoByCar = false;
+                                canGoByBike = false;
+                                canGoByFoot = false;
                             }
                             type = null;
                             break;
@@ -657,6 +763,10 @@ public class Model {
     public KdTree getKDTreeSCHOOL () {return KDTreeSCHOOL;}
     public KdTree getKDTreeFERRY () {return KDTreeFERRY;}
     public KdTree getKDTreeGRAVEYARD () {return KDTreeGRAVEYARD;}
+    public KdTree getKDTreeNodesInGraphAllWays() {return  KDTreeNodesInGraphAllWays;}
+    public KdTree getKDTreeNodesInGraphCAR () {return KDTreeNodesInGraphCAR;}
+    public KdTree getKDTreeNodesInGraphBIKE () {return KDTreeNodesInGraphBIKE;}
+    public KdTree getKDTreeNodesInGraphFOOT () {return KDTreeNodesInGraphFOOT;}
     public KdTree getKDTreeTERRITORIAl () {return KDTreeTERRITORIAl;}
     public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
 
@@ -682,7 +792,6 @@ public class Model {
         return listOfOSMNodesOfCoastlines;
     }
 
-
     public List<PolyLine> makeCoastlineObject(Map<WayType, List<Drawable>> linesList) {
         //det som er tilføjet til listen
 
@@ -697,7 +806,6 @@ public class Model {
         //Slut for den coastline man kigger på lige nu
         OSMNode currentEndOSMNode;
         PolyLine currentWay = null;
-
 
         ArrayList<OSMNode> listOfNodesInCoastline = new ArrayList<>();
 
@@ -794,7 +902,7 @@ public class Model {
 
     }
 
-    public void makeMapOfOSMNodesToIndex(ArrayList<DirectedEdge> listOfAllEdgesInWays) {
+    public HashMap<OSMNode, Integer> makeMapOfOSMNodesToIndex(ArrayList<DirectedEdge> listOfAllEdgesInWays, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
         int counter = 0;
         for (DirectedEdge edge : listOfAllEdgesInWays) {
             OSMNode start = edge.getStart();
@@ -809,19 +917,18 @@ public class Model {
                 counter++;
             }
         }
+        return mapOfOSMNodesToIndex;
     }
 
 
-    public void makeGraph(){
+    public EdgeWeightedDigraph makeGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, ArrayList<DirectedEdge> listOfAllEdgesInWays, EdgeWeightedDigraph graph) {
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
 
-        for (DirectedEdge edge : listOfAllEdgesInWays){
-            graph.addEdge(edge);
+        for (DirectedEdge edge : listOfAllEdgesInWays) {
+            graph.addEdge(edge, mapOfOSMNodesToIndex);
         }
-
-        makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndex);
+        return graph;
     }
-
 
     public double calculateDistance(OSMNode punkt1, OSMNode punkt2) {
         //Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
@@ -868,33 +975,73 @@ public class Model {
         return listOfAllEdgesInWays;
     }
 
-    public static Map<OSMNode, Integer> getMapOfOSMNodesToIndex() {
-        return mapOfOSMNodesToIndex;
-    }
-
 
     //Laver et array der holder hver OSMNodes i grafen på dens tilhørende index. Bruges til at få OSMNode udfra index
-    public void makeArrayOfOSMNodesInGraph(Map<OSMNode, Integer> mapOfOSMNodesToIndex){
+    public OSMNode[] makeArrayOfOSMNodesInGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, OSMNode[] arrayOfOSMNodesInGraph){
         arrayOfOSMNodesInGraph = new OSMNode[mapOfOSMNodesToIndex.size()];
         for(Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()) {
             int index = entry.getValue();
             arrayOfOSMNodesInGraph[index] = entry.getKey();
         }
+        return arrayOfOSMNodesInGraph;
     }
 
     public NodeMap getId2node() {
         return id2node;
     }
 
-
-    public EdgeWeightedDigraph getGraph() {
-        return graph;
+    public EdgeWeightedDigraph getGraphCAR() {
+        return graphCAR;
     }
 
-
-    public static OSMNode[] getArrayOfOSMNodesInGraph() {
-        return arrayOfOSMNodesInGraph;
+    public EdgeWeightedDigraph getGraphBIKE() {
+        return graphBIKE;
     }
+
+    public EdgeWeightedDigraph getGraphFOOT() {
+        return graphFOOT;
+    }
+
+    public OSMNode[] getArrayOfOSMNodesInGraphCAR() {
+        return arrayOfOSMNodesInGraphCAR;
+    }
+
+    public OSMNode[] getArrayOfOSMNodesInGraphBIKE() {
+        return arrayOfOSMNodesInGraphBIKE;
+    }
+
+    public OSMNode[] getArrayOfOSMNodesInGraphFOOT() {
+        return arrayOfOSMNodesInGraphFOOT;
+    }
+
+    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysCAR() {
+        return listOfAllEdgesInWaysCAR;
+    }
+
+    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysBIKE() {
+        return listOfAllEdgesInWaysBIKE;
+    }
+
+    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysFOOT() {
+        return listOfAllEdgesInWaysFOOT;
+    }
+
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexCAR() {
+        return mapOfOSMNodesToIndexCAR;
+    }
+
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexBIKE() {
+        return mapOfOSMNodesToIndexBIKE;
+    }
+
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexFOOT() {
+        return mapOfOSMNodesToIndexFOOT;
+    }
+
+    public ArrayList<OSMNode> getListOfAlleNodesInGraphAllWays() {
+        return listOfAlleNodesInGraphAllWays;
+    }
+
 }
 
 

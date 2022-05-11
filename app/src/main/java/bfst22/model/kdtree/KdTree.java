@@ -3,6 +3,8 @@ package bfst22.model.kdtree;
 import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
+
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -18,16 +20,11 @@ public class KdTree {
     private OSMNode closestNodeField = null;
     private double closestDistField = Double.POSITIVE_INFINITY;
 
-
-
-    public KdTree() {
-    }
-
     public KdTree(List<Drawable> drawables) {
         this.root = buildKDTree(drawables, true);
     }
 
-    public KdTree(List<OSMNode> osmNodes, int nul) {
+    public KdTree(ArrayList<OSMNode> osmNodes, int nul) {
         this.root = buildKDTreeOfOSMNodes(osmNodes, true);
     }
 

@@ -8,6 +8,7 @@ import bfst22.model.algslib.IndexMinPQ;
 import bfst22.model.algslib.Stack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -22,10 +23,10 @@ public class Dijkstra {
     private Stack<PolyLine> polylinesInPath = new Stack<>();
 
 
-    public Dijkstra(EdgeWeightedDigraph graph, int startVertex, int endVertex) {
+    public Dijkstra(EdgeWeightedDigraph graph, int startVertex, int endVertex, OSMNode[] arrayOfOSMNodesInGraph, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
 
         // Tjekker at en edge ikke har negativ vægt
-        for (DirectedEdge edge : graph.allEdgesInGraph()) {
+        for (DirectedEdge edge : graph.allEdgesInGraph(mapOfOSMNodesToIndex, arrayOfOSMNodesInGraph)) {
             if (edge.weight() < 0)
                 throw new IllegalArgumentException("edge " + edge + " has negative weight");
         }
@@ -55,36 +56,23 @@ public class Dijkstra {
                 break;
             }
             else {
-                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexLightestWeight]))
-                relax(edge, vertexLightestWeight);
+                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[vertexLightestWeight], mapOfOSMNodesToIndex))
+                relax(edge, mapOfOSMNodesToIndex);
             }
         }
 
         // Check optimality conditions
-        assert check(graph, startVertex);
+        assert check(graph, startVertex, arrayOfOSMNodesInGraph, mapOfOSMNodesToIndex);
     }
 
 
     // Metoden der relaxer en edge og opdaterer priority queuen hvis nødvendigt
-    private void relax(DirectedEdge edge, int vertexLightestWeight) {
-        OSMNode vertexLightestWeightOSMNode = Model.getArrayOfOSMNodesInGraph()[vertexLightestWeight];
+    private void relax(DirectedEdge edge, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
         int edgeStart;
         int edgeEnd;
 
-        edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
-        edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
-
-
-        /*if(vertexLightestWeightOSMNode == edge.getStart()){
-            edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
-            edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
-            System.out.println("Nu er vi inde i den første if");
-        }
-        else{
-            edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
-            edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
-            System.out.println("Nu er vi inde i else");
-        }*/
+        edgeStart = mapOfOSMNodesToIndex.get(edge.getStart());
+        edgeEnd = mapOfOSMNodesToIndex.get(edge.getEnd());
 
         if (distTo[edgeEnd] > distTo[edgeStart] + edge.weight()) {
             distTo[edgeEnd] = distTo[edgeStart] + edge.weight();
@@ -92,12 +80,6 @@ public class Dijkstra {
             if (pq.contains(edgeEnd)) pq.decreaseKey(edgeEnd, distTo[edgeEnd]);
             else                      pq.insert(edgeEnd, distTo[edgeEnd]);
         }
-
-        //relax(edge, from)
-        //if(from == edge.start)
-            //gør det som vi har lavet
-        //else
-            //byt og start og slut om
 
     }
 
@@ -115,11 +97,11 @@ public class Dijkstra {
     }
 
     // Returnerer den korteste vej fra start vertex til en vertex v
-    public Iterable<DirectedEdge> pathTo(int vertex) { // som vi bruger det, er vertex vores slut-vertex
+    public Iterable<DirectedEdge> pathTo(int vertex, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) { // som vi bruger det, er vertex vores slut-vertex
         validateVertex(vertex);
         if (!hasPathTo(vertex)) return null;
         Stack<DirectedEdge> path = new Stack<DirectedEdge>();
-        for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[Model.getMapOfOSMNodesToIndex().get(edge.getStart())]) {
+        for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[mapOfOSMNodesToIndex.get(edge.getStart())]) {
             path.push(edge);
         }
         System.out.println("Færdig med pathTo");
@@ -132,10 +114,10 @@ public class Dijkstra {
     // check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(EdgeWeightedDigraph G, int s) {
+    private boolean check(EdgeWeightedDigraph G, int s, OSMNode[] arrayOfOSMNodesInGraph, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
 
         // check that edge weights are non-negative
-        for (DirectedEdge e : G.allEdgesInGraph()) {
+        for (DirectedEdge e : G.allEdgesInGraph(mapOfOSMNodesToIndex, arrayOfOSMNodesInGraph)) {
             if (e.weight() < 0) {
                 System.err.println("negative edge weight detected");
                 return false;
@@ -157,8 +139,8 @@ public class Dijkstra {
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.getNumberOfVertices(); v++) {
-            for (DirectedEdge e : G.getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[v])) {
-                int w = Model.getMapOfOSMNodesToIndex().get(e.getEnd());
+            for (DirectedEdge e : G.getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[v], mapOfOSMNodesToIndex)) {
+                int w = mapOfOSMNodesToIndex.get(e.getEnd());
                 if (distTo[v] + e.weight() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
                     return false;
@@ -170,8 +152,8 @@ public class Dijkstra {
         for (int w = 0; w < G.getNumberOfVertices(); w++) {
             if (edgeTo[w] == null) continue;
             DirectedEdge e = edgeTo[w];
-            int v = Model.getMapOfOSMNodesToIndex().get(e.getStart());
-            if (w != Model.getMapOfOSMNodesToIndex().get(e.getEnd())) return false;
+            int v = mapOfOSMNodesToIndex.get(e.getStart());
+            if (w != mapOfOSMNodesToIndex.get(e.getEnd())) return false;
             if (distTo[v] + e.weight() != distTo[w]) {
                 System.err.println("edge " + e + " on shortest path not tight");
                 return false;
