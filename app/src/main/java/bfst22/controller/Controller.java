@@ -84,7 +84,8 @@ public class Controller {
     public void init(Model model) {
         canvas.init(model);
         warningPane.setVisible(false);
-        scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
+        //scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
+        scaleInfo.textProperty().bind(Bindings.format(canvas.getDistToString()));
 
 
 
@@ -100,7 +101,8 @@ public class Controller {
     public void onScroll(ScrollEvent e) {
         var factor = e.getDeltaY();
         canvas.zoom(Math.pow(1.05, factor), e.getX(), e.getY());
-        scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
+        //scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
+        scaleInfo.textProperty().bind(Bindings.format(canvas.getDistToString()));
     }
     //Metoden gør det muligt at trække i kortet ved at trække musens sidste koordinater fra musens nye koordinater.
     @FXML
