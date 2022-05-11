@@ -613,7 +613,7 @@ public class MapCanvas extends Canvas {
                 if (model.getKDTreeMOTORWAY() != null && model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot()) != null) {
                     for (Drawable drawable : model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot())) {
                         gc.setLineWidth(WayType.MOTORWAY.getWidth() / Math.sqrt(trans.determinant()));
-                        drawable.fillWayType(gc, WayType.MOTORWAY);
+                        drawable.drawWayType(gc, WayType.MOTORWAY);
                     }
                 }
 
