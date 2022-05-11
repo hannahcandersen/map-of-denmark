@@ -653,13 +653,10 @@ public class Model {
     public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
 
 
-
-
-
-
-
+    //slettes??
     public Map<WayType, List<Drawable>> getCoastlinesMap() {return coastlinesMap;}
 
+    //slettes??
     public static List<OSMNode> getListOfOSMNodesOfCoastlines(Map<WayType, List<Drawable>> coastlines) {
         //så længe dens startpunkt ikke er dens slutpunkt - kør while loop
         //getLon/Lat fra OSMNode
@@ -716,7 +713,7 @@ public class Model {
 
                 currentStartOSMNode = ((PolyLine) coastline).getNodes().get(0);
                 currentEndOSMNode = ((PolyLine) coastline).getNodes().get(((PolyLine) coastline).getNodes().size() - 1);
-//
+
                 // SITUATION 1: Begge pile mod højre.
                 if (currentStartOSMNode.getLat() == endOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
                     listOfNodesInCoastline.addAll(((PolyLine) coastline).getNodes());

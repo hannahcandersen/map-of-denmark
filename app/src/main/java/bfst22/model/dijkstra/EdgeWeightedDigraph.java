@@ -54,6 +54,8 @@ public class EdgeWeightedDigraph {
         OSMNode end = edge.getEnd();
 
         adjacencyList[Model.getMapOfOSMNodesToIndex().get(start)].add(edge);
+        System.out.println(Model.getMapOfOSMNodesToIndex().get(start));
+
         indegree[Model.getMapOfOSMNodesToIndex().get(end)]++;
         numberOfEdges++;
     }
