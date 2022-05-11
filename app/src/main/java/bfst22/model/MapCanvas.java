@@ -594,19 +594,20 @@ public class MapCanvas extends Canvas {
         }*/
 
 
-        // TEGNER GRAFEN
+        /*
+        // TEGNER GRAFEN - TIL DEBUG MODE
         for (Drawable drawable : Model.getListOfAllEdgesInWays()) {
             gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
             gc.setStroke(Color.RED);
             drawable.draw(gc);
         }
 
+         */
 
-        //Tegner vores debug firkant
+        //Tegner vores debug firkant - TIL DEBUG MODE
         Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
         gc.setFill(rectangleColor);
         gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
-
 
 
         //Tegner nearest node når man double klikker
@@ -621,9 +622,9 @@ public class MapCanvas extends Canvas {
             gc.fillRect(drawPunktStartOfRoute.getLat(), drawPunktStartOfRoute.getLon(), 0.00002, 0.00002);
             gc.fillRect(drawPunktStartOfRoute.getLon(), drawPunktStartOfRoute.getLat(), 0.00002, 0.00002);
             //System.out.println("Tegner drawPunktStartOfRoute");
-            }*/
+            }
 
-        /*if(drawPunktEndOfRoute != null){
+        if(drawPunktEndOfRoute != null){
             gc.setFill(Color.BLUE);
             gc.fillRect(drawPunktEndOfRoute.getLat(), drawPunktEndOfRoute.getLon(), 0.00002, 0.00002);
             gc.fillRect(drawPunktEndOfRoute.getLon(), drawPunktEndOfRoute.getLat(), 0.00002, 0.00002);

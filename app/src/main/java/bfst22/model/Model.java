@@ -546,6 +546,7 @@ public class Model {
                                 //sætter maxspeed til 0, fordi det er ikke alle veje der har tag maxspeed,
                                 // så hvis vi ikke opdaterer dette, vil næste vej få samme værdi som den forrige
                                 maxspeed = 0;
+                                isOneway = false;
                             }
                             break;
 
