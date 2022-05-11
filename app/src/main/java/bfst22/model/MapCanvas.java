@@ -119,7 +119,7 @@ public class MapCanvas extends Canvas {
 
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
-        //System.out.println("Currentzoomlevel: " + zoomLevel);
+        System.out.println("Currentzoomlevel: " + zoomLevel);
 
 
         //Result listen, med de drawables der er inRange
@@ -179,14 +179,13 @@ public class MapCanvas extends Canvas {
         //Tegner multipolygon
 
 
-        //Tegner alle skove altid
-       /* if( model.lines.get(WayType.FOREST) != null){
+        //Tegner Altid multipolygonskove
+        if( model.lines.get(WayType.FOREST) != null){
             for (Drawable drawable: model.lines.get(WayType.FOREST)) {
-                drawable.fillWayType(gc, WayType.FOREST);
+                if (drawable instanceof MultiPolygon) gc.setFillRule(FillRule.EVEN_ODD); drawable.fillWayType(gc, WayType.FOREST);
+
             }
-        }*/
-
-
+        }
 
         //Tegner forest
         if (model.getKDTreeFOREST() != null && model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot()) != null) {
@@ -195,16 +194,25 @@ public class MapCanvas extends Canvas {
                 if (isPartySelected) {
                     drawable.fill(gc);
                 } else {
-                   // gc.setFillRule(FillRule.EVEN_ODD);
-                    //gc.setFill(Color.HOTPINK);
-                    //drawable.fill(gc);
-
                     drawable.fillWayType(gc, WayType.FOREST);
-
-
                 }
             }
         }
+
+
+        if(zoomLevel <=26){
+        if (model.getKDTreeTERRITORIAl() != null && model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot()) != null) {
+            gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+            for (Drawable drawable : model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot())) {
+                if (isPartySelected) {
+                    drawable.draw(gc);
+                } else {
+                    drawable.drawWayType(gc, WayType.TERRITORIAl);
+                }
+            }
+        }}
+
+
 
         // Alt der skal tegnes ved zoom level 29
         if (zoomLevel >= 29) {

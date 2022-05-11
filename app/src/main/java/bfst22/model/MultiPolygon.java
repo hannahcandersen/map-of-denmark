@@ -171,10 +171,11 @@ public class MultiPolygon implements Drawable, Serializable {
 
     @Override
     public void trace(GraphicsContext gc) {
-        gc.setFillRule(FillRule.EVEN_ODD);
+        //gc.setFillRule(FillRule.EVEN_ODD);
         for (var part : parts){
             gc.beginPath();
             part.trace(gc);
+            gc.setFillRule(FillRule.EVEN_ODD);
             gc.fill();
         }
     }
