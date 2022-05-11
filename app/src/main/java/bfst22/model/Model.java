@@ -103,7 +103,7 @@ public class Model {
     private boolean canGoByCar;
     private boolean canGoByBike;
     private boolean canGoByFoot;
-    private List<PolyLine> listOfCoastlines;
+    //private List<PolyLine> listOfCoastlines;
     private EdgeWeightedDigraph graphCAR, graphBIKE, graphFOOT;
     private OSMNode[] arrayOfOSMNodesInGraphCAR, arrayOfOSMNodesInGraphBIKE, arrayOfOSMNodesInGraphFOOT;
     private List<PolyLine> listOfCoastlines = new ArrayList<>();
@@ -253,8 +253,8 @@ public class Model {
         arrayOfOSMNodesInGraphBIKE = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexBIKE, arrayOfOSMNodesInGraphBIKE);
         arrayOfOSMNodesInGraphFOOT = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexFOOT, arrayOfOSMNodesInGraphFOOT);
         //Skal nok sættes op i .osm
-        makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
-        makeGraph();
+        //makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
+        //makeGraph();
         //System.out.println(graph);
 
         //System.out.println("indegree " + graph.getIndegree()[484]);
