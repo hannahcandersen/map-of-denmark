@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
@@ -24,9 +25,9 @@
             <Pane fx:id="transportTypePane" layoutX="124.0" layoutY="45.0" prefHeight="35.0" prefWidth="407.0" style="-fx-background-color: EFC0E8;" AnchorPane.leftAnchor="124.0" visible="false">
                 <children>
                     <Button fx:id="transportCloseButton" layoutX="381.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#onClickedTransportCloseButton" prefHeight="12.0" prefWidth="6.0" text="X" />
-                    <CheckBox fx:id="checkBoxBicycle" layoutX="77.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxBicycle" text="Bicycle" />
-                    <CheckBox fx:id="checkBoxWalking" layoutX="150.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxFoot" text="Walking" />
-                    <CheckBox fx:id="checkBoxCar" layoutX="14.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxCar" text="Car" />
+               <RadioButton fx:id="checkBoxCar" layoutX="14.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxCar" text="Car" />
+               <RadioButton fx:id="checkBoxBicycle" layoutX="78.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxBicycle" text="Bicycle" />
+               <RadioButton fx:id="checkBoxWalking" layoutX="160.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxFoot" text="Walking" />
                 </children>
             </Pane>
          <Pane maxWidth="1.7976931348623157E308" prefHeight="38.0" style="-fx-background-color: EFC0E8;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

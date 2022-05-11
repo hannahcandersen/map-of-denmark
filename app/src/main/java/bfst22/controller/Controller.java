@@ -55,11 +55,11 @@ public class Controller {
     @FXML
     private Label scaleInfo;
     @FXML
-    private CheckBox checkBoxBicycle;
+    private RadioButton checkBoxBicycle;
     @FXML
-    private CheckBox checkBoxWalking;
+    private RadioButton checkBoxWalking;
     @FXML
-    private CheckBox checkBoxCar;
+    private RadioButton checkBoxCar;
     @FXML
     private Pane transportTypePane;
     @FXML
