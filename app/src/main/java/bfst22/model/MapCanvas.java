@@ -164,6 +164,11 @@ public class MapCanvas extends Canvas {
         }
         // }
 
+        for(Drawable drawable: MultiPolygon.getListOfMultipolygonLines()){
+            gc.setFill(Color.BLUE);
+            drawable.fill(gc);
+        }
+
 
         // Tegner og farvelægger kortet
         //Tegner alt UNKNOWN
@@ -174,6 +179,13 @@ public class MapCanvas extends Canvas {
         //Tegner multipolygon
 
 
+        //Tegner alle skove altid
+       /* if( model.lines.get(WayType.FOREST) != null){
+            for (Drawable drawable: model.lines.get(WayType.FOREST)) {
+                drawable.fillWayType(gc, WayType.FOREST);
+            }
+        }*/
+
 
 
         //Tegner forest
@@ -183,14 +195,12 @@ public class MapCanvas extends Canvas {
                 if (isPartySelected) {
                     drawable.fill(gc);
                 } else {
+                   // gc.setFillRule(FillRule.EVEN_ODD);
+                    //gc.setFill(Color.HOTPINK);
+                    //drawable.fill(gc);
 
-
-                    if(drawable instanceof MultiPolygon){
-                        System.out.println("Jeg er en forrest multipolygon");
-
-                    }
-                    gc.setFillRule(FillRule.EVEN_ODD);
                     drawable.fillWayType(gc, WayType.FOREST);
+
 
                 }
             }

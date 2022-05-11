@@ -771,7 +771,8 @@ public class Model {
             else {
                // gammel liste = ny liste (ting vi mangler at kigge på)
                unSortedCoastlines = buildUpCoastlinesList;
-           }} //Forloop stop
+           }
+        } //While stop
 
         //hvis start og slut ikke er det samme - sæt en linje imellem
         System.out.println("done med kystliner");
