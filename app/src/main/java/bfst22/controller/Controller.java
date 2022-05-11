@@ -112,7 +112,7 @@ public class Controller {
 
             //canvas.TestdrawPunkt = new OSMNode(mapPointx, mapPointy);
 
-            canvas.setDrawPunkt(canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), mapPointy, mapPointx));
+            canvas.setDrawPunkt(canvas.getModel().getKDTreeNodesInGraphAllWays().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphAllWays().getRoot(), mapPointy, mapPointx));
 
             //canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);
             canvas.repaint();
@@ -154,27 +154,27 @@ public class Controller {
     @FXML
     public void searchRoute(ActionEvent actionEvent) {
         //Finder den tætteste node fra søgt adresse (nearest neighbour)
-        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
-        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+        //OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
+        //OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
 
         //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
         //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
-        canvas.setDrawPunktStartOfRoute(startOfRoute);
-        canvas.setDrawPunktEndOfRoute(endOfRoute);
+        //canvas.setDrawPunktStartOfRoute(startOfRoute);
+        //canvas.setDrawPunktEndOfRoute(endOfRoute);
+
+        //Find indeks for startOfRoute og endOfRoute
+        //int startOfRouteIndex = Model.getMapOfOSMNodesToIndexX().get(startOfRoute);
+        //int endOfRouteIndex = Model.getMapOfOSMNodesToIndexX().get(endOfRoute);
+
+        //Dijkstra
+        //Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphX(), startOfRouteIndex, endOfRouteIndex);
+
+        //Gemmer den korteste route i et felt
+        //canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex)); //tilføj Hashmap
 
         //if()
         //kald på searchByCar
         //kald på searchByBike
-
-        //Find indeks for startOfRoute og endOfRoute
-        int startOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(startOfRoute);
-        int endOfRouteIndex = Model.getMapOfOSMNodesToIndex().get(endOfRoute);
-
-        //Dijkstra
-        Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraph(), startOfRouteIndex, endOfRouteIndex);
-
-        //Gemmer den korteste route i et felt
-        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex)); //tilføj Hashmap
         canvas.repaint();
 
     }
@@ -276,15 +276,18 @@ public class Controller {
         canvas.repaint();
     }
 
-    public OSMNode getStartOfRoute() {
-
+    /*public OSMNode getStartOfRoute() {
+        return canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
     }
+    public OSMNode getEndOfRoute() {
+        return canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+    }*/
 
 
     public void searchRouteByCar(ActionEvent actionEvent) {
         //Finder den tætteste node fra søgt adresse (nearest neighbour)
-        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
-        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraph().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraph().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
+        OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
+        OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
 
         //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
         //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
