@@ -674,7 +674,8 @@ public class MapCanvas extends Canvas {
             gc.setFill(Color.BLUE);
             gc.fillRect(drawPunktEndOfRoute.getLat(), drawPunktEndOfRoute.getLon(), 0.00002, 0.00002);
             gc.fillRect(drawPunktEndOfRoute.getLon(), drawPunktEndOfRoute.getLat(), 0.00002, 0.00002);
-            System.out.println("Tegner drawPunktEndOfRoute");}
+            //System.out.println("Tegner drawPunktEndOfRoute");
+            }
 
         /*gc.setFill(Color.YELLOW);
         gc.fillRect(realscalebarPoint1.getX(), realscalebarPoint1.getY(), 0.02, 0.02);
