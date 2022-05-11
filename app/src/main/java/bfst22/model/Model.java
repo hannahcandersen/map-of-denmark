@@ -31,52 +31,22 @@ import static java.util.stream.Collectors.toList;
 
 public class Model {
 
-    //Felter til alle KD-træerne
-    private final KdTree KDTreeUNKNOWN, KDTreeRESIDENTIAL, KDTreeLAKE, KDTreeBEACH, KDTreeSAND, KDTreeFOREST, KDTreeWATER, KDTreeBUILDING, KDTreeINDUSTRIAL, KDTreeMEADOW, KDTreePARK,
-            KDTreeCEMETERY, KDTreeALLOTMENTS, KDTreeCOMMERCIAL, KDTreeCONSTRUCTION, KDTreeRETAIL;
-    private final KdTree KDTreeFARMLAND;
-    private final KdTree KDTreeGRASS;
-    private final KdTree KDTreeGREENHOUSE_HORTICULTURE;
-    private final KdTree KDTreeRAILWAY;
-    private final KdTree KDTreeRELIGIOUS;
-    private final KdTree KDTreeMOTORWAY;
-    private final KdTree KDTreeCOASTLINE;
-    private final KdTree KDTreePRIMARY;
-    private final KdTree KDTreeSECONDARY;
-    private final KdTree KDTreeTERTIARY;
-    private final KdTree KDTreeLIVING_STREET;
-    private final KdTree KDTreeSERVICE;
-    private final KdTree KDTreePEDESTRIAN;
-    private final KdTree KDTreeTRACK;
-    private final KdTree KDTreeROAD;
-    private final KdTree KDTreeFOOTWAY_ANDMORE;
-    private final KdTree KDTreeBRIDLEWAY;
-    private final KdTree KDTreeCYCLEWAY;
-    private final KdTree KDTreeRESIDENTIALWAY;
-    private final KdTree KDTreeCONSTRUCTIONWAY;
-    private final KdTree KDTreeRIVER_ANDMORE;
-    private final KdTree KDTreeHOSPITAL;
-    private final KdTree KDTreePITCH;
-    private final KdTree KDTreeRECREATION_GROUND;
-    private final KdTree KDTreeSCHOOL;
-    private final KdTree KDTreeFERRY;
-    private final KdTree KDTreeGRAVEYARD;
-    private final KdTree KDTreeNodesInGraphAllWays;
-    private final KdTree KDTreeNodesInGraphCAR;
-    private final KdTree KDTreeNodesInGraphBIKE;
-    private final KdTree KDTreeNodesInGraphFOOT;
-    //private final KdTree KDTreeNodesInGraph;
-    private final KdTree KDTreeTERRITORIAl;
-
-
-
-
-    //Måske static
-    NodeMap id2node = new NodeMap(); // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
-    List<Runnable> observers = new ArrayList<>();  // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
+    /////////////// FELTER ///////////////////
 
     // Min og max koordinater for hele datasættet. Hedder bounds i osm filen
     private float minlat, minlon, maxlat, maxlon;
+
+    //Felter til alle KD-træerne
+    private final KdTree KDTreeUNKNOWN, KDTreeRESIDENTIAL, KDTreeLAKE, KDTreeBEACH, KDTreeSAND, KDTreeFOREST, KDTreeWATER, KDTreeBUILDING, KDTreeINDUSTRIAL, KDTreeMEADOW, KDTreePARK,
+            KDTreeCEMETERY, KDTreeALLOTMENTS, KDTreeCOMMERCIAL, KDTreeCONSTRUCTION, KDTreeRETAIL, KDTreeFARMLAND, KDTreeGRASS, KDTreeGREENHOUSE_HORTICULTURE, KDTreeRAILWAY,
+            KDTreeRELIGIOUS, KDTreeMOTORWAY, KDTreeCOASTLINE, KDTreePRIMARY, KDTreeSECONDARY, KDTreeTERTIARY, KDTreeLIVING_STREET, KDTreeSERVICE, KDTreePEDESTRIAN, KDTreeTRACK,
+            KDTreeROAD, KDTreeFOOTWAY_ANDMORE, KDTreeBRIDLEWAY, KDTreeCYCLEWAY, KDTreeRESIDENTIALWAY, KDTreeCONSTRUCTIONWAY, KDTreeRIVER_ANDMORE, KDTreeHOSPITAL, KDTreePITCH,
+            KDTreeRECREATION_GROUND, KDTreeSCHOOL, KDTreeFERRY, KDTreeGRAVEYARD, KDTreeNodesInGraphAllWays, KDTreeNodesInGraphCAR, KDTreeNodesInGraphBIKE, KDTreeNodesInGraphFOOT,
+            KDTreeTERRITORIAl;
+
+    // Grafer
+    private EdgeWeightedDigraph graphCAR, graphBIKE, graphFOOT;
+    // Felter der bruges til at lave edges til graferne
     private double maxspeed = 0;
     private boolean isOneway;
     private boolean isRoundabout;
@@ -86,57 +56,49 @@ public class Model {
     private boolean canGoByCar;
     private boolean canGoByBike;
     private boolean canGoByFoot;
-    //private List<PolyLine> listOfCoastlines;
-    private EdgeWeightedDigraph graphCAR, graphBIKE, graphFOOT;
+    // Lister, maps og arrays der bruges til at koble OSMNodes og indeks sammen i graferne
     private OSMNode[] arrayOfOSMNodesInGraphCAR, arrayOfOSMNodesInGraphBIKE, arrayOfOSMNodesInGraphFOOT;
-    private List<PolyLine> listOfCoastlines = new ArrayList<>();
-    private EdgeWeightedDigraph graph;
-    private static OSMNode[] arrayOfOSMNodesInGraph;
-    private TST tst;
-
-
-    // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
-    Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);{
-        for (var type : WayType.values()) lines.put(type, new ArrayList<>());
-    }
-
-    //Map med coastlines
-    Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);{
-        for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());
-    }
-
-    //Liste med HIGHWAYS
-    private ArrayList<DirectedEdge> listOfAllEdgesInWaysAllWays = new ArrayList<>();
-    private ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
-    private ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
-    private ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
-
-    //Liste med alle OSMNodes in graph
-    private ArrayList<OSMNode> listOfAlleNodesInGraphAllWays = new ArrayList<>();
-    private ArrayList<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
-    private ArrayList<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
-    private ArrayList<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
-
-
-    //Map med OSMNode to index. Bruges til at lave en graf
+    private final ArrayList<DirectedEdge> listOfAllEdgesInWaysAllWays = new ArrayList<>();
+    private final ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
+    private final ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
+    private final ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
+    private final ArrayList<OSMNode> listOfAlleNodesInGraphAllWays = new ArrayList<>();
+    private final ArrayList<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
+    private final ArrayList<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
+    private final ArrayList<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
     private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexCAR = new HashMap<>();
     private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexBIKE = new HashMap<>();
     private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexFOOT = new HashMap<>();
 
+    // NodeMap til nodes, der gemmer id, lon og lat for en node. NodeMap er en sorteret liste
+    NodeMap id2node = new NodeMap();
+    // Liste af observers. Observers gør så objekter kan blive notificeret om ændringer i andre objekter
+    List<Runnable> observers = new ArrayList<>();
+    // Map med type (om det f.eks. er lake eller highway) og tilhørende linje
+    Map<WayType, List<Drawable>> lines = new EnumMap<>(WayType.class);{
+        for (var type : WayType.values()) lines.put(type, new ArrayList<>());}
+    // Map med coastlines
+    Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);{
+        for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());}
+    // Liste med alle coastlines
+    private List<PolyLine> listOfCoastlines = new ArrayList<>();
+    // Ternary Search Tree
+    private TST tst;
 
 
-    /////////////// Konstruktør (unchecked) ///////////////////
+    /////////////// KONSTRUKTØR ///////////////////
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
         tst = new TST();
         var time = -System.nanoTime();
-        if (filename.endsWith(".zip")) {   // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
-            var zip = new ZipFile(new File(filename)); //læser zip-filen én fil af gangen
-            var entry = zip.entries().nextElement(); // læser næste fil i zip-filen
+
+        if (filename.endsWith(".zip")) {   // Unzipper en zip-fil og læser den herefter på samme måde som osm-fil
+            var zip = new ZipFile(new File(filename)); // Læser zip-filen én fil af gangen
+            var entry = zip.entries().nextElement(); // Læser næste fil i zip-filen
             loadOSM(zip.getInputStream(entry));
-        } else if (filename.endsWith(".osm")) {// læser filen som en osm-fil
+        } else if (filename.endsWith(".osm")) {// Læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
             listOfCoastlines = makeCoastlineObject(coastlinesMap);
-        } else if (filename.endsWith(".obj")) { // kan læse den .obj-fil der er blevet gemt (binary file)
+        } else if (filename.endsWith(".obj")) { // Læser filen som en binary file (obj)
             try (var input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 minlat = input.readFloat();
                 minlon = input.readFloat();
@@ -149,7 +111,6 @@ public class Model {
                 tst = (TST) input.readObject();
                 //tst.setRoot((AddressNode) input.readObject());
                 //System.out.println(tst.getRoot().getC());
-
                 //VIGTIGT at skrive i samme rækkefølge som i save()
                 //tilføj de ting vi har tilføjet i save
             }
@@ -158,15 +119,14 @@ public class Model {
                     .map(Line::new)
                     .collect(toList()));
         }
-        // måler load time
-        time += System.nanoTime(); // load time i nanosekunder
-        System.out.println("Load time: " + (long) (time / 1e6) + " ms"); // printer load time i millisekunder
+        // Måler load time
+        time += System.nanoTime(); // Load time i nanosekunder
+        System.out.println("Load time: " + (long) (time / 1e6) + " ms"); // Printer load time i millisekunder
 
-        // gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
+        // Gemmer den indlæste data som en .obj-fil, så den vigtige data serialiseres
         if (!filename.endsWith(".obj")) save(filename);
 
-
-        //Lav træer
+        //Laver træer
         KDTreeUNKNOWN = new KdTree(lines.get(WayType.UNKNOWN));
         KDTreeLAKE = new KdTree(lines.get(WayType.LAKE));
         KDTreeBEACH = new KdTree(lines.get(WayType.BEACH));
@@ -210,41 +170,34 @@ public class Model {
         KDTreeGRAVEYARD = new KdTree(lines.get(WayType.GRAVEYARD));
         KDTreeRIVER_ANDMORE = new KdTree(lines.get(WayType.RIVER_ANDMORE));
         KDTreeCOASTLINE = new KdTree(lines.get(WayType.COASTLINE));
-        KDTreeNodesInGraphAllWays = new KdTree(listOfAlleNodesInGraphAllWays, 0); // bruges til nearest neigbour når man dobbeltklikker
+        KDTreeTERRITORIAl = new KdTree(lines.get(WayType.TERRITORIAl));
+        KDTreeNodesInGraphAllWays = new KdTree(listOfAlleNodesInGraphAllWays, 0);
         KDTreeNodesInGraphCAR = new KdTree(listOfAlleNodesInGraphCAR, 0);
         KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
         KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
-        KDTreeTERRITORIAl = new KdTree(lines.get(WayType.TERRITORIAl));
 
-
-        //lav liste med coastlines
-
-        //lav dijkstra graf
         //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
         mapOfOSMNodesToIndexCAR = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysCAR, mapOfOSMNodesToIndexCAR);
         mapOfOSMNodesToIndexBIKE = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysBIKE, mapOfOSMNodesToIndexBIKE);
         mapOfOSMNodesToIndexFOOT = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysFOOT, mapOfOSMNodesToIndexFOOT);
-
         //Laver graf for veje hvor man kan henholdsvis køre bil, cykle og gå
         graphCAR = makeGraph(mapOfOSMNodesToIndexCAR, listOfAllEdgesInWaysCAR, graphCAR);
         graphBIKE = makeGraph(mapOfOSMNodesToIndexBIKE, listOfAllEdgesInWaysBIKE, graphBIKE);
         graphFOOT = makeGraph(mapOfOSMNodesToIndexFOOT, listOfAllEdgesInWaysFOOT, graphFOOT);
-
         // Laver arrays for veje hvor man kan henholdsvis køre bil, cykle og gå
         arrayOfOSMNodesInGraphCAR = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexCAR, arrayOfOSMNodesInGraphCAR);
         arrayOfOSMNodesInGraphBIKE = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexBIKE, arrayOfOSMNodesInGraphBIKE);
         arrayOfOSMNodesInGraphFOOT = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexFOOT, arrayOfOSMNodesInGraphFOOT);
         //Skal nok sættes op i .osm
-        //makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
-        //makeGraph();
-        //System.out.println(graph);
 
-        //System.out.println("indegree " + graph.getIndegree()[484]);
+        // TIL TEST:
+        //System.out.println(graphCAR);
+        //System.out.println(graphBIKE);
+        //System.out.println(graphFOOT);
+        //System.out.println("indegree " + graph.getIndegree()[]);
     }
 
-
-
-    // metode til at gemme data i en .obj-fil
+    // Metode til at gemme data i en .obj-fil
     public void save(String basename) throws FileNotFoundException, IOException {
         try (var out = new ObjectOutputStream(new FileOutputStream(basename + ".obj"))) {
             out.writeFloat(minlat);
@@ -256,48 +209,27 @@ public class Model {
             //out.writeObject(graph);
             out.writeObject(tst);
             out.writeObject(tst.getRoot());
-
-
-
             //tilføj alle de ting vi har lavet: tst
-
             //Gem kystlinjer her
         }
     }
 
-    // get-metoder til min og max koordinater
-    public float getMinLat() {
-        return minlat;
-    }
-
-    public float getMinLon() {
-        return minlon;
-    }
-
-    public float getMaxlat() {
-        return maxlat;
-    }
-
-    public float getMaxlon() {
-        return maxlon;
-    }
-
-    // metode der bruges til at parse en OSM film
+    // Metode der bruges til at parse en OSM fil
     private void loadOSM(InputStream input) throws XMLStreamException, FactoryConfigurationError {
         var reader = XMLInputFactory.newInstance().createXMLStreamReader(new BufferedInputStream(input)); // laver en ny XML Reader der læser tags
         var id2way = new HashMap<Long, OSMWay>(); // map til veje, der gemmer rel-id og listen af nodes for vejen
         var nodes = new ArrayList<OSMNode>(); // liste af nodes for den enkelte vej
-        var rel = new ArrayList<OSMWay>(); // liste med osm ways
+        var rel = new ArrayList<OSMWay>(); // liste med osm ways for en relation
         String city = "";
         String housenumber = "";
         String postcode = "";
         String street = "";
         OSMNode osmNodeToAddress = null;
         long relID = 0; // giver et id til en relation
-        var type = WayType.UNKNOWN; // sætter først typen til unknows. kan ændres undervejs i metoden til f.eks. LAKE
-        while (reader.hasNext()) { // læser hver linje én af gangen
+        var type = WayType.UNKNOWN; // sætter først typen til unknows. dette ændres senere i parseren
+        while (reader.hasNext()) { // læser hver linje i filen én af gangen
             switch (reader.next()) {
-                case XMLStreamConstants.START_ELEMENT: // får det første på den givne linje i osm-filen. f.eks. om det er en node
+                case XMLStreamConstants.START_ELEMENT: // Læser det første element på linjen
                     var name = reader.getLocalName();
                     // switch statement, som gør noget forskelligt ud fra hvad det første ord på linjen er
                     switch (name) {
@@ -314,23 +246,21 @@ public class Model {
                             var lat = Float.parseFloat(reader.getAttributeValue(null, "lat"));
                             var lon = Float.parseFloat(reader.getAttributeValue(null, "lon"));
                             osmNodeToAddress = new OSMNode(id, 0.56f * lon, -lat);
-                            id2node.add(osmNodeToAddress);
-                            //map der en node, her er key gadenavn og value id
+                            id2node.add(osmNodeToAddress); //map der en node, her er key gadenavn og value id
                             break;
-                        // en way har i osm-filen en reference til de nodes der angiver vejen kaldet nd, der indeholder nodes' id nummer.
-                        // her gemmes disse nodes i en arrayliste "nodes"
+                        // nodes i en way starter med tagget 'nd'. Tilføjer disse nodes til nodes-listen for vejen
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             var node = id2node.get(ref);
-                            if (node == null) break;
+                            if (node == null) break; // fordi nogle nodes i veje peger ikke på nogle nodes i filen
                             nodes.add(node);
                             break;
-                        // sætter type til UNKNOWN for veje (kan måske sættes til noget andet, når vi har defineret flere typer veje?)
+                        // starter med at sætte WayType til UNKNOWN
                         case "way":
                             relID = Long.parseLong(reader.getAttributeValue(null, "id"));
                             type = WayType.UNKNOWN;
                             break;
-                        // hvis et punkt har tag natural og water, er det en sø. ændrer WayType til LAKE
+                        // læser tags og opdaterer felter og lokalvariable udfra det
                         case "tag":
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
@@ -339,7 +269,7 @@ public class Model {
                                     try {
                                         maxspeed = Double.parseDouble(v);
                                     } catch (NumberFormatException e) {
-                                        System.out.println("Invalid maxspeed: " + v);
+                                        System.out.println("Invalid maxspeed: " + v); // fordi maxspeed nogle gange er angivet som noget andet end et tal
                                     }
                                 case "oneway":
                                     isOneway = v.equals("yes");
@@ -369,9 +299,8 @@ public class Model {
                                     break;
                                 case "landuse":
                                     type = switch (v) {
-                                        //currentElement.setWayType(WayType.valueOf(v.toUpperCase(Locale.ROOT)));
-                                        //Hvis tagget ikke findes, sæt til unknown
-                                        //Current type
+                                        // Sætter WayType for tagget landuse
+                                        // Hvis tagget ikke findes, sæt til unknown
                                         case "forest" -> WayType.FOREST;
                                         case "residential" -> WayType.RESIDENTIAL;
                                         case "industrial" -> WayType.INDUSTRIAL;
@@ -394,6 +323,7 @@ public class Model {
                                     };
                                     break;
                                 case "natural":
+                                    // Sætter WayType for tagget natural
                                     type = switch (v) {
                                         case "beach" -> WayType.BEACH;
                                         case "sand" -> WayType.SAND;
@@ -405,6 +335,7 @@ public class Model {
                                     };
                                     break;
                                 case "water":
+                                    // Sætter WayType for tagget water
                                     type = switch (v) {
                                         case "lake", "lagoon" -> WayType.LAKE;
                                         case "canal", "river" -> WayType.RIVER_ANDMORE;
@@ -413,6 +344,7 @@ public class Model {
                                     };
                                     break;
                                 case "waterway":
+                                    // Sætter WayType for tagget waterway
                                     type = switch (v) {
                                         case "river", "canal" -> WayType.RIVER_ANDMORE;
                                         case "stream", "ditch", "drain" -> WayType.STREAM_ANDMORE;
@@ -421,14 +353,15 @@ public class Model {
                                         default -> WayType.UNKNOWN;
                                     };
                                     break;
-
                                 case("border_type"):
+                                    // Sætter WayType for tagget border_type
                                     type = switch (v){
                                         case "territorial" -> WayType.TERRITORIAl;
                                         default -> WayType.UNKNOWN;
                                     };
                                     break;
                                 case "amenity":
+                                    // Sætter WayType for tagget amenity
                                     type = switch (v) {
                                         case "school", "kindergarten" -> WayType.SCHOOL;
                                         case "parking" -> WayType.PARKING;
@@ -439,8 +372,8 @@ public class Model {
                                     };
                                     break;
                                 case "building":
+                                    // Sætter WayType for tagget building
                                     type = switch (v) {
-                                        //Kunne være vi skulle have flere forskellige bygninger ENUM
                                         case "yes", "church", "retail", "detached", "house", "toilets",
                                                 "shed", "garage", "school", "hotel", "commercial",
                                                 "public", "slurry_tank", "greenhouse", "office", "chapel", "semidetached_house",
@@ -466,13 +399,14 @@ public class Model {
                                     };
                                     break;
                                 case "route":
+                                    // Sætter WayType for tagget route
                                     type = switch (v) {
                                         case "ferry" -> WayType.FERRY;
                                         default -> WayType.UNKNOWN;
                                     };
                                     break;
-
                                 case "leisure":
+                                    // Sætter WayType for tagget leisure
                                     type = switch (v) {
                                         case "park" -> WayType.PARK;
                                         case "garden" -> WayType.GARDEN;
@@ -484,6 +418,7 @@ public class Model {
                                     };
                                     break;
                                 case "highway":
+                                    // Sætter WayType for tagget hihway. Highway er alle veje man kan køre, cykle eller gå på
                                     type = switch (v) {
                                         case "motorway", "motorway_link" -> WayType.MOTORWAY;
                                         case "primary", "primary_link" -> WayType.PRIMARY;
@@ -508,155 +443,139 @@ public class Model {
                                     break;
                                     }
                             break;
-                        // relations har member-tags, der referer til
-                        case "member":
+                        case "member": // relations har member-tags, der referer til det, der er en del af den givne relation
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
-                            var elm = id2way.get(ref); //man får et OSMWay objekt
-                            if (elm != null && type != WayType.TERRITORIAl) rel.add(elm); //tilføjer OSMWay objekt til listen rel
+                            var elm = id2way.get(ref);
+                            if (elm != null && type != WayType.TERRITORIAl) rel.add(elm);
                             break;
                         case "relation":
                             id = Long.parseLong(reader.getAttributeValue(null, "id"));
-                            if (id == 1305702) {
-                                System.out.println("Done");
-                            }
                             break;
                     }
                     break;
-                case XMLStreamConstants.END_ELEMENT: // får det sidste på den givne linje i osm-filen.
+                case XMLStreamConstants.END_ELEMENT: // Læser det sidste element på listen.
                     switch (reader.getLocalName()) {
-                        // laver en ny OSMWay ud fra listen af de nodes, som vejen indeholder
                         case "way":
                             if(type == null) break;
                             if (nodes.size() == 0) break;
 
-                            var way = new PolyLine(nodes, type);
+                            var way = new PolyLine(nodes, type); // laver en ny Polyline ud fra listen af de nodes, som vejen indeholder
+                            id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
+                            lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende type
+                            nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
 
-
-                                //var way = new PolyLine(nodes);
-                                id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
-                                lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende
-                                nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
-
-
-                            //Tilføjer coastlines til en liste
+                            // Tilføjer coastlines til et map
                             if (type == WayType.COASTLINE) {
                                 coastlinesMap.get(type).add(way);
                                 nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
                             }
 
+                            // Går herind, hvis way er en vej man kan køre, cykle eller gå på. Så skal den nemlig med i en af graferne
                             if (type == WayType.MOTORWAY || type == WayType.PRIMARY || type == WayType.TRUNK || type == WayType.SECONDARY || type == WayType.TERTIARY
                                     || type == WayType.UNCLASSIFIED || type == WayType.RESIDENTIALWAY || type == WayType.LIVING_STREET || type == WayType.SERVICE
                                     || type == WayType.PEDESTRIAN || type == WayType.ROAD || type == WayType.FOOTWAY_ANDMORE || type == WayType.STEPS
                                     || type == WayType.CYCLEWAY || type == WayType.CONSTRUCTIONWAY) {
 
-                                //if maxspeed != 0 - brug den maxspeed som er oplyst
-                                //if maxspeed == 0 - find ud af hvad type vej det er og sæt en værdi
-                                //vi vælger selv nogle standard værdier for de forskellige veje
+                                // De fleste veje har defineret en maxspeed. Hvis ikke, sætter vi her en selv
+                                // Baseret på oplysninger fra OpenStreetMap om de forskellige typers typiske fartgrænser
                                 if(maxspeed == 0) {
                                     maxspeed = switch (type) {
-                                        case MOTORWAY -> 120; //110-130 km/t 130
+                                        case MOTORWAY -> 120;
                                         case TRUNK -> 110;
                                         case PRIMARY, SECONDARY, ROAD, CONSTRUCTIONWAY -> 80;
-                                        case UNCLASSIFIED, TERTIARY -> 50; //secondary, road
-                                        case RESIDENTIALWAY -> 40; //se kommentar nedenunder
-                                        case LIVING_STREET, SERVICE, CYCLEWAY -> 20;  //se kommentar nedenunder
+                                        case UNCLASSIFIED, TERTIARY -> 50;
+                                        case RESIDENTIALWAY -> 40;
+                                        case LIVING_STREET, SERVICE, CYCLEWAY -> 20;
                                         case PEDESTRIAN, FOOTWAY_ANDMORE, STEPS -> 5;
-                                        default -> 0; //skal vi have en default værdi på 20 måske?
+                                        default -> 0;
                                     };
                                 }
 
-                                //sætte booleans for om der må køres, cykles eller gåes på vejen
+                                // Sætter booleans for om der må køres, cykles eller gås på vejen
                                 if(type == WayType.MOTORWAY || type == WayType.TRUNK) {
-                                    canGoByCar = true;
-
+                                    canGoByCar = true; // MAN MÅ KUN KØRE BIL
                                 }
                                 if(type == WayType.PRIMARY || type == WayType.SECONDARY || type == WayType.TERTIARY ||
                                         type == WayType.UNCLASSIFIED || type == WayType.RESIDENTIALWAY || type == WayType.LIVING_STREET ||
                                         type == WayType.SERVICE || type == WayType.ROAD || type == WayType.CONSTRUCTIONWAY) {
-                                    canGoByCar = true;
-                                    canGoByBike = true;
-                                    canGoByFoot = true;
+                                    canGoByCar = true; // MAN MÅ KØRE BIL
+                                    canGoByBike = true; // OG CYKLE
+                                    canGoByFoot = true; // OG GÅ
                                 }
                                 if(type == WayType.PEDESTRIAN || type == WayType.FOOTWAY_ANDMORE || type == WayType.STEPS) {
-                                    canGoByFoot = true;
+                                    canGoByFoot = true; // MAN MÅ KUN GÅ
                                     if(bicycle) {
-                                        canGoByBike = true;
+                                        canGoByBike = true; // MED MINDRE VEJEN ER TAGGET MED, AT MAN GERNE MÅ CYKLE
                                     }
-                                    if(vehicle) {
+                                    if(vehicle) { // MED MINDRE VEJEN ER TAGGET MED, AT MAN GERNE MÅ KØRE BIL
                                         canGoByCar = true;
                                     }
                                 }
                                 if(type == WayType.CYCLEWAY) {
-                                    canGoByBike = true;
+                                    canGoByBike = true; // MAN MÅ KUN CYKLE
                                     if(foot) {
-                                        canGoByFoot = true;
+                                        canGoByFoot = true; // MED MINDRE VEJEN ER TAGGET MED, AT MAN GERNE MÅ GÅ
                                     }
                                 }
 
-
-                                //Laver alle edges'ene
+                                //Laver alle edges'ene til graferne
                                 for (int j = 0; j < way.getNodes().size()-1; j++){
 
-                                    double weightTime = calculateTime(way.getNodes().get(j), way.getNodes().get(j + 1));
-                                    double weightDistance = calculateDistance(way.getNodes().get(j), way.getNodes().get(j+1));
+                                    double weightTime = calculateTime(way.getNodes().get(j), way.getNodes().get(j + 1)); // Hvor lang tid det tager at køre vejen
+                                    double weightDistance = calculateDistance(way.getNodes().get(j), way.getNodes().get(j+1)); // Hvor lang vejen er
 
-                                    //System.out.println(weightTime);
-
+                                    // Grafen for CAR får weightTime som vægt
                                     DirectedEdge edgeOneWayCAR = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightTime, canGoByCar, canGoByBike, canGoByFoot);
                                     DirectedEdge edgeOtherWayCAR = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightTime, canGoByCar, canGoByBike, canGoByFoot);
-
+                                    // Graferne for BIKE og FOOT får weightDistance som vægt
                                     DirectedEdge edgeOneWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightDistance, canGoByCar, canGoByBike, canGoByFoot);
                                     DirectedEdge edgeOtherWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightDistance, canGoByCar, canGoByBike, canGoByFoot);
 
                                     //Tilføjer edge og dens nodes til listerne med edges og nodes
                                     if(isOneway || isRoundabout) {  // Tilføjer en edge den ene vej
-
                                         if(canGoByCar) {
-                                          listOfAllEdgesInWaysCAR.add(edgeOneWayCAR);
-                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j));
+                                          listOfAllEdgesInWaysCAR.add(edgeOneWayCAR); // tilføjer til graf for CAR
+                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j)); // tilføjer til liste af OSMNodes for CAR
                                         }
                                         if(canGoByBike) {
-                                            listOfAllEdgesInWaysBIKE.add(edgeOneWayBIKEandFOOT);
-                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j));
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWayBIKEandFOOT); // tilføjer til graf for BIKE
+                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j)); // tilføjer til liste af OSMNodes for BIKE
                                         }
                                         if(canGoByFoot) {
-                                            listOfAllEdgesInWaysFOOT.add(edgeOneWayBIKEandFOOT);
-                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWayBIKEandFOOT); // tilføjer til graf for FOOT
+                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j)); // tilføjer til liste af OSMNodes for FOOT
                                         }
-                                        // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
+                                        // Tilføjer også egde og dens start node til de lister for alle veje. Bruges til når man dobbeltklikker eller skal tegne grafen
                                         listOfAllEdgesInWaysAllWays.add(edgeOneWayCAR);
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
 
                                     } else { // Tilføjer en edge den ene vej og den anden vej
                                         if(canGoByCar) {
-                                            listOfAllEdgesInWaysCAR.add(edgeOneWayCAR);
-                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j));
-                                            listOfAllEdgesInWaysCAR.add(edgeOtherWayCAR);
-                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j+1));
+                                            listOfAllEdgesInWaysCAR.add(edgeOneWayCAR); // tilføjer til graf for CAR
+                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j)); // tilføjer til liste af OSMNodes for CAR
+                                            listOfAllEdgesInWaysCAR.add(edgeOtherWayCAR); // tilføjer til graf for CAR
+                                            listOfAlleNodesInGraphCAR.add(way.getNodes().get(j+1)); // tilføjer til liste af OSMNodes for CAR
                                         }
                                         if(canGoByBike) {
-                                            listOfAllEdgesInWaysBIKE.add(edgeOneWayBIKEandFOOT);
-                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j));
-                                            listOfAllEdgesInWaysBIKE.add(edgeOtherWayBIKEandFOOT);
-                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j+1));
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWayBIKEandFOOT); // tilføjer til graf for BIKE
+                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j)); // tilføjer til liste af OSMNodes for BIKE
+                                            listOfAllEdgesInWaysBIKE.add(edgeOtherWayBIKEandFOOT); // tilføjer til graf for BIKE
+                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j+1)); // tilføjer til liste af OSMNodes for BIKE
                                         }
                                         if(canGoByFoot) {
-                                            listOfAllEdgesInWaysFOOT.add(edgeOneWayBIKEandFOOT);
-                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
-                                            listOfAllEdgesInWaysFOOT.add(edgeOtherWayBIKEandFOOT);
-                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j+1));
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWayBIKEandFOOT); // tilføjer til graf for FOOT
+                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j)); // tilføjer til liste af OSMNodes for FOOT
+                                            listOfAllEdgesInWaysFOOT.add(edgeOtherWayBIKEandFOOT); // tilføjer til graf for FOOT
+                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j+1)); // tilføjer til liste af OSMNodes for FOOT
                                         }
-                                        // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
+                                        // Tilføjer også de to egdes og deres nodes til de lister for alle veje. Bruges til når man dobbeltklikker eller skal tegne grafen
                                         listOfAllEdgesInWaysAllWays.add(edgeOneWayCAR);
                                         listOfAllEdgesInWaysAllWays.add(edgeOtherWayCAR);
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j+1));
                                     }
                                 }
-
-                                //sætter maxspeed til 0, fordi det er ikke alle veje der har tag maxspeed,
-                                // så hvis vi ikke opdaterer dette, vil næste vej få samme værdi som den forrige
-                                //sætter alle til standard værdi, så det ikke kommer med til næste vej.
+                                // Sætter felter tilbage til start, så næste vej ikke får dem med
                                 maxspeed = 0;
                                 isOneway = false;
                                 canGoByCar = false;
@@ -665,38 +584,200 @@ public class Model {
                             }
                             type = null;
                             break;
-
                         case "relation":
-
                             if (type == WayType.FOREST || type == WayType.BUILDING && type !=WayType.TERRITORIAl && type != WayType.TERTIARY && !rel.isEmpty()) {
-                                lines.get(type).add(new MultiPolygon(rel, type));
-                                //System.out.println(type);
-                                //System.out.println("Tilføjer multipolygon");
-
+                                lines.get(type).add(new MultiPolygon(rel, type)); // tilføjer Multipolygon til typens liste
                             }
                             rel.clear();
-
                             break;
                         case "node":
                             if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
                                 //laver Ternary Search Tree/Trie med alle adresserne
                                 if(tst == null) {
                                     tst = new TST(new AddressObject(street, housenumber, postcode, city, osmNodeToAddress.getLat(), osmNodeToAddress.getLon()));
-                                    //System.out.println("Laver TST");
                                 } else {
                                     tst.put(street, new AddressObject(street, housenumber, postcode, city, osmNodeToAddress.getLat(), osmNodeToAddress.getLon()));
-                                    //System.out.println("Tilføjer til TST");
                                 }
                             }
                             break;
-
                     }
                     break;
             }
         }
-
-        System.out.println("Done");
+        //System.out.println("Done med at loade OSM");
     }
+
+
+    /////////////// METODER DER LAVER COASTLINES  ///////////////////
+
+    private List<PolyLine> makeCoastlineObject(Map<WayType, List<Drawable>> linesList) {
+
+        List<PolyLine> listOfCoastlines = new ArrayList<>(); //Holder på vores færdige coastlines - Den vi returnerer til sidst
+        List<Drawable> unSortedCoastlines = linesList.get(WayType.COASTLINE); //Alle ways af typen coastline
+        PolyLine currentWay = null;
+        OSMNode startOSMNode = null; //Starten for CurrentWay
+        OSMNode endOSMNode = null; //Slutning for CurrentWay
+        OSMNode currentStartOSMNode; //Start for den coastline man kigger på lige nu
+        OSMNode currentEndOSMNode; //Slut for den coastline man kigger på lige nu
+        ArrayList<OSMNode> listOfNodesInCoastline = new ArrayList<>(); // Alle nodes i currentWay
+
+        while (!unSortedCoastlines.isEmpty()) {
+            List<Drawable> buildUpCoastlinesList = new ArrayList<>(); // Liste for de coastlines som ikke passer med nogen
+            for (Drawable coastline : unSortedCoastlines) {
+
+                //Når det er første iteration
+                if (listOfNodesInCoastline.size() == 0) {
+                    listOfNodesInCoastline.addAll(coastline.getNodes());
+                    startOSMNode = coastline.getNodes().get(0);
+                    endOSMNode = coastline.getNodes().get(coastline.getNodes().size() - 1);
+                    //Opretter currentWay med nodes i vores første vej
+                    currentWay = new PolyLine(listOfNodesInCoastline); // Opretter currentWay. Starter med at være den første coastline vi møder
+                    continue;
+                }
+
+                // Når det ikke er første iteration
+                currentStartOSMNode = coastline.getNodes().get(0);
+                currentEndOSMNode = coastline.getNodes().get(coastline.getNodes().size() - 1);
+//
+                // SITUATION 1: Begge pile mod højre.
+                if (currentStartOSMNode.getLat() == endOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
+                    listOfNodesInCoastline.addAll(coastline.getNodes());
+                    endOSMNode = currentEndOSMNode;
+                    currentWay = new PolyLine(listOfNodesInCoastline); // Tilføjer den der passer og laver ny, længere, currentway
+                    //System.out.println("Vi er ved situation 1");
+                }
+                // SITUATION 2: Begge pile mod midten
+                else if (endOSMNode.getLat() == currentEndOSMNode.getLat() && endOSMNode.getLon() == currentEndOSMNode.getLon()) {
+                    // Vend nummer to pil om og tilføjer til listOfNodesInCoastLine
+                    Collections.reverse(coastline.getNodes());
+                    listOfNodesInCoastline.addAll(coastline.getNodes());
+                    endOSMNode = currentEndOSMNode;
+                    currentWay = new PolyLine(listOfNodesInCoastline); // Tilføjer den der passer og laver ny, længere, currentway
+                    //System.out.println("Vi er ved situation 2");
+                }
+                // SITUATION 3: Begge pile væk fra midten // Start og start mødes //Første pil drejet rundt
+                else if (currentStartOSMNode.getLat() == startOSMNode.getLat() && currentStartOSMNode.getLon() == startOSMNode.getLon()) {
+                    // Vend nummer et pil om og tilføjer til listOfNodesInCoastLine
+                    Collections.reverse(coastline.getNodes());
+                    listOfNodesInCoastline.addAll(0, coastline.getNodes());
+                    startOSMNode = listOfNodesInCoastline.get(0);
+                    currentWay = new PolyLine(listOfNodesInCoastline); // Tilføjer den der passer og laver ny, længere, currentway
+                    //System.out.println("Vi er ved situation 3");
+                }
+                // SITUATION 4: Begge pile mod venstre // Vores start == nye slut
+                else if (currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()) {
+                    listOfNodesInCoastline.addAll(0, coastline.getNodes()); // Tilføjer foran det andet
+                    startOSMNode = listOfNodesInCoastline.get(0);
+                    currentWay = new PolyLine(listOfNodesInCoastline); // Tilføjer den der passer og laver ny, længere, currentway
+                    //System.out.println("Vi er ved situation 4");
+                } else {
+                    buildUpCoastlinesList.add(coastline); // Hvis den ikke passer på nogen, tilføjes den til listen med dem, der ikke passer
+                    //System.out.println("Jeg går ind i else");
+                }
+                //Hvis end og start det samme, ville alle coastlines være tilføjet
+                if (endOSMNode.getLat() == startOSMNode.getLat() && endOSMNode.getLon() == startOSMNode.getLon()) {
+                    listOfNodesInCoastline.addAll(coastline.getNodes());
+                    listOfCoastlines.add(currentWay); // Tilføjer den fulde kystline til linjen med kystlinjer
+                    listOfNodesInCoastline.clear();
+                    //System.out.println("Vi er færdige med kystlinjen og har tilføjet den");
+                }
+            }
+
+            // Hvis der har været en iteration, hvor ingen passede, afslutter vi selv kystlinjen
+           if(buildUpCoastlinesList.size() == unSortedCoastlines.size()) {
+                    //tilføjer den færdige polyline figur til listen, der gemmer alle øerne i form af polylines
+                    listOfCoastlines.add(currentWay);
+                    listOfNodesInCoastline.clear();
+            }
+            else {
+               // Laver ny iteartion med listen af de kystlinjer, der endnu ikke er tilføjet
+               unSortedCoastlines = buildUpCoastlinesList;
+           }
+        }
+        //System.out.println("Done med kystliner");
+        return listOfCoastlines;
+
+    }
+
+    /////////////// METODER DER LAVER GRAFER ///////////////////
+
+    // Laver og retunerer en EdgeWeigtedGraph
+    private EdgeWeightedDigraph makeGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, ArrayList<DirectedEdge> listOfAllEdgesInWays, EdgeWeightedDigraph graph) {
+        graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
+
+        // Tilføjer hver edge fra den givne liste til grafen
+        for (DirectedEdge edge : listOfAllEdgesInWays) {
+            graph.addEdge(edge, mapOfOSMNodesToIndex);
+        }
+        return graph;
+    }
+
+    // Laver map der mapper OSMNodes i en graf til et index
+    private HashMap<OSMNode, Integer> makeMapOfOSMNodesToIndex(ArrayList<DirectedEdge> listOfAllEdgesInWays, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
+        int counter = 0;
+        for (DirectedEdge edge : listOfAllEdgesInWays) {
+            OSMNode start = edge.getStart();
+            OSMNode end = edge.getEnd();
+
+            if (!mapOfOSMNodesToIndex.containsKey(start)){ // Tjek om den allerede er der
+                mapOfOSMNodesToIndex.put(start, counter); // Ellers tilføj på næste ledige plads
+                counter++;
+            }
+            if (!mapOfOSMNodesToIndex.containsKey(end)){ // Tjek om den allerede er der
+                mapOfOSMNodesToIndex.put(end, counter); // Ellers tilføj på næste ledige plads
+                counter++;
+            }
+        }
+        return mapOfOSMNodesToIndex;
+    }
+
+    // Laver et array der holder hver OSMNodes i grafen på dens tilhørende index. Bruges til at få OSMNode udfra index.
+    // En OSMNode vil have samme index i arrayet og i mappet (metoden ovenover)
+    private OSMNode[] makeArrayOfOSMNodesInGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, OSMNode[] arrayOfOSMNodesInGraph){
+        arrayOfOSMNodesInGraph = new OSMNode[mapOfOSMNodesToIndex.size()];
+
+        // Tjekker index for en OSMNode og tilføjer den til samme index i arrayet
+        for(Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()) {
+            int index = entry.getValue();
+            arrayOfOSMNodesInGraph[index] = entry.getKey();
+        }
+        return arrayOfOSMNodesInGraph;
+    }
+
+    // Bruges til at regne vægten (weightDistance) ud for edge:
+    private double calculateDistance(OSMNode punkt1, OSMNode punkt2) {
+        // Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
+        // Converts from degrees to radians.
+        double lon1 = Math.toRadians(punkt1.getLon());
+        double lon2 = Math.toRadians(punkt2.getLon());
+        double lat1 = Math.toRadians(punkt1.getLat());
+        double lat2 = Math.toRadians(punkt2.getLat());
+
+        // Haversine formula
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2), 2);
+
+        double c = 2 * Math.asin(Math.sqrt(a));
+
+        // Radius of earth in kilometers
+        double r = 6371;
+
+        // calculate the result
+        return (c * r);
+    }
+
+    // Bruges til at regne vægten (weightTime) ud for edge:
+    private double calculateTime(OSMNode punkt1, OSMNode punkt2) {
+        double distance = calculateDistance(punkt1, punkt2);
+        if(distance < 0) throw new IllegalArgumentException("Distance must be a non-negative integer");
+        return distance / maxspeed;
+    }
+
+
+    /////////////// ANDRE METODER ///////////////////
 
     // tilføjer en observer til listen observers
     // Runnable = metode der ikke tager nogle argumenter eller returnerer noget
@@ -713,10 +794,23 @@ public class Model {
         }
     }
 
-    // iterator over types
-    public Iterable<Drawable> iterable(WayType type) {return lines.get(type);}
 
-    public KdTree getKDTreeUNKNOWN() {return KDTreeUNKNOWN;}
+    /////////////// GETTERS ///////////////////
+
+    // Getters til min og max koordinater
+    public float getMinLat() {
+        return minlat;
+    }
+    public float getMinLon() {
+        return minlon;
+    }
+    public float getMaxlat() {
+        return maxlat;
+    }
+    public float getMaxlon() {
+        return maxlon;
+    }
+    // Getters til Kd træerne
     public KdTree getKDTreeRESIDENTIAL() {return KDTreeRESIDENTIAL;}
     public KdTree getKDTreeLAKE() {return KDTreeLAKE;}
     public KdTree getKDTreeBEACH() {return KDTreeBEACH;}
@@ -744,13 +838,11 @@ public class Model {
     public KdTree getKDTreeLIVING_STREET () {return KDTreeLIVING_STREET;}
     public KdTree getKDTreeSERVICE () {return KDTreeSERVICE;}
     public KdTree getKDTreePEDESTRIAN () {return KDTreePEDESTRIAN;}
-    public KdTree getKDTreeTRACK () {return KDTreeTRACK;}
     public KdTree getKDTreeROAD () {return KDTreeROAD;}
     public KdTree getKDTreeFOOTWAY_ANDMORE () {return KDTreeFOOTWAY_ANDMORE;}
     public KdTree getKDTreeBRIDLEWAY () {return KDTreeBRIDLEWAY;}
     public KdTree getKDTreeCYCLEWAY () {return KDTreeCYCLEWAY;}
     public KdTree getKDTreeRESIDENTIALWAY () {return KDTreeRESIDENTIALWAY;}
-    public KdTree getKDTreeCONSTRUCTIONWAY() {return KDTreeCONSTRUCTIONWAY;}
     public KdTree getKDTreeRIVER_ANDMORE () {return KDTreeRIVER_ANDMORE;}
     public KdTree getKDTreeHOSPITAL () {return KDTreeHOSPITAL;}
     public KdTree getKDTreeRECREATION_GROUND () {return KDTreeRECREATION_GROUND;}
@@ -758,286 +850,47 @@ public class Model {
     public KdTree getKDTreeSCHOOL () {return KDTreeSCHOOL;}
     public KdTree getKDTreeFERRY () {return KDTreeFERRY;}
     public KdTree getKDTreeGRAVEYARD () {return KDTreeGRAVEYARD;}
+    public KdTree getKDTreeTERRITORIAl () {return KDTreeTERRITORIAl;}
     public KdTree getKDTreeNodesInGraphAllWays() {return  KDTreeNodesInGraphAllWays;}
     public KdTree getKDTreeNodesInGraphCAR () {return KDTreeNodesInGraphCAR;}
     public KdTree getKDTreeNodesInGraphBIKE () {return KDTreeNodesInGraphBIKE;}
     public KdTree getKDTreeNodesInGraphFOOT () {return KDTreeNodesInGraphFOOT;}
-    public KdTree getKDTreeTERRITORIAl () {return KDTreeTERRITORIAl;}
-    //public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
-
-
-
-
-
-
-
-
-
-    //slettes??
-    public Map<WayType, List<Drawable>> getCoastlinesMap() {return coastlinesMap;}
-
-    //slettes??
-    public static List<OSMNode> getListOfOSMNodesOfCoastlines(Map<WayType, List<Drawable>> coastlines) {
-        //så længe dens startpunkt ikke er dens slutpunkt - kør while loop
-        //getLon/Lat fra OSMNode
-        ArrayList<OSMNode> listOfOSMNodesOfCoastlines = new ArrayList<>();
-        for (Drawable drawable : coastlines.get(WayType.COASTLINE)) {
-            listOfOSMNodesOfCoastlines.addAll(((PolyLine) drawable).getNodes());
-        }
-        return listOfOSMNodesOfCoastlines;
-    }
-
-    public List<PolyLine> makeCoastlineObject(Map<WayType, List<Drawable>> linesList) {
-        //det som er tilføjet til listen
-
-        //Starten for CurrentWay
-        OSMNode startOSMNode = null;
-
-        //Slutning for CurrentWay
-        OSMNode endOSMNode = null;
-        //det som ikke endnu er tilføjet
-        //Start for den coastline man kigger på lige nu
-        OSMNode currentStartOSMNode;
-        //Slut for den coastline man kigger på lige nu
-        OSMNode currentEndOSMNode;
-        PolyLine currentWay = null;
-
-        ArrayList<OSMNode> listOfNodesInCoastline = new ArrayList<>();
-
-        //Holder på vores færdige coastlines
-        List<PolyLine> listOfCoastlines = new ArrayList<>();
-
-        //Alle ways af typen coastline
-        List<Drawable> unSortedCoastlines = linesList.get(WayType.COASTLINE);
-
-        while (!unSortedCoastlines.isEmpty()) {
-
-            //System.out.println("unSortedCoastlines size: " + unSortedCoastlines.size());
-            // De coastlines som ikke passede
-            List<Drawable> buildUpCoastlinesList = new ArrayList<>();
-            //System.out.println("buildUpCoastlinesList size: " + buildUpCoastlinesList.size());
-            for (Drawable coastline : unSortedCoastlines) {
-
-                if (listOfNodesInCoastline.size() == 0) {
-                    //listOfNodesInCoastline.addAll((lines.get(WayType.COASTLINE).get(0)));
-                    listOfNodesInCoastline.addAll(coastline.getNodes());
-                    startOSMNode = coastline.getNodes().get(0);
-                    endOSMNode = coastline.getNodes().get(coastline.getNodes().size() - 1);
-                    //Opretter currentWay med Nodes i vores første vej
-                    currentWay = new PolyLine(listOfNodesInCoastline);
-                    //System.out.println("Vi er ved o case");
-                    continue;
-                }
-
-                currentStartOSMNode = coastline.getNodes().get(0);
-                currentEndOSMNode = coastline.getNodes().get(coastline.getNodes().size() - 1);
-//
-                // SITUATION 1: Begge pile mod højre.
-                if (currentStartOSMNode.getLat() == endOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(coastline.getNodes());
-                    endOSMNode = currentEndOSMNode;
-                    currentWay = new PolyLine(listOfNodesInCoastline);
-                    //System.out.println("Vi er ved situation 1");
-                }
-                // SITUATION 2: Begge pile mod midten
-                else if (endOSMNode.getLat() == currentEndOSMNode.getLat() && endOSMNode.getLon() == currentEndOSMNode.getLon()) {
-                    // Vend nummer to pil om og tilføjer til listOfNodesInCoastLine
-                    Collections.reverse(coastline.getNodes());
-                    listOfNodesInCoastline.addAll(coastline.getNodes());
-                    endOSMNode = currentEndOSMNode;
-                    currentWay = new PolyLine(listOfNodesInCoastline);
-                    //System.out.println("Vi er ved situation 2");
-                }
-                // SITUATION 3: Begge pile væk fra midten // Start og start mødes //Første pil drejet rundt
-                else if (currentStartOSMNode.getLat() == startOSMNode.getLat() && currentStartOSMNode.getLon() == startOSMNode.getLon()) {
-                    Collections.reverse(coastline.getNodes());
-                    listOfNodesInCoastline.addAll(0, coastline.getNodes());
-                    startOSMNode = listOfNodesInCoastline.get(0);
-                    currentWay = new PolyLine(listOfNodesInCoastline);
-                    //System.out.println("Vi er ved situation 3");
-                }
-                // SITUATION 4: Begge pile mod venstre // Vores start == nye slut
-                else if (currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(0, coastline.getNodes());
-                    startOSMNode = listOfNodesInCoastline.get(0);
-                    currentWay = new PolyLine(listOfNodesInCoastline);
-                    //System.out.println("Vi er ved situation 4");
-                } else {
-                    buildUpCoastlinesList.add(coastline);
-                    //System.out.println("buildUpCoastlinesList: " + buildUpCoastlinesList.size());
-                    //System.out.println("Jeg går ind i else");
-                }
-                //Hvis end og start det samme, ville alle coastlines være tilføjet
-                if (endOSMNode.getLat() == startOSMNode.getLat() && endOSMNode.getLon() == startOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(coastline.getNodes());
-                    listOfCoastlines.add(currentWay);
-                    listOfNodesInCoastline.clear();
-                    //System.out.println("Vi er færdige med kystlinjen og har tilføjet den");
-
-                }
-            }
-
-           if(buildUpCoastlinesList.size() == unSortedCoastlines.size()) {
-               //System.out.println("listOfNodesInCoastline størelse: " + listOfNodesInCoastline.size());
-
-                    //tilføjer den færdige polyline figur til listen, der gemmer alle øerne i form af polylines
-                    listOfCoastlines.add(currentWay);
-                    listOfNodesInCoastline.clear();
-
-            }
-            else {
-               // gammel liste = ny liste (ting vi mangler at kigge på)
-               unSortedCoastlines = buildUpCoastlinesList;
-           }
-        } //While stop
-
-        //hvis start og slut ikke er det samme - sæt en linje imellem
-        System.out.println("done med kystliner");
-        return listOfCoastlines;
-
-    }
-
-    public HashMap<OSMNode, Integer> makeMapOfOSMNodesToIndex(ArrayList<DirectedEdge> listOfAllEdgesInWays, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
-        int counter = 0;
-        for (DirectedEdge edge : listOfAllEdgesInWays) {
-            OSMNode start = edge.getStart();
-            OSMNode end = edge.getEnd();
-            // Tjek om den allerede er der
-            if (!mapOfOSMNodesToIndex.containsKey(start)){
-                mapOfOSMNodesToIndex.put(start, counter);
-                counter++;
-            }
-            if (!mapOfOSMNodesToIndex.containsKey(end)){
-                mapOfOSMNodesToIndex.put(end, counter);
-                counter++;
-            }
-        }
-        return mapOfOSMNodesToIndex;
-    }
-
-
-    public EdgeWeightedDigraph makeGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, ArrayList<DirectedEdge> listOfAllEdgesInWays, EdgeWeightedDigraph graph) {
-        graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
-
-        for (DirectedEdge edge : listOfAllEdgesInWays) {
-            graph.addEdge(edge, mapOfOSMNodesToIndex);
-        }
-        return graph;
-    }
-
-    public double calculateDistance(OSMNode punkt1, OSMNode punkt2) {
-        //Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
-        // The math module contains a function named toRadians which converts from degrees to radians.
-        double lon1 = Math.toRadians(punkt1.getLon());
-        double lon2 = Math.toRadians(punkt2.getLon());
-        double lat1 = Math.toRadians(punkt1.getLat());
-        double lat2 = Math.toRadians(punkt2.getLat());
-        //System.out.println("lon1: " + punkt1.getLon() + " lat1: " + punkt1.getLat());
-        //System.out.println("lon2: " + punkt2.getLon() + " lat2: " + punkt2.getLat());
-        //System.out.println("lon1RAD: " + lon1 + " lat1RAD: " + lat1);
-
-        // Haversine formula
-        double dlon = lon2 - lon1;
-        double dlat = lat2 - lat1;
-        double a = Math.pow(Math.sin(dlat / 2), 2)
-                + Math.cos(lat1) * Math.cos(lat2)
-                * Math.pow(Math.sin(dlon / 2), 2);
-
-        double c = 2 * Math.asin(Math.sqrt(a));
-
-        // Radius of earth in kilometers. Use 3956 for miles
-        double r = 6371;
-
-        // calculate the result
-        return (c * r);
-    }
-
-    public double calculateTime(OSMNode punkt1, OSMNode punkt2) {
-        double distance = calculateDistance(punkt1, punkt2);
-        if(distance < 0) throw new IllegalArgumentException("Distance must be a non-negative integer");
-        //if(distance == 0) throw new IllegalArgumentException("Distance must be a positive integer");
-        /////////////nogle er 0.0 - hvad gør vi med det?
-
-        //udregn vægten: tid=længde/maxspeed
-        return distance / maxspeed;
-    }
-
+    // Getter til coastlines
     public List<PolyLine> getListOfCoastlines() {
         return listOfCoastlines;
     }
-
+    //Getters til graferne:
+    public EdgeWeightedDigraph getGraphCAR() {return graphCAR;}
+    public EdgeWeightedDigraph getGraphBIKE() {return graphBIKE;}
+    public EdgeWeightedDigraph getGraphFOOT() {return graphFOOT;}
+    //Getters til maps fra index til OSMNode
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexCAR() {
+        return mapOfOSMNodesToIndexCAR;
+    }
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexBIKE() {
+        return mapOfOSMNodesToIndexBIKE;
+    }
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexFOOT() {
+        return mapOfOSMNodesToIndexFOOT;
+    }
+    //Getters til arrays fra index til OSMNode
+    public OSMNode[] getArrayOfOSMNodesInGraphCAR() {
+        return arrayOfOSMNodesInGraphCAR;
+    }
+    public OSMNode[] getArrayOfOSMNodesInGraphBIKE() {
+        return arrayOfOSMNodesInGraphBIKE;
+    }
+    public OSMNode[] getArrayOfOSMNodesInGraphFOOT() {
+        return arrayOfOSMNodesInGraphFOOT;
+    }
+    //Getter til listen med alle edges i veje
     public List<DirectedEdge> getListOfAllEdgesInWaysAllWays() {
         return listOfAllEdgesInWaysAllWays;
     }
 
-
-    //Laver et array der holder hver OSMNodes i grafen på dens tilhørende index. Bruges til at få OSMNode udfra index
-    public OSMNode[] makeArrayOfOSMNodesInGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, OSMNode[] arrayOfOSMNodesInGraph){
-        arrayOfOSMNodesInGraph = new OSMNode[mapOfOSMNodesToIndex.size()];
-        for(Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()) {
-            int index = entry.getValue();
-            arrayOfOSMNodesInGraph[index] = entry.getKey();
-        }
-        return arrayOfOSMNodesInGraph;
-    }
-
-    public NodeMap getId2node() {
-        return id2node;
-    }
-
-    public EdgeWeightedDigraph getGraphCAR() {
-        return graphCAR;
-    }
-
-    public EdgeWeightedDigraph getGraphBIKE() {
-        return graphBIKE;
-    }
-
-    public EdgeWeightedDigraph getGraphFOOT() {
-        return graphFOOT;
-    }
-
-    public OSMNode[] getArrayOfOSMNodesInGraphCAR() {
-        return arrayOfOSMNodesInGraphCAR;
-    }
-
-    public OSMNode[] getArrayOfOSMNodesInGraphBIKE() {
-        return arrayOfOSMNodesInGraphBIKE;
-    }
-
-    public OSMNode[] getArrayOfOSMNodesInGraphFOOT() {
-        return arrayOfOSMNodesInGraphFOOT;
-    }
-
-    public ArrayList<DirectedEdge> getListOfAllEdgesInWaysCAR() {
-        return listOfAllEdgesInWaysCAR;
-    }
-
-    public ArrayList<DirectedEdge> getListOfAllEdgesInWaysBIKE() {
-        return listOfAllEdgesInWaysBIKE;
-    }
-
-    public ArrayList<DirectedEdge> getListOfAllEdgesInWaysFOOT() {
-        return listOfAllEdgesInWaysFOOT;
-    }
-
-    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexCAR() {
-        return mapOfOSMNodesToIndexCAR;
-    }
-
-    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexBIKE() {
-        return mapOfOSMNodesToIndexBIKE;
-    }
-
-    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexFOOT() {
-        return mapOfOSMNodesToIndexFOOT;
-    }
-
-    public ArrayList<OSMNode> getListOfAlleNodesInGraphAllWays() {
-        return listOfAlleNodesInGraphAllWays;
-    }
-
 }
+
+
 
 
 
