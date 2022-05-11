@@ -682,7 +682,7 @@ public class Model {
 
                             if (type == WayType.FOREST || type == WayType.BUILDING && type !=WayType.TERRITORIAl && type != WayType.TERTIARY && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel, type));
-                                System.out.println(type);
+                                //System.out.println(type);
                                 //System.out.println("Tilføjer multipolygon");
 
                             }

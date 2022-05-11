@@ -30,26 +30,10 @@ public class MapCanvas extends Canvas {
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
-    private boolean isPartySelected; //skal laves private
-    private boolean isPinkSelected; //skal laves private
-    private Iterable<DirectedEdge> dijkstraShortestPath;
-
-
-
-    public void setPartySelected(boolean partySelected) {
-        isPartySelected = partySelected;
-    }
-
-    public void setPinkSelected(boolean pinkSelected) {
-        isPinkSelected = pinkSelected;
-    }
-
-    public void setDebugSelected(boolean debugSelected) {
-        isDebugSelected = debugSelected;
-    }
-
+    private boolean isPartySelected;
+    private boolean isPinkSelected;
     private boolean isDebugSelected;
-
+    private Iterable<DirectedEdge> dijkstraShortestPath;
 
     //Randomme farver
     private int r;
@@ -694,12 +678,16 @@ public class MapCanvas extends Canvas {
 
             /*
         // TEGNER GRAFEN - TIL DEBUG MODE
-        for (Drawable drawable : Model.getListOfAllEdgesInWays()) {
-            gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
-            gc.setStroke(Color.RED);
-            drawable.draw(gc);
+        if(isPinkSelected) {
+            for (Drawable drawable : Model.getListOfAllEdgesInWaysAllWays()) {
+                gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
+                gc.setStroke(Color.RED);
+                drawable.draw(gc);
+            }
         }
-         */
+
+             */
+
 
         //Tegner vores debug firkant - TIL DEBUG MODE
         if(isDebugSelected) {
@@ -894,5 +882,17 @@ public class MapCanvas extends Canvas {
 
     public Point2D getRealscalebarPoint2() {
         return realscalebarPoint2;
+    }
+
+    public void setPartySelected(boolean partySelected) {
+        isPartySelected = partySelected;
+    }
+
+    public void setPinkSelected(boolean pinkSelected) {
+        isPinkSelected = pinkSelected;
+    }
+
+    public void setDebugSelected(boolean debugSelected) {
+        isDebugSelected = debugSelected;
     }
 }
