@@ -95,8 +95,8 @@ public class Model {
     private boolean canGoByBike;
     private boolean canGoByFoot;
     private List<PolyLine> listOfCoastlines;
-    private EdgeWeightedDigraph graph;
-    private static OSMNode[] arrayOfOSMNodesInGraph;
+    private EdgeWeightedDigraph graphCAR, graphBIKE, graphFOOT;
+    private OSMNode[] arrayOfOSMNodesInGraphCAR, arrayOfOSMNodesInGraphBIKE, arrayOfOSMNodesInGraphFOOT;
     private TST tst;
 
 
@@ -117,10 +117,15 @@ public class Model {
     private static ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
 
     //Liste med alle OSMNodes in graph
-    private List<OSMNode> listOfAlleNodesInGraph = new ArrayList<>();
+    private List<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
+    private List<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
+    private List<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
+
 
     //Map med OSMNode to index. Bruges til at lave en graf
-    private static Map<OSMNode, Integer> mapOfOSMNodesToIndex = new HashMap<>();
+    private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexCAR = new HashMap<>();
+    private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexBIKE = new HashMap<>();
+    private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexFOOT = new HashMap<>();
 
 
 
@@ -205,7 +210,6 @@ public class Model {
         KDTreeRIVER_ANDMORE = new KdTree(lines.get(WayType.RIVER_ANDMORE));
         KDTreeCOASTLINE = new KdTree(lines.get(WayType.COASTLINE));
         KDTreeNodesInGraph = new KdTree(listOfAlleNodesInGraph, 0);
-
 
         //lav liste med coastlines
         listOfCoastlines = makeCoastlineObject(coastlinesMap);
@@ -863,13 +867,10 @@ public class Model {
     public void makeGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, ArrayList<DirectedEdge> listOfAllEdgesInWays, EdgeWeightedDigraph graph) {
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
 
-        for (DirectedEdge edge : listOfAllEdgesInWays){
+        for (DirectedEdge edge : listOfAllEdgesInWays) {
             graph.addEdge(edge);
         }
-
-        makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndex);
     }
-
 
     public double calculateDistance(OSMNode punkt1, OSMNode punkt2) {
         //Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
@@ -916,13 +917,16 @@ public class Model {
         return listOfAllEdgesInWays;
     }
 
+    /*
     public static Map<OSMNode, Integer> getMapOfOSMNodesToIndex() {
         return mapOfOSMNodesToIndex;
     }
 
+     */
+
 
     //Laver et array der holder hver OSMNodes i grafen på dens tilhørende index. Bruges til at få OSMNode udfra index
-    public void makeArrayOfOSMNodesInGraph(Map<OSMNode, Integer> mapOfOSMNodesToIndex){
+    public void makeArrayOfOSMNodesInGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, OSMNode[] arrayOfOSMNodesInGraph){
         arrayOfOSMNodesInGraph = new OSMNode[mapOfOSMNodesToIndex.size()];
         for(Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()) {
             int index = entry.getValue();
@@ -935,6 +939,7 @@ public class Model {
     }
 
 
+/*
     public EdgeWeightedDigraph getGraph() {
         return graph;
     }
@@ -942,6 +947,56 @@ public class Model {
 
     public static OSMNode[] getArrayOfOSMNodesInGraph() {
         return arrayOfOSMNodesInGraph;
+    }
+
+ */
+
+    public EdgeWeightedDigraph getGraphCAR() {
+        return graphCAR;
+    }
+
+    public EdgeWeightedDigraph getGraphBIKE() {
+        return graphBIKE;
+    }
+
+    public EdgeWeightedDigraph getGraphFOOT() {
+        return graphFOOT;
+    }
+
+    public OSMNode[] getArrayOfOSMNodesInGraphCAR() {
+        return arrayOfOSMNodesInGraphCAR;
+    }
+
+    public OSMNode[] getArrayOfOSMNodesInGraphBIKE() {
+        return arrayOfOSMNodesInGraphBIKE;
+    }
+
+    public OSMNode[] getArrayOfOSMNodesInGraphFOOT() {
+        return arrayOfOSMNodesInGraphFOOT;
+    }
+
+    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysCAR() {
+        return listOfAllEdgesInWaysCAR;
+    }
+
+    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysBIKE() {
+        return listOfAllEdgesInWaysBIKE;
+    }
+
+    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysFOOT() {
+        return listOfAllEdgesInWaysFOOT;
+    }
+
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexCAR() {
+        return mapOfOSMNodesToIndexCAR;
+    }
+
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexBIKE() {
+        return mapOfOSMNodesToIndexBIKE;
+    }
+
+    public HashMap<OSMNode, Integer> getMapOfOSMNodesToIndexFOOT() {
+        return mapOfOSMNodesToIndexFOOT;
     }
 }
 

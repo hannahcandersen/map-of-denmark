@@ -56,13 +56,13 @@ public class Dijkstra {
                 break;
             }
             else {
-                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexLightestWeight]))
-                relax(edge, vertexLightestWeight);
+                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[vertexLightestWeight]))
+                relax(edge, mapOfOSMNodesToIndex);
             }
         }
 
         // Check optimality conditions
-        assert check(graph, startVertex);
+        assert check(graph, startVertex, arrayOfOSMNodesInGraph, mapOfOSMNodesToIndex);
     }
 
 
@@ -71,20 +71,8 @@ public class Dijkstra {
         int edgeStart;
         int edgeEnd;
 
-        edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
-        edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
-
-
-        /*if(vertexLightestWeightOSMNode == edge.getStart()){
-            edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
-            edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
-            System.out.println("Nu er vi inde i den første if");
-        }
-        else{
-            edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
-            edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
-            System.out.println("Nu er vi inde i else");
-        }*/
+        edgeStart = mapOfOSMNodesToIndex.get(edge.getStart());
+        edgeEnd = mapOfOSMNodesToIndex.get(edge.getEnd());
 
         if (distTo[edgeEnd] > distTo[edgeStart] + edge.weight()) {
             distTo[edgeEnd] = distTo[edgeStart] + edge.weight();
@@ -92,12 +80,6 @@ public class Dijkstra {
             if (pq.contains(edgeEnd)) pq.decreaseKey(edgeEnd, distTo[edgeEnd]);
             else                      pq.insert(edgeEnd, distTo[edgeEnd]);
         }
-
-        //relax(edge, from)
-        //if(from == edge.start)
-            //gør det som vi har lavet
-        //else
-            //byt og start og slut om
 
     }
 

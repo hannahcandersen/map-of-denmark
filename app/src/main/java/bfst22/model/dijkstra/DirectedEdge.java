@@ -121,15 +121,15 @@ public class DirectedEdge implements Drawable{
         this.canGoByFoot = canGoByFoot;
     }
 
-    public boolean isCanGoByCar() {
+    public boolean getCanGoByCar() {
         return canGoByCar;
     }
 
-    public boolean isCanGoByBike() {
+    public boolean getCanGoByBike() {
         return canGoByBike;
     }
 
-    public boolean isCanGoByFoot() {
+    public boolean getCanGoByFoot() {
         return canGoByFoot;
     }
 }
