@@ -4,12 +4,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.ObservableList;
 
 //Ternary Search Tree/Trie
-public class TST {
+public class TST implements Serializable {
+
+    public static final long serialVersionUID = 134123;
     //rooten er det første bogstav i det første ord, som bliver tilføjet til Tree/Trie
     private static AddressNode root;   // root of trie
     //private ObservableList<AddressObject> listOfSearchResult = FXCollections.observableArrayList();
@@ -40,6 +43,13 @@ public class TST {
         else if (d < key.length() - 1) return get(node.mid, key, d+1);
         //Hvis ingen af disse er tilfældet, så må vi være på sidste character.
         else return node;
+    }
+
+    public AddressNode getRoot(){
+        return root;
+    }
+    public void setRoot(AddressNode newRoot){
+        root = newRoot;
     }
 
     public void put(String key, AddressObject address)

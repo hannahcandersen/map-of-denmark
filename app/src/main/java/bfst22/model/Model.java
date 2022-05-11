@@ -1,5 +1,6 @@
 package bfst22.model;
 
+import bfst22.model.addresses.AddressNode;
 import bfst22.model.dijkstra.DirectedEdge;
 import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.addresses.AddressObject;
@@ -90,7 +91,7 @@ public class Model {
     private int maxspeed = 0;
     private boolean isOneway;
     private boolean isRoundabout;
-    private List<PolyLine> listOfCoastlines;
+    private List<PolyLine> listOfCoastlines = new ArrayList<>();
     private EdgeWeightedDigraph graph;
     private static OSMNode[] arrayOfOSMNodesInGraph;
     private TST tst;
@@ -119,6 +120,7 @@ public class Model {
 
     /////////////// Konstruktør (unchecked) ///////////////////
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
+        tst = new TST();
         var time = -System.nanoTime();
         if (filename.endsWith(".zip")) {   // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
             var zip = new ZipInputStream(new FileInputStream(filename)); //læser zip-filen én fil af gangen
@@ -126,6 +128,7 @@ public class Model {
             loadOSM(zip);
         } else if (filename.endsWith(".osm")) {// læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
+            listOfCoastlines = makeCoastlineObject(coastlinesMap);
         } else if (filename.endsWith(".obj")) { // kan læse den .obj-fil der er blevet gemt (binary file)
             try (var input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 minlat = input.readFloat();
@@ -134,8 +137,11 @@ public class Model {
                 maxlon = input.readFloat();
                 lines = (Map<WayType, List<Drawable>>) input.readObject();
                 listOfCoastlines = (List<PolyLine>) input.readObject();
-                graph = (EdgeWeightedDigraph) input.readObject();
-                //tst = (TST) input.readObject();
+                //graph = (EdgeWeightedDigraph) input.readObject();
+                //Bliver læst eller gemt forkert
+                tst = (TST) input.readObject();
+                //tst.setRoot((AddressNode) input.readObject());
+                //System.out.println(tst.getRoot().getC());
 
                 //VIGTIGT at skrive i samme rækkefølge som i save()
                 //tilføj de ting vi har tilføjet i save
@@ -202,9 +208,9 @@ public class Model {
 
 
         //lav liste med coastlines
-        listOfCoastlines = makeCoastlineObject(coastlinesMap);
 
         //lav dijkstra graf
+        //Skal nok sættes op i .osm
         makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
         makeGraph();
         //System.out.println(graph);
@@ -226,8 +232,10 @@ public class Model {
             out.writeFloat(maxlon);
             out.writeObject(lines);
             out.writeObject(listOfCoastlines);
-            out.writeObject(graph);
-            //out.writeObject(tst);
+            //out.writeObject(graph);
+            out.writeObject(tst);
+            out.writeObject(tst.getRoot());
+
 
 
 
@@ -568,8 +576,9 @@ public class Model {
 
                         case "relation":
 
-                            if (type == WayType.FOREST && type !=WayType.TERRITORIAl && type != WayType.TERTIARY && !rel.isEmpty()) {
+                            if (type == WayType.FOREST || type == WayType.BUILDING && type !=WayType.TERRITORIAl && type != WayType.TERTIARY && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel, type));
+                                System.out.println(type);
                                 //System.out.println("Tilføjer multipolygon");
 
                             }
