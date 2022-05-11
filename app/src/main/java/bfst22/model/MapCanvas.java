@@ -7,8 +7,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import java.util.Random;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.FillRule;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
@@ -34,6 +36,7 @@ public class MapCanvas extends Canvas {
     private Iterable<DirectedEdge> dijkstraShortestPath;
 
 
+
     public void setPartySelected(boolean partySelected) {
         isPartySelected = partySelected;
     }
@@ -57,7 +60,16 @@ public class MapCanvas extends Canvas {
     private Point2D screenMin;
     private Point2D screenMax;
 
+
+
+
+
+    Point2D realscalebarPoint1;
+    Point2D realscalebarPoint2;
+
     private double ration;
+    private int scalebarincreaseX = 0;
+    private int scalebarincreaseY = 0;
 
 
 
@@ -78,9 +90,12 @@ public class MapCanvas extends Canvas {
         //repainter hver gang størrelsen på skærmen ændres
         widthProperty().addListener((observable, oldValue, newValue) -> {
             repaint();
+
         });
         heightProperty().addListener((observable, oldValue, newValue) -> {
             repaint();
+            scalebarincreaseY +=2;
+            System.out.println(scalebarincreaseY);
         });
     }
 
@@ -102,14 +117,19 @@ public class MapCanvas extends Canvas {
         RangeSerachRectangle rangeSearchRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         //System.out.println(rangeSearchRectangle);
 
-        Point2D scalebarPoint1 = new Point2D(0,0);
-        Point2D scalebarPoint2 = new Point2D(10, 0);
+        //Point2D scalebarPoint1 = new Point2D((getWidth()/2) + 170,getHeight()/2 +120 + scalebarincreaseY);
+        //Point2D scalebarPoint2 = new Point2D((getWidth()/2)+250, getHeight()/2 +120 + scalebarincreaseY);
+
+        //Point2D scalebarPoint1 = new Point2D((getWidth()/2)  + (getWidth()/4) ,                (getHeight()/2)  + (getHeight()/4));
+        //Point2D scalebarPoint2 = new Point2D((getWidth()/2)  + (getWidth()/4) +(getWidth()/6) , (getHeight()/2) + (getHeight()/4));
+
+        Point2D scalebarPoint1 = new Point2D(getWidth()-60, getHeight()-100 );
+        Point2D scalebarPoint2 = new Point2D(getWidth()-150 , getHeight()-100);
 
 
-
-        Point2D realscalebarPoint1 = mouseToModel(scalebarPoint1);
+        realscalebarPoint1 = mouseToModel(scalebarPoint1);
         //System.out.println("Point 1: " + realscalebarPoint1.getX() + realscalebarPoint1.getY());
-        Point2D realscalebarPoint2 = mouseToModel(scalebarPoint2);
+        realscalebarPoint2 = mouseToModel(scalebarPoint2);
         //System.out.println("Point 2: " + realscalebarPoint2.getX() + realscalebarPoint2.getY());
 
         ration = calculateRation(realscalebarPoint1.getX(),realscalebarPoint2.getX());
@@ -117,7 +137,7 @@ public class MapCanvas extends Canvas {
 
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
-        //System.out.println("Currentzoomlevel: " + zoomLevel);
+        System.out.println("Currentzoomlevel: " + zoomLevel);
 
 
         //Result listen, med de drawables der er inRange
@@ -162,12 +182,28 @@ public class MapCanvas extends Canvas {
         }
         // }
 
+        for(Drawable drawable: MultiPolygon.getListOfMultipolygonLines()){
+            gc.setFill(Color.BLUE);
+            drawable.fill(gc);
+        }
+
 
         // Tegner og farvelægger kortet
         //Tegner alt UNKNOWN
         /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN())) {
                 drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
+
+        //Tegner multipolygon
+
+
+        //Tegner Altid multipolygonskove
+        if( model.lines.get(WayType.FOREST) != null){
+            for (Drawable drawable: model.lines.get(WayType.FOREST)) {
+                if (drawable instanceof MultiPolygon) drawable.fillWayType(gc, WayType.FOREST);
+
+            }
+        }
 
         //Tegner forest
         if (model.getKDTreeFOREST() != null && model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot()) != null) {
@@ -180,6 +216,21 @@ public class MapCanvas extends Canvas {
                 }
             }
         }
+
+
+        if(zoomLevel <=26){
+        if (model.getKDTreeTERRITORIAl() != null && model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot()) != null) {
+            gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+            for (Drawable drawable : model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot())) {
+                if (isPartySelected) {
+                    drawable.draw(gc);
+                } else {
+                    drawable.drawWayType(gc, WayType.TERRITORIAl);
+                }
+            }
+        }}
+
+
 
         // Alt der skal tegnes ved zoom level 29
         if (zoomLevel >= 29) {
@@ -662,6 +713,26 @@ public class MapCanvas extends Canvas {
             gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
             gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
 
+       /* if(scalebarPoint1 != null){
+            gc.setFill(Color.HOTPINK);
+            gc.fillOval(realscalebarPoint1.getX(), realscalebarPoint1.getY(), 10/Math.sqrt(trans.determinant()), 10/Math.sqrt(trans.determinant()));
+        }*/
+
+
+
+
+
+
+
+        drawCenteredCircle(gc,realscalebarPoint1.getX(), realscalebarPoint1.getY(), 5/Math.sqrt(trans.determinant()/2) );
+        drawCenteredCircle(gc,realscalebarPoint2.getX(), realscalebarPoint2.getY(), 5/Math.sqrt(trans.determinant()/2) );
+
+        Line ScalebarLine = new Line(realscalebarPoint1, realscalebarPoint2);
+        gc.setStroke(Color.HOTPINK);
+        gc.setLineWidth(1/Math.sqrt(trans.determinant()));
+        ScalebarLine.draw(gc);
+
+
         //Tegner start og end node af en rute
         if(drawPunktStartOfRoute != null){
             gc.setFill(Color.RED);
@@ -686,6 +757,41 @@ public class MapCanvas extends Canvas {
                 double distX = x2-x1;
                 return 10/distX; //EVT bytte om
     }
+
+    public void drawCenteredCircle(GraphicsContext g, double x, double y, double r) {
+        x = x-(r/2);
+        y = y-(r/2);
+        g.setFill(Color.HOTPINK);
+        g.fillOval(x,y,r,r);
+    }
+
+    //Kilde for formel at regne distance: https://www.geeksforgeeks.org/program-distance-two-points-earth/
+    // The math module contains a function named toRadians which converts from degrees to radians.
+   public double calculateDistBetween2Points(Point2D punkt1, Point2D punkt2) {
+       double lon1 = Math.toRadians(punkt1.getY());
+       double lon2 = Math.toRadians(punkt2.getY());
+       double lat1 = Math.toRadians(punkt1.getX());
+       double lat2 = Math.toRadians(punkt2.getX());
+       //System.out.println("lon1: " + punkt1.getLon() + " lat1: " + punkt1.getLat());
+       //System.out.println("lon2: " + punkt2.getLon() + " lat2: " + punkt2.getLat());
+       //System.out.println("lon1RAD: " + lon1 + " lat1RAD: " + lat1);
+
+       // Haversine formula
+       double dlon = lon2 - lon1;
+       double dlat = lat2 - lat1;
+       double a = Math.pow(Math.sin(dlat / 2), 2)
+               + Math.cos(lat1) * Math.cos(lat2)
+               * Math.pow(Math.sin(dlon / 2), 2);
+
+       double c = 2 * Math.asin(Math.sqrt(a));
+
+       // Radius of earth in kilometers. Use 3956 for miles
+       double r = 6371;
+
+       // calculate the result
+       return (c * r)*1000;
+   }
+
 
     public Model getModel() {
         return model;
@@ -775,5 +881,17 @@ public class MapCanvas extends Canvas {
         return String.valueOf(this.ration);
     }
 
+    public String getDistToString(){
+        //System.out.println("Dist: " + String.valueOf(calculateDistBetween2Points(realscalebarPoint1, realscalebarPoint2)));
+        return String.valueOf(calculateDistBetween2Points(realscalebarPoint1, realscalebarPoint2));
 
+    }
+
+    public Point2D getRealscalebarPoint1() {
+        return realscalebarPoint1;
+    }
+
+    public Point2D getRealscalebarPoint2() {
+        return realscalebarPoint2;
+    }
 }

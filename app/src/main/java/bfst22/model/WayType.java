@@ -17,7 +17,7 @@ public enum WayType {
     MOTORWAY, PRIMARY, TRUNK, SECONDARY, TERTIARY, UNCLASSIFIED, LIVING_STREET, SERVICE, PEDESTRIAN, TRACK, ROAD, RACEWAY,
     BUS_GUIDEWAY, FOOTWAY_ANDMORE, STEPS, BRIDLEWAY, CYCLEWAY, RESIDENTIALWAY, CONSTRUCTIONWAY, DOG_PARK, GOLF_COURSE,
     ICE_RINK, MARINA, MINIATURE_GOLF, NATURE_RESERVE, PITCH, SPORTS_CENTRE, SWIMMING_POOL, RIVER_ANDMORE, SCHOOL,
-    STREAM_ANDMORE, DOCK, POND_ANDMORE, HARBOUR, PARKING, HOSPITAL, FERRY, MULTIPOLYGON, GRAVEYARD;
+    STREAM_ANDMORE, DOCK, POND_ANDMORE, HARBOUR, PARKING, HOSPITAL, FERRY, MULTIPOLYGON, GRAVEYARD, TERRITORIAl;
 
     /*
     Her er også stroke farve, men fordi BUILDING skal have to forskellige farver, er der lavet to metoder.
@@ -87,6 +87,7 @@ public enum WayType {
             case COASTLINE -> Color.valueOf("F2EFEA");
             case RIVER_ANDMORE -> Color.valueOf("B2D2DD");
             case FERRY -> Color.valueOf("6E97C8");
+            case TERRITORIAl -> Color.valueOf("9A8AA8");
             default -> Color.BLACK;
         };
     }
@@ -94,9 +95,10 @@ public enum WayType {
     public int getWidth() {
         return switch (this) {
             case MOTORWAY -> 6;
-            case TRUNK, PRIMARY, SECONDARY -> 5;
-            case UNCLASSIFIED, LIVING_STREET, TERTIARY -> 4;
-            case ROAD, RACEWAY -> 3;
+            case TRUNK, PRIMARY, SECONDARY, TERRITORIAl -> 4;
+            //case TERTIARY -> 6;
+            case UNCLASSIFIED, LIVING_STREET -> 5;
+            case ROAD, RACEWAY, TERTIARY -> 3;
             case CONSTRUCTIONWAY, SERVICE, PEDESTRIAN, STEPS, RESIDENTIALWAY -> 2;
             default -> 1;
         };

@@ -3,6 +3,7 @@ package bfst22.view;
 import bfst22.model.OSMNode;
 import bfst22.model.WayType;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.FillRule;
 
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public interface Drawable {
         gc.beginPath();
         trace(gc);
         gc.setFill(wt.getFillColor());
+        gc.setFillRule(FillRule.EVEN_ODD);
         gc.fill();
     }
 
