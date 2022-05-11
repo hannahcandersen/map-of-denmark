@@ -35,37 +35,18 @@ public class Controller {
     @FXML
     private Point2D lastMouse;
     @FXML
-    private TextField fromTextField;
+    private TextField fromTextField, toTextField;
     @FXML
-    private TextField toTextField;
+    private ListView<AddressObject> listViewFrom, listViewTo;
     @FXML
-    private ListView<AddressObject> listViewFrom;
+    private CheckBox colorCheckBox, graphCheckBox, debugBox;
     @FXML
-    private ListView<AddressObject> listViewTo;
-    @FXML
-    private CheckBox colorCheckBox;
-    @FXML
-    private CheckBox graphCheckBox;
-    @FXML
-    private CheckBox debugBox;
-    @FXML
-    private Pane warningPane;
-    @FXML
-    private Button warningOkButton;
+    private Pane warningPane, transportTypePane;
     @FXML
     private Label scaleInfo;
     @FXML
-    private RadioButton checkBoxBicycle;
-    @FXML
-    private RadioButton checkBoxWalking;
-    @FXML
-    private RadioButton checkBoxCar;
-    @FXML
-    private Pane transportTypePane;
-    @FXML
-    private Button findRouteButton;
-    @FXML
-    private Button transportCloseButton;
+    private RadioButton checkBoxCar, checkBoxBicycle, checkBoxWalking;
+
 
     private int clickOnWaringButtonCounter = 0;
     private AddressObject chosenAddressFrom;
@@ -166,10 +147,8 @@ public class Controller {
 
     @FXML
     public void searchRoute(ActionEvent actionEvent) {
-        transportTypePane.setVisible(true);
         checkBoxCar.setSelected(true);
         onClickedcheckBoxCar(actionEvent);
-
 
         //canvas.repaint();
 
@@ -300,7 +279,7 @@ public class Controller {
             try {
                 OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
                 OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
-
+                transportTypePane.setVisible(true);
             //System.out.println("chosenAddressFrom: Lat+Lon " + chosenAddressFrom.getLat() + chosenAddressFrom.getLon());
             //System.out.println("chosenAddressTo: Lat+Lon " + chosenAddressTo.getLat() + chosenAddressTo.getLon());
             canvas.setDrawPunktStartOfRoute(startOfRoute);
