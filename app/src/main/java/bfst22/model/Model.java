@@ -81,7 +81,7 @@ public class Model {
     private final KdTree KDTreeNodesInGraphCAR;
     private final KdTree KDTreeNodesInGraphBIKE;
     private final KdTree KDTreeNodesInGraphFOOT;
-    private final KdTree KDTreeNodesInGraph;
+    //private final KdTree KDTreeNodesInGraph;
     private final KdTree KDTreeTERRITORIAl;
 
 
@@ -768,7 +768,7 @@ public class Model {
     public KdTree getKDTreeNodesInGraphBIKE () {return KDTreeNodesInGraphBIKE;}
     public KdTree getKDTreeNodesInGraphFOOT () {return KDTreeNodesInGraphFOOT;}
     public KdTree getKDTreeTERRITORIAl () {return KDTreeTERRITORIAl;}
-    public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
+    //public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
 
 
 
