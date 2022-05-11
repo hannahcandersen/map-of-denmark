@@ -319,7 +319,9 @@ public class Model {
                         // her gemmes disse nodes i en arrayliste "nodes"
                         case "nd":
                             var ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
-                            nodes.add(id2node.get(ref));
+                            var node = id2node.get(ref);
+                            if (node == null) break;
+                            nodes.add(node);
                             break;
                         // sætter type til UNKNOWN for veje (kan måske sættes til noget andet, når vi har defineret flere typer veje?)
                         case "way":
@@ -332,7 +334,11 @@ public class Model {
                             var v = reader.getAttributeValue(null, "v");
                             switch (k) {
                                 case "maxspeed":
-                                    maxspeed = Double.parseDouble(v);
+                                    try {
+                                        maxspeed = Double.parseDouble(v);
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Invalid maxspeed: " + v);
+                                    }
                                 case "oneway":
                                     isOneway = v.equals("yes");
                                 case "junction":
