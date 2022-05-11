@@ -6,6 +6,7 @@ import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import java.util.Random;
+import java.util.Scanner;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -15,39 +16,23 @@ import javafx.scene.transform.NonInvertibleTransformException;
 
 
 
-
 //Canvas = lærred. Klassen der tegner, panner og zoomer
 
 public class MapCanvas extends Canvas {
-    public OSMNode TestdrawPunkt;
-    private OSMNode drawPunkt;
-
-    private OSMNode drawPunktStartOfRoute;
-    private OSMNode drawPunktEndOfRoute;
-
-
     private Model model;
     private Affine trans = new Affine();
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
-    private boolean isPartySelected;
-    private boolean isGraphSelected;
-    private boolean isDebugSelected;
-    private boolean goByCar;
-    private boolean goByBike;
-    private boolean goByFoot;
+    private OSMNode drawPunkt, drawPunktStartOfRoute, drawPunktEndOfRoute;
+    private boolean isPartySelected, isGraphSelected, isDebugSelected;
+    private boolean goByCar, goByBike, goByFoot;
     private Iterable<DirectedEdge> dijkstraShortestPath;
 
+    private Point2D screenMin, screenMax;
+    private Point2D realscalebarPoint1, realscalebarPoint2;
+
     //Randomme farver
-    private int r;
-    private int g;
-    private int b;
-
-    private Point2D screenMin;
-    private Point2D screenMax;
-
-    private Point2D realscalebarPoint1;
-    private Point2D realscalebarPoint2;
+    private int r, g, b;
 
     private double ration;
     private int scalebarincreaseX = 0;
@@ -55,20 +40,13 @@ public class MapCanvas extends Canvas {
 
 
 
-
-
-
-
     public void init(Model model) {
         this.model = model;
         //mouseToModel()  -  så får vi hvor den
         pan(-model.getMinLon(), -model.getMinLat());
-        //tallet 640 bestemmer hvor tæt eller hvor langt fra vi er på kortet, når programmet starter
-        //640 er hvor mange pixels bredden af canvas
-        //skift 640 ud med getCanvasWidth
         zoom(getWidth() / (model.getMaxlon() - model.getMinLon()), 0, 0);
         model.addObserver(this::repaint);
-        repaint();
+        //repaint();
         //repainter hver gang størrelsen på skærmen ændres
         widthProperty().addListener((observable, oldValue, newValue) -> {
             repaint();
@@ -77,9 +55,10 @@ public class MapCanvas extends Canvas {
         heightProperty().addListener((observable, oldValue, newValue) -> {
             repaint();
             scalebarincreaseY +=2;
-            System.out.println(scalebarincreaseY);
+            //System.out.println(scalebarincreaseY);
         });
     }
+
 
     //Repaint gør at billedet ikke tegner oveni det forrige billede, således at canvaset hele tiden opdateres.
     public void repaint() { //throws NullPointerException
@@ -95,37 +74,45 @@ public class MapCanvas extends Canvas {
         Point2D realMin = mouseToModel(screenMin);
         Point2D realMax = mouseToModel(screenMax);
 
+
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
         RangeSerachRectangle rangeSearchRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         //System.out.println(rangeSearchRectangle);
 
+
+
+
+        //  TODO KAN SLETTES?????????
         //Point2D scalebarPoint1 = new Point2D((getWidth()/2) + 170,getHeight()/2 +120 + scalebarincreaseY);
         //Point2D scalebarPoint2 = new Point2D((getWidth()/2)+250, getHeight()/2 +120 + scalebarincreaseY);
 
         //Point2D scalebarPoint1 = new Point2D((getWidth()/2)  + (getWidth()/4) ,                (getHeight()/2)  + (getHeight()/4));
         //Point2D scalebarPoint2 = new Point2D((getWidth()/2)  + (getWidth()/4) +(getWidth()/6) , (getHeight()/2) + (getHeight()/4));
+        ////////////////////////////////////
 
+
+        //Sætter positionen for hvor vores scalebar skal stå
         Point2D scalebarPoint1 = new Point2D(getWidth()-60, getHeight()-100 );
         Point2D scalebarPoint2 = new Point2D(getWidth()-150 , getHeight()-100);
-
 
         realscalebarPoint1 = mouseToModel(scalebarPoint1);
         //System.out.println("Point 1: " + realscalebarPoint1.getX() + realscalebarPoint1.getY());
         realscalebarPoint2 = mouseToModel(scalebarPoint2);
         //System.out.println("Point 2: " + realscalebarPoint2.getX() + realscalebarPoint2.getY());
 
+
+        //Udregner rationen for hvad en meter (så lang linjen er???) på kortet
         ration = calculateRation(realscalebarPoint1.getX(),realscalebarPoint2.getX());
         //System.out.println("ration: " + ration);
 
+
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
-        System.out.println("Currentzoomlevel: " + zoomLevel);
+        //System.out.println("Currentzoomlevel: " + zoomLevel);
 
 
-        //Result listen, med de drawables der er inRange
-        //var resultUNKNOWN = KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN());
 
-        //Sætter de generelle indstillinger for MapCanvas
+        //Sætter de generelle indstillinger for GraphicsContext til at vi kan tegne
         var gc = getGraphicsContext2D();
         gc.setTransform(new Affine());
 
@@ -139,7 +126,6 @@ public class MapCanvas extends Canvas {
 
         //Tegner kystlinjer
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
-        //{
         gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
         for (Drawable drawable : model.getListOfCoastlines()) {
             if (zoomLevel <= 30) {
@@ -162,32 +148,33 @@ public class MapCanvas extends Canvas {
                 }
             }
         }
-        // }
 
+
+
+
+        /////// TODO TEGNER DENNE MULTIPOLYGONER??  FARVEN ER BLÅ   ///////
         for(Drawable drawable: MultiPolygon.getListOfMultipolygonLines()){
             gc.setFill(Color.BLUE);
             drawable.fill(gc);
         }
 
 
-        // Tegner og farvelægger kortet
+        //////////////////// TEGNER OG FARVELÆGGER KORTET ////////////////////
         //Tegner alt UNKNOWN
         /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN())) {
                 drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
 
-        //Tegner multipolygon
 
 
-        //Tegner Altid multipolygonskove
+        //////////////////// TEGNER ALTID MULTIPOLYGON_FOREST ////////////////////
         if( model.lines.get(WayType.FOREST) != null){
             for (Drawable drawable: model.lines.get(WayType.FOREST)) {
                 if (drawable instanceof MultiPolygon) drawable.fillWayType(gc, WayType.FOREST);
-
             }
         }
 
-        //Tegner forest
+        //////////////////// TEGNER FOREST ////////////////////
         if (model.getKDTreeFOREST() != null && model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot()) != null) {
             gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
             for (Drawable drawable : model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot())) {
@@ -200,7 +187,8 @@ public class MapCanvas extends Canvas {
         }
 
 
-        if(zoomLevel <=26){
+        //////////////////// ZOOM UNDER 26 ////////////////////
+        if(zoomLevel <= 26){
         if (model.getKDTreeTERRITORIAl() != null && model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot()) != null) {
             gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
             for (Drawable drawable : model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot())) {
@@ -214,7 +202,7 @@ public class MapCanvas extends Canvas {
 
 
 
-        // Alt der skal tegnes ved zoom level 29
+        ///////////////////// ZOOM OVER 29 ////////////////////
         if (zoomLevel >= 29) {
             if (model.getKDTreeFARMLAND() != null && model.getKDTreeFARMLAND().rangeSearch(rangeSearchRectangle, model.getKDTreeFARMLAND().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
@@ -297,7 +285,8 @@ public class MapCanvas extends Canvas {
             }
         }
 
-        // Alt der skal tegnes ved zoom level 30
+
+        //////////////////// ZOOM == 30 ELLER 31 ////////////////////
         if(zoomLevel == 30 || zoomLevel==31) {
             if (model.getKDTreeRESIDENTIAL() != null && model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
@@ -320,7 +309,6 @@ public class MapCanvas extends Canvas {
                     }
                 }
             }
-
 
             if (model.getKDTreeGREENHOUSE_HORTICULTURE() != null && model.getKDTreeGREENHOUSE_HORTICULTURE().rangeSearch(rangeSearchRectangle, model.getKDTreeGREENHOUSE_HORTICULTURE().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
@@ -350,10 +338,9 @@ public class MapCanvas extends Canvas {
                     drawable.drawWayType(gc, WayType.SECONDARY);
                 }
             }
-
         }
 
-        // Alt der skal tegnes ved zoom level 31 og højere
+        //////////////////// ZOOM OVER 31 ////////////////////
         if (zoomLevel >= 31){
             if(model.getKDTreeRESIDENTIAL() != null && model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
@@ -365,7 +352,6 @@ public class MapCanvas extends Canvas {
                     }
                 }
             }
-
 
             if(model.getKDTreeINDUSTRIAL() != null && model.getKDTreeINDUSTRIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeINDUSTRIAL().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
@@ -488,51 +474,49 @@ public class MapCanvas extends Canvas {
                 }
             }
 
-
-
-                if (model.getKDTreeSAND() != null && model.getKDTreeSAND().rangeSearch(rangeSearchRectangle, model.getKDTreeSAND().getRoot()) != null) {
-                    gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
-                    for (Drawable drawable : model.getKDTreeSAND().rangeSearch(rangeSearchRectangle, model.getKDTreeSAND().getRoot())) {
-                        if (isPartySelected) {
-                            drawable.fill(gc);
-                        } else {
-                            drawable.fillWayType(gc, WayType.SAND);
-                        }
+            if (model.getKDTreeSAND() != null && model.getKDTreeSAND().rangeSearch(rangeSearchRectangle, model.getKDTreeSAND().getRoot()) != null) {
+                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+                for (Drawable drawable : model.getKDTreeSAND().rangeSearch(rangeSearchRectangle, model.getKDTreeSAND().getRoot())) {
+                    if (isPartySelected) {
+                        drawable.fill(gc);
+                    } else {
+                        drawable.fillWayType(gc, WayType.SAND);
                     }
                 }
+            }
 
-                if (model.getKDTreeHOSPITAL() != null && model.getKDTreeHOSPITAL().rangeSearch(rangeSearchRectangle, model.getKDTreeHOSPITAL().getRoot()) != null) {
-                    gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
-                    for (Drawable drawable : model.getKDTreeHOSPITAL().rangeSearch(rangeSearchRectangle, model.getKDTreeHOSPITAL().getRoot())) {
-                        if (isPartySelected) {
-                            drawable.fill(gc);
-                        } else {
-                            drawable.fillWayType(gc, WayType.HOSPITAL);
-                        }
+            if (model.getKDTreeHOSPITAL() != null && model.getKDTreeHOSPITAL().rangeSearch(rangeSearchRectangle, model.getKDTreeHOSPITAL().getRoot()) != null) {
+                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+                for (Drawable drawable : model.getKDTreeHOSPITAL().rangeSearch(rangeSearchRectangle, model.getKDTreeHOSPITAL().getRoot())) {
+                    if (isPartySelected) {
+                        drawable.fill(gc);
+                    } else {
+                        drawable.fillWayType(gc, WayType.HOSPITAL);
                     }
                 }
+            }
 
-                if (model.getKDTreeRECREATION_GROUND() != null && model.getKDTreeRECREATION_GROUND().rangeSearch(rangeSearchRectangle, model.getKDTreeRECREATION_GROUND().getRoot()) != null) {
-                    gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
-                    for (Drawable drawable : model.getKDTreeRECREATION_GROUND().rangeSearch(rangeSearchRectangle, model.getKDTreeRECREATION_GROUND().getRoot())) {
-                        if (isPartySelected) {
-                            drawable.fill(gc);
-                        } else {
-                            drawable.fillWayType(gc, WayType.RECREATION_GROUND);
-                        }
+            if (model.getKDTreeRECREATION_GROUND() != null && model.getKDTreeRECREATION_GROUND().rangeSearch(rangeSearchRectangle, model.getKDTreeRECREATION_GROUND().getRoot()) != null) {
+                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+                for (Drawable drawable : model.getKDTreeRECREATION_GROUND().rangeSearch(rangeSearchRectangle, model.getKDTreeRECREATION_GROUND().getRoot())) {
+                    if (isPartySelected) {
+                        drawable.fill(gc);
+                    } else {
+                        drawable.fillWayType(gc, WayType.RECREATION_GROUND);
                     }
                 }
+            }
 
-                    if (model.getKDTreePITCH() != null && model.getKDTreePITCH().rangeSearch(rangeSearchRectangle, model.getKDTreePITCH().getRoot()) != null) {
-                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
-                        for (Drawable drawable : model.getKDTreePITCH().rangeSearch(rangeSearchRectangle, model.getKDTreePITCH().getRoot())) {
-                            if (isPartySelected) {
-                                drawable.fill(gc);
-                            } else {
-                                drawable.fillWayType(gc, WayType.PITCH);
-                            }
-                        }
+            if (model.getKDTreePITCH() != null && model.getKDTreePITCH().rangeSearch(rangeSearchRectangle, model.getKDTreePITCH().getRoot()) != null) {
+                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+                for (Drawable drawable : model.getKDTreePITCH().rangeSearch(rangeSearchRectangle, model.getKDTreePITCH().getRoot())) {
+                    if (isPartySelected) {
+                        drawable.fill(gc);
+                    } else {
+                        drawable.fillWayType(gc, WayType.PITCH);
                     }
+                }
+            }
 
             if (model.getKDTreeBUILDING() != null && model.getKDTreeBUILDING().rangeSearch(rangeSearchRectangle, model.getKDTreeBUILDING().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
@@ -551,81 +535,80 @@ public class MapCanvas extends Canvas {
             }
 
 
-                    if (model.getKDTreeBRIDLEWAY() != null && model.getKDTreeBRIDLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeBRIDLEWAY().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeBRIDLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeBRIDLEWAY().getRoot())) {
-                            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
-                            gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.BRIDLEWAY);
-                        }
-                    }
+            if (model.getKDTreeBRIDLEWAY() != null && model.getKDTreeBRIDLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeBRIDLEWAY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeBRIDLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeBRIDLEWAY().getRoot())) {
+                    gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.BRIDLEWAY.getDashes());
+                    gc.setLineWidth(WayType.BRIDLEWAY.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.BRIDLEWAY);
+                }
+            }
 
-                    if (model.getKDTreeFOOTWAY_ANDMORE() != null && model.getKDTreeFOOTWAY_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeFOOTWAY_ANDMORE().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeFOOTWAY_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeFOOTWAY_ANDMORE().getRoot())) {
-                            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
-                            gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);
-                        }
-                        gc.setLineDashes(null);
-                    }
+            if (model.getKDTreeFOOTWAY_ANDMORE() != null && model.getKDTreeFOOTWAY_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeFOOTWAY_ANDMORE().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeFOOTWAY_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeFOOTWAY_ANDMORE().getRoot())) {
+                    gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.FOOTWAY_ANDMORE.getDashes());
+                    gc.setLineWidth(WayType.FOOTWAY_ANDMORE.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.FOOTWAY_ANDMORE);
+                }
+                gc.setLineDashes(null);
+            }
 
-                    if (model.getKDTreeCYCLEWAY() != null && model.getKDTreeCYCLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeCYCLEWAY().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeCYCLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeCYCLEWAY().getRoot())) {
-                            gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
-                            gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.CYCLEWAY);
-                        }
-                        gc.setLineDashes(null);
-                    }
+            if (model.getKDTreeCYCLEWAY() != null && model.getKDTreeCYCLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeCYCLEWAY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeCYCLEWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeCYCLEWAY().getRoot())) {
+                    gc.setLineDashes(1 / Math.sqrt(trans.determinant()) * WayType.CYCLEWAY.getDashes());
+                    gc.setLineWidth(WayType.CYCLEWAY.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.CYCLEWAY);
+                }
+                gc.setLineDashes(null);
+            }
 
-                    if (model.getKDTreePEDESTRIAN() != null && model.getKDTreePEDESTRIAN().rangeSearch(rangeSearchRectangle, model.getKDTreePEDESTRIAN().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreePEDESTRIAN().rangeSearch(rangeSearchRectangle, model.getKDTreePEDESTRIAN().getRoot())) {
-                            gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.PEDESTRIAN);
-                        }
-                    }
+            if (model.getKDTreePEDESTRIAN() != null && model.getKDTreePEDESTRIAN().rangeSearch(rangeSearchRectangle, model.getKDTreePEDESTRIAN().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreePEDESTRIAN().rangeSearch(rangeSearchRectangle, model.getKDTreePEDESTRIAN().getRoot())) {
+                    gc.setLineWidth(WayType.PEDESTRIAN.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.PEDESTRIAN);
+                }
+            }
 
-                    if (model.getKDTreeSERVICE() != null && model.getKDTreeSERVICE().rangeSearch(rangeSearchRectangle, model.getKDTreeSERVICE().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeSERVICE().rangeSearch(rangeSearchRectangle, model.getKDTreeSERVICE().getRoot())) {
-                            gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.SERVICE);
-                        }
-                    }
+            if (model.getKDTreeSERVICE() != null && model.getKDTreeSERVICE().rangeSearch(rangeSearchRectangle, model.getKDTreeSERVICE().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeSERVICE().rangeSearch(rangeSearchRectangle, model.getKDTreeSERVICE().getRoot())) {
+                    gc.setLineWidth(WayType.SERVICE.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.SERVICE);
+                }
+            }
 
+            if (model.getKDTreeROAD() != null && model.getKDTreeROAD().rangeSearch(rangeSearchRectangle, model.getKDTreeROAD().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeROAD().rangeSearch(rangeSearchRectangle, model.getKDTreeROAD().getRoot())) {
+                    gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.ROAD);
+                }
+            }
 
-                    if (model.getKDTreeROAD() != null && model.getKDTreeROAD().rangeSearch(rangeSearchRectangle, model.getKDTreeROAD().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeROAD().rangeSearch(rangeSearchRectangle, model.getKDTreeROAD().getRoot())) {
-                            gc.setLineWidth(WayType.ROAD.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.ROAD);
-                        }
-                    }
+            if (model.getKDTreeLIVING_STREET() != null && model.getKDTreeLIVING_STREET().rangeSearch(rangeSearchRectangle, model.getKDTreeLIVING_STREET().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeLIVING_STREET().rangeSearch(rangeSearchRectangle, model.getKDTreeLIVING_STREET().getRoot())) {
+                    gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.LIVING_STREET);
+                }
+            }
 
-                    if (model.getKDTreeLIVING_STREET() != null && model.getKDTreeLIVING_STREET().rangeSearch(rangeSearchRectangle, model.getKDTreeLIVING_STREET().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeLIVING_STREET().rangeSearch(rangeSearchRectangle, model.getKDTreeLIVING_STREET().getRoot())) {
-                            gc.setLineWidth(WayType.LIVING_STREET.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.LIVING_STREET);
-                        }
-                    }
+            if (model.getKDTreeRESIDENTIALWAY() != null && model.getKDTreeRESIDENTIALWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIALWAY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeRESIDENTIALWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIALWAY().getRoot())) {
+                    gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.RESIDENTIALWAY);
+                }
+            }
 
-                    if (model.getKDTreeRESIDENTIALWAY() != null && model.getKDTreeRESIDENTIALWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIALWAY().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeRESIDENTIALWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIALWAY().getRoot())) {
-                            gc.setLineWidth(WayType.RESIDENTIALWAY.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.RESIDENTIALWAY);
-                        }
-                    }
+            if (model.getKDTreeSECONDARY() != null && model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot())) {
+                    gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.SECONDARY);
+                }
+            }
 
-                    if (model.getKDTreeSECONDARY() != null && model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeSECONDARY().rangeSearch(rangeSearchRectangle, model.getKDTreeSECONDARY().getRoot())) {
-                            gc.setLineWidth(WayType.SECONDARY.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.SECONDARY);
-                        }
-                    }
-
-                    if (model.getKDTreeTERTIARY() != null && model.getKDTreeTERTIARY().rangeSearch(rangeSearchRectangle, model.getKDTreeTERTIARY().getRoot()) != null) {
-                        for (Drawable drawable : model.getKDTreeTERTIARY().rangeSearch(rangeSearchRectangle, model.getKDTreeTERTIARY().getRoot())) {
-                            gc.setLineWidth(WayType.TERTIARY.getWidth() / Math.sqrt(trans.determinant()));
-                            drawable.drawWayType(gc, WayType.TERTIARY);
-                        }
-                    }
+            if (model.getKDTreeTERTIARY() != null && model.getKDTreeTERTIARY().rangeSearch(rangeSearchRectangle, model.getKDTreeTERTIARY().getRoot()) != null) {
+                for (Drawable drawable : model.getKDTreeTERTIARY().rangeSearch(rangeSearchRectangle, model.getKDTreeTERTIARY().getRoot())) {
+                    gc.setLineWidth(WayType.TERTIARY.getWidth() / Math.sqrt(trans.determinant()));
+                    drawable.drawWayType(gc, WayType.TERTIARY);
+                }
+            }
 
             if (model.getKDTreeGRAVEYARD() != null && model.getKDTreeGRAVEYARD().rangeSearch(rangeSearchRectangle, model.getKDTreeGRAVEYARD().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
@@ -642,23 +625,25 @@ public class MapCanvas extends Canvas {
 
         } //If zoomlevel slutter
 
-                //Tegner motorway - tegnes altid øverst
-                if (model.getKDTreeMOTORWAY() != null && model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot()) != null) {
-                    for (Drawable drawable : model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot())) {
-                        gc.setLineWidth(WayType.MOTORWAY.getWidth() / Math.sqrt(trans.determinant()));
-                        drawable.drawWayType(gc, WayType.MOTORWAY);
-                    }
-                }
 
-                // Tegner hovedveje - tegnes altid øverst
-                if (model.getKDTreePRIMARY() != null && model.getKDTreePRIMARY().rangeSearch(rangeSearchRectangle, model.getKDTreePRIMARY().getRoot()) != null) {
-                    for (Drawable drawable : model.getKDTreePRIMARY().rangeSearch(rangeSearchRectangle, model.getKDTreePRIMARY().getRoot())) {
-                        gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
-                        drawable.drawWayType(gc, WayType.PRIMARY);
-                    }
-                }
+        //////////////////// Tegner motorway - tegnes altid øverst ////////////////////
+        if (model.getKDTreeMOTORWAY() != null && model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot()) != null) {
+            for (Drawable drawable : model.getKDTreeMOTORWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeMOTORWAY().getRoot())) {
+                gc.setLineWidth(WayType.MOTORWAY.getWidth() / Math.sqrt(trans.determinant()));
+                drawable.drawWayType(gc, WayType.MOTORWAY);
+            }
+        }
 
-        // TEGNER GRAFEN - TIL DEBUG MODE
+        //////////////////// Tegner hovedveje - tegnes altid øverst ////////////////////
+        if (model.getKDTreePRIMARY() != null && model.getKDTreePRIMARY().rangeSearch(rangeSearchRectangle, model.getKDTreePRIMARY().getRoot()) != null) {
+            for (Drawable drawable : model.getKDTreePRIMARY().rangeSearch(rangeSearchRectangle, model.getKDTreePRIMARY().getRoot())) {
+                gc.setLineWidth(WayType.PRIMARY.getWidth() / Math.sqrt(trans.determinant()));
+                drawable.drawWayType(gc, WayType.PRIMARY);
+            }
+        }
+
+
+        //////////////////// TEGNER GRAFEN - TIL DEBUG MODE ////////////////////
         if(isGraphSelected) {
             Color graphColor = new Color(0.2, 0.2, 0.6, 0.2);
             for (Drawable drawable : model.getListOfAllEdgesInWaysAllWays()) {
@@ -668,21 +653,21 @@ public class MapCanvas extends Canvas {
             }
         }
 
-        //Tegner vores debug firkant - TIL DEBUG MODE
+        //////////////////// TEGNER VORES DEBUG FIRKANT - TIL DEBUG MODE ////////////////////
         if(isDebugSelected) {
             Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
             gc.setFill(rectangleColor);
             gc.fillRect(realMin.getX(), realMin.getY(), realMax.getX() - realMin.getX(), realMax.getY() - realMin.getY());
         }
 
-        //Tegner nearest node når man double klikker
+        //////////////////// TEGNER NEAREST NODE NÅR MAN DOUBLE KLIKKER ////////////////////
         if(drawPunkt != null){
             gc.setFill(Color.RED);
             gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
             gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
 
 
-        //// TEGNER SHORTEST PATH //////
+        //////////////////// TEGNER SHORTEST PATH ////////////////////
         if(goByCar || goByBike || goByFoot) {
             if (dijkstraShortestPath != null) {
                 for (Drawable drawable : dijkstraShortestPath) {
@@ -691,19 +676,18 @@ public class MapCanvas extends Canvas {
                     drawable.draw(gc);
                 }
                 //System.out.println("Jeg har tegnet Dijkstra");
-            }
-        }/*else {
-            System.out.println("Dijkstra er null");
-        }*/
+            }}
 
 
 
+        //////////////////// TODO KAN SLETTES??
        /* if(scalebarPoint1 != null){
             gc.setFill(Color.HOTPINK);
             gc.fillOval(realscalebarPoint1.getX(), realscalebarPoint1.getY(), 10/Math.sqrt(trans.determinant()), 10/Math.sqrt(trans.determinant()));
         }*/
 
 
+        //////////////////// TEGNER LINJEN OG CIRKLERNE PÅ GRAPHICAL SCALEBAR ////////////////////
         drawCenteredCircle(gc,realscalebarPoint1.getX(), realscalebarPoint1.getY(), 5/Math.sqrt(trans.determinant()/2) );
         drawCenteredCircle(gc,realscalebarPoint2.getX(), realscalebarPoint2.getY(), 5/Math.sqrt(trans.determinant()/2) );
 
@@ -713,7 +697,7 @@ public class MapCanvas extends Canvas {
         ScalebarLine.draw(gc);
 
 
-        //Tegner start og end node af en rute
+        ///////////////////// TEGNER START OG END NODE AF EN RUTE ////////////////////
         if(drawPunktStartOfRoute != null){
             gc.setFill(Color.RED);
             gc.fillRect(drawPunktStartOfRoute.getLat(), drawPunktStartOfRoute.getLon(), 0.00002, 0.00002);
@@ -728,16 +712,20 @@ public class MapCanvas extends Canvas {
             //System.out.println("Tegner drawPunktEndOfRoute");
             }
 
+
+        //////////////////// TODO KAN SLETTES??
         /*gc.setFill(Color.YELLOW);
         gc.fillRect(realscalebarPoint1.getX(), realscalebarPoint1.getY(), 0.02, 0.02);
         gc.fillRect(realscalebarPoint2.getX(), realscalebarPoint2.getY(), 0.02, 0.02);*/
     }
 
+    //////////////////// TODO SKRIV KOMMENTAR (KATRINE?)
     public double calculateRation(double x1, double x2){
                 double distX = x2-x1;
                 return 10/distX; //EVT bytte om
     }
 
+    //////////////////// TODO SKRIV KOMMENTAR (KATRINE?)
     public void drawCenteredCircle(GraphicsContext g, double x, double y, double r) {
         x = x-(r/2);
         y = y-(r/2);
@@ -773,29 +761,9 @@ public class MapCanvas extends Canvas {
    }
 
 
-    public Model getModel() {
-        return model;
-    }
 
-    public void setDrawPunkt(OSMNode drawPunkt) {
-        this.drawPunkt = drawPunkt;
-    }
 
-    public void setDrawPunktStartOfRoute(OSMNode drawPunkt) {
-        this.drawPunktStartOfRoute = drawPunkt;
-    }
-    public void setDrawPunktEndOfRoute(OSMNode drawPunkt) {
-        this.drawPunktEndOfRoute = drawPunkt;
-    }
-
-    private int getZoomLevel(double r) {
-        if (r != 0){
-            double scale = r / 500;
-            zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
-        }
-        return zoomLevel;
-    }
-
+    //////////////////// GENERELLE METODER SOM PAN OG ZOOM FX. ////////////////////
     public void pan(double dx, double dy) {
         trans.prependTranslation(dx, dy);
             repaint();
@@ -822,6 +790,7 @@ public class MapCanvas extends Canvas {
         }
     }
 
+    //Sætter random farver
     public int randomR(){
         //Random c
         Random rand = new Random();
@@ -849,12 +818,23 @@ public class MapCanvas extends Canvas {
         return b;
     }
 
-    public Iterable<DirectedEdge> getDijkstraShortestPath() {
-        return dijkstraShortestPath;
+
+
+    //////////////////// GETTERS ////////////////////
+    public Model getModel() {
+        return model;
     }
 
-    public void setDijkstraShortestPath(Iterable<DirectedEdge> dijkstraShortestPath) {
-        this.dijkstraShortestPath = dijkstraShortestPath;
+    private int getZoomLevel(double r) {
+        if (r != 0){
+            double scale = r / 500;
+            zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel;
+    }
+
+    public Iterable<DirectedEdge> getDijkstraShortestPath() {
+        return dijkstraShortestPath;
     }
 
     public String getRationToString(){
@@ -873,6 +853,23 @@ public class MapCanvas extends Canvas {
 
     public Point2D getRealscalebarPoint2() {
         return realscalebarPoint2;
+    }
+
+
+    //////////////////// SETTERS ////////////////////
+    public void setDijkstraShortestPath(Iterable<DirectedEdge> dijkstraShortestPath) {
+        this.dijkstraShortestPath = dijkstraShortestPath;
+    }
+
+    public void setDrawPunkt(OSMNode drawPunkt) {
+        this.drawPunkt = drawPunkt;
+    }
+
+    public void setDrawPunktStartOfRoute(OSMNode drawPunkt) {
+        this.drawPunktStartOfRoute = drawPunkt;
+    }
+    public void setDrawPunktEndOfRoute(OSMNode drawPunkt) {
+        this.drawPunktEndOfRoute = drawPunkt;
     }
 
     public void setPartySelected(boolean partySelected) {

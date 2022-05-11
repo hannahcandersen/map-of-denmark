@@ -32,7 +32,7 @@ public class MultiPolygon implements Drawable, Serializable {
     private  List<Drawable> parts = new ArrayList<>();
     private ArrayList<OSMNode> multiPolygonNodes = new ArrayList<>(); // Alle nodes der er i multipolygonet
     private static ArrayList<PolyLine> multiPolygonPolylines = new ArrayList<>();
-    static List<PolyLine> listOfMultipolygonLines = new ArrayList<>();
+    private static List<PolyLine> listOfMultipolygonLines = new ArrayList<>();
 
     //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes" Og WayType
     public MultiPolygon(ArrayList<OSMWay> rel, WayType wayType) {
