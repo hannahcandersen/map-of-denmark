@@ -88,6 +88,12 @@ public class Model {
     private int maxspeed = 0;
     private boolean isOneway;
     private boolean isRoundabout;
+    private boolean vehicle;
+    private boolean bicycle;
+    private boolean foot;
+    private boolean canGoByCar;
+    private boolean canGoByBike;
+    private boolean canGoByFoot;
     private List<PolyLine> listOfCoastlines;
     private EdgeWeightedDigraph graph;
     private static OSMNode[] arrayOfOSMNodesInGraph;
@@ -106,6 +112,9 @@ public class Model {
 
     //Liste med HIGHWAYS
     private static ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
+    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
+    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
+    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
 
     //Liste med alle OSMNodes in graph
     private List<OSMNode> listOfAlleNodesInGraph = new ArrayList<>();
@@ -132,7 +141,7 @@ public class Model {
                 maxlon = input.readFloat();
                 lines = (Map<WayType, List<Drawable>>) input.readObject();
                 listOfCoastlines = (List<PolyLine>) input.readObject();
-                graph = (EdgeWeightedDigraph) input.readObject();
+                //graph = (EdgeWeightedDigraph) input.readObject();
                 //tst = (TST) input.readObject();
 
                 //VIGTIGT at skrive i samme rækkefølge som i save()
@@ -202,9 +211,20 @@ public class Model {
         listOfCoastlines = makeCoastlineObject(coastlinesMap);
 
         //lav dijkstra graf
-        makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
-        makeGraph();
-        //System.out.println(graph);
+        //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå 
+        makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysCAR, mapOfOSMNodesToIndexCAR);
+        makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysBIKE, mapOfOSMNodesToIndexBIKE);
+        makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysFOOT, mapOfOSMNodesToIndexFOOT);
+        
+        //Laver graf for veje hvor man kan henholdsvis køre bil, cykle og gå
+        makeGraph(mapOfOSMNodesToIndexCAR, listOfAllEdgesInWaysCAR, graphCAR);
+        makeGraph(mapOfOSMNodesToIndexBIKE, listOfAllEdgesInWaysBIKE, graphBIKE);
+        makeGraph(mapOfOSMNodesToIndexFOOT, listOfAllEdgesInWaysFOOT, graphFOOT);
+
+        // Laver arrays for veje hvor man kan henholdsvis køre bil, cykle og gå
+        makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexCAR, arrayOfOSMNodesInGraphCAR);
+        makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexBIKE, arrayOfOSMNodesInGraphBIKE);
+        makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexFOOT, arrayOfOSMNodesInGraphFOOT);
 
         //System.out.println("indegree " + graph.getIndegree()[484]);
 
@@ -223,7 +243,7 @@ public class Model {
             out.writeFloat(maxlon);
             out.writeObject(lines);
             out.writeObject(listOfCoastlines);
-            out.writeObject(graph);
+            //out.writeObject(graph);
             //out.writeObject(tst);
 
 
@@ -308,6 +328,16 @@ public class Model {
                                     isOneway = v.equals("yes");
                                 case "junction":
                                     isRoundabout = v.equals("roundabout");
+                                case "motor-vehicle":
+                                    vehicle = v.equals("yes");
+                                case "vehicle":
+                                    vehicle = v.equals("yes");
+                                case "bicycle":
+                                    if(v.equals("yes") || v.equals("designated")) {
+                                        bicycle = true;
+                                    }
+                                case "foot":
+                                    foot = v.equals("designated");
                                 case "addr:city":
                                     city = v;
                                     break;
@@ -431,8 +461,6 @@ public class Model {
                                     break;
                                 case "highway":
                                     type = switch (v) {
-                                        //highway - primary.. ??
-                                        //cycleway - track, lane ??
                                         case "motorway", "motorway_link" -> WayType.MOTORWAY;
                                         case "primary", "primary_link" -> WayType.PRIMARY;
                                         case "trunk", "trunk_link" -> WayType.TRUNK;
@@ -454,7 +482,7 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
-                            }
+                                    }
                             break;
                         // relations har member-tags, der referer til
                         case "member":
@@ -506,37 +534,82 @@ public class Model {
                                         default -> 0; //skal vi have en default værdi på 20 måske?
                                     };
                                 }
-                                /////The order of values for the highway-tag ordered by assumed speed is://///
-                                    //motorway - Usually the maxspeed can be kept for long distances, but these roads can be sensitive to long traffic jams. Usually forbidden for slow traffic (pedestrians, cyclists, agricultural, ...)
-                                    //trunk - 	Similar to motorways, but these roads can have level crossings, so the stretches where the maximum speed can be reached are shorter. Best avoided when using slow vehicles (sometimes forbidden, depending on the local legislation).
-                                    //primary, secondary, tertiary - Usually around 90-100 km/t in the countryside, and 50 (or even 30) km/t when crossing a residential center.
-                                    //motorway-link - Reachable speed depends a lot on curvature, usually around 60-90 km/h
-                                    //trunk-, primary-, secondary-, tertiary-link - The speed on these road pieces is very slow, as these often need to give way to the other traffic.
-                                    //unclassified - will rarely exceed 50 km/t
-                                    //residential - 50 km/t to 30 km/t
-                                    //living_street - 20km/t
-                                    //service - Service roads are usually found on private property or parking lots. The driver has to pay attention to manoeuvring vehicles, and must wait often
-                                    //track (måske ikke tegne) - Tracks are roads of agricultural purpose. They usually connect fields to farms. The surface sometimes makes them inaccessible for regular cars, or at least limits the speeds to a very slow pace. Tracks should always be avoided for through-going traffic.
-                                    //pedestrian - Pedestrian roads are normally forbidden for motorised vehicles, but can be allowed on certain hours (f.e. early in the morning), or for certain purposes (like delivering goods to shops). Even when allowed, only pedestrian speed is advisable. Cycling can also be forbidden on pedestrian highways.
-                                    //road - er et wildcard; kan være motorway, men også living-street (vælger ca. midten af 20 og 110)
-                                    //constuctionway - en vej, som er midlertidig under arbejde, men openstreetmap er måske ikke opdateret (sætter samme værdi som road)
 
+                                //sætte booleans for om der må køres, cykles eller gåes på vejen
+                                if(type == WayType.MOTORWAY || type == WayType.TRUNK) {
+                                    canGoByCar = true;
+
+                                }
+                                if(type == WayType.PRIMARY || type == WayType.SECONDARY || type == WayType.TERTIARY ||
+                                        type == WayType.UNCLASSIFIED || type == WayType.RESIDENTIALWAY || type == WayType.LIVING_STREET ||
+                                        type == WayType.SERVICE || type == WayType.ROAD || type == WayType.CONSTRUCTIONWAY) {
+                                    canGoByCar = true;
+                                    canGoByBike = true;
+                                    canGoByFoot = true;
+                                }
+                                if(type == WayType.PEDESTRIAN || type == WayType.FOOTWAY_ANDMORE || type == WayType.STEPS) {
+                                    canGoByFoot = true;
+                                    if(bicycle) {
+                                        canGoByBike = true;
+                                    }
+                                    if(vehicle) {
+                                        canGoByCar = true;
+                                    }
+                                }
+                                if(type == WayType.CYCLEWAY) {
+                                    canGoByBike = true;
+                                    if(foot) {
+                                        canGoByFoot = true;
+                                    }
+                                }
+
+
+                                //Laver alle edges'ene
                                 for (int j = 0; j < way.getNodes().size()-1; j++){
                                     double weight = calculateTime(way.getNodes().get(j), way.getNodes().get(j+1));
                                     //System.out.println(weight);
 
-                                    DirectedEdge edgeOneWay = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight);
-                                    DirectedEdge edgeOtherWay = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight);
+                                    DirectedEdge edgeOneWay = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight, canGoByCar, canGoByBike, canGoByFoot);
+                                    DirectedEdge edgeOtherWay = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight, canGoByCar, canGoByBike, canGoByFoot);
 
                                     //tilføj til liste med alle edges
                                     if(isOneway || isRoundabout) {
-                                        listOfAllEdgesInWays.add(edgeOneWay);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j)); //måske lave denne liste om til et Set?
+                                        //listOfAllEdgesInWays.add(edgeOneWay); /// BRUGES TIL DIJKSTRA
+                                        if(canGoByCar) {
+                                          listOfAllEdgesInWaysCAR.add(edgeOneWay);
+                                        }
+                                        if(canGoByBike) {
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWay);
+                                        }
+                                        if(canGoByFoot) {
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWay);
+                                        }
+
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j)); //måske lave denne liste om til et Set? BRUGEST TIL NEAREST NEIGHBOR
+
                                     } else {
-                                        listOfAllEdgesInWays.add(edgeOneWay);
+                                        if(canGoByCar) {
+                                            listOfAllEdgesInWaysCAR.add(edgeOneWay);
+                                        }
+                                        if(canGoByBike) {
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWay);
+                                        }
+                                        if(canGoByFoot) {
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWay);
+                                        }
+                                        //listOfAllEdgesInWays.add(edgeOneWay);
                                         listOfAlleNodesInGraph.add(way.getNodes().get(j)); // obs på at vi tilføjer nodes to gange
 
-                                        listOfAllEdgesInWays.add(edgeOtherWay);
+                                        if(canGoByCar) {
+                                            listOfAllEdgesInWaysCAR.add(edgeOtherWay);
+                                        }
+                                        if(canGoByBike) {
+                                            listOfAllEdgesInWaysBIKE.add(edgeOtherWay);
+                                        }
+                                        if(canGoByFoot) {
+                                            listOfAllEdgesInWaysFOOT.add(edgeOtherWay);
+                                        }
+                                        //listOfAllEdgesInWays.add(edgeOtherWay);
                                         listOfAlleNodesInGraph.add(way.getNodes().get(j+1)); /// obs på at vi tilføjer nodes to gange
                                     }
 
@@ -545,8 +618,12 @@ public class Model {
 
                                 //sætter maxspeed til 0, fordi det er ikke alle veje der har tag maxspeed,
                                 // så hvis vi ikke opdaterer dette, vil næste vej få samme værdi som den forrige
+                                //sætter alle til standard værdi, så det ikke kommer med til næste vej.
                                 maxspeed = 0;
                                 isOneway = false;
+                                canGoByCar = false;
+                                canGoByBike = false;
+                                canGoByFoot = false;
                             }
                             break;
 
@@ -765,7 +842,7 @@ public class Model {
 
     }
 
-    public void makeMapOfOSMNodesToIndex(ArrayList<DirectedEdge> listOfAllEdgesInWays) {
+    public void makeMapOfOSMNodesToIndex(ArrayList<DirectedEdge> listOfAllEdgesInWays, HashMap<OSMNode, Integer> mapOfOSMNodesToIndex) {
         int counter = 0;
         for (DirectedEdge edge : listOfAllEdgesInWays) {
             OSMNode start = edge.getStart();
@@ -781,9 +858,9 @@ public class Model {
             }
         }
     }
+    
 
-
-    public void makeGraph(){
+    public void makeGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, ArrayList<DirectedEdge> listOfAllEdgesInWays, EdgeWeightedDigraph graph) {
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
 
         for (DirectedEdge edge : listOfAllEdgesInWays){
