@@ -55,8 +55,8 @@ public class Dijkstra {
                 break;
             }
             else {
-                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(vertexLightestWeight)))
-                relax(edge);
+                for (DirectedEdge edge : graph.getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexLightestWeight]))
+                relax(edge, vertexLightestWeight);
             }
         }
 
@@ -66,20 +66,39 @@ public class Dijkstra {
 
 
     // Metoden der relaxer en edge og opdaterer priority queuen hvis nødvendigt
-    private void relax(DirectedEdge edge) {
+    private void relax(DirectedEdge edge, int vertexLightestWeight) {
+        OSMNode vertexLightestWeightOSMNode = Model.getArrayOfOSMNodesInGraph()[vertexLightestWeight];
+        int edgeStart;
+        int edgeEnd;
+
+        edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
+        edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
+
+
+        /*if(vertexLightestWeightOSMNode == edge.getStart()){
+            edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
+            edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
+            System.out.println("Nu er vi inde i den første if");
+        }
+        else{
+            edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
+            edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
+            System.out.println("Nu er vi inde i else");
+        }*/
+
+        if (distTo[edgeEnd] > distTo[edgeStart] + edge.weight()) {
+            distTo[edgeEnd] = distTo[edgeStart] + edge.weight();
+            edgeTo[edgeEnd] = edge;
+            if (pq.contains(edgeEnd)) pq.decreaseKey(edgeEnd, distTo[edgeEnd]);
+            else                      pq.insert(edgeEnd, distTo[edgeEnd]);
+        }
+
         //relax(edge, from)
         //if(from == edge.start)
             //gør det som vi har lavet
         //else
             //byt og start og slut om
-        int edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
-        int edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
-        if (distTo[edgeEnd] > distTo[edgeStart] + edge.weight()) {
-            distTo[edgeEnd] = distTo[edgeStart] + edge.weight();
-            edgeTo[edgeEnd] = edge;
-            if (pq.contains(edgeEnd)) pq.decreaseKey(edgeEnd, distTo[edgeEnd]);
-            else                pq.insert(edgeEnd, distTo[edgeEnd]);
-        }
+
     }
 
 
@@ -106,29 +125,6 @@ public class Dijkstra {
         System.out.println("Færdig med pathTo");
         return path;
     }
-
-    /*
-    public void caluclatePolylinesInPath(int vertex){
-        validateVertex(vertex);
-        ArrayList<OSMNode> nodesInPolyLine = new ArrayList<>();
-
-        for (DirectedEdge edge = edgeTo[vertex]; edge != null; edge = edgeTo[Model.getMapOfOSMNodesToIndex().get(edge.getStart())]) {
-            nodesInPolyLine.add(edge.getStart());
-            nodesInPolyLine.add(edge.getEnd());
-            PolyLine polyLine = new PolyLine(nodesInPolyLine);
-            polylinesInPath.push(polyLine);
-        }
-    }
-
-    public Iterable<PolyLine> getPolylinesInPath(int vertex){
-        if (!hasPathTo(vertex)) return null;
-        caluclatePolylinesInPath(vertex);
-        return polylinesInPath;
-    }
-     */
-
-
-
 
 
     ///////////// METODER TIL VALIDERING ///////////////////
@@ -161,7 +157,7 @@ public class Dijkstra {
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.getNumberOfVertices(); v++) {
-            for (DirectedEdge e : G.getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(v))) {
+            for (DirectedEdge e : G.getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[v])) {
                 int w = Model.getMapOfOSMNodesToIndex().get(e.getEnd());
                 if (distTo[v] + e.weight() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");

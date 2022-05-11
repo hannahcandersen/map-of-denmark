@@ -90,6 +90,7 @@ public class Model {
     private boolean isRoundabout;
     private List<PolyLine> listOfCoastlines;
     private EdgeWeightedDigraph graph;
+    private static OSMNode[] arrayOfOSMNodesInGraph;
     private TST tst;
 
 
@@ -205,6 +206,9 @@ public class Model {
         makeGraph();
         //System.out.println(graph);
 
+        //System.out.println("indegree " + graph.getIndegree()[484]);
+
+
         //calculateDistance(listOfAllEdgesInWays.get(10).getStart(), listOfAllEdgesInWays.get(10).getEnd());
     }
 
@@ -298,6 +302,12 @@ public class Model {
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
                             switch (k) {
+                                case "maxspeed":
+                                    maxspeed = Integer.parseInt(v);
+                                case "oneway":
+                                    isOneway = v.equals("yes");
+                                case "junction":
+                                    isRoundabout = v.equals("roundabout");
                                 case "addr:city":
                                     city = v;
                                     break;
@@ -444,24 +454,6 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
-                                case "lanes":
-                                    var lane = Integer.parseInt(v);
-                                    //ikke alle har line
-                                    //hvordan vælger vi hvilke der har to og ikke?
-                                    break;
-                                case "maxspeed":
-                                    maxspeed = Integer.parseInt(v);
-
-                                    //primary, secondary, tertiary = 80
-                                    //primary, secondary, tertiary = 50
-                                    //tertiary, residential = 40
-                                    //nogle veje har ikke maxspeed (tertiary)
-
-                                case "oneway":
-                                    if (v.equals("no")) isOneway = false;
-                                    else if (v.equals("yes")) isOneway = true;
-                                case "junction":
-                                    isRoundabout = v.equals("roundabout");
                             }
                             break;
                         // relations har member-tags, der referer til
@@ -507,14 +499,12 @@ public class Model {
                                         case MOTORWAY -> 120; //110-130 km/t 130
                                         case TRUNK -> 110;
                                         case PRIMARY, SECONDARY, ROAD, CONSTRUCTIONWAY -> 80;
-                                        //manlger typer til -LINK vejene
                                         case UNCLASSIFIED, TERTIARY -> 50; //secondary, road
                                         case RESIDENTIALWAY -> 40; //se kommentar nedenunder
                                         case LIVING_STREET, SERVICE, CYCLEWAY -> 20;  //se kommentar nedenunder
                                         case PEDESTRIAN, FOOTWAY_ANDMORE, STEPS -> 5;
                                         default -> 0; //skal vi have en default værdi på 20 måske?
                                     };
-                                    break;
                                 }
                                 /////The order of values for the highway-tag ordered by assumed speed is://///
                                     //motorway - Usually the maxspeed can be kept for long distances, but these roads can be sensitive to long traffic jams. Usually forbidden for slow traffic (pedestrians, cyclists, agricultural, ...)
@@ -535,27 +525,28 @@ public class Model {
                                     double weight = calculateTime(way.getNodes().get(j), way.getNodes().get(j+1));
                                     //System.out.println(weight);
 
-                                    DirectedEdge edgeStart = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight);
-                                    DirectedEdge edgeEnd = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight);
+                                    DirectedEdge edgeOneWay = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight);
+                                    DirectedEdge edgeOtherWay = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight);
 
                                     //tilføj til liste med alle edges
                                     if(isOneway || isRoundabout) {
-                                        listOfAllEdgesInWays.add(edgeStart);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j));
+                                        listOfAllEdgesInWays.add(edgeOneWay);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j)); //måske lave denne liste om til et Set?
                                     } else {
-                                        listOfAllEdgesInWays.add(edgeStart);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j));
+                                        listOfAllEdgesInWays.add(edgeOneWay);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j)); // obs på at vi tilføjer nodes to gange
 
-                                        listOfAllEdgesInWays.add(edgeEnd);
-                                        listOfAlleNodesInGraph.add(way.getNodes().get(j+1));
-
+                                        listOfAllEdgesInWays.add(edgeOtherWay);
+                                        listOfAlleNodesInGraph.add(way.getNodes().get(j+1)); /// obs på at vi tilføjer nodes to gange
                                     }
+
                                     //tjek om der er bil, cycle eller fodgænger
                                 }
 
                                 //sætter maxspeed til 0, fordi det er ikke alle veje der har tag maxspeed,
                                 // så hvis vi ikke opdaterer dette, vil næste vej få samme værdi som den forrige
                                 maxspeed = 0;
+                                isOneway = false;
                             }
                             break;
 
@@ -649,13 +640,10 @@ public class Model {
     public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
 
 
-
-
-
-
-
+    //slettes??
     public Map<WayType, List<Drawable>> getCoastlinesMap() {return coastlinesMap;}
 
+    //slettes??
     public static List<OSMNode> getListOfOSMNodesOfCoastlines(Map<WayType, List<Drawable>> coastlines) {
         //så længe dens startpunkt ikke er dens slutpunkt - kør while loop
         //getLon/Lat fra OSMNode
@@ -794,12 +782,15 @@ public class Model {
         }
     }
 
+
     public void makeGraph(){
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
 
         for (DirectedEdge edge : listOfAllEdgesInWays){
             graph.addEdge(edge);
         }
+
+        makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndex);
     }
 
 
@@ -809,7 +800,7 @@ public class Model {
         double lon1 = Math.toRadians(punkt1.getLon());
         double lon2 = Math.toRadians(punkt2.getLon());
         double lat1 = Math.toRadians(punkt1.getLat());
-        double lat2 = Math.toRadians(punkt1.getLat());
+        double lat2 = Math.toRadians(punkt2.getLat());
         //System.out.println("lon1: " + punkt1.getLon() + " lat1: " + punkt1.getLat());
         //System.out.println("lon2: " + punkt2.getLon() + " lat2: " + punkt2.getLat());
         //System.out.println("lon1RAD: " + lon1 + " lat1RAD: " + lat1);
@@ -853,17 +844,13 @@ public class Model {
     }
 
 
-    /// Den her metode tager 99% af tiden i Dijkstra kald!!!
-    public static OSMNode getKeyfromValueInHashMap(int value){
-        if(mapOfOSMNodesToIndex.containsValue(value)) {
-            for (Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()){
-                if (entry.getValue() == value){
-                    return entry.getKey();
-                }
-            }
+    //Laver et array der holder hver OSMNodes i grafen på dens tilhørende index. Bruges til at få OSMNode udfra index
+    public void makeArrayOfOSMNodesInGraph(Map<OSMNode, Integer> mapOfOSMNodesToIndex){
+        arrayOfOSMNodesInGraph = new OSMNode[mapOfOSMNodesToIndex.size()];
+        for(Map.Entry<OSMNode,Integer> entry : mapOfOSMNodesToIndex.entrySet()) {
+            int index = entry.getValue();
+            arrayOfOSMNodesInGraph[index] = entry.getKey();
         }
-        return null;
-
     }
 
     public NodeMap getId2node() {
@@ -876,7 +863,9 @@ public class Model {
     }
 
 
-
+    public static OSMNode[] getArrayOfOSMNodesInGraph() {
+        return arrayOfOSMNodesInGraph;
+    }
 }
 
 

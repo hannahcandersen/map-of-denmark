@@ -34,6 +34,7 @@ public class EdgeWeightedDigraph {
         // Opretter en tom bag for hver index/vertex i adj. Den første vertex er index 0, den anden index 1, osv.
         for (int v = 0; v < numberOfVerticesInGraph; v++)
             adjacencyList[v] = new Bag<DirectedEdge>();
+
     }
 
     // Antal vertices i grafen
@@ -53,6 +54,8 @@ public class EdgeWeightedDigraph {
         OSMNode end = edge.getEnd();
 
         adjacencyList[Model.getMapOfOSMNodesToIndex().get(start)].add(edge);
+        //System.out.println(Model.getMapOfOSMNodesToIndex().get(start));
+
         indegree[Model.getMapOfOSMNodesToIndex().get(end)]++;
         numberOfEdges++;
     }
@@ -76,7 +79,7 @@ public class EdgeWeightedDigraph {
     public Iterable<DirectedEdge> allEdgesInGraph() {
         Bag<DirectedEdge> listOfEdges = new Bag<DirectedEdge>();
         for (int vertexIndex = 0; vertexIndex < numberOfVertices; vertexIndex++) {
-            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getKeyfromValueInHashMap(vertexIndex))) {
+            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexIndex])) {
                 listOfEdges.add(edge);
             }
         }
@@ -95,5 +98,9 @@ public class EdgeWeightedDigraph {
             s.append(NEWLINE);
         }
         return s.toString();
+    }
+
+    public int[] getIndegree() {
+        return indegree;
     }
 }

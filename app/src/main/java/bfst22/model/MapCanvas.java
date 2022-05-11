@@ -594,10 +594,6 @@ public class MapCanvas extends Canvas {
                         }
                     }
 
-
-
-
-
             if (model.getKDTreeGRAVEYARD() != null && model.getKDTreeGRAVEYARD().rangeSearch(rangeSearchRectangle, model.getKDTreeGRAVEYARD().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeGRAVEYARD().rangeSearch(rangeSearchRectangle, model.getKDTreeGRAVEYARD().getRoot())) {
@@ -638,11 +634,23 @@ public class MapCanvas extends Canvas {
                 gc.setStroke(Color.RED);
                 drawable.draw(gc);
             }
-            System.out.println("Jeg har tegnet Dijkstra");
+            //System.out.println("Jeg har tegnet Dijkstra");
+        }/*else {
+            System.out.println("Dijkstra er null");
+        }*/
+
+
+        /*
+        // TEGNER GRAFEN - TIL DEBUG MODE
+        for (Drawable drawable : Model.getListOfAllEdgesInWays()) {
+            gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
+            gc.setStroke(Color.RED);
+            drawable.draw(gc);
         }
 
+         */
 
-        //Tegner vores debug firkant
+        //Tegner vores debug firkant - TIL DEBUG MODE
         if(isDebugSelected) {
             Color rectangleColor = new Color(0.6, 0.2, 0.1, 0.2);
             gc.setFill(rectangleColor);
@@ -658,14 +666,15 @@ public class MapCanvas extends Canvas {
         //Tegner start og end node af en rute
         if(drawPunktStartOfRoute != null){
             gc.setFill(Color.RED);
-            gc.fillRect(drawPunktStartOfRoute.getLat(), drawPunktStartOfRoute.getLon(), 0.0002, 0.0002);
-            gc.fillRect(drawPunktStartOfRoute.getLon(), drawPunktStartOfRoute.getLat(), 0.0002, 0.0002);
-            System.out.println("Tegner drawPunktStartOfRoute");}
+            gc.fillRect(drawPunktStartOfRoute.getLat(), drawPunktStartOfRoute.getLon(), 0.00002, 0.00002);
+            gc.fillRect(drawPunktStartOfRoute.getLon(), drawPunktStartOfRoute.getLat(), 0.00002, 0.00002);
+            //System.out.println("Tegner drawPunktStartOfRoute");
+            }
 
         if(drawPunktEndOfRoute != null){
             gc.setFill(Color.BLUE);
-            gc.fillRect(drawPunktEndOfRoute.getLat(), drawPunktEndOfRoute.getLon(), 0.0002, 0.0002);
-            gc.fillRect(drawPunktEndOfRoute.getLon(), drawPunktEndOfRoute.getLat(), 0.0002, 0.0002);
+            gc.fillRect(drawPunktEndOfRoute.getLat(), drawPunktEndOfRoute.getLon(), 0.00002, 0.00002);
+            gc.fillRect(drawPunktEndOfRoute.getLon(), drawPunktEndOfRoute.getLat(), 0.00002, 0.00002);
             System.out.println("Tegner drawPunktEndOfRoute");}
 
         /*gc.setFill(Color.YELLOW);
