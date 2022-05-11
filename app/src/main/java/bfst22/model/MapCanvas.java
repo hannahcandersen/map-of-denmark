@@ -9,6 +9,7 @@ import java.util.Random;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.FillRule;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
@@ -32,6 +33,7 @@ public class MapCanvas extends Canvas {
     private boolean isPartySelected; //skal laves private
     private boolean isPinkSelected; //skal laves private
     private Iterable<DirectedEdge> dijkstraShortestPath;
+
 
 
     public void setPartySelected(boolean partySelected) {
@@ -117,7 +119,7 @@ public class MapCanvas extends Canvas {
 
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
-        //System.out.println("Currentzoomlevel: " + zoomLevel);
+        System.out.println("Currentzoomlevel: " + zoomLevel);
 
 
         //Result listen, med de drawables der er inRange
@@ -162,12 +164,28 @@ public class MapCanvas extends Canvas {
         }
         // }
 
+        for(Drawable drawable: MultiPolygon.getListOfMultipolygonLines()){
+            gc.setFill(Color.BLUE);
+            drawable.fill(gc);
+        }
+
 
         // Tegner og farvelægger kortet
         //Tegner alt UNKNOWN
         /*if (Model.getKDTreeUNKNOWN() != null && KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN()) != null) {
             for (Drawable drawable : KdTree.rangeSearch(rangeSearchRectangle, Model.getKDTreeUNKNOWN())) {
                 drawable.drawWayType(gc, WayType.UNKNOWN);}}*/
+
+        //Tegner multipolygon
+
+
+        //Tegner Altid multipolygonskove
+        if( model.lines.get(WayType.FOREST) != null){
+            for (Drawable drawable: model.lines.get(WayType.FOREST)) {
+                if (drawable instanceof MultiPolygon) gc.setFillRule(FillRule.EVEN_ODD); drawable.fillWayType(gc, WayType.FOREST);
+
+            }
+        }
 
         //Tegner forest
         if (model.getKDTreeFOREST() != null && model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot()) != null) {
@@ -180,6 +198,21 @@ public class MapCanvas extends Canvas {
                 }
             }
         }
+
+
+        if(zoomLevel <=26){
+        if (model.getKDTreeTERRITORIAl() != null && model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot()) != null) {
+            gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+            for (Drawable drawable : model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot())) {
+                if (isPartySelected) {
+                    drawable.draw(gc);
+                } else {
+                    drawable.drawWayType(gc, WayType.TERRITORIAl);
+                }
+            }
+        }}
+
+
 
         // Alt der skal tegnes ved zoom level 29
         if (zoomLevel >= 29) {

@@ -76,6 +76,8 @@ public class Model {
     private final KdTree KDTreeFERRY;
     private final KdTree KDTreeGRAVEYARD;
     private final KdTree KDTreeNodesInGraph;
+    private final KdTree KDTreeTERRITORIAl;
+
 
 
 
@@ -195,6 +197,7 @@ public class Model {
         KDTreeGRAVEYARD = new KdTree(lines.get(WayType.GRAVEYARD));
         KDTreeRIVER_ANDMORE = new KdTree(lines.get(WayType.RIVER_ANDMORE));
         KDTreeCOASTLINE = new KdTree(lines.get(WayType.COASTLINE));
+        KDTreeTERRITORIAl = new KdTree(lines.get(WayType.TERRITORIAl));
         KDTreeNodesInGraph = new KdTree(listOfAlleNodesInGraph, 0);
 
 
@@ -343,7 +346,7 @@ public class Model {
                                         case "railway" -> WayType.RAILWAY;
                                         case "religious" -> WayType.RELIGIOUS;
                                         case "recreation_ground" -> WayType.RECREATION_GROUND;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
                                 case "natural":
@@ -354,7 +357,7 @@ public class Model {
                                         case "grassland" -> WayType.GRASSLAND;
                                         case "bare_rock", "rock" -> WayType.BARE_ROCK;
                                         case "coastline" -> WayType.COASTLINE;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
                                 case "water":
@@ -362,7 +365,7 @@ public class Model {
                                         case "lake", "lagoon" -> WayType.LAKE;
                                         case "canal", "river" -> WayType.RIVER_ANDMORE;
                                         case "harbour" -> WayType.HARBOUR;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
                                 case "waterway":
@@ -371,7 +374,14 @@ public class Model {
                                         case "stream", "ditch", "drain" -> WayType.STREAM_ANDMORE;
                                         case "dock" -> WayType.DOCK;
                                         case "lake" -> WayType.LAKE;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
+                                    };
+                                    break;
+
+                                case("border_type"):
+                                    type = switch (v){
+                                        case "territorial" -> WayType.TERRITORIAl;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
                                 case "amenity":
@@ -381,7 +391,7 @@ public class Model {
                                         case "hospital" -> WayType.HOSPITAL;
                                         //case "kindergarten" -> WayType.SCHOOL;
                                         case "grave_yard" -> WayType.GRAVEYARD;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
                                 case "building":
@@ -408,13 +418,13 @@ public class Model {
                                                 "institution", "palace", "hall", "outhouse", "production_hall", "mall",
                                                 "chapel_of_rest", "dentist", "conservatory", "bell_tower", "farmhouse",
                                                 "court_house" -> WayType.BUILDING;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
                                 case "route":
                                     type = switch (v) {
                                         case "ferry" -> WayType.FERRY;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
 
@@ -426,7 +436,7 @@ public class Model {
                                         case "nature_reserve" -> WayType.NATURE_RESERVE;
                                         case "pitch", "track" -> WayType.PITCH;
                                         case "sports_centre", "stadium" -> WayType.SPORTS_CENTRE;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
                                 case "highway":
@@ -451,16 +461,17 @@ public class Model {
                                         case "steps" -> WayType.STEPS;
                                         case "cycleway" -> WayType.CYCLEWAY;
                                         case "construction" -> WayType.CONSTRUCTIONWAY;
-                                        default -> type;
+                                        default -> WayType.UNKNOWN;
                                     };
                                     break;
                             }
                             break;
                         // relations har member-tags, der referer til
                         case "member":
+                            //if(relID !=48925553)
                             ref = Long.parseLong(reader.getAttributeValue(null, "ref"));
                             var elm = id2way.get(ref); //man får et OSMWay objekt
-                            if (elm != null) rel.add(elm); //tilføjer OSMWay objekt til listen rel
+                            if (elm != null && type != WayType.TERRITORIAl) rel.add(elm); //tilføjer OSMWay objekt til listen rel
                             break;
                         case "relation":
                             id = Long.parseLong(reader.getAttributeValue(null, "id"));
@@ -474,11 +485,15 @@ public class Model {
                     switch (reader.getLocalName()) {
                         // laver en ny OSMWay ud fra listen af de nodes, som vejen indeholder
                         case "way":
+                            if(type == null) break;
                             var way = new PolyLine(nodes, type);
-                            //var way = new PolyLine(nodes);
-                            id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
-                            lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende
-                            nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
+
+
+                                //var way = new PolyLine(nodes);
+                                id2way.put(relID, new OSMWay(nodes)); // tilføjer vejen til mappet med linjer
+                                lines.get(type).add(way); // tilføjer vejen til mappet med veje og dens tilhørende
+                                nodes.clear(); // clearer nodes så den er tom når næste linje skal indlæses
+
 
                             //Tilføjer coastlines til en liste
                             if (type == WayType.COASTLINE) {
@@ -548,13 +563,18 @@ public class Model {
                                 maxspeed = 0;
                                 isOneway = false;
                             }
+                            type = null;
                             break;
 
                         case "relation":
-                            if (type == WayType.FOREST && !rel.isEmpty()) {
+
+                            if (type == WayType.FOREST && type !=WayType.TERRITORIAl && type != WayType.TERTIARY && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel, type));
+                                //System.out.println("Tilføjer multipolygon");
+
                             }
                             rel.clear();
+
                             break;
                         case "node":
                             if(!city.equals("") && !housenumber.equals("") && !postcode.equals("") && !street.equals("")){
@@ -637,7 +657,15 @@ public class Model {
     public KdTree getKDTreeSCHOOL () {return KDTreeSCHOOL;}
     public KdTree getKDTreeFERRY () {return KDTreeFERRY;}
     public KdTree getKDTreeGRAVEYARD () {return KDTreeGRAVEYARD;}
+    public KdTree getKDTreeTERRITORIAl () {return KDTreeTERRITORIAl;}
     public KdTree getKDTreeNodesInGraph () {return KDTreeNodesInGraph;}
+
+
+
+
+
+
+
 
 
     //slettes??
@@ -757,7 +785,8 @@ public class Model {
             else {
                // gammel liste = ny liste (ting vi mangler at kigge på)
                unSortedCoastlines = buildUpCoastlinesList;
-           }} //Forloop stop
+           }
+        } //While stop
 
         //hvis start og slut ikke er det samme - sæt en linje imellem
         System.out.println("done med kystliner");
