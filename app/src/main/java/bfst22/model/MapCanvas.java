@@ -647,7 +647,6 @@ public class MapCanvas extends Canvas {
             gc.setStroke(Color.RED);
             drawable.draw(gc);
         }
-
          */
 
         //Tegner vores debug firkant - TIL DEBUG MODE

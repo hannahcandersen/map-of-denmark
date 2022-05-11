@@ -86,7 +86,7 @@ public class KdTree {
     }
 
     //////////////////// BULDING KDTREE OF OSM NODES///////////////////////
-    public KdNode buildKDTreeOfOSMNodes(ArrayList<OSMNode> OSMNodes, boolean isXcoord) {
+    public KdNode buildKDTreeOfOSMNodes(List<OSMNode> OSMNodes, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if (OSMNodes == null || OSMNodes.size() == 0) {
             return null;}

@@ -128,9 +128,9 @@ public class Controller {
 
             //canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);
             canvas.repaint();
-            System.out.println("jeg har dobbeltklikket");
-            System.out.println("mapPointX " + mapPointx);
-            System.out.println("mapPointY " + mapPointy);
+            //System.out.println("jeg har dobbeltklikket");
+            //System.out.println("mapPointX " + mapPointx);
+            //System.out.println("mapPointY " + mapPointy);
         }
     }
 
