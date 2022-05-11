@@ -31,23 +31,9 @@ import static java.util.stream.Collectors.toList;
 
 public class Model {
 
-    //KD Trees
-    private final KdTree KDTreeUNKNOWN;
-    private final KdTree KDTreeRESIDENTIAL;
-    private final KdTree KDTreeLAKE;
-    private final KdTree KDTreeBEACH;
-    private final KdTree KDTreeSAND;
-    private final KdTree KDTreeFOREST;
-    private final KdTree KDTreeWATER;
-    private final KdTree KDTreeBUILDING;
-    private final KdTree KDTreeINDUSTRIAL;
-    private final KdTree KDTreeMEADOW;
-    private final KdTree KDTreePARK;
-    private final KdTree KDTreeCEMETERY;
-    private final KdTree KDTreeALLOTMENTS;
-    private final KdTree KDTreeCOMMERCIAL;
-    private final KdTree KDTreeCONSTRUCTION;
-    private final KdTree KDTreeRETAIL;
+    //Felter til alle KD-træerne
+    private final KdTree KDTreeUNKNOWN, KDTreeRESIDENTIAL, KDTreeLAKE, KDTreeBEACH, KDTreeSAND, KDTreeFOREST, KDTreeWATER, KDTreeBUILDING, KDTreeINDUSTRIAL, KDTreeMEADOW, KDTreePARK,
+            KDTreeCEMETERY, KDTreeALLOTMENTS, KDTreeCOMMERCIAL, KDTreeCONSTRUCTION, KDTreeRETAIL;
     private final KdTree KDTreeFARMLAND;
     private final KdTree KDTreeGRASS;
     private final KdTree KDTreeGREENHOUSE_HORTICULTURE;
