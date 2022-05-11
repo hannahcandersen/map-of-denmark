@@ -1,5 +1,6 @@
 package bfst22.model;
 
+import bfst22.model.addresses.AddressNode;
 import bfst22.model.dijkstra.DirectedEdge;
 import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.addresses.AddressObject;
@@ -105,6 +106,9 @@ public class Model {
     private List<PolyLine> listOfCoastlines;
     private EdgeWeightedDigraph graphCAR, graphBIKE, graphFOOT;
     private OSMNode[] arrayOfOSMNodesInGraphCAR, arrayOfOSMNodesInGraphBIKE, arrayOfOSMNodesInGraphFOOT;
+    private List<PolyLine> listOfCoastlines = new ArrayList<>();
+    private EdgeWeightedDigraph graph;
+    private static OSMNode[] arrayOfOSMNodesInGraph;
     private TST tst;
 
 
@@ -140,6 +144,7 @@ public class Model {
 
     /////////////// Konstruktør (unchecked) ///////////////////
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
+        tst = new TST();
         var time = -System.nanoTime();
         if (filename.endsWith(".zip")) {   // unzipper en zip-fil og læser den herefter på samme måde som osm-fil
             var zip = new ZipFile(new File(filename)); //læser zip-filen én fil af gangen
@@ -147,6 +152,7 @@ public class Model {
             loadOSM(zip.getInputStream(entry));
         } else if (filename.endsWith(".osm")) {// læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
+            listOfCoastlines = makeCoastlineObject(coastlinesMap);
         } else if (filename.endsWith(".obj")) { // kan læse den .obj-fil der er blevet gemt (binary file)
             try (var input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 minlat = input.readFloat();
@@ -156,7 +162,10 @@ public class Model {
                 lines = (Map<WayType, List<Drawable>>) input.readObject();
                 listOfCoastlines = (List<PolyLine>) input.readObject();
                 //graph = (EdgeWeightedDigraph) input.readObject();
-                //tst = (TST) input.readObject();
+                //Bliver læst eller gemt forkert
+                tst = (TST) input.readObject();
+                //tst.setRoot((AddressNode) input.readObject());
+                //System.out.println(tst.getRoot().getC());
 
                 //VIGTIGT at skrive i samme rækkefølge som i save()
                 //tilføj de ting vi har tilføjet i save
@@ -227,7 +236,6 @@ public class Model {
 
 
         //lav liste med coastlines
-        listOfCoastlines = makeCoastlineObject(coastlinesMap);
 
         //lav dijkstra graf
         //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
@@ -244,6 +252,10 @@ public class Model {
         arrayOfOSMNodesInGraphCAR = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexCAR, arrayOfOSMNodesInGraphCAR);
         arrayOfOSMNodesInGraphBIKE = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexBIKE, arrayOfOSMNodesInGraphBIKE);
         arrayOfOSMNodesInGraphFOOT = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexFOOT, arrayOfOSMNodesInGraphFOOT);
+        //Skal nok sættes op i .osm
+        makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
+        makeGraph();
+        //System.out.println(graph);
 
         //System.out.println("indegree " + graph.getIndegree()[484]);
     }
@@ -260,7 +272,8 @@ public class Model {
             out.writeObject(lines);
             out.writeObject(listOfCoastlines);
             //out.writeObject(graph);
-            //out.writeObject(tst);
+            out.writeObject(tst);
+            out.writeObject(tst.getRoot());
 
 
 
@@ -674,8 +687,9 @@ public class Model {
 
                         case "relation":
 
-                            if (type == WayType.FOREST && type !=WayType.TERRITORIAl && type != WayType.TERTIARY && !rel.isEmpty()) {
+                            if (type == WayType.FOREST || type == WayType.BUILDING && type !=WayType.TERRITORIAl && type != WayType.TERTIARY && !rel.isEmpty()) {
                                 lines.get(type).add(new MultiPolygon(rel, type));
+                                System.out.println(type);
                                 //System.out.println("Tilføjer multipolygon");
 
                             }

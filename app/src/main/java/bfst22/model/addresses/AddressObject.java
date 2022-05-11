@@ -2,7 +2,11 @@ package bfst22.model.addresses;
 
 import bfst22.model.OSMNode;
 
-public class AddressObject {
+import java.io.Serializable;
+
+public class AddressObject implements Serializable {
+
+    public static final long serialVersionUID = 134123;
     private String street, house, postcode, city;
     private float lat, lon;
 
