@@ -33,11 +33,7 @@ public class Model {
 
     //Felter til alle KD-træerne
     private final KdTree KDTreeUNKNOWN, KDTreeRESIDENTIAL, KDTreeLAKE, KDTreeBEACH, KDTreeSAND, KDTreeFOREST, KDTreeWATER, KDTreeBUILDING, KDTreeINDUSTRIAL, KDTreeMEADOW, KDTreePARK,
-            KDTreeCEMETERY, KDTreeALLOTMENTS, KDTreeCOMMERCIAL, KDTreeCONSTRUCTION, KDTreeRETAIL;
-    private final KdTree KDTreeFARMLAND;
-    private final KdTree KDTreeGRASS;
-    private final KdTree KDTreeGREENHOUSE_HORTICULTURE;
-    private final KdTree KDTreeRAILWAY;
+            KDTreeCEMETERY, KDTreeALLOTMENTS, KDTreeCOMMERCIAL, KDTreeCONSTRUCTION, KDTreeRETAIL, KDTreeFARMLAND, KDTreeGRASS, KDTreeGREENHOUSE_HORTICULTURE, KDTreeRAILWAY;
     private final KdTree KDTreeRELIGIOUS;
     private final KdTree KDTreeMOTORWAY;
     private final KdTree KDTreeCOASTLINE;
