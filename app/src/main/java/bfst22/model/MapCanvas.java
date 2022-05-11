@@ -321,7 +321,7 @@ public class MapCanvas extends Canvas {
         }
 
         // Alt der skal tegnes ved zoom level 31 og højere
-        if (zoomLevel >= 32){
+        if (zoomLevel >= 31){
             if(model.getKDTreeRESIDENTIAL() != null && model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()) != null) {
                 gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot())) {
