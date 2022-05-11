@@ -684,7 +684,7 @@ public class MapCanvas extends Canvas {
 
     public double calculateRation(double x1, double x2){
                 double distX = x2-x1;
-                return 10/distX;
+                return 10/distX; //EVT bytte om
     }
 
     public Model getModel() {

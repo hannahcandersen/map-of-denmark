@@ -55,11 +55,23 @@ public class Controller {
     private Button warningOkButton;
     @FXML
     private Label scaleInfo;
+    @FXML
+    private CheckBox checkBoxBicycle;
+    @FXML
+    private CheckBox checkBoxWalking;
+    @FXML
+    private CheckBox checkBoxCar;
+    @FXML
+    private Pane transportTypePane;
+    @FXML
+    private Button findRouteButton;
+    @FXML
+    private Button transportCloseButton;
 
     private int clickOnWaringButtonCounter = 0;
     private AddressObject chosenAddressFrom;
     private AddressObject chosenAddressTo;
-
+    private int onSearchRouteClickCounter = 0;
 
 
     //Canvas er superklassen til vores MapCanvas.
@@ -170,6 +182,8 @@ public class Controller {
         //Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphX(), startOfRouteIndex, endOfRouteIndex);
 
         //Gemmer den korteste route i et felt
+        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex));
+        transportTypePane.setVisible(true);
         //canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex)); //tilføj Hashmap
 
         //if()
@@ -177,8 +191,25 @@ public class Controller {
         //kald på searchByBike
         canvas.repaint();
 
+        //onClickedSearchRoute();
+
+    }
+ /*
+    @FXML
+    public void onClickedSearchRoute() {
+        onSearchRouteClickCounter++;
+        System.out.println(onSearchRouteClickCounter);
+        if(onSearchRouteClickCounter % 2 == 1 ) {
+            transportTypePane.setVisible(true);
+            System.out.println("pane vises");
+        } else {
+            transportTypePane.setVisible(false);
+            System.out.println("pane vises ikke");
+
+        }
     }
 
+  */
 
     @FXML
     public void getSearchResultFrom(KeyEvent keyEvent) {
@@ -276,6 +307,37 @@ public class Controller {
         canvas.repaint();
     }
 
+    @FXML
+    public void onClickedcheckBoxBicycle(ActionEvent event) {
+        if(checkBoxBicycle.isSelected()) {
+            checkBoxWalking.setSelected(false);
+            checkBoxCar.setSelected(false);
+            //Kald metode som udregner Dijkstra cykel
+        }
+    }
+
+    @FXML
+    public void onClickedcheckBoxWalking(ActionEvent event) {
+        if(checkBoxWalking.isSelected()) {
+            checkBoxCar.setSelected(false);
+            checkBoxBicycle.setSelected(false);
+            //Kald metode som udregner Dijkstra gågang
+        }
+    }
+
+    @FXML
+    public void onClickedcheckBoxCar(ActionEvent event) {
+        if(checkBoxCar.isSelected()) {
+            checkBoxBicycle.setSelected(false);
+            checkBoxWalking.setSelected(false);
+
+        }
+    }
+
+    @FXML
+    public void onClickedTransportCloseButton(MouseEvent mouseEvent) {
+        transportTypePane.setVisible(false);
+    }
     /*public OSMNode getStartOfRoute() {
         return canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
     }
