@@ -15,6 +15,9 @@ public class DirectedEdge implements Drawable{
     private final OSMNode end; // En anden vertex (slut)
     private final double weight; // Vægten
     private ArrayList<OSMNode> nodesInEdge;
+    private boolean canGoByCar;
+    private boolean canGoByBike;
+    private boolean canGoByFoot;
 
     // skal evt. tilføjes som parameter for en edge:z
     /*
@@ -23,13 +26,16 @@ public class DirectedEdge implements Drawable{
     private boolean canGoByFoot
      */
 
-    public DirectedEdge(OSMNode start, OSMNode end, double weight) {
+    public DirectedEdge(OSMNode start, OSMNode end, double weight, boolean canGoByCar, boolean canGoByBike, boolean canGoByFoot) {
         if (start == null) throw new IllegalArgumentException("Vertex must be non-negative integers");
         if (end == null) throw new IllegalArgumentException("Vertex must be non-negative integers");
         if (Double.isNaN(weight)) throw new IllegalArgumentException("Weight is NaN");
         this.start = start;
         this.end = end;
         this.weight = weight;
+        this.canGoByCar = canGoByCar;
+        this.canGoByBike = canGoByBike;
+        this.canGoByFoot = canGoByFoot;
     }
 
     // Returnerer den vertex der er "from"
@@ -103,5 +109,28 @@ public class DirectedEdge implements Drawable{
         gc.stroke();
     }
 
+    public void setCanGoByCar(boolean canGoByCar) {
+        this.canGoByCar = canGoByCar;
+    }
+
+    public void setCanGoByBike(boolean canGoByBike) {
+        this.canGoByBike = canGoByBike;
+    }
+
+    public void setCanGoByFoot(boolean canGoByFoot) {
+        this.canGoByFoot = canGoByFoot;
+    }
+
+    public boolean isCanGoByCar() {
+        return canGoByCar;
+    }
+
+    public boolean isCanGoByBike() {
+        return canGoByBike;
+    }
+
+    public boolean isCanGoByFoot() {
+        return canGoByFoot;
+    }
 }
 
