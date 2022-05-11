@@ -205,6 +205,9 @@ public class Model {
         makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
         makeGraph();
         System.out.println(graph);
+        /*for(int i = 0; i < graph.getIndegree().length; i++) {
+            System.out.println("indegree " + graph.getIndegree()[i]);
+        }*/
 
         //calculateDistance(listOfAllEdgesInWays.get(10).getStart(), listOfAllEdgesInWays.get(10).getEnd());
     }
@@ -803,7 +806,7 @@ public class Model {
 
     public void makeGraph(){
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
-        
+
         for (DirectedEdge edge : listOfAllEdgesInWays){
             graph.addEdge(edge);
         }

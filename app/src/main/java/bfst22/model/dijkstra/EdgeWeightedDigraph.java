@@ -97,4 +97,8 @@ public class EdgeWeightedDigraph {
         }
         return s.toString();
     }
+
+    public int[] getIndegree() {
+        return indegree;
+    }
 }
