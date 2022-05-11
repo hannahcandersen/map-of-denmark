@@ -229,7 +229,6 @@ public class Model {
         KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
         KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
         KDTreeTERRITORIAl = new KdTree(lines.get(WayType.TERRITORIAl));
-        //KDTreeNodesInGraph = new KdTree(listOfAlleNodesInGraph, 0);
 
 
         //lav liste med coastlines
@@ -981,7 +980,7 @@ public class Model {
         return listOfCoastlines;
     }
 
-    public static List<DirectedEdge> getListOfAllEdgesInWaysAllWays() {
+    public List<DirectedEdge> getListOfAllEdgesInWaysAllWays() {
         return listOfAllEdgesInWaysAllWays;
     }
 
@@ -1024,7 +1023,7 @@ public class Model {
         return arrayOfOSMNodesInGraphFOOT;
     }
 
-    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysCAR() {
+    public ArrayList<DirectedEdge> getListOfAllEdgesInWaysCAR() {
         return listOfAllEdgesInWaysCAR;
     }
 
