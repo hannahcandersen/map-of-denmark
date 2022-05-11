@@ -277,7 +277,7 @@ public class Controller {
     }
 
     public OSMNode getStartOfRoute() {
-        
+
     }
 
 
