@@ -642,7 +642,6 @@ public class Model {
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
 
                                     } else { // Tilføjer en edge den ene vej og den anden vej
-                                        // Den ene vej
                                         if(canGoByCar) {
                                             listOfAllEdgesInWaysCAR.add(edgeOneWay);
                                             listOfAlleNodesInGraphCAR.add(way.getNodes().get(j));
