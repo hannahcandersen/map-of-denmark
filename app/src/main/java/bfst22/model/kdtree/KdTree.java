@@ -3,6 +3,8 @@ package bfst22.model.kdtree;
 import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
+
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -89,7 +91,7 @@ public class KdTree {
     }
 
     //////////////////// BULDING KDTREE OF OSM NODES///////////////////////
-    public KdNode buildKDTreeOfOSMNodes(List<OSMNode> OSMNodes, boolean isXcoord) {
+    public KdNode buildKDTreeOfOSMNodes(ArrayList<OSMNode> OSMNodes, boolean isXcoord) {
         //If statement der tjekker om der findes et træ
         if (OSMNodes == null || OSMNodes.size() == 0) {
             return null;}
