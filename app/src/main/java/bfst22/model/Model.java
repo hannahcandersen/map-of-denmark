@@ -518,7 +518,6 @@ public class Model {
                                         case PEDESTRIAN, FOOTWAY_ANDMORE, STEPS -> 5;
                                         default -> 0; //skal vi have en default værdi på 20 måske?
                                     };
-                                    break;
                                 }
                                 /////The order of values for the highway-tag ordered by assumed speed is://///
                                     //motorway - Usually the maxspeed can be kept for long distances, but these roads can be sensitive to long traffic jams. Usually forbidden for slow traffic (pedestrians, cyclists, agricultural, ...)
