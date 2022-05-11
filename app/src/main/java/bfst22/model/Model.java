@@ -120,10 +120,10 @@ public class Model {
     }
 
     //Liste med HIGHWAYS
-    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysAllWays = new ArrayList<>();
-    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
-    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
-    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWaysAllWays = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
 
     //Liste med alle OSMNodes in graph
     private ArrayList<OSMNode> listOfAlleNodesInGraphAllWays = new ArrayList<>();
@@ -639,6 +639,7 @@ public class Model {
                                             listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
                                         }
                                         // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
+                                        listOfAllEdgesInWaysAllWays.add(edgeOneWayCAR);
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
 
                                     } else { // Tilføjer en edge den ene vej og den anden vej
@@ -661,6 +662,8 @@ public class Model {
                                             listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j+1));
                                         }
                                         // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
+                                        listOfAllEdgesInWaysAllWays.add(edgeOneWayCAR);
+                                        listOfAllEdgesInWaysAllWays.add(edgeOtherWayCAR);
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j+1));
                                     }
@@ -1025,11 +1028,11 @@ public class Model {
         return listOfAllEdgesInWaysCAR;
     }
 
-    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysBIKE() {
+    public ArrayList<DirectedEdge> getListOfAllEdgesInWaysBIKE() {
         return listOfAllEdgesInWaysBIKE;
     }
 
-    public static ArrayList<DirectedEdge> getListOfAllEdgesInWaysFOOT() {
+    public ArrayList<DirectedEdge> getListOfAllEdgesInWaysFOOT() {
         return listOfAllEdgesInWaysFOOT;
     }
 

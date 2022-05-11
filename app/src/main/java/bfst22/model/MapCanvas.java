@@ -31,8 +31,11 @@ public class MapCanvas extends Canvas {
     private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
     private boolean isPartySelected;
-    private boolean isPinkSelected;
+    private boolean isGraphSelected;
     private boolean isDebugSelected;
+    private boolean goByCar;
+    private boolean goByBike;
+    private boolean goByFoot;
     private Iterable<DirectedEdge> dijkstraShortestPath;
 
     //Randomme farver
@@ -655,39 +658,15 @@ public class MapCanvas extends Canvas {
                     }
                 }
 
-
-
-        //// TEGNER SHORTEST PATH //////
-        if (dijkstraShortestPath != null){
-            for (Drawable drawable : dijkstraShortestPath) {
-                gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
-                gc.setStroke(Color.RED);
-                drawable.draw(gc);
-            }
-            //System.out.println("Jeg har tegnet Dijkstra");
-        }/*else {
-            System.out.println("Dijkstra er null");
-        }*/
-
-
-        for (Drawable drawable : Model.getListOfAllEdgesInWaysAllWays()) {
-            gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
-            gc.setStroke(Color.RED);
-            drawable.draw(gc);
-        }
-
-            /*
         // TEGNER GRAFEN - TIL DEBUG MODE
-        if(isPinkSelected) {
-            for (Drawable drawable : Model.getListOfAllEdgesInWaysAllWays()) {
+        if(isGraphSelected) {
+            Color graphColor = new Color(0.2, 0.2, 0.6, 0.2);
+            for (Drawable drawable : model.getListOfAllEdgesInWaysAllWays()) {
                 gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
-                gc.setStroke(Color.RED);
+                gc.setStroke(graphColor);
                 drawable.draw(gc);
             }
         }
-
-             */
-
 
         //Tegner vores debug firkant - TIL DEBUG MODE
         if(isDebugSelected) {
@@ -702,15 +681,27 @@ public class MapCanvas extends Canvas {
             gc.fillRect(drawPunkt.getLat(), drawPunkt.getLon(), 0.0002, 0.0002);
             gc.fillRect(drawPunkt.getLon(), drawPunkt.getLat(), 0.0002, 0.0002);}
 
-       /* if(scalebarPoint1 != null){
-            gc.setFill(Color.HOTPINK);
-            gc.fillOval(realscalebarPoint1.getX(), realscalebarPoint1.getY(), 10/Math.sqrt(trans.determinant()), 10/Math.sqrt(trans.determinant()));
+
+        //// TEGNER SHORTEST PATH //////
+        if(goByCar || goByBike || goByFoot) {
+            if (dijkstraShortestPath != null) {
+                for (Drawable drawable : dijkstraShortestPath) {
+                    gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
+                    gc.setStroke(Color.RED);
+                    drawable.draw(gc);
+                }
+                //System.out.println("Jeg har tegnet Dijkstra");
+            }
+        }/*else {
+            System.out.println("Dijkstra er null");
         }*/
 
 
 
-
-
+       /* if(scalebarPoint1 != null){
+            gc.setFill(Color.HOTPINK);
+            gc.fillOval(realscalebarPoint1.getX(), realscalebarPoint1.getY(), 10/Math.sqrt(trans.determinant()), 10/Math.sqrt(trans.determinant()));
+        }*/
 
 
         drawCenteredCircle(gc,realscalebarPoint1.getX(), realscalebarPoint1.getY(), 5/Math.sqrt(trans.determinant()/2) );
@@ -888,11 +879,23 @@ public class MapCanvas extends Canvas {
         isPartySelected = partySelected;
     }
 
-    public void setPinkSelected(boolean pinkSelected) {
-        isPinkSelected = pinkSelected;
+    public void setGraphSelected(boolean graphSelected) {
+        isGraphSelected = graphSelected;
     }
 
     public void setDebugSelected(boolean debugSelected) {
         isDebugSelected = debugSelected;
+    }
+
+    public void setGoByCar(boolean goByCar) {
+        this.goByCar = goByCar;
+    }
+
+    public void setGoByBike(boolean goByBike) {
+        this.goByBike = goByBike;
+    }
+
+    public void setGoByFoot(boolean goByFoot) {
+        this.goByFoot = goByFoot;
     }
 }

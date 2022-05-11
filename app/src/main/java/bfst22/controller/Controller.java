@@ -5,7 +5,6 @@ import bfst22.model.MapCanvas;
 import bfst22.model.OSMNode;
 import bfst22.model.dijkstra.Dijkstra;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
@@ -26,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 //LINK//https://gist.github.com/Da9el00/cde4381b8f17299693bab886ec700a78
-import java.util.Map;
+
 
 //Controller klassen håndterer alle kliks og scrolls eller andet som brugeren foretager sig.
 //Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
@@ -46,7 +45,7 @@ public class Controller {
     @FXML
     private CheckBox colorCheckBox;
     @FXML
-    private CheckBox pinkCheckBox;
+    private CheckBox graphCheckBox;
     @FXML
     private CheckBox debugBox;
     @FXML
@@ -288,11 +287,11 @@ public class Controller {
     }
 
     @FXML
-    public void pinkColorToggle(ActionEvent event){
-        if(pinkCheckBox.isSelected()){
-            canvas.setPinkSelected(true);}
+    public void graphColorToggle(ActionEvent event){
+        if(graphCheckBox.isSelected()){
+            canvas.setGraphSelected(true);}
         else{
-            canvas.setPinkSelected(false);}
+            canvas.setGraphSelected(false);}
         canvas.repaint();
     }
 
@@ -343,7 +342,7 @@ public class Controller {
     }
 
     @FXML
-    public void onClickedcheckBoxWalking(ActionEvent event) {
+    public void onClickedcheckBoxFoot(ActionEvent event) {
         if(checkBoxWalking.isSelected()) {
             checkBoxCar.setSelected(false);
             checkBoxBicycle.setSelected(false);
@@ -408,4 +407,7 @@ public class Controller {
     public OSMNode getEndOfRoute() {
         return canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
     }*/
+
+
+
 }

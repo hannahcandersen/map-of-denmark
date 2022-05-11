@@ -25,7 +25,7 @@
                 <children>
                     <Button fx:id="transportCloseButton" layoutX="381.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#onClickedTransportCloseButton" prefHeight="12.0" prefWidth="6.0" text="X" />
                     <CheckBox fx:id="checkBoxBicycle" layoutX="77.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxBicycle" text="Bicycle" />
-                    <CheckBox fx:id="checkBoxWalking" layoutX="150.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxWalking" text="Walking" />
+                    <CheckBox fx:id="checkBoxWalking" layoutX="150.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxFoot" text="Walking" />
                     <CheckBox fx:id="checkBoxCar" layoutX="14.0" layoutY="9.0" mnemonicParsing="false" onAction="#onClickedcheckBoxCar" text="Car" />
                 </children>
             </Pane>
@@ -67,7 +67,7 @@
                <Button fx:id="warningOkButton" layoutX="57.0" layoutY="46.0" mnemonicParsing="false" onAction="#onClickWarningOk" prefHeight="25.0" prefWidth="31.0" text="Ok" />
             </children>
          </Pane>
-         <CheckBox fx:id="pinkCheckBox" layoutX="15.0" layoutY="417.0" mnemonicParsing="false" onAction="#pinkColorToggle" text="Pink mode" AnchorPane.bottomAnchor="45.4" AnchorPane.leftAnchor="14.0" />
+         <CheckBox fx:id="graphCheckBox" layoutX="15.0" layoutY="417.0" mnemonicParsing="false" onAction="#graphColorToggle" text="Graph mode" AnchorPane.bottomAnchor="45.4" AnchorPane.leftAnchor="14.0" />
          <CheckBox fx:id="debugBox" layoutX="15.0" layoutY="449.0" mnemonicParsing="false" onAction="#onClickdebugBox" text="Debug mode" AnchorPane.bottomAnchor="13.399999999999999" AnchorPane.leftAnchor="14.0" />
          <Label fx:id="scaleInfo" layoutX="532.0" layoutY="427.0" prefHeight="28.0" prefWidth="90.0" style="-fx-background-color: EFC0E8; -fx-text-fill: BLACK;" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="17.599999999999994" />
          <Label layoutX="488.0" layoutY="427.0" prefHeight="28.0" prefWidth="44.0" style="-fx-background-color: EFC0E8;" text="Meters:" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="108.0" />
