@@ -614,6 +614,9 @@ public class Model {
 
                                 //Laver alle edges'ene
                                 for (int j = 0; j < way.getNodes().size()-1; j++){
+                                    if() {
+
+                                    }
                                     double weight = calculateTime(way.getNodes().get(j), way.getNodes().get(j+1));
                                     //System.out.println(weight);
 
@@ -643,33 +646,25 @@ public class Model {
                                         if(canGoByCar) {
                                             listOfAllEdgesInWaysCAR.add(edgeOneWay);
                                             listOfAlleNodesInGraphCAR.add(way.getNodes().get(j));
-                                        }
-                                        if(canGoByBike) {
-                                            listOfAllEdgesInWaysBIKE.add(edgeOneWay);
-                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j));
-                                        }
-                                        if(canGoByFoot) {
-                                            listOfAllEdgesInWaysFOOT.add(edgeOneWay);
-                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
-                                        }
-                                        // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
-                                        listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
-
-                                        // Den anden vej
-                                        if(canGoByCar) {
                                             listOfAllEdgesInWaysCAR.add(edgeOtherWay);
                                             listOfAlleNodesInGraphCAR.add(way.getNodes().get(j+1));
                                         }
                                         if(canGoByBike) {
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWay);
+                                            listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j));
                                             listOfAllEdgesInWaysBIKE.add(edgeOtherWay);
                                             listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j+1));
                                         }
                                         if(canGoByFoot) {
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWay);
+                                            listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
                                             listOfAllEdgesInWaysFOOT.add(edgeOtherWay);
                                             listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j+1));
                                         }
                                         // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
+                                        listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j+1));
+
                                     }
                                 }
 
