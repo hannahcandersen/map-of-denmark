@@ -29,7 +29,7 @@ public class KdTree {
         this.root = buildKDTree(drawables, true);
     }
 
-    public KdTree(List<OSMNode> osmNodes, int nul) {
+    public KdTree(ArrayList<OSMNode> osmNodes, int nul) {
         this.root = buildKDTreeOfOSMNodes(osmNodes, true);
     }
 

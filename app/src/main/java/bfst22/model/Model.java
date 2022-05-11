@@ -120,9 +120,9 @@ public class Model {
 
     //Liste med alle OSMNodes in graph
     private ArrayList<OSMNode> listOfAlleNodesInGraphAllWays = new ArrayList<>();
-    private List<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
-    private List<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
-    private List<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
 
 
     //Map med OSMNode to index. Bruges til at lave en graf
@@ -882,7 +882,7 @@ public class Model {
         graph = new EdgeWeightedDigraph(mapOfOSMNodesToIndex.size());
 
         for (DirectedEdge edge : listOfAllEdgesInWays) {
-            graph.addEdge(edge);
+            graph.addEdge(edge, mapOfOSMNodesToIndex);
         }
         return graph;
     }

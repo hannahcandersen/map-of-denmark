@@ -76,10 +76,10 @@ public class EdgeWeightedDigraph {
     }
 
     // Returnerer alle edges i grafen
-    public Iterable<DirectedEdge> allEdgesInGraph() {
+    public Iterable<DirectedEdge> allEdgesInGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, OSMNode[] arrayOfOSMNodesInGraph) {
         Bag<DirectedEdge> listOfEdges = new Bag<DirectedEdge>();
         for (int vertexIndex = 0; vertexIndex < numberOfVertices; vertexIndex++) {
-            for (DirectedEdge edge : getEdgesAdjacentToVertex(Model.getArrayOfOSMNodesInGraph()[vertexIndex])) {
+            for (DirectedEdge edge : getEdgesAdjacentToVertex(arrayOfOSMNodesInGraph[vertexIndex], mapOfOSMNodesToIndex)) {
                 listOfEdges.add(edge);
             }
         }
