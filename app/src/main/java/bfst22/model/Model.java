@@ -1,20 +1,17 @@
 package bfst22.model;
 
-import bfst22.model.addresses.AddressNode;
 import bfst22.model.dijkstra.DirectedEdge;
 import bfst22.model.dijkstra.EdgeWeightedDigraph;
 import bfst22.model.addresses.AddressObject;
 import bfst22.model.addresses.TST;
 import bfst22.model.kdtree.KdTree;
 import bfst22.view.Drawable;
-import javafx.scene.shape.Polyline;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.zip.ZipFile;
 import java.io.File;
-import java.util.zip.ZipInputStream;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
@@ -123,7 +120,7 @@ public class Model {
     }
 
     //Liste med HIGHWAYS
-    private static ArrayList<DirectedEdge> listOfAllEdgesInWays = new ArrayList<>();
+    private static ArrayList<DirectedEdge> listOfAllEdgesInWaysAllWays = new ArrayList<>();
     private static ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
     private static ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
     private static ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
@@ -981,8 +978,8 @@ public class Model {
         return listOfCoastlines;
     }
 
-    public static List<DirectedEdge> getListOfAllEdgesInWays() {
-        return listOfAllEdgesInWays;
+    public static List<DirectedEdge> getListOfAllEdgesInWaysAllWays() {
+        return listOfAllEdgesInWaysAllWays;
     }
 
 

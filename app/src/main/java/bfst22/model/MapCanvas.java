@@ -10,7 +10,6 @@ import java.util.Random;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.FillRule;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
@@ -60,12 +59,8 @@ public class MapCanvas extends Canvas {
     private Point2D screenMin;
     private Point2D screenMax;
 
-
-
-
-
-    Point2D realscalebarPoint1;
-    Point2D realscalebarPoint2;
+    private Point2D realscalebarPoint1;
+    private Point2D realscalebarPoint2;
 
     private double ration;
     private int scalebarincreaseX = 0;
@@ -691,7 +686,13 @@ public class MapCanvas extends Canvas {
         }*/
 
 
-        /*
+        for (Drawable drawable : Model.getListOfAllEdgesInWaysAllWays()) {
+            gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
+            gc.setStroke(Color.RED);
+            drawable.draw(gc);
+        }
+
+            /*
         // TEGNER GRAFEN - TIL DEBUG MODE
         for (Drawable drawable : Model.getListOfAllEdgesInWays()) {
             gc.setLineWidth(2 / Math.sqrt(trans.determinant()));
