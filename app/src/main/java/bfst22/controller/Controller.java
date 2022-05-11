@@ -182,7 +182,7 @@ public class Controller {
         //Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphX(), startOfRouteIndex, endOfRouteIndex);
 
         //Gemmer den korteste route i et felt
-        canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex));
+        //canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex));
         transportTypePane.setVisible(true);
         //canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex)); //tilføj Hashmap
 

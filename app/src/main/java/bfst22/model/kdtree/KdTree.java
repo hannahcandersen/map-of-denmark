@@ -20,11 +20,6 @@ public class KdTree {
     private OSMNode closestNodeField = null;
     private double closestDistField = Double.POSITIVE_INFINITY;
 
-
-
-    public KdTree() {
-    }
-
     public KdTree(List<Drawable> drawables) {
         this.root = buildKDTree(drawables, true);
     }
