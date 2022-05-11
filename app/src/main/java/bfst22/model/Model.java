@@ -614,28 +614,31 @@ public class Model {
 
                                 //Laver alle edges'ene
                                 for (int j = 0; j < way.getNodes().size()-1; j++){
-                                    if() {
 
-                                    }
-                                    double weight = calculateTime(way.getNodes().get(j), way.getNodes().get(j+1));
-                                    //System.out.println(weight);
+                                    double weightTime = calculateTime(way.getNodes().get(j), way.getNodes().get(j + 1));
+                                    double weightDistance = calculateDistance(way.getNodes().get(j), way.getNodes().get(j+1));
 
-                                    DirectedEdge edgeOneWay = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weight, canGoByCar, canGoByBike, canGoByFoot);
-                                    DirectedEdge edgeOtherWay = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weight, canGoByCar, canGoByBike, canGoByFoot);
+                                    //System.out.println(weightTime);
+
+                                    DirectedEdge edgeOneWayCAR = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightTime, canGoByCar, canGoByBike, canGoByFoot);
+                                    DirectedEdge edgeOtherWayCAR = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightTime, canGoByCar, canGoByBike, canGoByFoot);
+
+                                    DirectedEdge edgeOneWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightDistance, canGoByCar, canGoByBike, canGoByFoot);
+                                    DirectedEdge edgeOtherWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightDistance, canGoByCar, canGoByBike, canGoByFoot);
 
                                     //Tilføjer edge og dens nodes til listerne med edges og nodes
                                     if(isOneway || isRoundabout) {  // Tilføjer en edge den ene vej
 
                                         if(canGoByCar) {
-                                          listOfAllEdgesInWaysCAR.add(edgeOneWay);
+                                          listOfAllEdgesInWaysCAR.add(edgeOneWayCAR);
                                             listOfAlleNodesInGraphCAR.add(way.getNodes().get(j));
                                         }
                                         if(canGoByBike) {
-                                            listOfAllEdgesInWaysBIKE.add(edgeOneWay);
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWayBIKEandFOOT);
                                             listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j));
                                         }
                                         if(canGoByFoot) {
-                                            listOfAllEdgesInWaysFOOT.add(edgeOneWay);
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWayBIKEandFOOT);
                                             listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
                                         }
                                         // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
@@ -643,27 +646,26 @@ public class Model {
 
                                     } else { // Tilføjer en edge den ene vej og den anden vej
                                         if(canGoByCar) {
-                                            listOfAllEdgesInWaysCAR.add(edgeOneWay);
+                                            listOfAllEdgesInWaysCAR.add(edgeOneWayCAR);
                                             listOfAlleNodesInGraphCAR.add(way.getNodes().get(j));
-                                            listOfAllEdgesInWaysCAR.add(edgeOtherWay);
+                                            listOfAllEdgesInWaysCAR.add(edgeOtherWayCAR);
                                             listOfAlleNodesInGraphCAR.add(way.getNodes().get(j+1));
                                         }
                                         if(canGoByBike) {
-                                            listOfAllEdgesInWaysBIKE.add(edgeOneWay);
+                                            listOfAllEdgesInWaysBIKE.add(edgeOneWayBIKEandFOOT);
                                             listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j));
-                                            listOfAllEdgesInWaysBIKE.add(edgeOtherWay);
+                                            listOfAllEdgesInWaysBIKE.add(edgeOtherWayBIKEandFOOT);
                                             listOfAlleNodesInGraphBIKE.add(way.getNodes().get(j+1));
                                         }
                                         if(canGoByFoot) {
-                                            listOfAllEdgesInWaysFOOT.add(edgeOneWay);
+                                            listOfAllEdgesInWaysFOOT.add(edgeOneWayBIKEandFOOT);
                                             listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j));
-                                            listOfAllEdgesInWaysFOOT.add(edgeOtherWay);
+                                            listOfAllEdgesInWaysFOOT.add(edgeOtherWayBIKEandFOOT);
                                             listOfAlleNodesInGraphFOOT.add(way.getNodes().get(j+1));
                                         }
                                         // Tilføjer også til den liste med nodes i alle veje. Bruges til når man dobbeltklikker
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j));
                                         listOfAlleNodesInGraphAllWays.add(way.getNodes().get(j+1));
-
                                     }
                                 }
 
