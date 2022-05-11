@@ -37,7 +37,6 @@
                    <Menu mnemonicParsing="false" text="File">
                      <items>
                          <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open file.." />
-                         <MenuItem mnemonicParsing="false" onAction="#etEllerAndet" text="Et eller andet" />
                      </items>
                    </Menu>
                  </menus>

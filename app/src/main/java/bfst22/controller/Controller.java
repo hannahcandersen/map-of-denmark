@@ -30,8 +30,17 @@ import java.util.List;
 //Controller klassen håndterer alle kliks og scrolls eller andet som brugeren foretager sig.
 //Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
 
+/*
+    Controller klassen: opdaterer objekterne fra model klassen og holder styr på hvad der bliver vist på canvas.
+ */
+
 
 public class Controller {
+    //Canvas er superklassen til vores MapCanvas.
+    //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
+    //Den bruger pakken GraphicsContext.
+    @FXML
+    private MapCanvas canvas;
     @FXML
     private Point2D lastMouse;
     @FXML
@@ -47,18 +56,9 @@ public class Controller {
     @FXML
     private RadioButton checkBoxCar, checkBoxBicycle, checkBoxWalking;
 
-
     private int clickOnWaringButtonCounter = 0;
-    private AddressObject chosenAddressFrom;
-    private AddressObject chosenAddressTo;
-    private int onSearchRouteClickCounter = 0;
+    private AddressObject chosenAddressFrom, chosenAddressTo;
 
-
-    //Canvas er superklassen til vores MapCanvas.
-    //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
-    //Den bruger pakken GraphicsContext.
-    @FXML
-    private MapCanvas canvas;
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
@@ -66,13 +66,6 @@ public class Controller {
         warningPane.setVisible(false);
         //scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
         scaleInfo.textProperty().bind(Bindings.format(canvas.getDistToString()));
-
-
-
-
-
-
-
     }
 
     //Metoden har et scroll event, som handler efter når brugeren scroller i kortet.
@@ -97,18 +90,13 @@ public class Controller {
     public void onMousePressed(MouseEvent e) {
         lastMouse = new Point2D(e.getX(), e.getY());
 
-
+        //Hvis vi dobbeltklikker, så finder den nearest neighbour
         if (e.getClickCount() == 2) {
-
             Point2D MapPointX = canvas.mouseToModel(lastMouse);
             float mapPointx = (float) MapPointX.getX();
             float mapPointy = (float) MapPointX.getY();
 
-            //canvas.TestdrawPunkt = new OSMNode(mapPointx, mapPointy);
-
             canvas.setDrawPunkt(canvas.getModel().getKDTreeNodesInGraphAllWays().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphAllWays().getRoot(), mapPointy, mapPointx));
-
-            //canvas.drawPunkt = kdTree.findNearestNeighbour(mapPointy, mapPointx);
             canvas.repaint();
             //System.out.println("jeg har dobbeltklikket");
             //System.out.println("mapPointX " + mapPointx);
@@ -119,7 +107,7 @@ public class Controller {
     @FXML
     public void openFile(ActionEvent event) throws XMLStreamException, IOException, ClassNotFoundException {
         FileChooser fc = new FileChooser();
-        //så den kun viser pdf filer
+        //så den kun viser pdf filer??
         //fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PDF files", "*.pdf"));
         File selectedFile = fc.showOpenDialog(null);
 
@@ -140,38 +128,19 @@ public class Controller {
         canvas.setTranslateY(y);
     }
 
-    @FXML
-    public void etEllerAndet(ActionEvent event) {
-        toTextField.setText("Bye");
-    }
 
-    @FXML
-    public void searchRoute(ActionEvent actionEvent) {
-        checkBoxCar.setSelected(true);
-        onClickedcheckBoxCar(actionEvent);
 
-        //canvas.repaint();
 
-    }
- /*
-    @FXML
-    public void onClickedSearchRoute() {
-        onSearchRouteClickCounter++;
-        System.out.println(onSearchRouteClickCounter);
-        if(onSearchRouteClickCounter % 2 == 1 ) {
-            transportTypePane.setVisible(true);
-            System.out.println("pane vises");
-        } else {
-            transportTypePane.setVisible(false);
-            System.out.println("pane vises ikke");
-
-        }
-    }
-
-  */
-
+    ///////////VISER OG VÆLGER ADRESSER///////////
     @FXML
     public void getSearchResultFrom(KeyEvent keyEvent) {
+        getSearchResult(fromTextField, listViewFrom);}
+
+    @FXML
+    public void getSearchResultTo(KeyEvent keyEvent) {
+        getSearchResult(toTextField, listViewTo);}
+
+    private void getSearchResult(TextField fromTextField, ListView<AddressObject> listViewFrom) {
         String input = fromTextField.getText();
         if(input.length() > 3) {
             TST tst = new TST();
@@ -186,30 +155,7 @@ public class Controller {
             listViewFrom.setVisible(true);
             listViewFrom.setItems(listOfObservables);
         } else {
-            listViewFrom.setVisible(false);
-        }
-    }
-
-    @FXML
-    public void getSearchResultTo(KeyEvent keyEvent) {
-        String input = toTextField.getText(); //UNDGÅ KODEDUPLIKERING
-        if(input.length() > 3) {
-            TST tst = new TST();
-            List<AddressObject> searchListOfAddresses = tst.search(input);
-
-            //sætte vores liste med adresse ind i observablelist
-            ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
-            listOfObservables.addAll(searchListOfAddresses);
-            //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
-            //SortedList<AddressObject> sortedList = new SortedList<>(listOfObservables);
-
-            listViewTo.setVisible(true);
-            listViewTo.setItems(listOfObservables);
-        } else {
-            listViewTo.setVisible(false);
-        }
-    }
-
+            listViewFrom.setVisible(false);}}
 
     @FXML
     public void chooseAddressFrom(MouseEvent event) {
@@ -217,8 +163,7 @@ public class Controller {
         chosenAddressFrom = listViewFrom.getSelectionModel().getSelectedItem();
         if(chosenAddressFrom != null) {
             fromTextField.setText(chosenAddressFrom.toString());
-            listViewFrom.setVisible(false);
-        }}
+            listViewFrom.setVisible(false);}}
 
     @FXML
     public void chooseAddressTo(MouseEvent event) {
@@ -226,47 +171,23 @@ public class Controller {
         chosenAddressTo = listViewTo.getSelectionModel().getSelectedItem();
         if(chosenAddressTo != null) {
             toTextField.setText(chosenAddressTo.toString());
-            listViewTo.setVisible(false);
-        }}
+            listViewTo.setVisible(false);}}
 
+
+
+
+
+    ///////////SØGEFUNKTION OG TRANSPORT MULIGHEDER///////////
     @FXML
-    public void partyColorToggle(ActionEvent event) {
-       if(colorCheckBox.isSelected()){
-           if(clickOnWaringButtonCounter<1){
-            warningPane.setVisible(true);}
-           canvas.setPartySelected(true);}
-       else{
-           canvas.setPartySelected(false);}
-       canvas.repaint();
+    //Hver gang en bruger trykker på 'Find route' knappen, vil den som det første søge en rute for en bil
+    //For at få vist ruten for en anden transportform, så kan man vælge det efter
+    public void searchRoute(ActionEvent actionEvent) {
+        checkBoxCar.setSelected(true);
+        onClickedcheckBoxCar(actionEvent);
+
     }
-
     @FXML
-    public void graphColorToggle(ActionEvent event){
-        if(graphCheckBox.isSelected()){
-            canvas.setGraphSelected(true);}
-        else{
-            canvas.setGraphSelected(false);}
-        canvas.repaint();
-    }
-
-    @FXML
-    public void onClickdebugBox(ActionEvent event) {
-        if(debugBox.isSelected()){
-            canvas.setDebugSelected(true);
-        }
-        else{
-            canvas.setDebugSelected(false);
-        }
-        canvas.repaint();
-    }
-
-    @FXML
-    public void onClickWarningOk(ActionEvent event){
-       warningPane.setVisible(false);
-        clickOnWaringButtonCounter++;
-    }
-
-    @FXML
+    //Finder korteste rute for en bil
     public void onClickedcheckBoxCar(ActionEvent event) {
         if(checkBoxCar.isSelected()) {
             checkBoxBicycle.setSelected(false);
@@ -275,7 +196,7 @@ public class Controller {
             canvas.setGoByBike(false);
             canvas.setGoByFoot(false);
 
-            //Finder den tætteste node fra søgt adresse (nearest neighbour)
+            //Finder den tætteste node fra søgt adresse (faktisk nearest neighbour adresse)
             try {
                 OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
                 OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphCAR().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphCAR().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
@@ -292,19 +213,17 @@ public class Controller {
             //Dijkstra
             Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphCAR(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getArrayOfOSMNodesInGraphCAR(), canvas.getModel().getMapOfOSMNodesToIndexCAR());
 
-            //Gemmer den korteste route i et felt
+            //Gemmer den korteste rute i et felt i Mapcanvas
             canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndexCAR()));
             canvas.repaint();
             } catch (NullPointerException e) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Please select a start and destination address");
                 //alert.setContentText("Please select a start and destination address :)");
-                alert.show();
-            }
-        }
-    }
+                alert.show();}}}
 
     @FXML
+    //Finder korteste rute for en cykel
     public void onClickedcheckBoxBicycle(ActionEvent event) {
         if(checkBoxBicycle.isSelected()) {
             checkBoxWalking.setSelected(false);
@@ -313,7 +232,7 @@ public class Controller {
             canvas.setGoByBike(true);
             canvas.setGoByFoot(false);
 
-            //Finder den tætteste node fra søgt adresse (nearest neighbour)
+            //Finder den tætteste node fra søgt adresse (faktisk nearest neighbour adresse)
             OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphBIKE().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphBIKE().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
             OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphBIKE().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphBIKE().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
 
@@ -329,13 +248,12 @@ public class Controller {
             //Dijkstra
             Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphBIKE(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getArrayOfOSMNodesInGraphBIKE(), canvas.getModel().getMapOfOSMNodesToIndexBIKE());
 
-            //Gemmer den korteste route i et felt
+            //Gemmer den korteste rute i et felt i Mapcanvas
             canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndexBIKE()));
-            canvas.repaint();
-        }
-    }
+            canvas.repaint();}}
 
     @FXML
+    //Finder korteste rute for en fodgænger
     public void onClickedcheckBoxFoot(ActionEvent event) {
         if(checkBoxWalking.isSelected()) {
             checkBoxCar.setSelected(false);
@@ -344,7 +262,7 @@ public class Controller {
             canvas.setGoByBike(false);
             canvas.setGoByFoot(true);
 
-            //Finder den tætteste node fra søgt adresse (nearest neighbour)
+            //Finder den tætteste node fra søgt adresse (faktisk nearest neighbour adresse)
             OSMNode startOfRoute = canvas.getModel().getKDTreeNodesInGraphFOOT().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphFOOT().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat());
             OSMNode endOfRoute = canvas.getModel().getKDTreeNodesInGraphFOOT().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphFOOT().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
 
@@ -360,23 +278,38 @@ public class Controller {
             //Dijkstra
             Dijkstra dijkstra = new Dijkstra(canvas.getModel().getGraphFOOT(), startOfRouteIndex, endOfRouteIndex, canvas.getModel().getArrayOfOSMNodesInGraphFOOT(), canvas.getModel().getMapOfOSMNodesToIndexFOOT());
 
-            //Gemmer den korteste route i et felt
+            //Gemmer den korteste rute i et felt i Mapcanvas
             canvas.setDijkstraShortestPath(dijkstra.pathTo(endOfRouteIndex, canvas.getModel().getMapOfOSMNodesToIndexFOOT()));
-            canvas.repaint();
-        }
-    }
+            canvas.repaint();}}
 
     @FXML
     public void onClickedTransportCloseButton(MouseEvent mouseEvent) {
-        transportTypePane.setVisible(false);
-    }
-    /*public OSMNode getStartOfRoute() {
-        return canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressFrom.getLon(), chosenAddressFrom.getLat()); //EVT byt om på lat og lon
-    }
-    public OSMNode getEndOfRoute() {
-        return canvas.getModel().getKDTreeNodesInGraphX().findNearestNeighbour(canvas.getModel().getKDTreeNodesInGraphX().getRoot(), chosenAddressTo.getLon(), chosenAddressTo.getLat());
-    }*/
+        transportTypePane.setVisible(false);}
 
 
 
+
+    ///////////EKSTRA FEATURES///////////
+    @FXML
+    public void partyColorToggle(ActionEvent event) {
+        if(colorCheckBox.isSelected()){
+            if(clickOnWaringButtonCounter<1){warningPane.setVisible(true);}
+            canvas.setPartySelected(true);}
+        else{canvas.setPartySelected(false);}
+        canvas.repaint();}
+    @FXML
+    //Når man vælger PartyMode, så bliver lige en advarsel vist
+    public void onClickWarningOk(ActionEvent event){
+        warningPane.setVisible(false);
+        clickOnWaringButtonCounter++;}
+    @FXML
+    public void graphColorToggle(ActionEvent event){
+        if(graphCheckBox.isSelected()){canvas.setGraphSelected(true);}
+        else{canvas.setGraphSelected(false);}
+        canvas.repaint();}
+    @FXML
+    public void onClickdebugBox(ActionEvent event) {
+        if(debugBox.isSelected()){canvas.setDebugSelected(true);}
+        else{canvas.setDebugSelected(false);}
+        canvas.repaint();}
 }
