@@ -71,8 +71,11 @@ public class Dijkstra {
         int edgeStart;
         int edgeEnd;
 
+        edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
+        edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
 
-        if(vertexLightestWeightOSMNode == edge.getStart()){
+
+        /*if(vertexLightestWeightOSMNode == edge.getStart()){
             edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
             edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
             System.out.println("Nu er vi inde i den første if");
@@ -81,7 +84,7 @@ public class Dijkstra {
             edgeEnd = Model.getMapOfOSMNodesToIndex().get(edge.getStart());
             edgeStart = Model.getMapOfOSMNodesToIndex().get(edge.getEnd());
             System.out.println("Nu er vi inde i else");
-        }
+        }*/
 
         if (distTo[edgeEnd] > distTo[edgeStart] + edge.weight()) {
             distTo[edgeEnd] = distTo[edgeStart] + edge.weight();

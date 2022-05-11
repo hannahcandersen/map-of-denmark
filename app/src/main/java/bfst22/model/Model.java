@@ -204,10 +204,10 @@ public class Model {
         //lav dijkstra graf
         makeMapOfOSMNodesToIndex(listOfAllEdgesInWays);
         makeGraph();
-        System.out.println(graph);
-        /*for(int i = 0; i < graph.getIndegree().length; i++) {
-            System.out.println("indegree " + graph.getIndegree()[i]);
-        }*/
+        //System.out.println(graph);
+
+        System.out.println("indegree " + graph.getIndegree()[484]);
+
 
         //calculateDistance(listOfAllEdgesInWays.get(10).getStart(), listOfAllEdgesInWays.get(10).getEnd());
     }
@@ -302,6 +302,12 @@ public class Model {
                             var k = reader.getAttributeValue(null, "k");
                             var v = reader.getAttributeValue(null, "v");
                             switch (k) {
+                                case "maxspeed":
+                                    maxspeed = Integer.parseInt(v);
+                                case "oneway":
+                                    isOneway = v.equals("yes");
+                                case "junction":
+                                    isRoundabout = v.equals("roundabout");
                                 case "addr:city":
                                     city = v;
                                     break;
@@ -448,24 +454,6 @@ public class Model {
                                         default -> type;
                                     };
                                     break;
-                                case "lanes":
-                                    var lane = Integer.parseInt(v);
-                                    //ikke alle har line
-                                    //hvordan vælger vi hvilke der har to og ikke?
-                                    break;
-                                case "maxspeed":
-                                    maxspeed = Integer.parseInt(v);
-
-                                    //primary, secondary, tertiary = 80
-                                    //primary, secondary, tertiary = 50
-                                    //tertiary, residential = 40
-                                    //nogle veje har ikke maxspeed (tertiary)
-
-                                case "oneway":
-                                    if (v.equals("no")) isOneway = false;
-                                    else if (v.equals("yes")) isOneway = true;
-                                case "junction":
-                                    isRoundabout = v.equals("roundabout");
                             }
                             break;
                         // relations har member-tags, der referer til
@@ -511,7 +499,6 @@ public class Model {
                                         case MOTORWAY -> 120; //110-130 km/t 130
                                         case TRUNK -> 110;
                                         case PRIMARY, SECONDARY, ROAD, CONSTRUCTIONWAY -> 80;
-                                        //manlger typer til -LINK vejene
                                         case UNCLASSIFIED, TERTIARY -> 50; //secondary, road
                                         case RESIDENTIALWAY -> 40; //se kommentar nedenunder
                                         case LIVING_STREET, SERVICE, CYCLEWAY -> 20;  //se kommentar nedenunder
@@ -817,7 +804,7 @@ public class Model {
         double lon1 = Math.toRadians(punkt1.getLon());
         double lon2 = Math.toRadians(punkt2.getLon());
         double lat1 = Math.toRadians(punkt1.getLat());
-        double lat2 = Math.toRadians(punkt1.getLat());
+        double lat2 = Math.toRadians(punkt2.getLat());
         //System.out.println("lon1: " + punkt1.getLon() + " lat1: " + punkt1.getLat());
         //System.out.println("lon2: " + punkt2.getLon() + " lat2: " + punkt2.getLat());
         //System.out.println("lon1RAD: " + lon1 + " lat1RAD: " + lat1);
