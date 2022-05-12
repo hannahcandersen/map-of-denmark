@@ -4,13 +4,16 @@ import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distanceSq;
 
-public class KdTree {
+public class KdTree implements Serializable {
+
+    public static final long serialVersionUID = 1325234;
 
     /////////////// FELTER ///////////////////
     private KdNode root; // Træets rod
