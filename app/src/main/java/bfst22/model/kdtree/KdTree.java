@@ -1,10 +1,8 @@
 package bfst22.model.kdtree;
 
-import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -122,14 +120,14 @@ public class KdTree {
     /////////////// RANGE SEARCH ///////////////////
 
     //Public - den der bliver kaldt i MapCanvas
-    public List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode root) {
+    public List<Drawable> rangeSearch(RangeSearchRectangle rangeSearchRectangle, KdNode root) {
         // Kalder den priavte rangesearch, der returner en liste med inrange resultaterne
         leavesAdded = 0;
-        return rangeSearch(rangeSerachRectangle, root, true, new ArrayList<>());
+        return rangeSearch(rangeSearchRectangle, root, true, new ArrayList<>());
     }
 
     //Private metode
-    private List<Drawable> rangeSearch(RangeSerachRectangle rangeSearchRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result) {
+    private List<Drawable> rangeSearch(RangeSearchRectangle rangeSearchRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result) {
         if (splitNode == null) {
             return null;
         }
@@ -195,18 +193,18 @@ public class KdTree {
 
 
     // Checker om drawable overlapper med searchRectangle
-    public boolean doRectanglesOverlap(Drawable drawable, RangeSerachRectangle rangeSerachRectangle) {
+    public boolean doRectanglesOverlap(Drawable drawable, RangeSearchRectangle rangeSearchRectangle) {
         // Sandt hvis de ikke overlapper
-        if (drawable.getCurrentMinX() > rangeSerachRectangle.getMaxLon()){
+        if (drawable.getCurrentMinX() > rangeSearchRectangle.getMaxLon()){
             return false;
         }
-        else if (drawable.getCurrentMaxX() < rangeSerachRectangle.getMinLon()){
+        else if (drawable.getCurrentMaxX() < rangeSearchRectangle.getMinLon()){
             return false;
         }
-        else if (drawable.getCurrentMinY() > rangeSerachRectangle.getMaxLat()){
+        else if (drawable.getCurrentMinY() > rangeSearchRectangle.getMaxLat()){
             return false;
         }
-        else if (drawable.getCurrentMaxY() < rangeSerachRectangle.getMinLat()){
+        else if (drawable.getCurrentMaxY() < rangeSearchRectangle.getMinLat()){
             return false;
         }
         // Ellers overlapper de

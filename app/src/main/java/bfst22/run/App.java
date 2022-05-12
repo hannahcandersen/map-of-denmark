@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-
 //Starter rammen/programmet med Danmarkskortet
 public class App extends Application {
     @Override

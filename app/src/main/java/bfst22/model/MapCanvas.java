@@ -1,12 +1,11 @@
 package bfst22.model;
 
 import bfst22.model.dijkstra.DirectedEdge;
-import bfst22.model.kdtree.RangeSerachRectangle;
+import bfst22.model.kdtree.RangeSearchRectangle;
 import bfst22.view.Drawable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import java.util.Random;
-import java.util.Scanner;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -76,7 +75,7 @@ public class MapCanvas extends Canvas {
 
 
         //Opretter en Searchrectangle med de koordinater der er inden for rectangle
-        RangeSerachRectangle rangeSearchRectangle = new RangeSerachRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
+        RangeSearchRectangle rangeSearchRectangle = new RangeSearchRectangle(realMin.getY(), realMax.getY(), realMin.getX(), realMax.getX());
         //System.out.println(rangeSearchRectangle);
 
 

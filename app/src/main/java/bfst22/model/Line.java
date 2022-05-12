@@ -38,6 +38,10 @@ public class Line implements Drawable {
         gc.stroke();
     }
 
+
+
+    ///////////////// GETTER METODER /////////////////
+
     @Override
     public float getMiddleX(){
         return (x1 + x2) / 2;

@@ -18,7 +18,11 @@ public class OSMWay implements Serializable {
         this.nodes = new ArrayList<>(nodes);
     }
 
-    //Metoder der bruges i vores KDtree
+
+
+    ///////////////// GETTER METODER /////////////////
+
+    //Metoder der bruges i vores KdTree
     public float getMiddleY () {return (currentMinY + currentMaxY) / 2;}
     public float getMiddleX () {return (currentMinX + currentMaxX) / 2;}
     public ArrayList<OSMNode> getNodes() {return nodes;}

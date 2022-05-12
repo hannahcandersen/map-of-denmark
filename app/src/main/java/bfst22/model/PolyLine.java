@@ -69,6 +69,9 @@ public class PolyLine implements Drawable, Serializable {
 
 
 
+    ///////////////// GETTER METODER /////////////////
+
+    @Override
     public float getCurrentMinX() {
         return currentMinX;
     }

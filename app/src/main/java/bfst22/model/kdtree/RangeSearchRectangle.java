@@ -7,10 +7,10 @@ import javafx.scene.transform.Affine;
 
 // Den firkant vi laver range search indenfor. I det officielle program er det skærmen, i debug mode er det debug firkanten
 
-public class RangeSerachRectangle extends Canvas {
+public class RangeSearchRectangle extends Canvas {
     private double minLon, maxLon, minLat, maxLat;
 
-    public RangeSerachRectangle(double minLon, double maxLon, double minLat, double maxLat) {
+    public RangeSearchRectangle(double minLon, double maxLon, double minLat, double maxLat) {
         this.minLon = minLon;
         this.maxLon = maxLon;
         this.minLat = minLat;

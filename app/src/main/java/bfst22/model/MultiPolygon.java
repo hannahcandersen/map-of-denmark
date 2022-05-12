@@ -43,9 +43,6 @@ public class MultiPolygon implements Drawable, Serializable {
             calculateMinAndMax();
     }
 
-
-
-
     //Bruges til at finde min og max af x og y. Skal bruges til range search
     private void calculateMinAndMax() {
         for (OSMNode node : multiPolygonNodes) {
