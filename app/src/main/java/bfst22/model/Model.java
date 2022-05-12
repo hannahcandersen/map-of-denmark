@@ -84,6 +84,7 @@ public class Model {
     private List<PolyLine> listOfCoastlines = new ArrayList<>();
     // Ternary Search Tree
     private TST tst;
+    private Coastline coastline = new Coastline();
 
 
     /////////////// KONSTRUKTØR ///////////////////
@@ -107,7 +108,9 @@ public class Model {
             KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
             KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
 
-            listOfCoastlines = makeCoastlineObject(coastlinesMap);
+            //listOfCoastlines = makeCoastlineObject(coastlinesMap);
+            listOfCoastlines = coastline.makeCoastlineObject(coastlinesMap, WayType.COASTLINE);
+
 
             //MÅSKE PUT GRAPF TILBAGE HER
             //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
