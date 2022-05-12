@@ -106,7 +106,7 @@ public class MapCanvas extends Canvas {
 
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
-        System.out.println("Currentzoomlevel: " + zoomLevel);
+        //System.out.println("Currentzoomlevel: " + zoomLevel);
 
 
 

@@ -90,12 +90,12 @@ public class Model {
             var zip = new ZipFile(new File(filename)); // Læser zip-filen én fil af gangen
             var entry = zip.entries().nextElement(); // Læser næste fil i zip-filen
             loadOSM(zip.getInputStream(entry));
-            System.out.println("Done med at loade OSM");
+            System.out.println("Færdig med at loade OSM");
 
 
         } else if (filename.endsWith(".osm")) {// Læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
-            System.out.println("Done med at loade OSM");
+            System.out.println("Færdig med at loade OSM");
 
 
             listOfCoastlines = coastline.makeCoastlineObject(coastlinesMap, WayType.COASTLINE);
@@ -309,7 +309,7 @@ public class Model {
                                     try {
                                         maxspeed = Double.parseDouble(v);
                                     } catch (NumberFormatException e) {
-                                        System.out.println("Invalid maxspeed: " + v); // fordi maxspeed nogle gange er angivet som noget andet end et tal
+                                        //System.out.println("Invalid maxspeed: " + v); // fordi maxspeed nogle gange er angivet som noget andet end et tal
                                     }
                                 case "oneway":
                                     isOneway = v.equals("yes");
