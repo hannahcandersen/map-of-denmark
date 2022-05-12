@@ -820,7 +820,6 @@ public class MapCanvas extends Canvas {
     public Model getModel() {
         return model;
     }
-
     private int getZoomLevel(double r) {
         if (r != 0){
             double scale = r / 500;
@@ -828,66 +827,51 @@ public class MapCanvas extends Canvas {
         }
         return zoomLevel;
     }
-
     public Iterable<DirectedEdge> getDijkstraShortestPath() {
         return dijkstraShortestPath;
     }
-
     public String getRationToString(){
         return String.valueOf(this.ration);
     }
-
     public String getDistToString(){
         //System.out.println("Dist: " + String.valueOf(calculateDistBetween2Points(realscalebarPoint1, realscalebarPoint2)));
         return String.valueOf(calculateDistBetween2Points(realscalebarPoint1, realscalebarPoint2));
-
     }
-
     public Point2D getRealscalebarPoint1() {
         return realscalebarPoint1;
     }
-
     public Point2D getRealscalebarPoint2() {
         return realscalebarPoint2;
     }
 
 
-    //////////////////// SETTERS ////////////////////
-    public void setDijkstraShortestPath(Iterable<DirectedEdge> dijkstraShortestPath) {
-        this.dijkstraShortestPath = dijkstraShortestPath;
-    }
 
+    //////////////////// SETTERS ////////////////////
+    public void setDijkstraShortestPath(Iterable<DirectedEdge> dijkstraShortestPath) {this.dijkstraShortestPath = dijkstraShortestPath;}
     public void setDrawPunkt(OSMNode drawPunkt) {
         this.drawPunkt = drawPunkt;
     }
-
     public void setDrawPunktStartOfRoute(OSMNode drawPunkt) {
         this.drawPunktStartOfRoute = drawPunkt;
     }
     public void setDrawPunktEndOfRoute(OSMNode drawPunkt) {
         this.drawPunktEndOfRoute = drawPunkt;
     }
-
     public void setPartySelected(boolean partySelected) {
         isPartySelected = partySelected;
     }
-
     public void setGraphSelected(boolean graphSelected) {
         isGraphSelected = graphSelected;
     }
-
     public void setDebugSelected(boolean debugSelected) {
         isDebugSelected = debugSelected;
     }
-
     public void setGoByCar(boolean goByCar) {
         this.goByCar = goByCar;
     }
-
     public void setGoByBike(boolean goByBike) {
         this.goByBike = goByBike;
     }
-
     public void setGoByFoot(boolean goByFoot) {
         this.goByFoot = goByFoot;
     }
