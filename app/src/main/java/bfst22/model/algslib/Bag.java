@@ -1,5 +1,6 @@
 package bfst22.model.algslib;
 //CODE FROM: https://algs4.cs.princeton.edu/13stacks/Bag.java.html
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -23,7 +24,8 @@ import java.util.NoSuchElementException;
  *
  *  @param <Item> the generic type of an item in this bag
  */
-public class Bag<Item> implements Iterable<Item> {
+public class Bag<Item> implements Iterable<Item>, Serializable {
+    public static final long serialVersionUID = 1325214;
     private Node<Item> first;    // beginning of bag
     private int n;               // number of elements in bag
 

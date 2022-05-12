@@ -3,14 +3,15 @@ package bfst22.model.kdtree;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
 
+import java.io.Serializable;
 import java.util.List;
 
-/*
-    Hvis vi til sidst har 4-10 noder, som vi ikke synes er nødvendigt at dele ud på træet,
-    så kan vi til sidst tilføje en liste med de sidste noder
-*/
+// Subklasse til KdNode
+// Holder hver på op til 100 elementer
 
-public class Leaf extends KdNode {
+public class Leaf extends KdNode implements Serializable {
+
+        public static final long serialVersionUID = 1325235;
         protected List<Drawable> listOfDrawables;
         protected List<OSMNode> listOfOSMNodes;
 
@@ -18,8 +19,7 @@ public class Leaf extends KdNode {
                 super();
                 this.listOfDrawables = leaves;
         }
-
-        public Leaf(List<OSMNode> osmNodes, int nul){
+        public Leaf(List<OSMNode> osmNodes, int nul){ //nul tilføjes, da den ellers ikke kan kende forskel på konstruktørerne
                 super();
                 this.listOfOSMNodes = osmNodes;
         }
@@ -27,10 +27,11 @@ public class Leaf extends KdNode {
         public List<Drawable> getListOfDrawables() {
                 return listOfDrawables;
         }
-
         public List<OSMNode> getListOfOSMNodes(){
                 return listOfOSMNodes;
         }
+
+        // Blade vil ikke have nogen left og right børn, da de er sidst i træet
         public KdNode getLeft(){return null;}
         public KdNode getRight(){return null;}
 

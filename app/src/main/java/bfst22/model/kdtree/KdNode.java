@@ -1,12 +1,16 @@
 package bfst22.model.kdtree;
 
-public abstract class KdNode {
+// Abstrakt superklasse til Node og Leaf
 
-    public KdNode() {
-    }
+import java.io.Serializable;
+
+public abstract class KdNode implements Serializable {
+
+    public static final long serialVersionUID = 1325239;
+
+    public KdNode() {}
 
     public abstract KdNode getLeft();
-
     public abstract KdNode getRight();
 }
 

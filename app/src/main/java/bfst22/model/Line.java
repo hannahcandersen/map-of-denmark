@@ -9,10 +9,10 @@ import java.util.ArrayList;
 public class Line implements Drawable {
     private Point2D from, to;
 
-    float x1;
-    float y1;
-    float x2;
-    float y2;
+    private float x1;
+    private float y1;
+    private float x2;
+    private float y2;
 
 //Line tager de fire koordinater fra txt line filerne og splitter dem til at kunne blive læst og derefter tegnet.
     public Line(String line) {
@@ -38,37 +38,39 @@ public class Line implements Drawable {
         gc.stroke();
     }
 
+
+
+    ///////////////// GETTER METODER /////////////////
+
     @Override
     public float getMiddleX(){
         return (x1 + x2) / 2;
     }
-
     @Override
     public float getMiddleY(){
         return (y1 + y2) / 2;
     }
-
+    @Override
     public float getCurrentMinX() {
         return x1;
     }
-
+    @Override
     public float getCurrentMinY() {
         return y1;
     }
-
+    @Override
     public float getCurrentMaxX() {
         return x2;
     }
-
+    @Override
     public float getCurrentMaxY() {
         return y2;
     }
-
     @Override
     public WayType getType() {
         return null;
     }
-
+    @Override
     public ArrayList<OSMNode> getNodes(){
         return null;
     }

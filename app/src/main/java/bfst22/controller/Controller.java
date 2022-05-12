@@ -21,24 +21,14 @@ import javafx.stage.FileChooser;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
-
 import java.util.List;
 
-//LINK//https://gist.github.com/Da9el00/cde4381b8f17299693bab886ec700a78
 
 
-//Controller klassen håndterer alle kliks og scrolls eller andet som brugeren foretager sig.
-//Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
-
-/*
-    Controller klassen: opdaterer objekterne fra model klassen og holder styr på hvad der bliver vist på canvas.
- */
+//Controller klassen: opdaterer objekterne fra model klassen og holder styr på hvad der bliver vist på canvas.
 
 
 public class Controller {
-    //Canvas er superklassen til vores MapCanvas.
-    //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
-    //Den bruger pakken GraphicsContext.
     @FXML
     private MapCanvas canvas;
     @FXML
@@ -50,25 +40,24 @@ public class Controller {
     @FXML
     private CheckBox colorCheckBox, graphCheckBox, debugBox;
     @FXML
-    private Pane warningPane, transportTypePane;
+    private Pane transportTypePane;
     @FXML
     private Label scaleInfo;
     @FXML
     private RadioButton checkBoxCar, checkBoxBicycle, checkBoxWalking;
 
-    private int clickOnWaringButtonCounter = 0;
+    private int clickOnPartyModeCheckBoxCounter = 0;
     private AddressObject chosenAddressFrom, chosenAddressTo;
 
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
         canvas.init(model);
-        warningPane.setVisible(false);
         //scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
         scaleInfo.textProperty().bind(Bindings.format(canvas.getDistToString()));
     }
 
-    //Metoden har et scroll event, som handler efter når brugeren scroller i kortet.
+
     //getDeltaY metoden returnerer den vertikale mængde af pixels som forstørres eller formindskes når brugeren scroller.
     @FXML
     public void onScroll(ScrollEvent e) {
@@ -107,6 +96,7 @@ public class Controller {
     @FXML
     public void openFile(ActionEvent event) throws XMLStreamException, IOException, ClassNotFoundException {
         FileChooser fc = new FileChooser();
+        //TODO husk at slette hvis ikke implementeret
         //så den kun viser pdf filer??
         //fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PDF files", "*.pdf"));
         File selectedFile = fc.showOpenDialog(null);
@@ -140,22 +130,20 @@ public class Controller {
     public void getSearchResultTo(KeyEvent keyEvent) {
         getSearchResult(toTextField, listViewTo);}
 
-    private void getSearchResult(TextField fromTextField, ListView<AddressObject> listViewFrom) {
-        String input = fromTextField.getText();
+    //Viser adresser efter mere end 3 bogstaver er indtastet.
+    private void getSearchResult(TextField textField, ListView<AddressObject> listView) {
+        String input = textField.getText();
         if(input.length() > 3) {
-            TST tst = new TST();
-            List<AddressObject> searchListOfAddresses = tst.search(input);
+            List<AddressObject> searchListOfAddresses = canvas.getModel().getTst().search(input);
 
-            //sætte vores liste med adresse ind i observablelist
+            //Sætter vores liste med adresser ind i observablelist
             ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
             listOfObservables.addAll(searchListOfAddresses);
-            //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
-            //SortedList<AddressObject> sortedList = new SortedList<>(listOfObservables);
 
-            listViewFrom.setVisible(true);
-            listViewFrom.setItems(listOfObservables);
+            listView.setVisible(true);
+            listView.setItems(listOfObservables);
         } else {
-            listViewFrom.setVisible(false);}}
+            listView.setVisible(false);}}
 
     @FXML
     public void chooseAddressFrom(MouseEvent event) {
@@ -180,7 +168,7 @@ public class Controller {
     ///////////SØGEFUNKTION OG TRANSPORT MULIGHEDER///////////
     @FXML
     //Hver gang en bruger trykker på 'Find route' knappen, vil den som det første søge en rute for en bil
-    //For at få vist ruten for en anden transportform, så kan man vælge det efter
+    //For at få vist ruten for en anden transportform, så kan man vælge cykel eller gågang
     public void searchRoute(ActionEvent actionEvent) {
         checkBoxCar.setSelected(true);
         onClickedcheckBoxCar(actionEvent);
@@ -293,15 +281,17 @@ public class Controller {
     @FXML
     public void partyColorToggle(ActionEvent event) {
         if(colorCheckBox.isSelected()){
-            if(clickOnWaringButtonCounter<1){warningPane.setVisible(true);}
+            if(clickOnPartyModeCheckBoxCounter<1){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText("WARNING: party mode selected");
+                alert.show();
+            }
             canvas.setPartySelected(true);}
         else{canvas.setPartySelected(false);}
-        canvas.repaint();}
-    @FXML
-    //Når man vælger PartyMode, så bliver lige en advarsel vist
-    public void onClickWarningOk(ActionEvent event){
-        warningPane.setVisible(false);
-        clickOnWaringButtonCounter++;}
+        canvas.repaint();
+    clickOnPartyModeCheckBoxCounter++;
+    }
+
     @FXML
     public void graphColorToggle(ActionEvent event){
         if(graphCheckBox.isSelected()){canvas.setGraphSelected(true);}

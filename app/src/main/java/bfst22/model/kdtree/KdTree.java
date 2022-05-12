@@ -1,73 +1,63 @@
 package bfst22.model.kdtree;
 
-import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
 import static java.awt.geom.Point2D.distanceSq;
 
-public class KdTree {
+public class KdTree implements Serializable {
 
+    public static final long serialVersionUID = 1325237;
 
-    //Erklærer roden.
-    private KdNode root;
-    static int leavesAdded = 0;
-
+    /////////////// FELTER ///////////////////
+    private KdNode root; // Træets rod
+    private static int leavesAdded = 0;
+    //Til nearest neighbour:
     private OSMNode closestNodeField = null;
     private double closestDistField = Double.POSITIVE_INFINITY;
 
-    public KdTree(List<Drawable> drawables) {
+    /////////////// KONSTRUKTØR ///////////////////
+    public KdTree(List<Drawable> drawables) { // Til at bygge træ af Drawables
         this.root = buildKDTree(drawables, true);
     }
-
-    public KdTree(ArrayList<OSMNode> osmNodes, int nul) {
+    public KdTree(ArrayList<OSMNode> osmNodes, int nul) { // Til at bygge træ af OSMNodes (til nearest neighbour)
         this.root = buildKDTreeOfOSMNodes(osmNodes, true);
     }
 
-    public static int getLeavesAdded() {
-        return leavesAdded;
-    }
 
-    public KdNode getRoot() {
-        return root;
-    }
-
-
-    //////////////////// BULDING KDTREE ///////////////////////
+    /////////////// BYGGER KD TREE AF DRAWABLES ///////////////////
     public KdNode buildKDTree(List<Drawable> drawables, boolean isXcoord) {
-        //If statement der tjekker om der findes et træ
+        //If statement der tjekker om listen er over 0
         if (drawables == null || drawables.size() == 0) {
             //System.out.println("OSMNode list is empty!");
             return null;
         }
 
-        //Erklærer
+        // Erklærer roden som KdNode
         KdNode kdNode;
 
         // Laver leaves
         if (drawables.size() < 100) {
             kdNode = new Leaf(drawables);}
-
         else {
-            //Laver en ny node
+            // Laver en ny node
             Node node = new Node();
 
-            //sorter listen på x
+            // Sorter listen på x
             if (isXcoord) {
-                //Vi sorterer listen drawables ved at bruge sort, som tager parametren Comparator.comparing.
-                //Den fortæller at vi skal hive fat i OSMNode-klassen og kalde getLon-metoden. Sorter på x.
+                // Sorterer på x værdien (for midten af drawable)
                 drawables.sort(Comparator.comparing(Drawable::getMiddleX));}
-            else {
-                //sorter listen på y
+            else { // Sorter listen på y
+                // Sorterer på y værdien (for midten af drawable)
                 drawables.sort(Comparator.comparing(Drawable::getMiddleY));}
 
-            //Finder midterste indeks af listen
+            // Finder midterste indeks af listen
             int mid = drawables.size() / 2;
-
 
             //Sætter splitværdien
             if (isXcoord) {
@@ -79,19 +69,19 @@ public class KdTree {
             node.setLeft(buildKDTree(drawables.subList(0, mid), !isXcoord));
             node.setRight(buildKDTree(drawables.subList(mid, drawables.size()), !isXcoord));
 
-            kdNode = node;
+            kdNode = node; // Sætter vores egen node til kdNode
         }
         root = kdNode;
         return kdNode;
     }
 
-    //////////////////// BULDING KDTREE OF OSM NODES///////////////////////
+    /////////////// BYGGER KD TREE AF OSMNODES ///////////////////
     public KdNode buildKDTreeOfOSMNodes(List<OSMNode> OSMNodes, boolean isXcoord) {
-        //If statement der tjekker om der findes et træ
+        //If statement der tjekker om listen er over 0
         if (OSMNodes == null || OSMNodes.size() == 0) {
             return null;}
 
-        //Erklærer
+        // Erklærer roden som KdNode
         KdNode kdNode;
 
         // Laver leaves
@@ -102,59 +92,47 @@ public class KdTree {
             //Laver en ny node
             Node node = new Node();
 
-            //sorter listen på x
+            // Sorter listen på x
             if (isXcoord) {
-                //Vi sorterer listen drawables ved at bruge sort, som tager parametren Comparator.comparing.
-                //Den fortæller at vi skal hive fat i OSMNode-klassen og kalde getLon-metoden. Sorter på x.
+                // Sorterer på x værdien (for midten af drawable)
                 OSMNodes.sort(Comparator.comparing(OSMNode::getLon));}
-            else {
-                //sorter listen på y
+            else { // Sorter listen på y
+                // Sorterer på y værdien (for midten af drawable)
                 OSMNodes.sort(Comparator.comparing(OSMNode::getLat));}
 
             //Finder midterste indeks af listen
             int mid = OSMNodes.size() / 2;
 
-
             //Sætter splitværdien
             if (isXcoord) {
                 node.setSplit(OSMNodes.get(mid).getLon());
-                node.setSplitDenAndenKoordinat(OSMNodes.get(mid).getLat());}
-
+            }
             else { //!isXcoord
                 node.setSplit(OSMNodes.get(mid).getLat());
-                node.setSplitDenAndenKoordinat(OSMNodes.get(mid).getLon());}
-
+            }
             //Laver left og right nodes
             node.setLeft(buildKDTreeOfOSMNodes(OSMNodes.subList(0, mid), !isXcoord));
             node.setRight(buildKDTreeOfOSMNodes(OSMNodes.subList(mid, OSMNodes.size()), !isXcoord));
 
-            kdNode = node;
+            kdNode = node; // Sætter vores egen node til kdNode
         }
         root = kdNode;
         return kdNode;
     }
 
 
-    //////////////////// RANGE SEARCH ///////////////////////
+    /////////////// RANGE SEARCH ///////////////////
 
-    //Public den der kaldt i MapCanvas
-    //RangeSearch der tager rectangle og root
-    public List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle, KdNode root) {
-        // kald den anden rangesearch, der returner en liste med inrange resultaterne
+    //Public - den der bliver kaldt i MapCanvas
+    public List<Drawable> rangeSearch(RangeSearchRectangle rangeSearchRectangle, KdNode root) {
+        // Kalder den priavte rangesearch, der returner en liste med inrange resultaterne
         leavesAdded = 0;
-        return rangeSearch(rangeSerachRectangle, root, true, new ArrayList<>());
+        return rangeSearch(rangeSearchRectangle, root, true, new ArrayList<>());
     }
 
-    // RangeSearch der kun tager rectangle
-    public List<Drawable> rangeSearch(RangeSerachRectangle rangeSerachRectangle) {
-        // kald den anden rangesearch, der returner en liste med inrange resultaterne
-        leavesAdded = 0;
-        return rangeSearch(rangeSerachRectangle, root, true, new ArrayList<>());
-    }
-
-    //Privat RangeSearch metode
-    private List<Drawable> rangeSearch(RangeSerachRectangle rangeSearchRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result){
-        if (splitNode == null){
+    //Private metode
+    private List<Drawable> rangeSearch(RangeSearchRectangle rangeSearchRectangle, KdNode splitNode, boolean isXcoord, List<Drawable> result) {
+        if (splitNode == null) {
             return null;
         }
 
@@ -166,52 +144,49 @@ public class KdTree {
                 if (doRectanglesOverlap(d, rangeSearchRectangle)) {
                     result.add(d);
                 }
-                leavesAdded++;}}
+                leavesAdded++;
+            }
+        }
 
         //Ellers er vores splitnode en splitnode, og vi skal kalde rekursivt ned gennem træet
-        else{
+        else {
             //Gør det på X (isXcoord)
-            if(isXcoord){
-
+            if (isXcoord) {
                 //InRange? - mellem minLon og MaxLon
-                if(((Node) splitNode).getSplit() > rangeSearchRectangle.getMinLon()
+                if (((Node) splitNode).getSplit() > rangeSearchRectangle.getMinLon()
                         && ((Node) splitNode).getSplit() < rangeSearchRectangle.getMaxLon()) {
-
                     //Gå begge veje
                     rangeSearch(rangeSearchRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                     rangeSearch(rangeSearchRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
-
                 }
-                // Over? - større end maxLon (((rectangle.getMaxLon())))
+                // Over? - større end maxLon
                 else if (((Node) splitNode).getSplit() > rangeSearchRectangle.getMaxLon()) {
                     //Gå til venstre
                     rangeSearch(rangeSearchRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                 }
                 //Under? - mindre end minLon
-                else if(((Node) splitNode).getSplit() < rangeSearchRectangle.getMinLon()) {
+                else if (((Node) splitNode).getSplit() < rangeSearchRectangle.getMinLon()) {
                     //Gå til højre
                     rangeSearch(rangeSearchRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
                 }
             }
 
-            //Gør det på Y (!isXcoord) Måske skal lat ændres til minus
+            //Gør det på Y (!isXcoord)
             else {
                 //InRange? - mellem minLon og MaxLon
-                if(((Node) splitNode).getSplit() > rangeSearchRectangle.getMinLat()
+                if (((Node) splitNode).getSplit() > rangeSearchRectangle.getMinLat()
                         && ((Node) splitNode).getSplit() < rangeSearchRectangle.getMaxLat()) {
-
                     //Gå begge veje
                     rangeSearch(rangeSearchRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                     rangeSearch(rangeSearchRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
-
                 }
                 // Over? - større end maxLon (((rectangle.getMaxLon())))
-                else if(((Node) splitNode).getSplit() > rangeSearchRectangle.getMaxLat()) {
+                else if (((Node) splitNode).getSplit() > rangeSearchRectangle.getMaxLat()) {
                     //Gå til venstre
                     rangeSearch(rangeSearchRectangle, ((Node) splitNode).getLeft(), !isXcoord, result);
                 }
                 //Under? - mindre end minLon
-                else if(((Node) splitNode).getSplit() < rangeSearchRectangle.getMinLat()) {
+                else if (((Node) splitNode).getSplit() < rangeSearchRectangle.getMinLat()) {
                     //Gå til højre
                     rangeSearch(rangeSearchRectangle, ((Node) splitNode).getRight(), !isXcoord, result);
                 }
@@ -221,191 +196,162 @@ public class KdTree {
     }
 
 
-    // checker om et element af drawable overlapper med searchTriangle. https://stackoverflow.com/questions/23302698/java-check-if-two-rectangles-overlap-at-any-point
-    public boolean doRectanglesOverlap(Drawable drawable, RangeSerachRectangle rangeSerachRectangle) {
-
-        //sandt hvis de ikke overlapper
-        if (drawable.getCurrentMinX() > rangeSerachRectangle.getMaxLon()){
+    // Checker om drawable overlapper med searchRectangle
+    public boolean doRectanglesOverlap(Drawable drawable, RangeSearchRectangle rangeSearchRectangle) {
+        // Sandt hvis de ikke overlapper
+        if (drawable.getCurrentMinX() > rangeSearchRectangle.getMaxLon()){
             return false;
         }
-        else if (drawable.getCurrentMaxX() < rangeSerachRectangle.getMinLon()){
+        else if (drawable.getCurrentMaxX() < rangeSearchRectangle.getMinLon()){
             return false;
         }
-        else if (drawable.getCurrentMinY() > rangeSerachRectangle.getMaxLat()){
+        else if (drawable.getCurrentMinY() > rangeSearchRectangle.getMaxLat()){
             return false;
         }
-        else if (drawable.getCurrentMaxY() < rangeSerachRectangle.getMinLat()){
+        else if (drawable.getCurrentMaxY() < rangeSearchRectangle.getMinLat()){
             return false;
         }
-
-        // ellers overlapper de
+        // Ellers overlapper de
             return true;
     }
 
 
-    public OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y){
+    /////////////// NEAREST NEIGHBOUR ///////////////////
+
+    // Public metode
+    public OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y){ // Starter med at tage en root og to koordinater på mappet
         closestDistField = Double.POSITIVE_INFINITY;
-        closestNodeField = null;
-        return findNearestNeighbour(searchKdNode, x, y, true);
+        closestNodeField = null; // Champion
+        return findNearestNeighbour(searchKdNode, x, y, true); // kalder private metode
     }
 
     private OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y, boolean divX) {
-        //undersøg om den skal til venstre eller højre
-        //hvis venstre: kald findNearestNeighbor for .getLeft()
-        //hvis højre: kald findNearest for .getRight()
 
+        // Hvis det er den del af træet der er sorteret på y
         if (!divX) {
 
             //Hvis searchKdNode er et leaf
             if(searchKdNode instanceof Leaf) {
-                findNearestNeighbourLeaf(searchKdNode, x, y, !divX);
+                findNearestNeighbourLeaf(searchKdNode, x, y, !divX); // Kalder metoden for leaf, der løber alle OSMNodes i bladet igennem
             }
             //Hvis searchKdNode er node
             if (searchKdNode instanceof Node) {
 
-                Node node = ((Node) searchKdNode);
+                Node node = ((Node) searchKdNode); // Caster til node
 
-                //her hvis y er mindre end splitY
-                //nearest neighbour i venstre side og ellers så højre side
-                if(y < ((Node) searchKdNode).getSplit()) {
+                // Starter med at gå hele vejen ned til det blad, som vi mistænker punktet er i
+                //Hvis y er mindre end splitY - Gå til venstre
+                if (y < ((Node) searchKdNode).getSplit()) {
                     findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
-
+                //Hvis y er større end splitY - Gå til højre
                 }else {
                     findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
                 }
 
-                //if x < searchnode.getSplit
-
-                // hvis venstre er en node
+                // Går op ad træet og tjekker om der kan være nogle tættere på
+                // Hvis venstre er en node
                 if (searchKdNode.getLeft() instanceof Node) {
                     Node leftNode = ((Node) node.getLeft());
-
-                    //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
+                    //Tjekker distance mellem punkt og venstres splitpunkt. Hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, leftNode.getSplit(), y) < this.closestDistField) {
                         findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
-
                     }
                 }
-                //hvis venstre er et leaf
+                // Hvis venstre er et leaf
                 if(searchKdNode.getLeft() instanceof Leaf){
-                    //kalder metoden der løber leaf igennem
-                    findNearestNeighbourLeaf(node.getLeft(), x, y, !divX);
+                    findNearestNeighbourLeaf(node.getLeft(), x, y, !divX); // Kalder metoden for leaf, der løber alle OSMNodes i bladet igennem
                 }
 
-                // hvis højre er en node
+                // Hvis højre er en node
                 if (searchKdNode.getRight() instanceof Node) {
-
                     Node rightNode = ((Node) node.getRight());
-
-                    //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
+                    // Tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, rightNode.getSplit(), y) < this.closestDistField) {
                         findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
-
                     }
                 }
-                //hvis højre er et leaf
+                // Hvis højre er et leaf
                 if(searchKdNode.getRight() instanceof Leaf) {
                     //kalder metoden der løber leaf igennem
                     findNearestNeighbourLeaf(node.getRight(), x, y, !divX);
                 }
             }
         }
-
-        else{ //hvis divX
-            //Hvis root er et leaf
+        // Hvis det er den del af træet der er sorteret på x
+        else{
+            // Hvis root er et leaf
             if(searchKdNode instanceof Leaf) {
                 findNearestNeighbourLeaf(searchKdNode, x, y, !divX);
             }
 
-            //Hvis searchKdNode er node
+            // Hvis searchKdNode er node
             if (searchKdNode instanceof Node) {
 
-                Node node = ((Node) searchKdNode);
+                Node node = ((Node) searchKdNode); // Caster til node
 
-                //////her hvis x er mindre end splitX
-                //////nearest neighbour i venstre side og ellers så højre side
+                // Starter med at gå hele vejen ned til det blad, som vi mistænker punktet er i
+                // Hvis x er mindre end splitX - Gå til venstre
                 if(x < ((Node) searchKdNode).getSplit()) {
                     findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
+                //Hvis x er større end splitX - Gå til højre
                 }else {
                     findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
                 }
 
-                // hvis venstre er en node
+                // Hvis venstre er en node
                 if (searchKdNode.getLeft() instanceof Node) {
-
                     Node leftNode = ((Node) node.getLeft());
-
-                    //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
+                    // Tjekker distance mellem punkt og venstres splitpunkt. Hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, x, leftNode.getSplit()) < this.closestDistField) {
                         findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
-
                     }
                 }
-                //hvis venstre node er et leaf
+                // Hvis venstre node er et leaf
                 if (searchKdNode.getLeft() instanceof Leaf) {
                     findNearestNeighbourLeaf(node.getLeft(), x, y, !divX);
                 }
 
-                //hvis højre er en node
+                // Hvis højre er en node
                 if (searchKdNode.getRight() instanceof Node) {
-
                     Node rightNode = ((Node) node.getRight());
-
-                    //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
+                    // Tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, x, rightNode.getSplit()) < this.closestDistField) {
                         findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
-
                     }
                 }
-                //hvis højre er et leaf
+                // Hvis højre er et leaf
                 if (searchKdNode.getRight() instanceof Leaf){
-                    //kalder metoden der løber leaf igennem
+                    // Kalder metoden der løber leaf igennem
                     findNearestNeighbourLeaf(node.getRight(), x, y, !divX);
                 }
             }
         }
-
+        // TIL TEST:
         //System.out.println("Fra kdTree: ClosestNode: " + closestNodeField);
         //System.out.println("Fra kdTree: ClosestDist: " + closestDistField);
         //System.out.println("Final node med lat og lon: " + closestNodeField.getLat() + " " + closestNodeField.getLon());
         return closestNodeField;
     }
 
-
+    // Metode der bruges i findNearestNeighbor(), når man er nede i et leaf
     public void findNearestNeighbourLeaf(KdNode searchKdNode, float x, float y, boolean divX) {
-        //System.out.println("Jeg er et leaf");
+        Leaf leaf = ((Leaf) searchKdNode); // Caster til leaf
 
-        Leaf leaf = ((Leaf) searchKdNode);
-
-
+        // Løber alle OSMNodes i bladet igennem og tjekker, om der er en kortere distance end den, vi allerede har
         for (OSMNode osmNode : leaf.getListOfOSMNodes()){
             double distanceCurrent = distanceSq(x, y, osmNode.getLon(), osmNode.getLat());
-
             if (this.closestDistField > distanceCurrent) {
                 this.closestDistField = distanceCurrent;
                 this.closestNodeField = osmNode;
             }
         }
-
         KdNode node = ((KdNode) leaf);
-        //System.out.println("Fra leaf Champnode: " + this.closestNodeField);
-        //System.out.println("Fra leaf ChampDist: " + this.closestDistField);
     }
 
 
-    public OSMNode getClosestNodeField() {
-        return closestNodeField;
-    }
+    /////////////// GETTERS ///////////////////
+    public KdNode getRoot() {return root;}
 
-    public void setClosestNodeField(OSMNode closestNodeField) {
-        this.closestNodeField = closestNodeField;
-    }
 
-    public double getClosestDistField() {
-        return closestDistField;
-    }
 
-    public void setClosestDistField(double closestDistField) {
-        this.closestDistField = closestDistField;
-    }
 }

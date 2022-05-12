@@ -9,11 +9,10 @@ public class AddressNode implements Serializable {
     public static final long serialVersionUID = 134123;
     char c;                                 // character
     AddressNode left, mid, right;           // left, middle, and right subtries
-    private List<AddressObject> listOfAddresses;    // value associated with string
+    private List<AddressObject> listOfAddresses;    // value associated with string (vores string er navnet på gaden og value er en liste med adresseobjekter)
 
     public AddressNode(char c) {
         this.c = c;
-        //listOfAddresses = new ArrayList<>();
     }
 
     public char getC(){

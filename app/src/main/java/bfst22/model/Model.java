@@ -88,16 +88,38 @@ public class Model {
 
     /////////////// KONSTRUKTØR ///////////////////
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
-        tst = new TST();
         var time = -System.nanoTime();
 
         if (filename.endsWith(".zip")) {   // Unzipper en zip-fil og læser den herefter på samme måde som osm-fil
             var zip = new ZipFile(new File(filename)); // Læser zip-filen én fil af gangen
             var entry = zip.entries().nextElement(); // Læser næste fil i zip-filen
             loadOSM(zip.getInputStream(entry));
+
+
         } else if (filename.endsWith(".osm")) {// Læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
+
+
+
             listOfCoastlines = makeCoastlineObject(coastlinesMap);
+
+            //MÅSKE PUT GRAPF TILBAGE HER
+            //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
+            mapOfOSMNodesToIndexCAR = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysCAR, mapOfOSMNodesToIndexCAR);
+            mapOfOSMNodesToIndexBIKE = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysBIKE, mapOfOSMNodesToIndexBIKE);
+            mapOfOSMNodesToIndexFOOT = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysFOOT, mapOfOSMNodesToIndexFOOT);
+            //Laver graf for veje hvor man kan henholdsvis køre bil, cykle og gå
+            graphCAR = makeGraph(mapOfOSMNodesToIndexCAR, listOfAllEdgesInWaysCAR, graphCAR);
+            graphBIKE = makeGraph(mapOfOSMNodesToIndexBIKE, listOfAllEdgesInWaysBIKE, graphBIKE);
+            graphFOOT = makeGraph(mapOfOSMNodesToIndexFOOT, listOfAllEdgesInWaysFOOT, graphFOOT);
+            // Laver arrays for veje hvor man kan henholdsvis køre bil, cykle og gå
+            arrayOfOSMNodesInGraphCAR = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexCAR, arrayOfOSMNodesInGraphCAR);
+            arrayOfOSMNodesInGraphBIKE = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexBIKE, arrayOfOSMNodesInGraphBIKE);
+            arrayOfOSMNodesInGraphFOOT = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexFOOT, arrayOfOSMNodesInGraphFOOT);
+            //Skal nok sættes op i .osm
+
+
+
         } else if (filename.endsWith(".obj")) { // Læser filen som en binary file (obj)
             try (var input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
                 minlat = input.readFloat();
@@ -106,11 +128,20 @@ public class Model {
                 maxlon = input.readFloat();
                 lines = (Map<WayType, List<Drawable>>) input.readObject();
                 listOfCoastlines = (List<PolyLine>) input.readObject();
-                //graph = (EdgeWeightedDigraph) input.readObject();
-                //Bliver læst eller gemt forkert
-                tst = (TST) input.readObject();
-                //tst.setRoot((AddressNode) input.readObject());
-                //System.out.println(tst.getRoot().getC());
+                Object o = input.readObject();
+                tst = (TST) o;
+               //graphCAR = (EdgeWeightedDigraph) input.readObject();
+                //graphBIKE = (EdgeWeightedDigraph) input.readObject();
+                //graphFOOT = (EdgeWeightedDigraph) input.readObject();
+
+
+
+
+
+
+
+
+
                 //VIGTIGT at skrive i samme rækkefølge som i save()
                 //tilføj de ting vi har tilføjet i save
             }
@@ -118,6 +149,7 @@ public class Model {
             lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
                     .map(Line::new)
                     .collect(toList()));
+
         }
         // Måler load time
         time += System.nanoTime(); // Load time i nanosekunder
@@ -176,19 +208,6 @@ public class Model {
         KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
         KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
 
-        //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
-        mapOfOSMNodesToIndexCAR = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysCAR, mapOfOSMNodesToIndexCAR);
-        mapOfOSMNodesToIndexBIKE = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysBIKE, mapOfOSMNodesToIndexBIKE);
-        mapOfOSMNodesToIndexFOOT = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysFOOT, mapOfOSMNodesToIndexFOOT);
-        //Laver graf for veje hvor man kan henholdsvis køre bil, cykle og gå
-        graphCAR = makeGraph(mapOfOSMNodesToIndexCAR, listOfAllEdgesInWaysCAR, graphCAR);
-        graphBIKE = makeGraph(mapOfOSMNodesToIndexBIKE, listOfAllEdgesInWaysBIKE, graphBIKE);
-        graphFOOT = makeGraph(mapOfOSMNodesToIndexFOOT, listOfAllEdgesInWaysFOOT, graphFOOT);
-        // Laver arrays for veje hvor man kan henholdsvis køre bil, cykle og gå
-        arrayOfOSMNodesInGraphCAR = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexCAR, arrayOfOSMNodesInGraphCAR);
-        arrayOfOSMNodesInGraphBIKE = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexBIKE, arrayOfOSMNodesInGraphBIKE);
-        arrayOfOSMNodesInGraphFOOT = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexFOOT, arrayOfOSMNodesInGraphFOOT);
-        //Skal nok sættes op i .osm
 
         // TIL TEST:
         //System.out.println(graphCAR);
@@ -206,11 +225,21 @@ public class Model {
             out.writeFloat(maxlon);
             out.writeObject(lines);
             out.writeObject(listOfCoastlines);
-            //out.writeObject(graph);
             out.writeObject(tst);
-            out.writeObject(tst.getRoot());
+
+            /*out.writeObject(KDTreeNodesInGraphAllWays);
+            out.writeObject(KDTreeNodesInGraphCAR);
+            out.writeObject(KDTreeNodesInGraphBIKE);
+            out.writeObject(KDTreeNodesInGraphFOOT);*/
+            //out.writeObject(graphCAR);
+            //out.writeObject(graphBIKE);
+            //out.writeObject(graphFOOT);
+
+
+
+
             //tilføj alle de ting vi har lavet: tst
-            //Gem kystlinjer her
+
         }
     }
 
@@ -525,11 +554,11 @@ public class Model {
                                     double weightDistance = calculateDistance(way.getNodes().get(j), way.getNodes().get(j+1)); // Hvor lang vejen er
 
                                     // Grafen for CAR får weightTime som vægt
-                                    DirectedEdge edgeOneWayCAR = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightTime, canGoByCar, canGoByBike, canGoByFoot);
-                                    DirectedEdge edgeOtherWayCAR = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightTime, canGoByCar, canGoByBike, canGoByFoot);
+                                    DirectedEdge edgeOneWayCAR = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightTime);
+                                    DirectedEdge edgeOtherWayCAR = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightTime);
                                     // Graferne for BIKE og FOOT får weightDistance som vægt
-                                    DirectedEdge edgeOneWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightDistance, canGoByCar, canGoByBike, canGoByFoot);
-                                    DirectedEdge edgeOtherWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightDistance, canGoByCar, canGoByBike, canGoByFoot);
+                                    DirectedEdge edgeOneWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightDistance);
+                                    DirectedEdge edgeOtherWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightDistance);
 
                                     //Tilføjer edge og dens nodes til listerne med edges og nodes
                                     if(isOneway || isRoundabout) {  // Tilføjer en edge den ene vej
@@ -887,7 +916,8 @@ public class Model {
     public List<DirectedEdge> getListOfAllEdgesInWaysAllWays() {
         return listOfAllEdgesInWaysAllWays;
     }
-
+    //Getter til Ternary search tree med adresser
+    public TST getTst() {return tst;}
 }
 
 

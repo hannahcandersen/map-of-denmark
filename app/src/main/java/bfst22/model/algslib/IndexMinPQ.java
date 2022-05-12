@@ -1,10 +1,12 @@
 package bfst22.model.algslib;
 //CODE FROM: https://algs4.cs.princeton.edu/24pq/IndexMinPQ.java.html
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 
-public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer> {
+public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer>, Serializable {
+    public static final long serialVersionUID = 1325232;
     private int maxN;        // maximum number of elements on PQ
     private int n;           // number of elements on PQ
     private int[] pq;        // binary heap using 1-based indexing

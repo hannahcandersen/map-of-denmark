@@ -8,12 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-
 //Starter rammen/programmet med Danmarkskortet
 public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // var filename = getParameters().getRaw().get(0);
         var model = new Model("data/bornholm.osm");
         new View(model, primaryStage);
     }

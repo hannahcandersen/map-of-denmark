@@ -4,8 +4,6 @@ package bfst22.model;
     An enum is a special "class" that represents a group of constants (unchangeable variables, like final variables)
 */
 
-// man kan tilføje flere typer f.eks. HIGHWAY
-
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -19,10 +17,7 @@ public enum WayType {
     ICE_RINK, MARINA, MINIATURE_GOLF, NATURE_RESERVE, PITCH, SPORTS_CENTRE, SWIMMING_POOL, RIVER_ANDMORE, SCHOOL,
     STREAM_ANDMORE, DOCK, POND_ANDMORE, HARBOUR, PARKING, HOSPITAL, FERRY, MULTIPOLYGON, GRAVEYARD, TERRITORIAl;
 
-    /*
-    Her er også stroke farve, men fordi BUILDING skal have to forskellige farver, er der lavet to metoder.
-    (se nedenfor)
-     */
+
     public Paint getFillColor() {
         return switch (this) {
             case LAKE, BASIN, WATER, RIVER_ANDMORE -> Color.valueOf("B2D2DD");
@@ -57,10 +52,6 @@ public enum WayType {
             case PITCH -> Color.valueOf("ACE0CC");
             case SCHOOL -> Color.valueOf("FFFFE6");
             case GRAVEYARD -> Color.valueOf("ABCBB0");
-
-
-
-            //case COASTLINE -> Color.valueOf("GREEN");
             default -> /*BACKGROUNDCOLOR*/ Color.valueOf("F2EFEA");
         };
     }
@@ -96,7 +87,6 @@ public enum WayType {
         return switch (this) {
             case MOTORWAY -> 6;
             case TRUNK, PRIMARY, SECONDARY, TERRITORIAl -> 4;
-            //case TERTIARY -> 6;
             case UNCLASSIFIED, LIVING_STREET -> 5;
             case ROAD, RACEWAY, TERTIARY -> 3;
             case CONSTRUCTIONWAY, SERVICE, PEDESTRIAN, STEPS, RESIDENTIALWAY -> 2;
