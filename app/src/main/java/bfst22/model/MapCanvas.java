@@ -166,7 +166,13 @@ public class MapCanvas extends Canvas {
         //////////////////// TEGNER ALTID MULTIPOLYGON_FOREST ////////////////////
         if( model.lines.get(WayType.FOREST) != null){
             for (Drawable drawable: model.lines.get(WayType.FOREST)) {
-                if (drawable instanceof MultiPolygon) drawable.fillWayType(gc, WayType.FOREST);
+                if (drawable instanceof MultiPolygon) {
+                    if(isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+                        drawable.fill(gc);
+                    }else
+                        drawable.fillWayType(gc, WayType.FOREST);
+                }
             }
         }
 
