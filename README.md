@@ -47,6 +47,16 @@ NEAREST NEIGHBOUR
 DEBUG MODE
 - Debug mode is only for developers
 
+ATTACHED .OBJ FILES
+Some attached .obj files will display some half regions, as they are not whole islands.
+We are currently not able to draw all Denmark.
+
+WHEN OPENING A NEW FILE
+When opening a new file you will be in the center of the map, but waaay zoomed in. So you have to zoom out to be able to see the map.
+
+LARGE FORESTS (MULTIPOLYGONS)
+Some large forests (multipolygons) will in some cases be drawn a little funny. The reason for this is because the lines are not sorted.
+
 
 ## Versioning
 We have used [github.itu](https://github.itu.dk/trbj/BFST22Group25) for versioning.
