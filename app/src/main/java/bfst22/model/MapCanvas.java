@@ -253,12 +253,7 @@ public class MapCanvas extends Canvas {
 
             if (model.getKDTreeRIVER_ANDMORE() != null && model.getKDTreeRIVER_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeRIVER_ANDMORE().getRoot()) != null) {
                 for (Drawable drawable : model.getKDTreeRIVER_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeRIVER_ANDMORE().getRoot())) {
-                    if (isPartySelected) {
-                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
-                        drawable.fill(gc);
-                    } else {
-                        drawable.fillWayType(gc, WayType.RIVER_ANDMORE);
-                    }
+                    drawable.drawWayType(gc, WayType.RIVER_ANDMORE);
                 }
             }
 

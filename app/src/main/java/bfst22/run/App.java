@@ -12,7 +12,7 @@ import javafx.scene.Scene;
 public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        var model = new Model("data/bornholm.osm");
+        var model = new Model("data/testAmager.osm");
         new View(model, primaryStage);
     }
 }
