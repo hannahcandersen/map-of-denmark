@@ -37,7 +37,6 @@ class TSTTest {
 
     @Test
     void put() {
-        assertEquals();
     }
 
     @Test
