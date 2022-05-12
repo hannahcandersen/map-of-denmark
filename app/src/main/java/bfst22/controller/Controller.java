@@ -182,18 +182,6 @@ public class Controller {
         double middelXzoom = canvas.getWidth();
         double middelYzoom = canvas.getHeight();
         Point2D realmiddelzoom = canvas.mouseToModel(new Point2D(middelXzoom, middelYzoom));
-
-        // TODO slet hvis det ikke virker, bruges til at zoome hen til adressen
-       // canvas.zoom(canvas.getWidth()/(canvas.getModel().getMaxlon()-0.05)-(canvas.getModel().getMinLon()-0.05),0, 0);
-        //canvas.zoom(canvas.getWidth()/5,realmiddelzoom.getX(), realmiddelzoom.getY());
-        //canvas.zoom(1.05,chosenAddressFrom.getLat()/2, chosenAddressFrom.getLon());
-        //canvas.repaint();
-
-
-        //ZOOM:
-        //getWidth og getHeight og lave om til MouseToModel. Den x værdi skal divideres med den x værdi vi gerne vil have
-
-
     }
     @FXML
     //Finder korteste rute for en bil
