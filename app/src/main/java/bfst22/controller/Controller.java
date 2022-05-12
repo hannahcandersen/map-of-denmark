@@ -23,10 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-
-
 //Controller klassen: opdaterer objekterne fra model klassen og holder styr på hvad der bliver vist på canvas.
-
 
 public class Controller {
     @FXML
@@ -63,7 +60,6 @@ public class Controller {
     public void onScroll(ScrollEvent e) {
         var factor = e.getDeltaY();
         canvas.zoom(Math.pow(1.05, factor), e.getX(), e.getY());
-        //scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
         scaleInfo.textProperty().bind(Bindings.format(canvas.getDistToString()));
     }
     //Metoden gør det muligt at trække i kortet ved at trække musens sidste koordinater fra musens nye koordinater.
@@ -96,29 +92,29 @@ public class Controller {
     @FXML
     public void openFile(ActionEvent event) throws XMLStreamException, IOException, ClassNotFoundException {
         FileChooser fc = new FileChooser();
-        //TODO husk at slette hvis ikke implementeret
-        //så den kun viser pdf filer??
-        //fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PDF files", "*.pdf"));
+
         File selectedFile = fc.showOpenDialog(null);
 
         if(selectedFile != null) {
             Model model = new Model(selectedFile.getAbsolutePath());
             canvas.init(model);
+
+            // Finder midten af kortet
+            double middelX = (model.getMinLon()+model.getMaxlon())/2;
+            double middelY = (model.getMinLat()+model.getMaxlat())/2;
+            Point2D middleOfMap = new Point2D(middelX, middelY);
+
+            // Panner hen til midten af kortet
+            canvas.center(middleOfMap);
+            canvas.repaint();
+            scaleInfo.textProperty().bind(Bindings.format(canvas.getDistToString()));
+
             //flytter canvas
-            canvas.zoom(canvas.getWidth() / (model.getMaxlon() - model.getMinLon()), 0, 0);
+            //canvas.zoom(canvas.getWidth() / (model.getMaxlon() - model.getMinLon()), 0, 0);
 
         } else {
             System.out.println("File is not valid");
-        }
-    }
-
-    //gør ikke helt det jeg håbede
-    private void moveCanvas(float x, float y) {
-        canvas.setTranslateX(x);
-        canvas.setTranslateY(y);
-    }
-
-
+        }}
 
 
     ///////////VISER OG VÆLGER ADRESSER///////////
@@ -173,6 +169,31 @@ public class Controller {
         checkBoxCar.setSelected(true);
         onClickedcheckBoxCar(actionEvent);
 
+        double middelX = canvas.getWidth()/2;
+        double middelY = canvas.getHeight()/2;
+        Point2D realmiddel = canvas.mouseToModel(new Point2D(middelX, middelY));
+
+        double distFromMiddelX = chosenAddressFrom.getLat()-realmiddel.getX();
+        double distFromMiddelY = chosenAddressFrom.getLon()-realmiddel.getY();
+
+        //Panner hen så startpunkt er i midten af skærmen
+        canvas.pan(distFromMiddelX*canvas.getRation(),distFromMiddelY*canvas.getRation());
+
+        double middelXzoom = canvas.getWidth();
+        double middelYzoom = canvas.getHeight();
+        Point2D realmiddelzoom = canvas.mouseToModel(new Point2D(middelXzoom, middelYzoom));
+
+        // TODO slet hvis det ikke virker, bruges til at zoome hen til adressen
+       // canvas.zoom(canvas.getWidth()/(canvas.getModel().getMaxlon()-0.05)-(canvas.getModel().getMinLon()-0.05),0, 0);
+        //canvas.zoom(canvas.getWidth()/5,realmiddelzoom.getX(), realmiddelzoom.getY());
+        //canvas.zoom(1.05,chosenAddressFrom.getLat()/2, chosenAddressFrom.getLon());
+        //canvas.repaint();
+
+
+        //ZOOM:
+        //getWidth og getHeight og lave om til MouseToModel. Den x værdi skal divideres med den x værdi vi gerne vil have
+
+
     }
     @FXML
     //Finder korteste rute for en bil
@@ -207,7 +228,6 @@ public class Controller {
             } catch (NullPointerException e) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText("Please select a start and destination address");
-                //alert.setContentText("Please select a start and destination address :)");
                 alert.show();}}}
 
     @FXML

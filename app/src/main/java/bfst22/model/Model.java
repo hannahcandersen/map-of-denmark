@@ -347,12 +347,10 @@ public class Model {
                                         case "meadow" -> WayType.MEADOW;
                                         case "cemetery" -> WayType.CEMETERY;
                                         case "allotments" -> WayType.ALLOTMENTS;
-                                        case "farmyard" -> WayType.FARMYARD;
                                         case "commercial" -> WayType.COMMERCIAL;
                                         case "construction" -> WayType.CONSTRUCTION;
                                         case "retail" -> WayType.RETAIL;
                                         case "farmland" -> WayType.FARMLAND;
-                                        case "orchard" -> WayType.ORCHARD;
                                         case "vineyard" -> WayType.VINEYARD;
                                         case "grass" -> WayType.GRASS;
                                         case "greenhouse_horticulture" -> WayType.GREENHOUSE_HORTICULTURE;
