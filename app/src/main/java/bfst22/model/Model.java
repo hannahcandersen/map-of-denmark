@@ -48,14 +48,12 @@ public class Model {
     private EdgeWeightedDigraph graphCAR, graphBIKE, graphFOOT;
     // Felter der bruges til at lave edges til graferne
     private double maxspeed = 0;
-    private boolean isOneway;
-    private boolean isRoundabout;
-    private boolean vehicle;
-    private boolean bicycle;
-    private boolean foot;
-    private boolean canGoByCar;
-    private boolean canGoByBike;
-    private boolean canGoByFoot;
+    private boolean isOneway, isRoundabout;
+    private boolean vehicle, bicycle, foot;
+    private boolean canGoByCar, canGoByBike, canGoByFoot;
+    private TST tst; // Ternary Search Tree objekt
+    private Coastline coastline = new Coastline(); // Coastline objekt
+    private List<PolyLine> listOfCoastlines = new ArrayList<>(); // Liste med alle coastlines
     // Lister, maps og arrays der bruges til at koble OSMNodes og indeks sammen i graferne
     private OSMNode[] arrayOfOSMNodesInGraphCAR, arrayOfOSMNodesInGraphBIKE, arrayOfOSMNodesInGraphFOOT;
     private final ArrayList<DirectedEdge> listOfAllEdgesInWaysAllWays = new ArrayList<>();
@@ -80,10 +78,8 @@ public class Model {
     // Map med coastlines
     Map<WayType, List<Drawable>> coastlinesMap = new EnumMap<>(WayType.class);{
         for (var type : WayType.values()) coastlinesMap.put(type, new ArrayList<>());}
-    // Liste med alle coastlines
-    private List<PolyLine> listOfCoastlines = new ArrayList<>();
-    // Ternary Search Tree
-    private TST tst;
+
+
 
 
     /////////////// KONSTRUKTØR ///////////////////
@@ -94,14 +90,15 @@ public class Model {
             var zip = new ZipFile(new File(filename)); // Læser zip-filen én fil af gangen
             var entry = zip.entries().nextElement(); // Læser næste fil i zip-filen
             loadOSM(zip.getInputStream(entry));
+            System.out.println("Done med at loade OSM");
 
 
         } else if (filename.endsWith(".osm")) {// Læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
+            System.out.println("Done med at loade OSM");
 
 
-
-            listOfCoastlines = makeCoastlineObject(coastlinesMap);
+            listOfCoastlines = coastline.makeCoastlineObject(coastlinesMap, WayType.COASTLINE);
 
             //MÅSKE PUT GRAPF TILBAGE HER
             //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
@@ -133,11 +130,6 @@ public class Model {
                //graphCAR = (EdgeWeightedDigraph) input.readObject();
                 //graphBIKE = (EdgeWeightedDigraph) input.readObject();
                 //graphFOOT = (EdgeWeightedDigraph) input.readObject();
-
-
-
-
-
 
 
 
@@ -633,102 +625,11 @@ public class Model {
                     break;
             }
         }
-        //System.out.println("Done med at loade OSM");
     }
 
 
-    /////////////// METODER DER LAVER COASTLINES  ///////////////////
 
-    private List<PolyLine> makeCoastlineObject(Map<WayType, List<Drawable>> linesList) {
-
-        List<PolyLine> listOfCoastlines = new ArrayList<>(); //Holder på vores færdige coastlines - Den vi returnerer til sidst
-        List<Drawable> unSortedCoastlines = linesList.get(WayType.COASTLINE); //Alle ways af typen coastline
-        PolyLine currentWay = null;
-        OSMNode startOSMNode = null; //Starten for CurrentWay
-        OSMNode endOSMNode = null; //Slutning for CurrentWay
-        OSMNode currentStartOSMNode; //Start for den coastline man kigger på lige nu
-        OSMNode currentEndOSMNode; //Slut for den coastline man kigger på lige nu
-        ArrayList<OSMNode> listOfNodesInCoastline = new ArrayList<>(); // Alle nodes i currentWay
-
-        while (!unSortedCoastlines.isEmpty()) {
-            List<Drawable> buildUpCoastlinesList = new ArrayList<>(); // Liste for de coastlines som ikke passer med nogen
-            for (Drawable coastline : unSortedCoastlines) {
-
-                //Når det er første iteration
-                if (listOfNodesInCoastline.size() == 0) {
-                    listOfNodesInCoastline.addAll(coastline.getNodes());
-                    startOSMNode = coastline.getNodes().get(0);
-                    endOSMNode = coastline.getNodes().get(coastline.getNodes().size() - 1);
-                    //Opretter currentWay med nodes i vores første vej
-                    currentWay = new PolyLine(listOfNodesInCoastline); // Opretter currentWay. Starter med at være den første coastline vi møder
-                    continue;
-                }
-
-                // Når det ikke er første iteration
-                currentStartOSMNode = coastline.getNodes().get(0);
-                currentEndOSMNode = coastline.getNodes().get(coastline.getNodes().size() - 1);
-//
-                // SITUATION 1: Begge pile mod højre.
-                if (currentStartOSMNode.getLat() == endOSMNode.getLat() && currentStartOSMNode.getLon() == endOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(coastline.getNodes());
-                    endOSMNode = currentEndOSMNode;
-                    currentWay = new PolyLine(listOfNodesInCoastline); // Tilføjer den der passer og laver ny, længere, currentway
-                    //System.out.println("Vi er ved situation 1");
-                }
-                // SITUATION 2: Begge pile mod midten
-                else if (endOSMNode.getLat() == currentEndOSMNode.getLat() && endOSMNode.getLon() == currentEndOSMNode.getLon()) {
-                    // Vend nummer to pil om og tilføjer til listOfNodesInCoastLine
-                    Collections.reverse(coastline.getNodes());
-                    listOfNodesInCoastline.addAll(coastline.getNodes());
-                    endOSMNode = currentEndOSMNode;
-                    currentWay = new PolyLine(listOfNodesInCoastline); // Tilføjer den der passer og laver ny, længere, currentway
-                    //System.out.println("Vi er ved situation 2");
-                }
-                // SITUATION 3: Begge pile væk fra midten // Start og start mødes //Første pil drejet rundt
-                else if (currentStartOSMNode.getLat() == startOSMNode.getLat() && currentStartOSMNode.getLon() == startOSMNode.getLon()) {
-                    // Vend nummer et pil om og tilføjer til listOfNodesInCoastLine
-                    Collections.reverse(coastline.getNodes());
-                    listOfNodesInCoastline.addAll(0, coastline.getNodes());
-                    startOSMNode = listOfNodesInCoastline.get(0);
-                    currentWay = new PolyLine(listOfNodesInCoastline); // Tilføjer den der passer og laver ny, længere, currentway
-                    //System.out.println("Vi er ved situation 3");
-                }
-                // SITUATION 4: Begge pile mod venstre // Vores start == nye slut
-                else if (currentEndOSMNode.getLat() == startOSMNode.getLat() && currentEndOSMNode.getLon() == startOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(0, coastline.getNodes()); // Tilføjer foran det andet
-                    startOSMNode = listOfNodesInCoastline.get(0);
-                    currentWay = new PolyLine(listOfNodesInCoastline); // Tilføjer den der passer og laver ny, længere, currentway
-                    //System.out.println("Vi er ved situation 4");
-                } else {
-                    buildUpCoastlinesList.add(coastline); // Hvis den ikke passer på nogen, tilføjes den til listen med dem, der ikke passer
-                    //System.out.println("Jeg går ind i else");
-                }
-                //Hvis end og start det samme, ville alle coastlines være tilføjet
-                if (endOSMNode.getLat() == startOSMNode.getLat() && endOSMNode.getLon() == startOSMNode.getLon()) {
-                    listOfNodesInCoastline.addAll(coastline.getNodes());
-                    listOfCoastlines.add(currentWay); // Tilføjer den fulde kystline til linjen med kystlinjer
-                    listOfNodesInCoastline.clear();
-                    //System.out.println("Vi er færdige med kystlinjen og har tilføjet den");
-                }
-            }
-
-            // Hvis der har været en iteration, hvor ingen passede, afslutter vi selv kystlinjen
-           if(buildUpCoastlinesList.size() == unSortedCoastlines.size()) {
-                    //tilføjer den færdige polyline figur til listen, der gemmer alle øerne i form af polylines
-                    listOfCoastlines.add(currentWay);
-                    listOfNodesInCoastline.clear();
-            }
-            else {
-               // Laver ny iteartion med listen af de kystlinjer, der endnu ikke er tilføjet
-               unSortedCoastlines = buildUpCoastlinesList;
-           }
-        }
-        //System.out.println("Done med kystliner");
-        return listOfCoastlines;
-
-    }
-
-    /////////////// METODER DER LAVER GRAFER ///////////////////
+    /////////////// METODER OG HJÆLPE-METODER DER LAVER GRAFER ///////////////////
 
     // Laver og retunerer en EdgeWeigtedGraph
     private EdgeWeightedDigraph makeGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, ArrayList<DirectedEdge> listOfAllEdgesInWays, EdgeWeightedDigraph graph) {
@@ -760,6 +661,7 @@ public class Model {
         return mapOfOSMNodesToIndex;
     }
 
+
     // Laver et array der holder hver OSMNodes i grafen på dens tilhørende index. Bruges til at få OSMNode udfra index.
     // En OSMNode vil have samme index i arrayet og i mappet (metoden ovenover)
     private OSMNode[] makeArrayOfOSMNodesInGraph(HashMap<OSMNode, Integer> mapOfOSMNodesToIndex, OSMNode[] arrayOfOSMNodesInGraph){
@@ -772,6 +674,9 @@ public class Model {
         }
         return arrayOfOSMNodesInGraph;
     }
+
+
+    /////////////// UDREGNER DISTANCE OG TID METODER ///////////////////
 
     // Bruges til at regne vægten (weightDistance) ud for edge:
     private double calculateDistance(OSMNode punkt1, OSMNode punkt2) {
@@ -806,7 +711,9 @@ public class Model {
     }
 
 
-    /////////////// ANDRE METODER ///////////////////
+
+
+    /////////////// TILFØJER OBSERVERS ///////////////////
 
     // tilføjer en observer til listen observers
     // Runnable = metode der ikke tager nogle argumenter eller returnerer noget
@@ -822,6 +729,7 @@ public class Model {
             observer.run();
         }
     }
+
 
 
     /////////////// GETTERS ///////////////////
