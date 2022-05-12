@@ -134,8 +134,8 @@ public class MapCanvas extends Canvas {
         //////////////////// TEGNER FOREST ////////////////////
         if (model.getKDTreeFOREST() != null && model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot()) != null) {
             for (Drawable drawable : model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot())) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 if (isPartySelected) {
+                    gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                     drawable.fill(gc);
                 } else {
                     drawable.fillWayType(gc, WayType.FOREST);
