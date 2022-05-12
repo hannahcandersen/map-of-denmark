@@ -5,6 +5,7 @@ import bfst22.model.WayType;
 import bfst22.view.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -13,7 +14,8 @@ import java.util.ArrayList;
     Hver edge indeholder to vertices (to og from), en vægt og booleans for om man må køre bil, cykle eller gå
  */
 
-public class DirectedEdge implements Drawable{
+public class DirectedEdge implements Drawable, Serializable {
+    public static final long serialVersionUID = 1395234;
 
     private final OSMNode start; // En vertex (start)
     private final OSMNode end; // En anden vertex (slut)

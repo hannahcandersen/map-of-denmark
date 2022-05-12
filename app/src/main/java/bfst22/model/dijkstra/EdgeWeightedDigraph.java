@@ -2,12 +2,15 @@ package bfst22.model.dijkstra;
 
 import bfst22.model.OSMNode;
 import bfst22.model.algslib.Bag;
+
+import java.io.Serializable;
 import java.util.HashMap;
 
 // En edge weighted graf der består af et antal vertices og et antal directed edges (der har et from, to og en vægt).
 // Bygges som en adjacency list, hvor hver index er en vertex, med en tilhørende bag af adjacent vertices
 
-public class EdgeWeightedDigraph {
+public class EdgeWeightedDigraph implements Serializable {
+    public static final long serialVersionUID = 1335234;
 
     //Line separator opdeler en string på to forskellige linjer. FX: "Hello," + System.lineSeparator() + "there"
     private static final String NEWLINE = System.lineSeparator();

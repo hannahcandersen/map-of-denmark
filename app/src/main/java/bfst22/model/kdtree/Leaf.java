@@ -3,12 +3,15 @@ package bfst22.model.kdtree;
 import bfst22.model.OSMNode;
 import bfst22.view.Drawable;
 
+import java.io.Serializable;
 import java.util.List;
 
 // Subklasse til KdNode
 // Holder hver på op til 100 elementer
 
-public class Leaf extends KdNode {
+public class Leaf extends KdNode implements Serializable {
+
+        public static final long serialVersionUID = 1325235;
         protected List<Drawable> listOfDrawables;
         protected List<OSMNode> listOfOSMNodes;
 

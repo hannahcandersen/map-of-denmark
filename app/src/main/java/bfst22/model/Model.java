@@ -95,17 +95,11 @@ public class Model {
             var entry = zip.entries().nextElement(); // Læser næste fil i zip-filen
             loadOSM(zip.getInputStream(entry));
 
-            KDTreeNodesInGraphAllWays = new KdTree(listOfAlleNodesInGraphAllWays, 0);
-            KDTreeNodesInGraphCAR = new KdTree(listOfAlleNodesInGraphCAR, 0);
-            KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
-            KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
+
         } else if (filename.endsWith(".osm")) {// Læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
 
-            KDTreeNodesInGraphAllWays = new KdTree(listOfAlleNodesInGraphAllWays, 0);
-            KDTreeNodesInGraphCAR = new KdTree(listOfAlleNodesInGraphCAR, 0);
-            KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
-            KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
+
 
             listOfCoastlines = makeCoastlineObject(coastlinesMap);
 
@@ -136,13 +130,11 @@ public class Model {
                 listOfCoastlines = (List<PolyLine>) input.readObject();
                 Object o = input.readObject();
                 tst = (TST) o;
-                KDTreeNodesInGraphAllWays = new KdTree(listOfAlleNodesInGraphAllWays, 0);
-                KDTreeNodesInGraphCAR = new KdTree(listOfAlleNodesInGraphCAR, 0);
-                KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
-                KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
-                graphCAR = (EdgeWeightedDigraph) input.readObject();
-                graphBIKE = (EdgeWeightedDigraph) input.readObject();
-                graphFOOT = (EdgeWeightedDigraph) input.readObject();
+               //graphCAR = (EdgeWeightedDigraph) input.readObject();
+                //graphBIKE = (EdgeWeightedDigraph) input.readObject();
+                //graphFOOT = (EdgeWeightedDigraph) input.readObject();
+
+
 
 
 
@@ -158,10 +150,6 @@ public class Model {
                     .map(Line::new)
                     .collect(toList()));
 
-            KDTreeNodesInGraphAllWays = new KdTree(listOfAlleNodesInGraphAllWays, 0);
-            KDTreeNodesInGraphCAR = new KdTree(listOfAlleNodesInGraphCAR, 0);
-            KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
-            KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
         }
         // Måler load time
         time += System.nanoTime(); // Load time i nanosekunder
@@ -215,6 +203,10 @@ public class Model {
         KDTreeRIVER_ANDMORE = new KdTree(lines.get(WayType.RIVER_ANDMORE));
         KDTreeCOASTLINE = new KdTree(lines.get(WayType.COASTLINE));
         KDTreeTERRITORIAl = new KdTree(lines.get(WayType.TERRITORIAl));
+        KDTreeNodesInGraphAllWays = new KdTree(listOfAlleNodesInGraphAllWays, 0);
+        KDTreeNodesInGraphCAR = new KdTree(listOfAlleNodesInGraphCAR, 0);
+        KDTreeNodesInGraphBIKE = new KdTree(listOfAlleNodesInGraphBIKE, 0);
+        KDTreeNodesInGraphFOOT = new KdTree(listOfAlleNodesInGraphFOOT, 0);
 
 
         // TIL TEST:
@@ -234,13 +226,16 @@ public class Model {
             out.writeObject(lines);
             out.writeObject(listOfCoastlines);
             out.writeObject(tst);
-            out.writeObject(KDTreeNodesInGraphAllWays);
+
+            /*out.writeObject(KDTreeNodesInGraphAllWays);
             out.writeObject(KDTreeNodesInGraphCAR);
             out.writeObject(KDTreeNodesInGraphBIKE);
-            out.writeObject(KDTreeNodesInGraphFOOT);
-            out.writeObject(graphCAR);
-            out.writeObject(graphBIKE);
-            out.writeObject(graphFOOT);
+            out.writeObject(KDTreeNodesInGraphFOOT);*/
+            //out.writeObject(graphCAR);
+            //out.writeObject(graphBIKE);
+            //out.writeObject(graphFOOT);
+
+
 
 
             //tilføj alle de ting vi har lavet: tst

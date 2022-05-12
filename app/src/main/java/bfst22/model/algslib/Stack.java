@@ -1,9 +1,11 @@
 package bfst22.model.algslib;
 //CODE FROM: https://algs4.cs.princeton.edu/13stacks/Stack.java
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Stack<Item> implements Iterable<Item> {
+public class Stack<Item> implements Iterable<Item>, Serializable {
+    public static final long serialVersionUID = 1325294;
     private Node<Item> first;     // top of stack
     private int n;                // size of the stack
 

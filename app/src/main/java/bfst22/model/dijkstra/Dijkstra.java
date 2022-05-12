@@ -5,6 +5,7 @@ import bfst22.model.OSMNode;
 import bfst22.model.algslib.IndexMinPQ;
 import bfst22.model.algslib.Stack;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 
@@ -12,7 +13,8 @@ import java.util.HashMap;
     Finder shortest path fra et startPunkt til slutPunkt i grafen
  */
 
-public class Dijkstra {
+public class Dijkstra implements Serializable {
+    public static final long serialVersionUID = 1324234;
     private double[] distTo;          // Holder korteste distance til alle vertices. distTo[v] = distance (vægt) for korteste vej fra Start-vertex til vertex v
     private DirectedEdge[] edgeTo;    // Holder den sidste edge på korteste vej til hver vertex. edgeTo[v] = sidste edge på korteste vej fra Start-vertex til vertex v
     private IndexMinPQ<Double> pq;    // Minimums-priority queue med vertices

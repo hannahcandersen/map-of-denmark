@@ -3,7 +3,11 @@ package bfst22.model.kdtree;
 // Subklasse til KdNode
 // Indeholder ingen elementer, men en splitværdi og en reference til højre og venstre barn
 
-public class Node extends KdNode {
+import java.io.Serializable;
+
+public class Node extends KdNode implements Serializable {
+
+    public static final long serialVersionUID = 1325236;
 
     private KdNode left, right;
     private float split; // Koordinat for den node, der var split i KdTræet. Er skiftevis x og y

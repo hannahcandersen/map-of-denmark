@@ -12,7 +12,7 @@ import static java.awt.geom.Point2D.distanceSq;
 
 public class KdTree implements Serializable {
 
-    public static final long serialVersionUID = 1325234;
+    public static final long serialVersionUID = 1325237;
 
     /////////////// FELTER ///////////////////
     private KdNode root; // Træets rod
