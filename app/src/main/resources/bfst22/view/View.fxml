@@ -52,21 +52,6 @@
             <ListView fx:id="listViewFrom" layoutX="124.0" layoutY="42.0" onMouseClicked="#chooseAddressFrom" prefHeight="184.0" prefWidth="184.0" visible="false" />
             <ListView fx:id="listViewTo" layoutX="348.0" layoutY="42.0" onMouseClicked="#chooseAddressTo" prefHeight="184.0" prefWidth="184.0" visible="false" />
             <CheckBox fx:id="colorCheckBox" layoutX="14.0" layoutY="387.0" mnemonicParsing="false" onAction="#partyColorToggle" text="Party mode" AnchorPane.bottomAnchor="75.4" AnchorPane.leftAnchor="14.0" />
-         <Pane fx:id="warningPane" centerShape="true" layoutX="246.0" layoutY="206.0" maxHeight="74.0" maxWidth="146.0" minHeight="74.0" minWidth="146.0" prefHeight="74.0" prefWidth="146.0" scaleShape="false" style="-fx-background-color: EE4B2B;" visible="false">
-            <children>
-               <Label fx:id="Warning" layoutX="9.0" layoutY="3.0" text="Epilepsy Warning">
-                  <font>
-                     <Font name="Comic Sans MS" size="16.0" />
-                  </font>
-               </Label>
-               <Label layoutX="11.0" layoutY="26.0" text="Party mode selected">
-                  <font>
-                     <Font name="Comic Sans MS" size="13.0" />
-                  </font>
-               </Label>
-               <Button fx:id="warningOkButton" layoutX="57.0" layoutY="46.0" mnemonicParsing="false" onAction="#onClickWarningOk" prefHeight="25.0" prefWidth="31.0" text="Ok" />
-            </children>
-         </Pane>
          <CheckBox fx:id="graphCheckBox" layoutX="15.0" layoutY="417.0" mnemonicParsing="false" onAction="#graphColorToggle" text="Graph mode" AnchorPane.bottomAnchor="45.4" AnchorPane.leftAnchor="14.0" />
          <CheckBox fx:id="debugBox" layoutX="15.0" layoutY="449.0" mnemonicParsing="false" onAction="#onClickdebugBox" text="Debug mode" AnchorPane.bottomAnchor="13.399999999999999" AnchorPane.leftAnchor="14.0" />
          <Label fx:id="scaleInfo" layoutX="532.0" layoutY="427.0" prefHeight="28.0" prefWidth="90.0" style="-fx-background-color: EFC0E8; -fx-text-fill: BLACK;" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="17.599999999999994" />

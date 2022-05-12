@@ -24,17 +24,18 @@ public class TST implements Serializable {
         return node.getListOfAddresses();           //returnerer alle adresserne med samme navn
     }
 
-
-    //Dette er en hjælpe metode til den anden get metode
-        //node er den node vi befinder os på (det kan være node, node.left, node.right eller node.mid)
-        //key er navnet på gaden
-        //d er en counter der holder styr på hvilke bogstav vi befinder os på
-    //Metoden sammen ligner bogstavet som er i TST og det fra gadenavnet
-        //Hvis de er det samme bogstav, så kalder den rekursivt node.mid
-        //Hvis gadenavnet's bogstav kommer før i alfabetet end det der står i TST, så kalder den rekursivt node.left
-        //Hvis gadenavnet's bogstav kommer efter i alfabetet end det der står i TST, så kalder den rekursivt node.right
-        //Hvis ingen af disse if-statements er true, så er vi på sidste bogstav i gadenavnet og returnerer derfor den node
-    private static AddressNode get(AddressNode node, String key, int d) {
+/*
+    Dette er en hjælpe metode til den anden get metode
+        node er den node vi befinder os på (det kan være node, node.left, node.right eller node.mid)
+        key er navnet på gaden
+        d er en counter der holder styr på hvilke bogstav vi befinder os på
+        Metoden sammen ligner bogstavet som er i TST og det fra gadenavnet
+        Hvis de er det samme bogstav, så kalder den rekursivt node.mid
+        Hvis gadenavnet's bogstav kommer før i alfabetet end det der står i TST, så kalder den rekursivt node.left
+        Hvis gadenavnet's bogstav kommer efter i alfabetet end det der står i TST, så kalder den rekursivt node.right
+        Hvis ingen af disse if-statements er true, så er vi på sidste bogstav i gadenavnet og returnerer derfor den node
+ */
+    private AddressNode get(AddressNode node, String key, int d) {
         if (node == null) return null;
         char c = key.charAt(d);
         if (c < node.c) return get(node.left, key, d);

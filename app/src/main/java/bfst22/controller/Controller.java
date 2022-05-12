@@ -40,20 +40,19 @@ public class Controller {
     @FXML
     private CheckBox colorCheckBox, graphCheckBox, debugBox;
     @FXML
-    private Pane warningPane, transportTypePane;
+    private Pane transportTypePane;
     @FXML
     private Label scaleInfo;
     @FXML
     private RadioButton checkBoxCar, checkBoxBicycle, checkBoxWalking;
 
-    private int clickOnWaringButtonCounter = 0;
+    private int clickOnPartyModeCheckBoxCounter = 0;
     private AddressObject chosenAddressFrom, chosenAddressTo;
 
 
     //metoden init() er en predefineret metode der bruges til at initialisere et objekt efter objektet er skabt.
     public void init(Model model) {
         canvas.init(model);
-        warningPane.setVisible(false);
         //scaleInfo.textProperty().bind(Bindings.format(canvas.getRationToString()));
         scaleInfo.textProperty().bind(Bindings.format(canvas.getDistToString()));
     }
@@ -131,7 +130,7 @@ public class Controller {
     public void getSearchResultTo(KeyEvent keyEvent) {
         getSearchResult(toTextField, listViewTo);}
 
-    //Viser a
+    //Viser adresser efter mere end 3 bogstaver er indtastet.
     private void getSearchResult(TextField textField, ListView<AddressObject> listView) {
         String input = textField.getText();
         if(input.length() > 3) {
@@ -169,7 +168,7 @@ public class Controller {
     ///////////SØGEFUNKTION OG TRANSPORT MULIGHEDER///////////
     @FXML
     //Hver gang en bruger trykker på 'Find route' knappen, vil den som det første søge en rute for en bil
-    //For at få vist ruten for en anden transportform, så kan man vælge det efter
+    //For at få vist ruten for en anden transportform, så kan man vælge cykel eller gågang
     public void searchRoute(ActionEvent actionEvent) {
         checkBoxCar.setSelected(true);
         onClickedcheckBoxCar(actionEvent);
@@ -282,15 +281,17 @@ public class Controller {
     @FXML
     public void partyColorToggle(ActionEvent event) {
         if(colorCheckBox.isSelected()){
-            if(clickOnWaringButtonCounter<1){warningPane.setVisible(true);}
+            if(clickOnPartyModeCheckBoxCounter<1){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText("WARNING: party mode selected");
+                alert.show();
+            }
             canvas.setPartySelected(true);}
         else{canvas.setPartySelected(false);}
-        canvas.repaint();}
-    @FXML
-    //Når man vælger PartyMode, så bliver lige en advarsel vist
-    public void onClickWarningOk(ActionEvent event){
-        warningPane.setVisible(false);
-        clickOnWaringButtonCounter++;}
+        canvas.repaint();
+    clickOnPartyModeCheckBoxCounter++;
+    }
+
     @FXML
     public void graphColorToggle(ActionEvent event){
         if(graphCheckBox.isSelected()){canvas.setGraphSelected(true);}
