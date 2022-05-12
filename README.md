@@ -62,5 +62,5 @@ The final release can be found: [Releases](https://github.itu.dk/trbj/BFST22Grou
 
 ## Acknowledgments
 * TA's from studyLab
-* We would not have made it through this project without our good TA's, Nadja, and the great Emil from StudyLab :)
+* We would not have made it through this project without our good TA, Nadja, and the great Emil from StudyLab :)
 
