@@ -8,12 +8,10 @@ import javafx.scene.shape.FillRule;
 
 import java.util.ArrayList;
 
-//Canvas = lærred
-//https://docs.oracle.com/javase/8/javafx/api/javafx/scene/canvas/GraphicsContext.html
 //Klassen Drawable er et interface som bruger GraphicsContext til at tegne scenen/lærred.
+//Default svarer til et "else" statement hvilket betyder at den udfører den handling uanset hvad.
 public interface Drawable {
-    //Default svarer til et "else" statement hvilket betyder at den udfører den handling uanset hvad.
-    //Metoden draw
+
     default void draw(GraphicsContext gc) {
         gc.beginPath();
         trace(gc);
@@ -30,30 +28,24 @@ public interface Drawable {
         trace(gc);
         gc.fill();
     }
-
     default void fillWayType(GraphicsContext gc, WayType wt) {
         gc.beginPath();
+        gc.setFillRule(FillRule.EVEN_ODD);
         trace(gc);
         gc.setFill(wt.getFillColor());
-        gc.setFillRule(FillRule.EVEN_ODD);
         gc.fill();
     }
 
     void trace(GraphicsContext gc);
-
-    //Bruges til at finde vejens midtpunkt
+    //OSMWay midtpunkt
     float getMiddleX();
     float getMiddleY();
 
     public float getCurrentMinX();
-
     public float getCurrentMaxX();
-
     public float getCurrentMinY();
-
     public float getCurrentMaxY();
 
-    WayType getType();
-
+    public WayType getType();
     public ArrayList<OSMNode> getNodes();
 }

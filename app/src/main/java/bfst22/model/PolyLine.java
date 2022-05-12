@@ -19,21 +19,17 @@ public class PolyLine implements Drawable, Serializable {
     private float currentMinX, currentMaxX, currentMinY, currentMaxY ;
     WayType wayType;
 
-    public static final long serialVersionUID = 134123;
-    //Programmet skal kun huske en sekvens af floats koordinater
+    //Gemmer en sekvens af floats koordinater
     private float[] coords;
-
     private ArrayList<OSMNode> nodes;
 
      public PolyLine(ArrayList<OSMNode> nodes, WayType wayType){
+         int i = 0;
          this.nodes = new ArrayList<>(nodes);
          this.wayType = wayType;
 
-         //Opretter et nyt float-array.
-         //Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
+         //  //Opretter et nyt float-array. Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
          coords = new float[nodes.size() * 2];
-
-         int i = 0;
 
          currentMinX = nodes.get(0).getLon();
          currentMaxX = nodes.get(0).getLon();
@@ -43,7 +39,7 @@ public class PolyLine implements Drawable, Serializable {
          //Gemmer alle lat og lon koordinater (x-,y-koordinater) fra OSMNode-listen i float-arrayet
          for (var node : nodes) {
 
-             //Opdatere currentMaxY EVT skriver: <
+             //Løber alle coords igennem og opdaterer currentMax og currentMin
              if (node.getLat() > currentMaxY) {
                  currentMaxY = node.getLat();
              }
@@ -56,16 +52,16 @@ public class PolyLine implements Drawable, Serializable {
              if (node.getLon() < currentMinX) {
                  currentMinX = node.getLon();
              }
-
              coords[i++] = node.getLat();
              coords[i++] = node.getLon();
          }
 
      }
+
     public PolyLine(ArrayList<OSMNode> nodes) {
         this.nodes = new ArrayList<>(nodes);
-        //Opretter et nyt float-array.
-        //Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
+
+        //Opretter et nyt float-array. Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
         coords = new float[nodes.size() * 2];
         int i = 0;
         currentMinX = nodes.get(0).getLon();
@@ -74,7 +70,7 @@ public class PolyLine implements Drawable, Serializable {
         currentMaxY = nodes.get(0).getLat();
         //Gemmer alle lat og lon koordinater (x-,y-koordinater) fra OSMNode-listen i float-arrayet
         for (var node : nodes) {
-            //Opdatere currentMaxY EVT skriver: <
+            //Opdatere currentMax og currentmin
             if (node.getLat() > currentMaxY) {currentMaxY = node.getLat();}
             if (node.getLat() < currentMinY) {currentMinY = node.getLat();}
             if (node.getLon() > currentMaxX) {currentMaxX = node.getLon();}
