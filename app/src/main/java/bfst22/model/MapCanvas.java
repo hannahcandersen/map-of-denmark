@@ -20,8 +20,6 @@ import javafx.scene.transform.NonInvertibleTransformException;
 public class MapCanvas extends Canvas {
     private Model model;
     private Affine trans = new Affine();
-    //TODO hvad er det her? *Paint color
-    private Paint color = WayType.UNKNOWN.getFillColor();
     private int zoomLevel;
     private OSMNode drawPunkt, drawPunktStartOfRoute, drawPunktEndOfRoute;
     private boolean isPartySelected, isGraphSelected, isDebugSelected;
@@ -108,7 +106,7 @@ public class MapCanvas extends Canvas {
 
         //Udregnet zoomLevel
         zoomLevel = getZoomLevel((realMax.getY() - realMin.getY()) / 2);
-        //System.out.println("Currentzoomlevel: " + zoomLevel);
+        System.out.println("Currentzoomlevel: " + zoomLevel);
 
 
 
@@ -173,9 +171,9 @@ public class MapCanvas extends Canvas {
 
         //////////////////// TEGNER FOREST ////////////////////
         if (model.getKDTreeFOREST() != null && model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot()) != null) {
-            gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
             for (Drawable drawable : model.getKDTreeFOREST().rangeSearch(rangeSearchRectangle, model.getKDTreeFOREST().getRoot())) {
                 if (isPartySelected) {
+                    gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                     drawable.fill(gc);
                 } else {
                     drawable.fillWayType(gc, WayType.FOREST);
@@ -187,13 +185,8 @@ public class MapCanvas extends Canvas {
         //////////////////// ZOOM UNDER 26 ////////////////////
         if(zoomLevel <= 26){
         if (model.getKDTreeTERRITORIAl() != null && model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot()) != null) {
-            gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
             for (Drawable drawable : model.getKDTreeTERRITORIAl().rangeSearch(rangeSearchRectangle, model.getKDTreeTERRITORIAl().getRoot())) {
-                if (isPartySelected) {
-                    drawable.draw(gc);
-                } else {
-                    drawable.drawWayType(gc, WayType.TERRITORIAl);
-                }
+                drawable.drawWayType(gc, WayType.TERRITORIAl);
             }
         }}
 
@@ -202,9 +195,9 @@ public class MapCanvas extends Canvas {
         ///////////////////// ZOOM OVER 29 ////////////////////
         if (zoomLevel >= 29) {
             if (model.getKDTreeFARMLAND() != null && model.getKDTreeFARMLAND().rangeSearch(rangeSearchRectangle, model.getKDTreeFARMLAND().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeFARMLAND().rangeSearch(rangeSearchRectangle, model.getKDTreeFARMLAND().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.FARMLAND);
@@ -213,9 +206,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeGRASS() != null && model.getKDTreeGRASS().rangeSearch(rangeSearchRectangle, model.getKDTreeGRASS().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeGRASS().rangeSearch(rangeSearchRectangle, model.getKDTreeGRASS().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.GRASS);
@@ -224,9 +217,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeBEACH() != null && model.getKDTreeBEACH().rangeSearch(rangeSearchRectangle, model.getKDTreeBEACH().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeBEACH().rangeSearch(rangeSearchRectangle, model.getKDTreeBEACH().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.BEACH);
@@ -235,20 +228,15 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeRAILWAY() != null && model.getKDTreeRAILWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRAILWAY().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRAILWAY().rangeSearch(rangeSearchRectangle, model.getKDTreeRAILWAY().getRoot())) {
-                    if (isPartySelected) {
-                        drawable.fill(gc);
-                    } else {
                         drawable.fillWayType(gc, WayType.RAILWAY);
-                    }
                 }
             }
 
             if (model.getKDTreeWATER() != null && model.getKDTreeWATER().rangeSearch(rangeSearchRectangle, model.getKDTreeWATER().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeWATER().rangeSearch(rangeSearchRectangle, model.getKDTreeWATER().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.WATER);
@@ -257,12 +245,12 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeRIVER_ANDMORE() != null && model.getKDTreeRIVER_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeRIVER_ANDMORE().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRIVER_ANDMORE().rangeSearch(rangeSearchRectangle, model.getKDTreeRIVER_ANDMORE().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
-                        drawable.drawWayType(gc, WayType.RIVER_ANDMORE);
+                        drawable.fillWayType(gc, WayType.RIVER_ANDMORE);
                     }
                 }
             }
@@ -286,9 +274,9 @@ public class MapCanvas extends Canvas {
         //////////////////// ZOOM == 30 ELLER 31 ////////////////////
         if(zoomLevel == 30 || zoomLevel==31) {
             if (model.getKDTreeRESIDENTIAL() != null && model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.RESIDENTIAL);
@@ -297,9 +285,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeMEADOW() != null && model.getKDTreeMEADOW().rangeSearch(rangeSearchRectangle, model.getKDTreeMEADOW().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeMEADOW().rangeSearch(rangeSearchRectangle, model.getKDTreeMEADOW().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.MEADOW);
@@ -308,9 +296,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeGREENHOUSE_HORTICULTURE() != null && model.getKDTreeGREENHOUSE_HORTICULTURE().rangeSearch(rangeSearchRectangle, model.getKDTreeGREENHOUSE_HORTICULTURE().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeGREENHOUSE_HORTICULTURE().rangeSearch(rangeSearchRectangle, model.getKDTreeGREENHOUSE_HORTICULTURE().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.GREENHOUSE_HORTICULTURE);
@@ -319,9 +307,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeRELIGIOUS() != null && model.getKDTreeRELIGIOUS().rangeSearch(rangeSearchRectangle, model.getKDTreeRELIGIOUS().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRELIGIOUS().rangeSearch(rangeSearchRectangle, model.getKDTreeRELIGIOUS().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.RELIGIOUS);
@@ -340,9 +328,9 @@ public class MapCanvas extends Canvas {
         //////////////////// ZOOM OVER 31 ////////////////////
         if (zoomLevel >= 31){
             if(model.getKDTreeRESIDENTIAL() != null && model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRESIDENTIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeRESIDENTIAL().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.RESIDENTIAL);
@@ -351,9 +339,9 @@ public class MapCanvas extends Canvas {
             }
 
             if(model.getKDTreeINDUSTRIAL() != null && model.getKDTreeINDUSTRIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeINDUSTRIAL().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeINDUSTRIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeINDUSTRIAL().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.INDUSTRIAL);
@@ -362,9 +350,9 @@ public class MapCanvas extends Canvas {
             }
 
             if(model.getKDTreeLAKE() != null && model.getKDTreeLAKE().rangeSearch(rangeSearchRectangle, model.getKDTreeLAKE().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeLAKE().rangeSearch(rangeSearchRectangle, model.getKDTreeLAKE().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.LAKE);
@@ -373,9 +361,9 @@ public class MapCanvas extends Canvas {
             }
 
             if(model.getKDTreeMEADOW() != null && model.getKDTreeMEADOW().rangeSearch(rangeSearchRectangle, model.getKDTreeMEADOW().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeMEADOW().rangeSearch(rangeSearchRectangle, model.getKDTreeMEADOW().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.MEADOW);
@@ -384,9 +372,9 @@ public class MapCanvas extends Canvas {
             }
 
             if(model.getKDTreeCEMETERY() != null && model.getKDTreeCEMETERY().rangeSearch(rangeSearchRectangle, model.getKDTreeCEMETERY().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeCEMETERY().rangeSearch(rangeSearchRectangle, model.getKDTreeCEMETERY().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.CEMETERY);
@@ -395,9 +383,9 @@ public class MapCanvas extends Canvas {
             }
 
             if(model.getKDTreeALLOTMENTS() != null && model.getKDTreeALLOTMENTS().rangeSearch(rangeSearchRectangle, model.getKDTreeALLOTMENTS().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeALLOTMENTS().rangeSearch(rangeSearchRectangle, model.getKDTreeALLOTMENTS().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.ALLOTMENTS);
@@ -406,9 +394,9 @@ public class MapCanvas extends Canvas {
             }
 
             if(model.getKDTreeCOMMERCIAL() != null && model.getKDTreeCOMMERCIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeCOMMERCIAL().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeCOMMERCIAL().rangeSearch(rangeSearchRectangle, model.getKDTreeCOMMERCIAL().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.COMMERCIAL);
@@ -417,9 +405,9 @@ public class MapCanvas extends Canvas {
             }
 
             if(model.getKDTreeCONSTRUCTION() != null && model.getKDTreeCONSTRUCTION().rangeSearch(rangeSearchRectangle, model.getKDTreeCONSTRUCTION().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeCONSTRUCTION().rangeSearch(rangeSearchRectangle, model.getKDTreeCONSTRUCTION().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.CONSTRUCTION);
@@ -428,9 +416,9 @@ public class MapCanvas extends Canvas {
             }
 
             if(model.getKDTreeRETAIL() != null && model.getKDTreeRETAIL().rangeSearch(rangeSearchRectangle, model.getKDTreeRETAIL().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRETAIL().rangeSearch(rangeSearchRectangle, model.getKDTreeRETAIL().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.RETAIL);
@@ -439,9 +427,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeRELIGIOUS() != null && model.getKDTreeRELIGIOUS().rangeSearch(rangeSearchRectangle, model.getKDTreeRELIGIOUS().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRELIGIOUS().rangeSearch(rangeSearchRectangle, model.getKDTreeRELIGIOUS().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.RELIGIOUS);
@@ -450,9 +438,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreePARK() != null && model.getKDTreePARK().rangeSearch(rangeSearchRectangle, model.getKDTreePARK().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreePARK().rangeSearch(rangeSearchRectangle, model.getKDTreePARK().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.PARK);
@@ -461,9 +449,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeSCHOOL() != null && model.getKDTreeSCHOOL().rangeSearch(rangeSearchRectangle, model.getKDTreeSCHOOL().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeSCHOOL().rangeSearch(rangeSearchRectangle, model.getKDTreeSCHOOL().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.SCHOOL);
@@ -472,9 +460,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeSAND() != null && model.getKDTreeSAND().rangeSearch(rangeSearchRectangle, model.getKDTreeSAND().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeSAND().rangeSearch(rangeSearchRectangle, model.getKDTreeSAND().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.SAND);
@@ -483,9 +471,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeHOSPITAL() != null && model.getKDTreeHOSPITAL().rangeSearch(rangeSearchRectangle, model.getKDTreeHOSPITAL().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeHOSPITAL().rangeSearch(rangeSearchRectangle, model.getKDTreeHOSPITAL().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.HOSPITAL);
@@ -494,9 +482,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeRECREATION_GROUND() != null && model.getKDTreeRECREATION_GROUND().rangeSearch(rangeSearchRectangle, model.getKDTreeRECREATION_GROUND().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeRECREATION_GROUND().rangeSearch(rangeSearchRectangle, model.getKDTreeRECREATION_GROUND().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.RECREATION_GROUND);
@@ -505,9 +493,9 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreePITCH() != null && model.getKDTreePITCH().rangeSearch(rangeSearchRectangle, model.getKDTreePITCH().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreePITCH().rangeSearch(rangeSearchRectangle, model.getKDTreePITCH().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.PITCH);
@@ -516,7 +504,6 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeBUILDING() != null && model.getKDTreeBUILDING().rangeSearch(rangeSearchRectangle, model.getKDTreeBUILDING().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeBUILDING().rangeSearch(rangeSearchRectangle, model.getKDTreeBUILDING().getRoot())) {
                     gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
                     if (isPartySelected) {
@@ -608,9 +595,10 @@ public class MapCanvas extends Canvas {
             }
 
             if (model.getKDTreeGRAVEYARD() != null && model.getKDTreeGRAVEYARD().rangeSearch(rangeSearchRectangle, model.getKDTreeGRAVEYARD().getRoot()) != null) {
-                gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                 for (Drawable drawable : model.getKDTreeGRAVEYARD().rangeSearch(rangeSearchRectangle, model.getKDTreeGRAVEYARD().getRoot())) {
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
+
                         drawable.fill(gc);
                     } else {
                         drawable.fillWayType(gc, WayType.GRAVEYARD);

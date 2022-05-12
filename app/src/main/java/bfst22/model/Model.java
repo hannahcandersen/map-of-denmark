@@ -358,6 +358,7 @@ public class Model {
                                         case "sand" -> WayType.SAND;
                                         case "water" -> WayType.WATER;
                                         case "grassland" -> WayType.GRASSLAND;
+                                        case "heath" -> WayType.GRASS;
                                         case "bare_rock", "rock" -> WayType.BARE_ROCK;
                                         case "coastline" -> WayType.COASTLINE;
                                         default -> WayType.UNKNOWN;
