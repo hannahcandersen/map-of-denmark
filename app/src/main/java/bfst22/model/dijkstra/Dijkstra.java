@@ -1,15 +1,12 @@
 package bfst22.model.dijkstra;
 
 
-import bfst22.model.Model;
 import bfst22.model.OSMNode;
 import bfst22.model.PolyLine;
 import bfst22.model.algslib.IndexMinPQ;
 import bfst22.model.algslib.Stack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 
 // Finder shortest path fra en vertex til alle andre vertices i grafen

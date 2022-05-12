@@ -31,7 +31,7 @@ public class MapCanvas extends Canvas {
     private Point2D screenMin, screenMax;
     private Point2D realscalebarPoint1, realscalebarPoint2;
 
-    //Randomme farver
+    //Tilfældige farver
     private int r, g, b;
 
     private double ration;

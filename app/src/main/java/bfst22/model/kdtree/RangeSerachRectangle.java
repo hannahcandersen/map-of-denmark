@@ -5,6 +5,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Affine;
 
+// Den firkant vi laver range search indenfor. I det officielle program er det skærmen, i debug mode er det debug firkanten
+
 public class RangeSerachRectangle extends Canvas {
     private double minLon, maxLon, minLat, maxLat;
 
@@ -18,41 +20,15 @@ public class RangeSerachRectangle extends Canvas {
     public double getMinLon() {
         return minLon;
     }
-
     public double getMinLat() {
         return minLat;
     }
-
     public double getMaxLon() {
         return maxLon;
     }
-
     public double getMaxLat() {
         return maxLat;
     }
-
-    public void setMinLon(float minLon) {
-        this.minLon = minLon;
-    }
-
-    public void setMinLat(float minLat) {
-        this.minLat = minLat;
-    }
-
-    public void setMaxLon(float maxLon) {
-        this.maxLon = maxLon;
-    }
-
-    public void setMaxLat(float maxLat) {
-        this.maxLat = maxLat;
-    }
-
-
-    //En metode til at tegne firkantens omkreds
-
-    //Skal først finde skærm koordinaterne, så kan vi omdanne dem til kortest koordinater
-    //trans.inverseTransform(point)  ---- kig i klassen: MapCanvas
-
 
     @Override
     public String toString() {

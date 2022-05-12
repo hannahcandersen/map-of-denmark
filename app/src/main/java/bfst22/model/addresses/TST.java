@@ -15,6 +15,9 @@ public class TST implements Serializable {
 
     public TST(AddressObject addressObject) {put(addressObject.getStreet(), addressObject);}
 
+    public AddressNode getRoot(){
+        return root;
+    }
 
     //Vi kan bruge denne metode til at finde, om der eksisterer en adresse i vores TST
     //Vi skal kun give den navnet på gaden (Starter med stort Bogstav)
@@ -24,27 +27,24 @@ public class TST implements Serializable {
         return node.getListOfAddresses();           //returnerer alle adresserne med samme navn
     }
 
-
-    //Dette er en hjælpe metode til den anden get metode
-        //node er den node vi befinder os på (det kan være node, node.left, node.right eller node.mid)
-        //key er navnet på gaden
-        //d er en counter der holder styr på hvilke bogstav vi befinder os på
-    //Metoden sammen ligner bogstavet som er i TST og det fra gadenavnet
-        //Hvis de er det samme bogstav, så kalder den rekursivt node.mid
-        //Hvis gadenavnet's bogstav kommer før i alfabetet end det der står i TST, så kalder den rekursivt node.left
-        //Hvis gadenavnet's bogstav kommer efter i alfabetet end det der står i TST, så kalder den rekursivt node.right
-        //Hvis ingen af disse if-statements er true, så er vi på sidste bogstav i gadenavnet og returnerer derfor den node
-    private static AddressNode get(AddressNode node, String key, int d) {
+/*
+    Dette er en hjælpe metode til den anden get metode
+        node er den node vi befinder os på (det kan være node, node.left, node.right eller node.mid)
+        key er navnet på gaden
+        d er en counter der holder styr på hvilke bogstav vi befinder os på
+        Metoden sammen ligner bogstavet som er i TST og det fra gadenavnet
+        Hvis de er det samme bogstav, så kalder den rekursivt node.mid
+        Hvis gadenavnet's bogstav kommer før i alfabetet end det der står i TST, så kalder den rekursivt node.left
+        Hvis gadenavnet's bogstav kommer efter i alfabetet end det der står i TST, så kalder den rekursivt node.right
+        Hvis ingen af disse if-statements er true, så er vi på sidste bogstav i gadenavnet og returnerer derfor den node
+ */
+    private AddressNode get(AddressNode node, String key, int d) {
         if (node == null) return null;
         char c = key.charAt(d);
         if (c < node.c) return get(node.left, key, d);
         else if (c > node.c) return get(node.right, key, d);
         else if (d < key.length() - 1) return get(node.mid, key, d+1);
         else return node;  //returnerer den sidste AddressNode, som holder på listen med adresseobjekter
-    }
-
-    public AddressNode getRoot(){
-        return root;
     }
 
     //Tilføjer en ny addresse til Tree/Trie
@@ -68,25 +68,29 @@ public class TST implements Serializable {
         return node;
     }
 
-    public AddressNode getEndNode(String input){
+    //Hjælpe metode til search metode
+    private AddressNode getEndNode(String input){
         AddressNode node = get(root, input, 0);
         if(node == null) return null;
         return node;
     }
 
-    public List<AddressObject> getAllEndOfAddressName(AddressNode currentRootNode){
+    //Hjælpe metode til search metoden
+    //Denne metoder returnerer alle adresserne, som starter med det samme
+        //fx. når der er blevet tastet 4 bogstaver ind i søgefeltet, så er det denne metode som står for hvilke adresser bliver vist
+    private List<AddressObject> getAllEndOfAddressName(AddressNode currentRootNode){
         List<AddressObject> searchedList = new ArrayList<>();
         //System.out.println("currrentNode c: " + currentRootNode.c);
 
         if (currentRootNode == null) return null;
-        //Vi skal have alle børnene (left, mid, right) for alle noderne efter endNode (sidste bogstav i ordet)
 
+        //Vi skal have alle børnene (left, mid, right) for alle noderne efter endNode (sidste bogstav i ordet)
+            //vi kalder endNode for currentRootNode i dette tilfælde, da den vil være root for det subtree med alle adresserne vi søger
         if(currentRootNode.getListOfAddresses() != null)              //tjekker om der er en liste i currentNode
-            searchedList.addAll(currentRootNode.getListOfAddresses());//tilføjer den til listen
+            searchedList.addAll(currentRootNode.getListOfAddresses());
 
         if(currentRootNode.left != null) {                            //tjekker om currentRootNode har venstre barn
             //System.out.println("Venstre barn");
-               //tilføjer listen af adresser til searchResult
             searchedList.addAll(getAllEndOfAddressName(currentRootNode.left));
         }
         if(currentRootNode.right != null) {                           //tjekker om currentRootNode har højre barn
@@ -97,10 +101,10 @@ public class TST implements Serializable {
             //System.out.println("Mid barn");
             searchedList.addAll(getAllEndOfAddressName(currentRootNode.mid));
         }
-
         return searchedList;
     }
 
+    //Hvis søgte gadenavn ikke matcher nogle adresser i TST, så returnerer den en tom liste ellers returnerer den liste med adresser
     public List<AddressObject> search(String input) {
         AddressNode endNode = getEndNode(input);
         if(endNode == null) {
