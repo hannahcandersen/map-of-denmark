@@ -10,9 +10,7 @@ import java.util.NoSuchElementException;
  *  items in arbitrary order.
  *  <p>
  *  This implementation uses a singly linked list with a static nested class Node.
- *  See {@link LinkedBag} for the version from the
  *  textbook that uses a non-static nested class.
- *  See {@link ResizingArrayBag} for a version that uses a resizing array.
  *  The <em>add</em>, <em>isEmpty</em>, and <em>size</em> operations
  *  take constant time. Iteration takes time proportional to the number of items.
  *  <p>
@@ -30,7 +28,8 @@ public class Bag<Item> implements Iterable<Item>, Serializable {
     private int n;               // number of elements in bag
 
     // helper linked list class
-    private static class Node<Item> {
+    private static class Node<Item> implements Serializable {
+        public static final long serialVersionUID = 1325244;
         private Item item;
         private Node<Item> next;
     }
@@ -86,7 +85,8 @@ public class Bag<Item> implements Iterable<Item>, Serializable {
     }
 
     // an iterator, doesn't implement remove() since it's optional
-    private class LinkedIterator implements Iterator<Item> {
+    private class LinkedIterator implements Iterator<Item>, Serializable {
+        public static final long serialVersionUID = 1325244;
         private Node<Item> current;
 
         public LinkedIterator(Node<Item> first) {
