@@ -9,7 +9,7 @@ class OSMNodeTest {
     OSMNode osmNode = new OSMNode(1000000, 4, 3);
     @Test
     void getId() {
-        assertEquals();
+
     }
 
     @Test
