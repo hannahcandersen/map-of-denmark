@@ -58,14 +58,14 @@ public class Model {
     private boolean canGoByFoot;
     // Lister, maps og arrays der bruges til at koble OSMNodes og indeks sammen i graferne
     private OSMNode[] arrayOfOSMNodesInGraphCAR, arrayOfOSMNodesInGraphBIKE, arrayOfOSMNodesInGraphFOOT;
-    private final ArrayList<DirectedEdge> listOfAllEdgesInWaysAllWays = new ArrayList<>();
-    private final ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
-    private final ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
-    private final ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
-    private final ArrayList<OSMNode> listOfAlleNodesInGraphAllWays = new ArrayList<>();
-    private final ArrayList<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
-    private final ArrayList<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
-    private final ArrayList<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWaysAllWays = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWaysCAR = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWaysBIKE = new ArrayList<>();
+    private ArrayList<DirectedEdge> listOfAllEdgesInWaysFOOT = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphAllWays = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphCAR = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphBIKE = new ArrayList<>();
+    private ArrayList<OSMNode> listOfAlleNodesInGraphFOOT = new ArrayList<>();
     private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexCAR = new HashMap<>();
     private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexBIKE = new HashMap<>();
     private HashMap<OSMNode, Integer> mapOfOSMNodesToIndexFOOT = new HashMap<>();
@@ -98,12 +98,7 @@ public class Model {
 
         } else if (filename.endsWith(".osm")) {// Læser filen som en osm-fil
             loadOSM(new FileInputStream(filename));
-
-
-
             listOfCoastlines = makeCoastlineObject(coastlinesMap);
-
-            //MÅSKE PUT GRAPF TILBAGE HER
             //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
             mapOfOSMNodesToIndexCAR = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysCAR, mapOfOSMNodesToIndexCAR);
             mapOfOSMNodesToIndexBIKE = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysBIKE, mapOfOSMNodesToIndexBIKE);
@@ -116,8 +111,6 @@ public class Model {
             arrayOfOSMNodesInGraphCAR = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexCAR, arrayOfOSMNodesInGraphCAR);
             arrayOfOSMNodesInGraphBIKE = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexBIKE, arrayOfOSMNodesInGraphBIKE);
             arrayOfOSMNodesInGraphFOOT = makeArrayOfOSMNodesInGraph(mapOfOSMNodesToIndexFOOT, arrayOfOSMNodesInGraphFOOT);
-            //Skal nok sættes op i .osm
-
 
 
         } else if (filename.endsWith(".obj")) { // Læser filen som en binary file (obj)
@@ -130,20 +123,28 @@ public class Model {
                 listOfCoastlines = (List<PolyLine>) input.readObject();
                 Object o = input.readObject();
                 tst = (TST) o;
-               //graphCAR = (EdgeWeightedDigraph) input.readObject();
-                //graphBIKE = (EdgeWeightedDigraph) input.readObject();
-                //graphFOOT = (EdgeWeightedDigraph) input.readObject();
+                listOfAllEdgesInWaysAllWays = (ArrayList<DirectedEdge>) input.readObject();
+                listOfAllEdgesInWaysCAR =(ArrayList<DirectedEdge>) input.readObject();
+                listOfAllEdgesInWaysBIKE = (ArrayList<DirectedEdge>) input.readObject();
+                listOfAllEdgesInWaysFOOT = (ArrayList<DirectedEdge>) input.readObject();
+                listOfAlleNodesInGraphAllWays = (ArrayList<OSMNode>) input.readObject();
+                listOfAlleNodesInGraphCAR =(ArrayList<OSMNode>) input.readObject();
+                listOfAlleNodesInGraphBIKE = (ArrayList<OSMNode>) input.readObject();
+                listOfAlleNodesInGraphFOOT = (ArrayList<OSMNode>) input.readObject();
 
+                mapOfOSMNodesToIndexCAR = (HashMap<OSMNode, Integer>) input.readObject();
+                mapOfOSMNodesToIndexBIKE = (HashMap<OSMNode, Integer>) input.readObject();
+                mapOfOSMNodesToIndexFOOT = (HashMap<OSMNode, Integer>) input.readObject();
 
+                graphCAR = (EdgeWeightedDigraph) input.readObject();
+                graphBIKE = (EdgeWeightedDigraph) input.readObject();
+                graphFOOT = (EdgeWeightedDigraph) input.readObject();
 
-
-
-
-
-
+                arrayOfOSMNodesInGraphCAR = (OSMNode[]) input.readObject();
+                arrayOfOSMNodesInGraphBIKE = (OSMNode[]) input.readObject();
+                arrayOfOSMNodesInGraphFOOT = (OSMNode[]) input.readObject();
 
                 //VIGTIGT at skrive i samme rækkefølge som i save()
-                //tilføj de ting vi har tilføjet i save
             }
         } else {
             lines.put(WayType.UNKNOWN, Files.lines(Paths.get(filename))
@@ -227,18 +228,26 @@ public class Model {
             out.writeObject(listOfCoastlines);
             out.writeObject(tst);
 
-            /*out.writeObject(KDTreeNodesInGraphAllWays);
-            out.writeObject(KDTreeNodesInGraphCAR);
-            out.writeObject(KDTreeNodesInGraphBIKE);
-            out.writeObject(KDTreeNodesInGraphFOOT);*/
-            //out.writeObject(graphCAR);
-            //out.writeObject(graphBIKE);
-            //out.writeObject(graphFOOT);
+            out.writeObject(listOfAllEdgesInWaysAllWays);
+            out.writeObject(listOfAllEdgesInWaysCAR);
+            out.writeObject(listOfAllEdgesInWaysBIKE);
+            out.writeObject(listOfAllEdgesInWaysFOOT);
+            out.writeObject(listOfAlleNodesInGraphAllWays);
+            out.writeObject(listOfAlleNodesInGraphCAR);
+            out.writeObject(listOfAlleNodesInGraphBIKE);
+            out.writeObject(listOfAlleNodesInGraphFOOT);
 
+            out.writeObject(mapOfOSMNodesToIndexCAR);
+            out.writeObject(mapOfOSMNodesToIndexBIKE);
+            out.writeObject(mapOfOSMNodesToIndexFOOT);
 
+            out.writeObject(graphCAR);
+            out.writeObject(graphBIKE);
+            out.writeObject(graphFOOT);
 
-
-            //tilføj alle de ting vi har lavet: tst
+            out.writeObject(arrayOfOSMNodesInGraphCAR);
+            out.writeObject(arrayOfOSMNodesInGraphBIKE);
+            out.writeObject(arrayOfOSMNodesInGraphFOOT);
 
         }
     }

@@ -10,7 +10,8 @@ public class Stack<Item> implements Iterable<Item>, Serializable {
     private int n;                // size of the stack
 
     // helper linked list class
-    private static class Node<Item> {
+    private static class Node<Item> implements Serializable {
+        public static final long serialVersionUID = 1315294;
         private Item item;
         private Node<Item> next;
     }
@@ -105,7 +106,8 @@ public class Stack<Item> implements Iterable<Item>, Serializable {
     }
 
     // an iterator, doesn't implement remove() since it's optional
-    private class LinkedIterator implements Iterator<Item> {
+    private class LinkedIterator implements Iterator<Item>, Serializable {
+        public static final long serialVersionUID = 1315294;
         private Node<Item> current;
 
         public LinkedIterator(Node<Item> first) {

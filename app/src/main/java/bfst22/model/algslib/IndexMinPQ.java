@@ -278,7 +278,8 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
      */
     public Iterator<Integer> iterator() { return new HeapIterator(); }
 
-    private class HeapIterator implements Iterator<Integer> {
+    private class HeapIterator implements Iterator<Integer>, Serializable{
+        public static final long serialVersionUID = 1325291;
         // create a new pq
         private IndexMinPQ<Key> copy;
 
