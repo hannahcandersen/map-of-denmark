@@ -27,14 +27,14 @@ public class OSMNode implements Serializable {
     ///////////////// GETTER METODER /////////////////
 
     public long getId(){
-        System.out.println("id: " + id);
+        //System.out.println("id: " + id);
         return id;}
     public float getLat(){
-        System.out.println("lat: " + lat);
+        //System.out.println("lat: " + lat);
         return lat;
     }
     public float getLon(){
-        System.out.println("lon: " + lon);
+        //System.out.println("lon: " + lon);
         return lon;}
 
 
