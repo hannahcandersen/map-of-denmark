@@ -104,11 +104,10 @@ public class KdTree {
             //Sætter splitværdien
             if (isXcoord) {
                 node.setSplit(OSMNodes.get(mid).getLon());
-                node.setSplitDenAndenKoordinat(OSMNodes.get(mid).getLat());}
+            }
             else { //!isXcoord
                 node.setSplit(OSMNodes.get(mid).getLat());
-                node.setSplitDenAndenKoordinat(OSMNodes.get(mid).getLon());}
-
+            }
             //Laver left og right nodes
             node.setLeft(buildKDTreeOfOSMNodes(OSMNodes.subList(0, mid), !isXcoord));
             node.setRight(buildKDTreeOfOSMNodes(OSMNodes.subList(mid, OSMNodes.size()), !isXcoord));
@@ -118,8 +117,6 @@ public class KdTree {
         root = kdNode;
         return kdNode;
     }
-
-
 
 
     /////////////// RANGE SEARCH ///////////////////
@@ -216,179 +213,143 @@ public class KdTree {
             return true;
     }
 
-    public OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y){
+
+    /////////////// NEAREST NEIGHBOUR ///////////////////
+
+    // Public metode
+    public OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y){ // Starter med at tage en root og to koordinater på mappet
         closestDistField = Double.POSITIVE_INFINITY;
-        closestNodeField = null;
-        return findNearestNeighbour(searchKdNode, x, y, true);
+        closestNodeField = null; // Champion
+        return findNearestNeighbour(searchKdNode, x, y, true); // kalder private metode
     }
 
     private OSMNode findNearestNeighbour(KdNode searchKdNode, float x, float y, boolean divX) {
-        //undersøg om den skal til venstre eller højre
-        //hvis venstre: kald findNearestNeighbor for .getLeft()
-        //hvis højre: kald findNearest for .getRight()
 
+        // Hvis det er den del af træet der er sorteret på y
         if (!divX) {
 
             //Hvis searchKdNode er et leaf
             if(searchKdNode instanceof Leaf) {
-                findNearestNeighbourLeaf(searchKdNode, x, y, !divX);
+                findNearestNeighbourLeaf(searchKdNode, x, y, !divX); // Kalder metoden for leaf, der løber alle OSMNodes i bladet igennem
             }
             //Hvis searchKdNode er node
             if (searchKdNode instanceof Node) {
 
-                Node node = ((Node) searchKdNode);
+                Node node = ((Node) searchKdNode); // Caster til node
 
-                //her hvis y er mindre end splitY
-                //nearest neighbour i venstre side og ellers så højre side
-                if(y < ((Node) searchKdNode).getSplit()) {
+                // Starter med at gå hele vejen ned til det blad, som vi mistænker punktet er i
+                //Hvis y er mindre end splitY - Gå til venstre
+                if (y < ((Node) searchKdNode).getSplit()) {
                     findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
-
+                //Hvis y er større end splitY - Gå til højre
                 }else {
                     findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
                 }
 
-                //if x < searchnode.getSplit
-
-                // hvis venstre er en node
+                // Går op ad træet og tjekker om der kan være nogle tættere på
+                // Hvis venstre er en node
                 if (searchKdNode.getLeft() instanceof Node) {
                     Node leftNode = ((Node) node.getLeft());
-
-                    //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
+                    //Tjekker distance mellem punkt og venstres splitpunkt. Hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, leftNode.getSplit(), y) < this.closestDistField) {
                         findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
-
                     }
                 }
-                //hvis venstre er et leaf
+                // Hvis venstre er et leaf
                 if(searchKdNode.getLeft() instanceof Leaf){
-                    //kalder metoden der løber leaf igennem
-                    findNearestNeighbourLeaf(node.getLeft(), x, y, !divX);
+                    findNearestNeighbourLeaf(node.getLeft(), x, y, !divX); // Kalder metoden for leaf, der løber alle OSMNodes i bladet igennem
                 }
 
-                // hvis højre er en node
+                // Hvis højre er en node
                 if (searchKdNode.getRight() instanceof Node) {
-
                     Node rightNode = ((Node) node.getRight());
-
-                    //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
+                    // Tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, rightNode.getSplit(), y) < this.closestDistField) {
                         findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
-
                     }
                 }
-                //hvis højre er et leaf
+                // Hvis højre er et leaf
                 if(searchKdNode.getRight() instanceof Leaf) {
                     //kalder metoden der løber leaf igennem
                     findNearestNeighbourLeaf(node.getRight(), x, y, !divX);
                 }
             }
         }
-
-        else{ //hvis divX
-            //Hvis root er et leaf
+        // Hvis det er den del af træet der er sorteret på x
+        else{
+            // Hvis root er et leaf
             if(searchKdNode instanceof Leaf) {
                 findNearestNeighbourLeaf(searchKdNode, x, y, !divX);
             }
 
-            //Hvis searchKdNode er node
+            // Hvis searchKdNode er node
             if (searchKdNode instanceof Node) {
 
-                Node node = ((Node) searchKdNode);
+                Node node = ((Node) searchKdNode); // Caster til node
 
-                //////her hvis x er mindre end splitX
-                //////nearest neighbour i venstre side og ellers så højre side
+                // Starter med at gå hele vejen ned til det blad, som vi mistænker punktet er i
+                // Hvis x er mindre end splitX - Gå til venstre
                 if(x < ((Node) searchKdNode).getSplit()) {
                     findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
+                //Hvis x er større end splitX - Gå til højre
                 }else {
                     findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
                 }
 
-                // hvis venstre er en node
+                // Hvis venstre er en node
                 if (searchKdNode.getLeft() instanceof Node) {
-
                     Node leftNode = ((Node) node.getLeft());
-
-                    //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
+                    // Tjekker distance mellem punkt og venstres splitpunkt. Hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, x, leftNode.getSplit()) < this.closestDistField) {
                         findNearestNeighbour(searchKdNode.getLeft(), x, y, !divX);
-
                     }
                 }
-                //hvis venstre node er et leaf
+                // Hvis venstre node er et leaf
                 if (searchKdNode.getLeft() instanceof Leaf) {
                     findNearestNeighbourLeaf(node.getLeft(), x, y, !divX);
                 }
 
-                //hvis højre er en node
+                // Hvis højre er en node
                 if (searchKdNode.getRight() instanceof Node) {
-
                     Node rightNode = ((Node) node.getRight());
-
-                    //tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
+                    // Tjekker distance mellem punkt og venstres splitpunkt. hvis det er mindre end closestDistField, gå til venstre
                     if (distanceSq(x, y, x, rightNode.getSplit()) < this.closestDistField) {
                         findNearestNeighbour(searchKdNode.getRight(), x, y, !divX);
-
                     }
                 }
-                //hvis højre er et leaf
+                // Hvis højre er et leaf
                 if (searchKdNode.getRight() instanceof Leaf){
-                    //kalder metoden der løber leaf igennem
+                    // Kalder metoden der løber leaf igennem
                     findNearestNeighbourLeaf(node.getRight(), x, y, !divX);
                 }
             }
         }
-
+        // TIL TEST:
         //System.out.println("Fra kdTree: ClosestNode: " + closestNodeField);
         //System.out.println("Fra kdTree: ClosestDist: " + closestDistField);
         //System.out.println("Final node med lat og lon: " + closestNodeField.getLat() + " " + closestNodeField.getLon());
         return closestNodeField;
     }
 
-
+    // Metode der bruges i findNearestNeighbor(), når man er nede i et leaf
     public void findNearestNeighbourLeaf(KdNode searchKdNode, float x, float y, boolean divX) {
-        //System.out.println("Jeg er et leaf");
+        Leaf leaf = ((Leaf) searchKdNode); // Caster til leaf
 
-        Leaf leaf = ((Leaf) searchKdNode);
-
-
+        // Løber alle OSMNodes i bladet igennem og tjekker, om der er en kortere distance end den, vi allerede har
         for (OSMNode osmNode : leaf.getListOfOSMNodes()){
             double distanceCurrent = distanceSq(x, y, osmNode.getLon(), osmNode.getLat());
-
             if (this.closestDistField > distanceCurrent) {
                 this.closestDistField = distanceCurrent;
                 this.closestNodeField = osmNode;
             }
         }
-
         KdNode node = ((KdNode) leaf);
-        //System.out.println("Fra leaf Champnode: " + this.closestNodeField);
-        //System.out.println("Fra leaf ChampDist: " + this.closestDistField);
     }
 
 
-    public OSMNode getClosestNodeField() {
-        return closestNodeField;
-    }
-
-    public void setClosestNodeField(OSMNode closestNodeField) {
-        this.closestNodeField = closestNodeField;
-    }
-
-    public double getClosestDistField() {
-        return closestDistField;
-    }
-
-    public void setClosestDistField(double closestDistField) {
-        this.closestDistField = closestDistField;
-    }
+    /////////////// GETTERS ///////////////////
+    public KdNode getRoot() {return root;}
 
 
-
-    public static int getLeavesAdded() {
-        return leavesAdded;
-    }
-    public KdNode getRoot() {
-        return root;
-    }
 
 }

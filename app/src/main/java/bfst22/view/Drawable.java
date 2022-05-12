@@ -37,7 +37,6 @@ public interface Drawable {
     }
 
     void trace(GraphicsContext gc);
-    //OSMWay midtpunkt
     float getMiddleX();
     float getMiddleY();
 
