@@ -559,11 +559,11 @@ public class Model {
                                     double weightDistance = calculateDistance(way.getNodes().get(j), way.getNodes().get(j+1)); // Hvor lang vejen er
 
                                     // Grafen for CAR får weightTime som vægt
-                                    DirectedEdge edgeOneWayCAR = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightTime, canGoByCar, canGoByBike, canGoByFoot);
-                                    DirectedEdge edgeOtherWayCAR = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightTime, canGoByCar, canGoByBike, canGoByFoot);
+                                    DirectedEdge edgeOneWayCAR = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightTime);
+                                    DirectedEdge edgeOtherWayCAR = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightTime);
                                     // Graferne for BIKE og FOOT får weightDistance som vægt
-                                    DirectedEdge edgeOneWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightDistance, canGoByCar, canGoByBike, canGoByFoot);
-                                    DirectedEdge edgeOtherWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightDistance, canGoByCar, canGoByBike, canGoByFoot);
+                                    DirectedEdge edgeOneWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j), way.getNodes().get(j+1), weightDistance);
+                                    DirectedEdge edgeOtherWayBIKEandFOOT = new DirectedEdge(way.getNodes().get(j+1), way.getNodes().get(j), weightDistance);
 
                                     //Tilføjer edge og dens nodes til listerne med edges og nodes
                                     if(isOneway || isRoundabout) {  // Tilføjer en edge den ene vej
