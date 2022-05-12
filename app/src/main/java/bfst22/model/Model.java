@@ -100,8 +100,7 @@ public class Model {
 
             listOfCoastlines = coastline.makeCoastlineObject(coastlinesMap, WayType.COASTLINE);
 
-            //MÅSKE PUT GRAPF TILBAGE HER
-            listOfCoastlines = makeCoastlineObject(coastlinesMap);
+            //listOfCoastlines = makeCoastlineObject(coastlinesMap);
             //Laver et map for veje hvor man kan henholdsvis køre bil, cykle og gå
             mapOfOSMNodesToIndexCAR = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysCAR, mapOfOSMNodesToIndexCAR);
             mapOfOSMNodesToIndexBIKE = makeMapOfOSMNodesToIndex(listOfAllEdgesInWaysBIKE, mapOfOSMNodesToIndexBIKE);
