@@ -140,22 +140,19 @@ public class Controller {
     public void getSearchResultTo(KeyEvent keyEvent) {
         getSearchResult(toTextField, listViewTo);}
 
-    private void getSearchResult(TextField fromTextField, ListView<AddressObject> listViewFrom) {
-        String input = fromTextField.getText();
+    private void getSearchResult(TextField textField, ListView<AddressObject> listView) {
+        String input = textField.getText();
         if(input.length() > 3) {
-            TST tst = new TST();
-            List<AddressObject> searchListOfAddresses = tst.search(input);
+            List<AddressObject> searchListOfAddresses = canvas.getModel().getTst().search(input);
 
-            //sætte vores liste med adresse ind i observablelist
+            //sætte vores liste med adresser ind i observablelist
             ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
             listOfObservables.addAll(searchListOfAddresses);
-            //sorterer listen - måske det ikke virker, når det er et objekt og den ikke ved hvad den skal sortere på..
-            //SortedList<AddressObject> sortedList = new SortedList<>(listOfObservables);
 
-            listViewFrom.setVisible(true);
-            listViewFrom.setItems(listOfObservables);
+            listView.setVisible(true);
+            listView.setItems(listOfObservables);
         } else {
-            listViewFrom.setVisible(false);}}
+            listView.setVisible(false);}}
 
     @FXML
     public void chooseAddressFrom(MouseEvent event) {

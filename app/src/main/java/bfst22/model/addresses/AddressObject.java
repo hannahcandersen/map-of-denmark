@@ -1,8 +1,7 @@
 package bfst22.model.addresses;
 
-import bfst22.model.OSMNode;
-
 import java.io.Serializable;
+
 
 public class AddressObject implements Serializable {
 

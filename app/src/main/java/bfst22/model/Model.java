@@ -88,7 +88,6 @@ public class Model {
 
     /////////////// KONSTRUKTØR ///////////////////
     public Model(String filename) throws IOException, XMLStreamException, FactoryConfigurationError, ClassNotFoundException {
-        tst = new TST();
         var time = -System.nanoTime();
 
         if (filename.endsWith(".zip")) {   // Unzipper en zip-fil og læser den herefter på samme måde som osm-fil
@@ -887,7 +886,8 @@ public class Model {
     public List<DirectedEdge> getListOfAllEdgesInWaysAllWays() {
         return listOfAllEdgesInWaysAllWays;
     }
-
+    //Getter til Ternary search tree med adresser
+    public TST getTst() {return tst;}
 }
 
 

@@ -1,13 +1,9 @@
 package bfst22.model.addresses;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.collections.ObservableList;
+
 
 //Ternary Search Tree/Trie
 public class TST implements Serializable {
@@ -15,34 +11,39 @@ public class TST implements Serializable {
     public static final long serialVersionUID = 134123;
     //rooten er det første bogstav i det første ord, som bliver tilføjet til Tree/Trie
     private static AddressNode root;   // root of trie
-    //private ObservableList<AddressObject> listOfSearchResult = FXCollections.observableArrayList();
 
 
-    public TST(){};
     public TST(AddressObject addressObject) {
         put(addressObject.getStreet(), addressObject);
     }
-
     //key er navnet på vejen
-    //vores value er listen med addresserne med samme navn
-    public static List<AddressObject> get(String key){
-        AddressNode node = get(root, key, 0);
-        if(node == null) return null;  //returner null, hvis der ikke er tilføjet noget til Tree/Trie
-        return node.getListOfAddresses();
+    //vores value er listen med adresserne med samme navn
+
+    //Vi kan bruge denne metode til at finde, om der eksisterer en adresse i vores TST
+    //Vi skal kun give den navnet på gaden (Starter med stort Bogstav)
+    public List<AddressObject> get(String key){
+        AddressNode node = get(root, key, 0);    //Den laver et kald til den anden get metode
+        if(node == null) return null;               //returner null, hvis der ikke er tilføjet noget til Tree/Trie
+        return node.getListOfAddresses();           //returnerer alle adresserne med samme navn
     }
-        //Metoden tager enten left,mid,right (x) samt hvilket bogstav der er input,
-        // d er en counter der holder styr på hvor langt i ordet vi befinder os.
-        //Hvis vores det nye c er mindre end det nuværende c, returnerer den venstre character, samt d som er nuværende plads.. Tegn TST tree for at visualisere.
-        //Hvis vores det nye c er større end det nuværende c, returnerer den højre character, samt d som er nuværende plads.
-        //Hvis c hverken er større eller mindre enford vores nuværende c, så er c lig det den nye character og returnerer derfor midten.
+
+
+    //Dette er en hjælpe metode til den anden get metode
+        //node er den node vi befinder os på (det kan være node, node.left, node.right eller node.mid)
+        //key er navnet på gaden
+        //d er en counter der holder styr på hvor langt i ordet vi befinder os
+    //Metoden sammen ligner bogstavet som er i TST og det fra gadenavnet
+        //Hvis de er det samme bogstav, så kalder den rekursivt node.mid
+        //Hvis gadenavnet's bogstav kommer før i alfabetet end det der står i TST, så kalder den rekursivt node.left
+        //Hvis gadenavnet's bogstav kommer efter i alfabetet end det der står i TST, så kalder den rekursivt node.right
+        //Hvis ingen af disse if-statements er true, så er vi på sidste bogstav i gadenavnet og returnerer derfor den node
     private static AddressNode get(AddressNode node, String key, int d) {
         if (node == null) return null;
         char c = key.charAt(d);
         if (c < node.c) return get(node.left, key, d);
         else if (c > node.c) return get(node.right, key, d);
         else if (d < key.length() - 1) return get(node.mid, key, d+1);
-        //Hvis ingen af disse er tilfældet, så må vi være på sidste character.
-        else return node;
+        else return node;  //returnerer den sidste AddressNode, som holder på listen med adresseobjekter
     }
 
     public AddressNode getRoot(){
