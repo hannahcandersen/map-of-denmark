@@ -10,9 +10,7 @@ import java.util.NoSuchElementException;
  *  items in arbitrary order.
  *  <p>
  *  This implementation uses a singly linked list with a static nested class Node.
- *  See {@link LinkedBag} for the version from the
  *  textbook that uses a non-static nested class.
- *  See {@link ResizingArrayBag} for a version that uses a resizing array.
  *  The <em>add</em>, <em>isEmpty</em>, and <em>size</em> operations
  *  take constant time. Iteration takes time proportional to the number of items.
  *  <p>
