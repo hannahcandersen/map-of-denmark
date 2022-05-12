@@ -4,21 +4,19 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ModelTest {
+class OSMNodeTest {
 
+    OSMNode osmNode = new OSMNode(1000000, 4, 3);
     @Test
-    void save() {
+    void getId() {
+        assertEquals();
     }
 
     @Test
-    void addObserver() {
+    void getLat() {
     }
 
     @Test
-    void notifyObservers() {
-    }
-
-    @Test
-    void iterable() {
+    void getLon() {
     }
 }
