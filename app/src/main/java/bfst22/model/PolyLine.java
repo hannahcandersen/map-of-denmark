@@ -1,7 +1,6 @@
 package bfst22.model;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.ArrayList;
 
 import bfst22.view.Drawable;
@@ -16,8 +15,8 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class PolyLine implements Drawable, Serializable {
     public static final long serialVersionUID = 134123;
-    private float currentMinX, currentMaxX, currentMinY, currentMaxY ;
-    WayType wayType;
+    private float currentMinX, currentMaxX, currentMinY, currentMaxY;
+    private WayType wayType;
 
     //Gemmer en sekvens af floats koordinater
     private float[] coords;
@@ -28,7 +27,7 @@ public class PolyLine implements Drawable, Serializable {
          this.nodes = new ArrayList<>(nodes);
          this.wayType = wayType;
 
-         //  //Opretter et nyt float-array. Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
+         // Opretter et nyt float-array. Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
          coords = new float[nodes.size() * 2];
          currentMinX = nodes.get(0).getLon();
          currentMaxX = nodes.get(0).getLon();
@@ -47,11 +46,11 @@ public class PolyLine implements Drawable, Serializable {
      }
 
     public PolyLine(ArrayList<OSMNode> nodes) {
+        int i = 0;
         this.nodes = new ArrayList<>(nodes);
 
         //Opretter et nyt float-array. Størrelsen er *2, fordi der er et y-koordinat for hvert x-koordinat
         coords = new float[nodes.size() * 2];
-        int i = 0;
         currentMinX = nodes.get(0).getLon();
         currentMaxX = nodes.get(0).getLon();
         currentMinY = nodes.get(0).getLat();
@@ -67,6 +66,12 @@ public class PolyLine implements Drawable, Serializable {
             coords[i++] = node.getLon();}
     }
 
+    @Override
+    public void trace(GraphicsContext gc) {
+        gc.moveTo(coords[0], coords[1]);
+        for (var i = 2; i < coords.length; i += 2) {
+            gc.lineTo(coords[i], coords[i + 1]);}}
+
 
 
     ///////////////// GETTER METODER /////////////////
@@ -75,36 +80,31 @@ public class PolyLine implements Drawable, Serializable {
     public float getCurrentMinX() {
         return currentMinX;
     }
+    @Override
     public float getCurrentMaxX() {
         return currentMaxX;
     }
+    @Override
     public float getCurrentMinY() {
         return currentMinY;
     }
+    @Override
     public float getCurrentMaxY() {
         return currentMaxY;
     }
+    @Override
     public ArrayList<OSMNode> getNodes(){
         return nodes;
     }
-
     @Override
     public WayType getType(){
         return this.wayType;
     }
-
-    @Override
-    public void trace(GraphicsContext gc) {
-        gc.moveTo(coords[0], coords[1]);
-        for (var i = 2; i < coords.length; i += 2) {
-            gc.lineTo(coords[i], coords[i + 1]);}}
-
     //Returner vejens midtpunkt
     @Override
     public float getMiddleX() {
         return (currentMaxX + currentMinX) / 2;
     }
-
     @Override
     public float getMiddleY() {
         return (currentMinY + currentMaxY) / 2;

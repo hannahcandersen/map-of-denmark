@@ -7,6 +7,12 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.ArrayList;
 
+
+/*
+    Repræsenterer en Directed Edge i en EdgeWeightedGraph.
+    Hver edge indeholder to vertices (to og from), en vægt og booleans for om man må køre bil, cykle eller gå
+ */
+
 public class DirectedEdge implements Drawable{
 
     private final OSMNode start; // En vertex (start)
@@ -14,7 +20,7 @@ public class DirectedEdge implements Drawable{
     private final double weight; // Vægten
     private final ArrayList<OSMNode> nodesInEdge = new ArrayList<>();
 
-    public DirectedEdge(OSMNode start, OSMNode end, double weight, boolean canGoByCar, boolean canGoByBike, boolean canGoByFoot) {
+    public DirectedEdge(OSMNode start, OSMNode end, double weight) {
         if (start == null) throw new IllegalArgumentException("Vertex must be non-negative integers");
         if (end == null) throw new IllegalArgumentException("Vertex must be non-negative integers");
         if (Double.isNaN(weight)) throw new IllegalArgumentException("Weight is NaN");
@@ -22,10 +28,27 @@ public class DirectedEdge implements Drawable{
         this.start = start;
         this.end = end;
         this.weight = weight;
-        this.canGoByCar = canGoByCar;
-        this.canGoByBike = canGoByBike;
-        this.canGoByFoot = canGoByFoot;
     }
+
+
+    @Override
+    // To-string metode
+    public String toString() {
+        return start + "->" + end + " " + String.format("%5.2f", weight);
+    }
+
+    @Override
+    public void trace(GraphicsContext gc) {
+        gc.beginPath();
+        gc.moveTo(start.getLat(), start.getLon());
+        gc.lineTo(end.getLat(), end.getLon());
+        gc.stroke();
+    }
+
+
+
+
+    ///////////////// GETTER METODER /////////////////
 
     // Returnerer den vertex der er "from"
     public OSMNode getStart() {
@@ -36,7 +59,7 @@ public class DirectedEdge implements Drawable{
         return end;
     }
     // Returnerer vægten af edge
-    public double weight() {
+    public double getWeight() {
         return weight;
     }
     @Override
@@ -63,7 +86,6 @@ public class DirectedEdge implements Drawable{
     public float getCurrentMaxY() {
         return end.getLat();
     }
-
     @Override
     public WayType getType() {
         return null;

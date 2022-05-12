@@ -2,11 +2,11 @@ package bfst22.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-//Indeholder linjesegmenter
+
 /*
-    Fungerer som edge i en graf
+    Indeholder linjesegmenter. En OSMWay består af en liste med OSMNodes
+    Fungerer som edge i en graf.
  */
 
 public class OSMWay implements Serializable {

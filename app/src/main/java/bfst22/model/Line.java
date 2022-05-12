@@ -46,33 +46,31 @@ public class Line implements Drawable {
     public float getMiddleX(){
         return (x1 + x2) / 2;
     }
-
     @Override
     public float getMiddleY(){
         return (y1 + y2) / 2;
     }
-
+    @Override
     public float getCurrentMinX() {
         return x1;
     }
-
+    @Override
     public float getCurrentMinY() {
         return y1;
     }
-
+    @Override
     public float getCurrentMaxX() {
         return x2;
     }
-
+    @Override
     public float getCurrentMaxY() {
         return y2;
     }
-
     @Override
     public WayType getType() {
         return null;
     }
-
+    @Override
     public ArrayList<OSMNode> getNodes(){
         return null;
     }

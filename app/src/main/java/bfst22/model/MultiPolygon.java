@@ -1,21 +1,22 @@
 package bfst22.model;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import bfst22.view.Drawable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.FillRule;
 
+/*
+    Multipolygon ligner polyline, forskellen er at den består af relations, som har members
+        - dvs. det er en figur der kan have fx. huller i sig
+ */
+
 public class MultiPolygon implements Drawable, Serializable {
-    /*
-        SerialVersionUID is a unique identifier for each class, JVM uses it to compare the versions of the
-        class ensuring that the same class was used during Serialization is loaded during Deserialization.
-        Specifying one gives more control, though JVM does generate one if you don't specify. OBS. Det er ligemeget hvilke tal vi giver den
-     */
+    public static final long serialVersionUID = 1325234;
+    private  List<Drawable> parts = new ArrayList<>();
+    private ArrayList<OSMNode> multiPolygonNodes = new ArrayList<>(); // Alle nodes der er i multipolygonet
 
     private float totalX;
     private float totalY;
@@ -26,13 +27,10 @@ public class MultiPolygon implements Drawable, Serializable {
     private WayType wayType;
 
 
-    public static final long serialVersionUID = 1325234;
-    private  List<Drawable> parts = new ArrayList<>();
-    private ArrayList<OSMNode> multiPolygonNodes = new ArrayList<>(); // Alle nodes der er i multipolygonet
-
-    //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes" Og WayType
+    //Konstruktør. Gemmer alle drawables i "parts" og alle OSMNodes i "multiPolygenNodes" og WayType
     public MultiPolygon(ArrayList<OSMWay> rel, WayType wayType) {
         this.wayType = wayType;
+
         for (OSMWay way : rel) {
             parts.add(new PolyLine(way.getNodes())); //Tilføjer OSMWay som en Polyline til listen "parts"
             totalX = 0;
@@ -59,13 +57,6 @@ public class MultiPolygon implements Drawable, Serializable {
         }
     }
 
-    //Hvis det fucker skal metoden calculateMinAndMax(); tilbage i
-    public float getCurrentMinX() {return currentMinX;}
-    public float getCurrentMaxX() {return currentMaxX;}
-    public float getCurrentMinY() {return currentMinY;}
-    public float getCurrentMaxY() {return currentMaxY;}
-    public ArrayList<OSMNode> getNodes(){return multiPolygonNodes;}
-
     @Override
     public void trace(GraphicsContext gc) {
         for (var part : parts){
@@ -75,6 +66,21 @@ public class MultiPolygon implements Drawable, Serializable {
             gc.fill();}
     }
 
+
+
+    ///////////////// GETTER METODER /////////////////
+
+    //Hvis det fucker skal metoden calculateMinAndMax(); tilbage i
+    @Override
+    public float getCurrentMinX() {return currentMinX;}
+    @Override
+    public float getCurrentMaxX() {return currentMaxX;}
+    @Override
+    public float getCurrentMinY() {return currentMinY;}
+    @Override
+    public float getCurrentMaxY() {return currentMaxY;}
+    @Override
+    public ArrayList<OSMNode> getNodes(){return multiPolygonNodes;}
     @Override
     public float getMiddleX(){return (totalX/parts.size());}
     @Override
