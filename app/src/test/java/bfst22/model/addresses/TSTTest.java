@@ -11,7 +11,6 @@ class TSTTest {
     AddressObject addressObject2;
     AddressObject addressObject3;
     AddressNode addressNodeS;
-    AddressNode addressNodeL;
     TST tstONE;
     TST tstTWO;
     TST tstALL;
@@ -25,7 +24,6 @@ class TSTTest {
         addressObject2 = new AddressObject("Smallesund", "15", "3700", "Rønne", 0,0);
         addressObject3 = new AddressObject("Lille Madsegade", "60", "3700", "Rønne", 0,0);
         addressNodeS = new AddressNode('S');
-        addressNodeL = new AddressNode('L');
 
         tstONE = new TST(addressObject1);
         tstONE.put("Smallesund", addressObject2);
@@ -45,7 +43,6 @@ class TSTTest {
     @Test
     void getRoot() {
         assertEquals(addressNodeS.getC(), tstONE.getRoot().getC());
-        assertEquals(addressNodeL.getC(), tstTWO.getRoot().getC());
     }
 
     @Test
