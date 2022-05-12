@@ -105,7 +105,7 @@ public class Controller {
             Model model = new Model(selectedFile.getAbsolutePath());
             canvas.init(model);
             //flytter canvas
-            //canvas.zoom(650 / (model.getMaxlon() - model.getMinLon()), 0, 0);
+            canvas.zoom(canvas.getWidth() / (model.getMaxlon() - model.getMinLon()), 0, 0);
 
         } else {
             System.out.println("File is not valid");
