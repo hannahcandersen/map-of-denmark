@@ -124,10 +124,10 @@ public class MapCanvas extends Canvas {
 
         //Tegner kystlinjer
         gc.setLineWidth(1 / Math.sqrt(trans.determinant()));
-        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
         for (Drawable drawable : model.getListOfCoastlines()) {
             if (zoomLevel <= 30) {
                 if (isPartySelected) {
+                    gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                     drawable.drawWayType(gc, WayType.COASTLINE);
                     drawable.fill(gc);
                 } else {
@@ -138,6 +138,7 @@ public class MapCanvas extends Canvas {
             }
             if (zoomLevel >= 31) {
                 if (isPartySelected) {
+                    gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                     drawable.drawWayType(gc, WayType.COASTLINE);
                     drawable.fill(gc);
                 } else {
@@ -507,12 +508,10 @@ public class MapCanvas extends Canvas {
                 for (Drawable drawable : model.getKDTreeBUILDING().rangeSearch(rangeSearchRectangle, model.getKDTreeBUILDING().getRoot())) {
                     gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
                     if (isPartySelected) {
+                        gc.setFill(Color.rgb(randomR(), randomB(), randomG()));
                         drawable.fill(gc);
-                        gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
-                        drawable.drawWayType(gc, WayType.BUILDING);
                     } else {
                         drawable.fillWayType(gc, WayType.BUILDING);
-                        gc.setLineWidth(WayType.BUILDING.getWidth() / Math.sqrt(trans.determinant()));
                         drawable.drawWayType(gc, WayType.BUILDING);
                     }
                 }
