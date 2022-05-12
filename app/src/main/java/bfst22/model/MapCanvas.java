@@ -152,11 +152,8 @@ public class MapCanvas extends Canvas {
 
 
 
-        /////// TODO TEGNER DENNE MULTIPOLYGONER??  FARVEN ER BLÅ   ///////
-        for(Drawable drawable: MultiPolygon.getListOfMultipolygonLines()){
-            gc.setFill(Color.BLUE);
-            drawable.fill(gc);
-        }
+
+
 
 
         //////////////////// TEGNER OG FARVELÆGGER KORTET ////////////////////

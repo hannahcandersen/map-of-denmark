@@ -107,7 +107,8 @@ public class Model {
                 listOfCoastlines = (List<PolyLine>) input.readObject();
                 //graph = (EdgeWeightedDigraph) input.readObject();
                 //Bliver læst eller gemt forkert
-                tst = (TST) input.readObject();
+                Object o = input.readObject();
+                tst = (TST) o;
                 //tst.setRoot((AddressNode) input.readObject());
                 //System.out.println(tst.getRoot().getC());
                 //VIGTIGT at skrive i samme rækkefølge som i save()
@@ -206,6 +207,7 @@ public class Model {
             out.writeObject(lines);
             out.writeObject(listOfCoastlines);
             //out.writeObject(graph);
+            System.out.println("TST:" + tst);
             out.writeObject(tst);
             out.writeObject(tst.getRoot());
             //tilføj alle de ting vi har lavet: tst

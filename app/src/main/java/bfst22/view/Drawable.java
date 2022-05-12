@@ -30,9 +30,9 @@ public interface Drawable {
     }
     default void fillWayType(GraphicsContext gc, WayType wt) {
         gc.beginPath();
-        gc.setFillRule(FillRule.EVEN_ODD);
         trace(gc);
         gc.setFill(wt.getFillColor());
+        gc.setFillRule(FillRule.EVEN_ODD);
         gc.fill();
     }
 

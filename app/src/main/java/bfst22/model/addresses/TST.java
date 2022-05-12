@@ -10,7 +10,7 @@ public class TST implements Serializable {
 
     public static final long serialVersionUID = 134123;
     //rooten er det første bogstav i det første ord, som bliver tilføjet til Tree/Trie
-    private static AddressNode root;   // root of trie
+    private AddressNode root;   // root of trie
 
 
     public TST(AddressObject addressObject) {put(addressObject.getStreet(), addressObject);}
