@@ -9,10 +9,10 @@ import java.util.ArrayList;
 public class Line implements Drawable {
     private Point2D from, to;
 
-    float x1;
-    float y1;
-    float x2;
-    float y2;
+    private float x1;
+    private float y1;
+    private float x2;
+    private float y2;
 
 //Line tager de fire koordinater fra txt line filerne og splitter dem til at kunne blive læst og derefter tegnet.
     public Line(String line) {

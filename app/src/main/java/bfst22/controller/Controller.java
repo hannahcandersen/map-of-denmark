@@ -21,24 +21,14 @@ import javafx.stage.FileChooser;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
-
 import java.util.List;
 
-//LINK//https://gist.github.com/Da9el00/cde4381b8f17299693bab886ec700a78
 
 
-//Controller klassen håndterer alle kliks og scrolls eller andet som brugeren foretager sig.
-//Klassen arbejder meget sammen med klassen MapCanvas som bruger koordinater til at tegne programmet.
-
-/*
-    Controller klassen: opdaterer objekterne fra model klassen og holder styr på hvad der bliver vist på canvas.
- */
+//Controller klassen: opdaterer objekterne fra model klassen og holder styr på hvad der bliver vist på canvas.
 
 
 public class Controller {
-    //Canvas er superklassen til vores MapCanvas.
-    //Canvas er billede som bliver tegnet givet en højde og en bredde som afgør størrelsen af billede.
-    //Den bruger pakken GraphicsContext.
     @FXML
     private MapCanvas canvas;
     @FXML
@@ -68,7 +58,7 @@ public class Controller {
         scaleInfo.textProperty().bind(Bindings.format(canvas.getDistToString()));
     }
 
-    //Metoden har et scroll event, som handler efter når brugeren scroller i kortet.
+
     //getDeltaY metoden returnerer den vertikale mængde af pixels som forstørres eller formindskes når brugeren scroller.
     @FXML
     public void onScroll(ScrollEvent e) {
@@ -107,6 +97,7 @@ public class Controller {
     @FXML
     public void openFile(ActionEvent event) throws XMLStreamException, IOException, ClassNotFoundException {
         FileChooser fc = new FileChooser();
+        //TODO husk at slette hvis ikke implementeret
         //så den kun viser pdf filer??
         //fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PDF files", "*.pdf"));
         File selectedFile = fc.showOpenDialog(null);
@@ -140,12 +131,13 @@ public class Controller {
     public void getSearchResultTo(KeyEvent keyEvent) {
         getSearchResult(toTextField, listViewTo);}
 
+    //Viser a
     private void getSearchResult(TextField textField, ListView<AddressObject> listView) {
         String input = textField.getText();
         if(input.length() > 3) {
             List<AddressObject> searchListOfAddresses = canvas.getModel().getTst().search(input);
 
-            //sætte vores liste med adresser ind i observablelist
+            //Sætter vores liste med adresser ind i observablelist
             ObservableList<AddressObject> listOfObservables = FXCollections.observableArrayList();
             listOfObservables.addAll(searchListOfAddresses);
 

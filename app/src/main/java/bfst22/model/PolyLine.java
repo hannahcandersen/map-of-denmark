@@ -15,10 +15,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 
 public class PolyLine implements Drawable, Serializable {
-    float currentMinX;
-    float currentMaxX;
-    float currentMinY;
-    float currentMaxY;
+    public static final long serialVersionUID = 134123;
+    private float currentMinX, currentMaxX, currentMinY, currentMaxY ;
     WayType wayType;
 
     public static final long serialVersionUID = 134123;
