@@ -638,6 +638,11 @@ public class Model {
                                     tst.put(street, new AddressObject(street, housenumber, postcode, city, osmNodeToAddress.getLat(), osmNodeToAddress.getLon()));
                                 }
                             }
+                            //Sætter værdierne til "", så samme adresse ikke bliver tilføjet flere gange
+                            city = "";
+                            housenumber = "";
+                            postcode = "";
+                            street = "";
                             break;
                     }
                     break;
